@@ -1,0 +1,34 @@
+<div class="ui grid">
+  <div class="three wide column">
+    <div class="ui violet vertical pointing menu">
+      <a class="item active" {{action "home"}}>
+        <i class="large home icon"></i>
+        Home
+      </a>
+      <a class="item" {{action "studentsDataEntry"}}>
+        <i class="large leanpub icon"></i>
+        Students Records
+      </a>
+      <div class="item">
+        <br><br>
+      </div>
+      <a class="item " {{action "about"}}>
+        <i class="large user icon"></i>
+        About
+      </a>
+    </div>
+  </div>
+  <div class="thirteen wide column ">
+    <div class="ui segment container">
+      {{#if isHomeShowing}}
+        {{welcome-page}}
+      {{/if}}
+      {{#if isStudentsRecordsDataEntry}}
+        {{student-data-entry}}
+      {{/if}}
+      {{#if isAboutShowing}}
+        {{about-us}}
+      {{/if}}
+    </div>
+  </div>
+</div>
