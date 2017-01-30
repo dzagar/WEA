@@ -1,0 +1,46 @@
+<div class="ui modal">
+  <div class="header">Find Student By:</div>
+  <div class="content">
+  	<div>
+  		<label>Student Number</label>
+  		<input class="text"/>
+  	</div>
+  	<div>
+  		<label>First Name</label>
+  		<input class="text"/>
+  	</div>
+  	<div>
+  		<label>Last Name</label>
+  		<input class="text"/>
+  	</div>
+  	<div>
+		<label>Gender</label>
+		<select>
+    		<option value=1>Male</option>
+       		<option value=2>Female</option>
+   		</select>
+  	</div>
+  	<div>
+        <label>Date of Birth</label>
+        <input type="date">
+  	</div>
+  	<div>
+  	    <label>Residency</label>
+  		<select>
+  			{{#each residency as |residencyChoice|}}
+                <option value={{residencyChoice.id}}>{{residencyChoice.name}} </option>
+            {{/each}}
+        </select>
+    </div>
+    <div class="actions">
+          <div class="ui button" {{action "exit"}}>Search</div>
+          <div class="ui button" {{action "exit"}}>Cancel</div>
+    </div>
+  </div>
+
+
+
+
+  
+</div>
+

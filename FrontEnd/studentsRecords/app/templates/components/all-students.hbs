@@ -9,7 +9,7 @@
               <div class="grouped fields">
                 <div class="field">
                   <div class="ui radio checkbox">
-                    <input type="radio"
+                    <input type="radio" name="Frank;)"
                            onchange={{action 'getStudent' oneStudent}}>
                     <label>{{oneStudent.number}} {{oneStudent.firstName}}
                       {{oneStudent.lastName}}  </label>
@@ -26,11 +26,11 @@
 
     <div class="actions">
       <hr>
-      <div class="ui button" {{action "loadNext"}}>
-        <i class="arrow right icon"></i>
-      </div>
       <div class="ui button" {{action "loadPrevious"}}>
         <i class="arrow left icon"></i>
+      </div>
+      <div class="ui button" {{action "loadNext"}}>
+        <i class="arrow right icon"></i>
       </div>
       <div class="ui button" {{action "exit"}}>OK</div>
     </div>

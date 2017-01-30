@@ -44,6 +44,8 @@
 {{#if showAllStudents}}
   <!-- Note that offset is an "in" and "out" parameter !-->
  {{all-students INDEX = currentIndex notDONE = showAllStudents offset = offset studentsModel = studentsRecords}}
+{{else if showFindStudent}}
+ {{find-student notDONE = showFindStudent residency=residencyModel}}
 {{else}}
   <!-- Show data entry form -->
 
@@ -85,8 +87,7 @@
             <label>Residency</label>
             <select onchange={{action 'selectResidency' value="target.value"}}>
               {{#each residencyModel as |residencyChoice|}}
-                <option value={{residencyChoice.id}} selected={{eq currentStudent.resInfo.id
-                                                                   residencyChoice.id}}>{{residencyChoice.name}} </option>
+                <option value={{residencyChoice.id}} selected={{eq currentStudent.resInfo.id residencyChoice.id}}>{{residencyChoice.name}} </option>
               {{/each}}
             </select>
           </div>
