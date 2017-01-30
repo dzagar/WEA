@@ -3,6 +3,7 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   store: Ember.inject.service(),
   showAllStudents: false,
+  showFindStudent: false,
   residencyModel: null,
   selectedResidency: null,
   selectedGender: null,
@@ -133,5 +134,11 @@ export default Ember.Component.extend({
     assignDate (date){
       this.set('selectedDate', date);
     },
+    undoSave(){
+
+    },
+    findStudent(){
+      this.set('showFindStudent', true);
+    }
   }
 });
