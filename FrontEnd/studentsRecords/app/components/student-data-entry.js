@@ -33,6 +33,10 @@ export default Ember.Component.extend({
       } else {
         self.set('currentIndex', records.indexOf(records.get("firstObject")));
       }
+    }, function (records) {
+
+      this.set('offset', 0);
+      self.set('currentIndex', records.indexOf(records.get("firstObject")));
     });
   }),
 
@@ -66,11 +70,18 @@ export default Ember.Component.extend({
   },
 
   showStudentData: function (index) {
-    this.set('currentStudent', this.get('studentsRecords').objectAt(index));
-    this.set('studentPhoto', this.get('currentStudent').get('photo'));
-    var date = this.get('currentStudent').get('DOB');
-    var datestring = date.toISOString().substring(0, 10);
-    this.set('selectedDate', datestring);
+    var record = this.get('studentsRecords').objectAt(index);
+    if (record != null) {
+      this.set('currentStudent',record );
+      this.set('studentPhoto', this.get('currentStudent').get('photo'));
+      var date = this.get('currentStudent').get('DOB');
+      var datestring = date.toISOString().substring(0, 10);
+      this.set('selectedDate', datestring);      
+    }
+    else
+    {
+      this.set('offset', 0);
+    }
   },
 
   didRender() {
