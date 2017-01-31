@@ -38,6 +38,7 @@ export default Ember.Component.extend({
 
   fetchStudent: Ember.observer('currentIndex', function () {
     this.showStudentData(this.get('currentIndex'));
+
   }),
 
   init() {
@@ -142,7 +143,17 @@ export default Ember.Component.extend({
       this.set('selectedDate', date);
     },
     undoSave(){
-
+      //Reset all text fields (number, first name, last name)
+      this.get('currentStudent').rollbackAttributes();
+      //Reset date
+      var date = this.get('currentStudent').get('DOB');
+      var datestring = date.toISOString().substring(0, 10);
+      this.set('selectedDate', datestring); 
+      //Reset gender
+      var gender = this.get('currentStudent').get('gender');
+      this.set('selectedGender', gender);
+      //Reset residency
+      
     },
     findStudent(){
       this.set('showFindStudent', true);
