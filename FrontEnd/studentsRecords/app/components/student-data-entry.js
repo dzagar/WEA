@@ -161,7 +161,20 @@ export default Ember.Component.extend({
       
     },
     findStudent(){
-      this.set('showFindStudent', true);
+      var self = this;
+      this.get('store').query('student', {
+        firstName: "a", 
+        lastName: "a"
+      }).then(function (records) {
+        console.log("did things");
+        self.set('studentsRecords', records);
+        self.set('firstIndex', records.indexOf(records.get("firstObject")));
+        self.set('lastIndex', records.indexOf(records.get("lastObject")));
+        // Show first student data
+        self.set('currentIndex', self.get('firstIndex'));
+        self.set('offset', 0);
+    });
+      //this.set('showFindStudent', true);
     },
     toggleProgramInfo() {
       if ($("#programInfoTab").is(":visible"))

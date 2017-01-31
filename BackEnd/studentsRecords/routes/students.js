@@ -14,10 +14,19 @@ router.route('/')
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
-        var l = parseInt(request.query.limit) ;
+        var l = parseInt(request.query.limit);
         var o = parseInt(request.query.offset);
+        var firstName = request.query.firstName;
+        var lastName = request.query.lastName;
         var Student = request.query.student;
         if (!Student) {
+            if (firstName != null)
+            {
+                models.Students.find({"firstName": {"$regex": request.query.firstName, "$options": "imx" }, "lastName": {"$regex": request.query.lastName, "$options": "imx" }}, function (error, students) {
+                if (error) response.send(error);
+                response.json({student: students});
+            });
+            }
             //models.Students.find(function (error, students) {
             //    if (error) response.send(error);
             //    response.json({student: students});
