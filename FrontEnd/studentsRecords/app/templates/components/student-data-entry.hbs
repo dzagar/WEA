@@ -50,9 +50,10 @@
   <!-- Show data entry form -->
 
   <div class="ui top attached tabular menu">
-    <div class="active item" data-tab="basics">Basic Info</div>
-    <div class="item" data-tab="program">Program Record</div>
-    <div class="item" data-tab="others">Other tabs</div>
+    <div style="cursor: pointer;" class="active item" data-tab="basics">Basic Info</div>
+    <div style="cursor: pointer;" class="item" data-tab="program">Program Record</div>
+    <div style="cursor: pointer;" class="item" data-tab="awards">Scholarships and Awards</div>
+    <div style="cursor: pointer;" class="item" data-tab="others">Other tabs</div>
   </div>
   <div class="ui bottom attached active tab segment"data-tab="basics">
     <!-- student basic information !-->
@@ -95,21 +96,35 @@
       </div>
       <!-- Show student photo -->
       <div class="ui center aligned  seven wide column segment">
-        <img  src={{studentPhoto}}>
+        <img src={{studentPhoto}}>
       </div>
     </div>
 
   </div>
   <div class="ui tab" data-tab="program">
-    <!-- Program records, courses and grades !-->
     <br>
-    <h2>{{currentStudent.number}}</h2>
-      <h3> {{currentStudent.firstName}} {{currentStudent.lastName}}</h3>
-    <br><br><br>
+      <h3> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.number}}</h3>
+    <br>
+
+    <h3 {{action "toggleProgramInfo"}}>Program Information</h3>
+    <div id="programInfoTab" >
+      <label>Program Info</label>
+    </div>
+    <h3 {{action "toggleAdvancedInfo"}}>Advanced Standings</h3>
+    <div id="advancedInfoTab" style="display: none;">
+      <label>Advanced Standings Info</label>
+    </div>
+    <h3 {{action "toggleHSInfo"}}>Highschool Information</h3>
+    <div id="hsInfoTab" style="display: none;">
+      <label>Highschool Info</label>
+    </div>
   </div>
   <div class="ui tab" data-tab="others">
     <!-- Others !-->
     <h2>Other data</h2>
+  </div>
+  <div class="ui tab" data-tab="awards">
+    <h2>Scholarship and Awards</h2>
   </div>
 
 

@@ -146,6 +146,42 @@ export default Ember.Component.extend({
     },
     findStudent(){
       this.set('showFindStudent', true);
+    },
+    toggleProgramInfo() {
+      if ($("#programInfoTab").is(":visible"))
+      {
+        $("#programInfoTab").hide(200);
+      }
+      else
+      {
+        $("#programInfoTab").show(200); 
+        $("#advancedInfoTab").hide(200);
+        $("#hsInfoTab").hide(200);       
+      }
+    },
+    toggleAdvancedInfo() {
+      if ($("#advancedInfoTab").is(":visible"))
+      {
+        $("#advancedInfoTab").hide(200);
+      }
+      else
+      {
+        $("#programInfoTab").hide(200); 
+        $("#advancedInfoTab").show(200);
+        $("#hsInfoTab").hide(200);         
+      }
+    },
+    toggleHSInfo() {
+      if ($("#hsInfoTab").is(":visible"))
+      {
+        $("#hsInfoTab").hide(200);
+      }
+      else
+      {
+        $("#programInfoTab").hide(200);
+        $("#advancedInfoTab").hide(200);
+        $("#hsInfoTab").show(200);          
+      }
     }
   }
 });
