@@ -106,15 +106,15 @@
       <h3> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.number}}</h3>
     <br>
 
-    <h3 {{action "toggleProgramInfo"}}>Program Information</h3>
+    <h3 style="cursor: pointer;" {{action "toggleProgramInfo"}}>Program Information</h3>
     <div id="programInfoTab" >
       <label>Program Info</label>
     </div>
-    <h3 {{action "toggleAdvancedInfo"}}>Advanced Standings</h3>
+    <h3 style="cursor: pointer;" {{action "toggleAdvancedInfo"}}>Advanced Standings</h3>
     <div id="advancedInfoTab" style="display: none;">
       <label>Advanced Standings Info</label>
     </div>
-    <h3 {{action "toggleHSInfo"}}>Highschool Information</h3>
+    <h3 style="cursor: pointer;" {{action "toggleHSInfo"}}>Highschool Information</h3>
     <div id="hsInfoTab" style="display: none;">
       <label>Highschool Info</label>
     </div>
