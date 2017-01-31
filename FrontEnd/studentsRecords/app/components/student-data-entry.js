@@ -73,7 +73,9 @@ export default Ember.Component.extend({
       this.set('studentPhoto', this.get('currentStudent').get('photo'));
       var date = this.get('currentStudent').get('DOB');
       var datestring = date.toISOString().substring(0, 10);
-      this.set('selectedDate', datestring);      
+      this.set('selectedDate', datestring);  
+      this.set('selectedGender', this.get('currentStudent').get('gender'));
+      this.set('selectedResidency', this.get('currentStudent').get('resInfo'));    
     }
     else
     {
@@ -151,8 +153,11 @@ export default Ember.Component.extend({
       this.set('selectedDate', datestring); 
       //Reset gender
       var gender = this.get('currentStudent').get('gender');
+      Ember.$("#ddlGender").val(gender);
       this.set('selectedGender', gender);
       //Reset residency
+      var resInfo = this.get('currentStudent').get('resInfo').get('id');
+      Ember.$("#ddlResidency").val(resInfo);
       
     },
     findStudent(){
