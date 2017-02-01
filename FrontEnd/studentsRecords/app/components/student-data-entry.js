@@ -4,6 +4,7 @@ export default Ember.Component.extend({
   store: Ember.inject.service(),
   showAllStudents: false,
   showFindStudent: false,
+  showHelp: false,
   residencyModel: null,
   selectedResidency: null,
   selectedGender: null,
@@ -178,6 +179,13 @@ export default Ember.Component.extend({
     //});
 
 
+    },
+    helpInfo(){
+      if (this.get("showHelp")){
+        this.set("showHelp", false);
+      } else {
+        this.set("showHelp", true);
+      }
     },
     toggleProgramInfo() {
       if ($("#programInfoTab").is(":visible"))

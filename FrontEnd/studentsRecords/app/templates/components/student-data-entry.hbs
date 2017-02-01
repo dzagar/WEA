@@ -36,10 +36,15 @@
     <i class="search icon"></i>
     Find Record
   </a>
-  <a class="item">
+  <a class = "item" {{action 'helpInfo'}}>
     Help
   </a>
 </div>
+
+{{#if showHelp}}
+  {{show-help}}
+{{/if}}  
+
 
 {{#if showAllStudents}}
   <!-- Note that offset is an "in" and "out" parameter !-->
