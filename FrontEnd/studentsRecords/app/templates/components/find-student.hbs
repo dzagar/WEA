@@ -40,11 +40,26 @@
           <div class="ui button" {{action "exit"}}>Cancel</div>
     </div>
     {{#each findResults as |oneStudent|}}
-    
+          <div class="ui grid">
+        <div class="ten wide column">
+          <div class="actions">
+            <div class="ui form">
+              <div class="grouped fields">
+                <div class="field">
+                  <div class="ui radio checkbox">
                     <input type="radio" name="Frank;)"
                            >
                     <label>{{oneStudent.number}} {{oneStudent.firstName}}
                       {{oneStudent.lastName}}  </label>
+                      </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="six wide column">
+        </div>
+      </div>
                  
     {{/each}}
   </div>
