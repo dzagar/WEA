@@ -52,7 +52,17 @@ export default Ember.Component.extend({
     		this.set('notDONE', false);
 	    	Ember.$('.ui.modal').modal('hide');
 	    	Ember.$('.ui.modal').remove();
-    	}
+    	},
+      clear: function () {
+        Ember.$('#studentNumber').val('');
+        Ember.$('#firstName').val('');
+        Ember.$('#lastName').val('');
+        Ember.$('#gender').val(0);
+        Ember.$('#residency').val(-1);
+        Ember.$('#dobFrom').val('');
+        Ember.$('#dobTo').val('');
+        this.set('findResults', null);
+      }
 	},
 	didRender() {
     Ember.$('.ui.modal')
