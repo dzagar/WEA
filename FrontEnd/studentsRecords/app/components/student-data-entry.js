@@ -38,8 +38,6 @@ export default Ember.Component.extend({
   }),
 
   fetchStudent: Ember.observer('currentIndex', function () {
-    this.set("showHelp", false);
-    this.set("showFindStudent",false);
     this.showStudentData(this.get('currentIndex'));
 
   }),
@@ -70,6 +68,8 @@ export default Ember.Component.extend({
   },
 
   showStudentData: function (index) {
+    this.set("showHelp", false);
+    this.set("showFindStudent",false);
     var record = this.get('studentsRecords').objectAt(index);
     if (record != null) {
       this.set('currentStudent',record );
