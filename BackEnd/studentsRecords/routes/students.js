@@ -27,15 +27,19 @@ router.route('/')
                 response.json({student: students});
             });
             }
+            else
+            { 
+                models.Students.paginate({}, { offset: o, limit: l },
+                    function (error, students) {
+                        if (error) response.send(error);
+                        response.json({student: students.docs});
+                    });
+
+            }
             //models.Students.find(function (error, students) {
             //    if (error) response.send(error);
             //    response.json({student: students});
             //});
-            models.Students.paginate({}, { offset: o, limit: l },
-                function (error, students) {
-                    if (error) response.send(error);
-                    response.json({student: students.docs});
-                });
         } else {
             //        if (Student == "residency")
             models.Students.find({"residency": request.query.residency}, function (error, students) {
