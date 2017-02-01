@@ -14,6 +14,7 @@ export default Ember.Component.extend({
     limit: null,
     offset: null,
     pageSize: null,
+    findResults: null,
     
 	actions: {
 
@@ -42,13 +43,8 @@ export default Ember.Component.extend({
 
       }).then(function (records) {
         console.log("did things");
-        self.set('studentsRecords', records);
-        self.set('firstIndex', records.indexOf(records.get("firstObject")));
-        self.set('lastIndex', records.indexOf(records.get("lastObject")));
-        // Show first student data
-        self.set('currentIndex', self.get('firstIndex'));
-        self.set('offset', 0);
-        self.set('notDONE', false);
+        self.set('findResults', records);
+        
     });
 
 		},

@@ -39,6 +39,14 @@
           <div class="ui button" {{action "search"}}>Search</div>
           <div class="ui button" {{action "exit"}}>Cancel</div>
     </div>
+    {{#each findResults as |oneStudent|}}
+    
+                    <input type="radio" name="Frank;)"
+                           >
+                    <label>{{oneStudent.number}} {{oneStudent.firstName}}
+                      {{oneStudent.lastName}}  </label>
+                 
+    {{/each}}
   </div>
 
 
