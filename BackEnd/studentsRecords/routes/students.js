@@ -45,57 +45,49 @@ router.route('/')
         }
     });
 
-// router.route('/:student_id')
-//     .get(parseUrlencoded, parseJSON, function (request, response) {
-//         models.Students.findById(request.params.student_id, function (error, student) {
-//             if (error) {
-//                 response.send({error: error});
-//             }
-//             else {
-//                 response.json({student: student});
-//             }
-//         });
-//     })
-//     .put(parseUrlencoded, parseJSON, function (request, response) {
-//         models.Students.findById(request.params.student_id, function (error, student) {
-//             if (error) {
-//                 response.send({error: error});
-//             }
-//             else {
-//                 student.number = request.body.student.number;
-//                 student.firstName = request.body.student.firstName;
-//                 student.lastName = request.body.student.lastName;
-//                 student.gender = request.body.student.gender;
-//                 student.DOB = request.body.student.DOB;
-//                 student.photo = request.body.student.photo;
-//                 student.resInfo = request.body.student.resInfo;
-
-//                 student.save(function (error) {
-//                     if (error) {
-//                         response.send({error: error});
-//                     }
-//                     else {
-//                         response.json({student: student});
-//                     }
-//                 });
-//             }
-//         });
-//     })
-//     .delete(parseUrlencoded, parseJSON, function (request, response) {
-//         models.Students.findByIdAndRemove(request.params.student_id,
-//             function (error, deleted) {
-//                 if (!error) {
-//                     response.json({student: deleted});
-//                 }
-//             }
-//         );
-//     });
-router.route('/find')
+router.route('/:student_id')
     .get(parseUrlencoded, parseJSON, function (request, response) {
+        models.Students.findById(request.params.student_id, function (error, student) {
+            if (error) {
+                response.send({error: error});
+            }
+            else {
+                response.json({student: student});
+            }
+        });
+    })
+    .put(parseUrlencoded, parseJSON, function (request, response) {
+        models.Students.findById(request.params.student_id, function (error, student) {
+            if (error) {
+                response.send({error: error});
+            }
+            else {
+                student.number = request.body.student.number;
+                student.firstName = request.body.student.firstName;
+                student.lastName = request.body.student.lastName;
+                student.gender = request.body.student.gender;
+                student.DOB = request.body.student.DOB;
+                student.photo = request.body.student.photo;
+                student.resInfo = request.body.student.resInfo;
 
-        models.Students.find({"firstName": {"$regex": request.query.firstName, "$options": "imx" }, "lastName": {"$regex": request.query.lastName, "$options": "imx" }}, function (error, students) {
-            if (error) response.send(error);
-                response.json({student: students});
-            });
+                student.save(function (error) {
+                    if (error) {
+                        response.send({error: error});
+                    }
+                    else {
+                        response.json({student: student});
+                    }
+                });
+            }
+        });
+    })
+    .delete(parseUrlencoded, parseJSON, function (request, response) {
+        models.Students.findByIdAndRemove(request.params.student_id,
+            function (error, deleted) {
+                if (!error) {
+                    response.json({student: deleted});
+                }
+            }
+        );
     });
 module.exports = router;
