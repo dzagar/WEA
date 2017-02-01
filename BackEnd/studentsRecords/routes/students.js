@@ -27,53 +27,75 @@ router.route('/')
         if (!Student) {
             if (firstName != null)
             {
+                var conditions = {
+                    "firstName": 
+                        {"$regex": firstName, "$options": "imx" },
+                    "lastName": 
+                        {"$regex": lastName, "$options": "imx" }
+                };
+                if (number != ""){
+                    conditions["number"] = number;
+                    //conditions.push({"number": number});
+                }
+                if (residency != -1){
+                    conditions["resInfo"] = residency;
+                    //conditions.push({"resInfo": residency});
+                }
+                if (gender != 0){
+                    conditions["gender"] = gender;
+                    //conditions.push({"gender": gender});
+                }
+                models.Students.find(conditions, function(error, students){
+                    if (error) response.send(error);
+                    else response.json({student: students});
+                });
 
-                if (residency == -1)
-                {
-                    if (gender == 0)
-                    {
-                        models.Students.find(
-                            {"firstName": {"$regex": firstName, "$options": "imx" },
-                            "lastName": {"$regex": lastName, "$options": "imx" }}, function (error, students) {
-                                if (error) response.send(error);
-                                    response.json({student: students});
-                        });
-                    }
-                    else
-                    {
-                        models.Students.find(
-                            {"firstName": {"$regex": firstName, "$options": "imx" },
-                            "lastName": {"$regex": lastName, "$options": "imx" },
-                            "gender": gender}, function (error, students) {
-                                if (error) response.send(error);
-                                    response.json({student: students});
-                        });
-                    }
-                }
-                else
-                {
-                    if (gender == 0)
-                    {
-                        models.Students.find(
-                            {"firstName": {"$regex": firstName, "$options": "imx" },
-                            "lastName": {"$regex": lastName, "$options": "imx" },
-                            "resInfo": residency}, function (error, students) {
-                                if (error) response.send(error);
-                                    response.json({student: students});
-                        });
-                    }
-                    else
-                    {
-                        models.Students.find(
-                            {"firstName": {"$regex": firstName, "$options": "imx" },
-                            "lastName": {"$regex": lastName, "$options": "imx" },
-                            "resInfo": residency,
-                            "gender": gender}, function (error, students) {
-                                if (error) response.send(error);
-                                    response.json({student: students});
-                        });
-                    }
-                }
+                // if (residency == -1)
+                // {
+                //     if (gender == 0)
+                //     {
+                //         models.Students.find(
+                //             {"firstName": {"$regex": firstName, "$options": "imx" },
+                //             "lastName": {"$regex": lastName, "$options": "imx" }}, function (error, students) {
+                //                 if (error) response.send(error);
+                //                     response.json({student: students});
+                //         });
+                //     }
+                //     else
+                //     {
+                //         models.Students.find(
+                //             {"firstName": {"$regex": firstName, "$options": "imx" },
+                //             "lastName": {"$regex": lastName, "$options": "imx" },
+                //             "gender": gender}, function (error, students) {
+                //                 if (error) response.send(error);
+                //                     response.json({student: students});
+                //         });
+                //     }
+                // }
+                // else
+                // {
+                //     if (gender == 0)
+                //     {
+                //         models.Students.find(
+                //             {"firstName": {"$regex": firstName, "$options": "imx" },
+                //             "lastName": {"$regex": lastName, "$options": "imx" },
+                //             "resInfo": residency}, function (error, students) {
+                //                 if (error) response.send(error);
+                //                     response.json({student: students});
+                //         });
+                //     }
+                //     else
+                //     {
+                //         models.Students.find(
+                //             {"firstName": {"$regex": firstName, "$options": "imx" },
+                //             "lastName": {"$regex": lastName, "$options": "imx" },
+                //             "resInfo": residency,
+                //             "gender": gender}, function (error, students) {
+                //                 if (error) response.send(error);
+                //                     response.json({student: students});
+                //         });
+                //     }
+                // }
             }
             else
             { 
