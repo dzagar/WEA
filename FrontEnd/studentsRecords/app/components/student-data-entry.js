@@ -38,6 +38,8 @@ export default Ember.Component.extend({
   }),
 
   fetchStudent: Ember.observer('currentIndex', function () {
+    this.set("showHelp", false);
+    this.set("showFindStudent",false);
     this.showStudentData(this.get('currentIndex'));
 
   }),
@@ -163,6 +165,8 @@ export default Ember.Component.extend({
 
     },
     findStudent(){
+      this.set("showAllStudents", false);
+      this.set("showHelp", false);
       this.set("showFindStudent",true);
       // var self = this;
       // this.get('store').query('student', {
@@ -181,11 +185,9 @@ export default Ember.Component.extend({
 
     },
     helpInfo(){
-      if (this.get("showHelp")){
-        this.set("showHelp", false);
-      } else {
-        this.set("showHelp", true);
-      }
+      this.set("showAllStudents", false);
+      this.set("showHelp", true);
+      this.set("showFindStudent",false);
     },
     toggleProgramInfo() {
       if ($("#programInfoTab").is(":visible"))

@@ -39,19 +39,21 @@
   <a class = "item" {{action 'helpInfo'}}>
     Help
   </a>
-</div>
-
-{{#if showHelp}}
-  {{show-help}}
-{{/if}}  
+</div> 
 
 
 {{#if showAllStudents}}
   <!-- Note that offset is an "in" and "out" parameter !-->
  {{all-students INDEX = currentIndex notDONE = showAllStudents offset = offset studentsModel = studentsRecords}}
 {{else if showFindStudent}}
+<<<<<<< Updated upstream
  {{find-student notDONE = showFindStudent residency=residencyModel studentsRecords=studentsRecords}}
 
+=======
+ {{find-student notDONE = showFindStudent residency=residencyModel}}
+{{else if showHelp}}
+  {{show-help}}
+>>>>>>> Stashed changes
 {{else}}
   <!-- Show data entry form -->
 
