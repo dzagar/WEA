@@ -158,6 +158,7 @@ export default Ember.Component.extend({
       //Reset residency
       var resInfo = this.get('currentStudent').get('resInfo').get('id');
       Ember.$("#ddlResidency").val(resInfo);
+      this.set('selectedResidency', this.get('currentStudent').get('resInfo'));
       
     },
     findStudent(){
