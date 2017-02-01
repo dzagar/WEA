@@ -31,7 +31,7 @@ export default Ember.Component.extend({
         dobTo=new Date(8640000000000000);
       else
         dobTo=(Ember.$('#dobTo').val());
-
+      console.log(Ember.$('#residency').val());
       this.get('store').query('student', {
         number: Ember.$('#studentNumber').val(),
         firstName: Ember.$('#firstName').val(),

@@ -27,18 +27,53 @@ router.route('/')
         if (!Student) {
             if (firstName != null)
             {
-                models.Students.find(
-                    {"firstName": {"$regex": firstName, "$options": "imx" },
-                        "lastName": {"$regex": lastName, "$options": "imx" },
-                        //"number": number,
-                        "gender": gender
-                        //$or: [{"gender": request.query.gender},{"gender":0}] ,
-                        //$or: [{"residency": request.query.resInfo},{"residency":-1}]
-                        
-                }, function (error, students) {
-                if (error) response.send(error);
-                response.json({student: students});
-            });
+
+                if (residency == -1)
+                {
+                    if (gender == 0)
+                    {
+                        models.Students.find(
+                            {"firstName": {"$regex": firstName, "$options": "imx" },
+                            "lastName": {"$regex": lastName, "$options": "imx" }}, function (error, students) {
+                                if (error) response.send(error);
+                                    response.json({student: students});
+                        });
+                    }
+                    else
+                    {
+                        models.Students.find(
+                            {"firstName": {"$regex": firstName, "$options": "imx" },
+                            "lastName": {"$regex": lastName, "$options": "imx" },
+                            "gender": gender}, function (error, students) {
+                                if (error) response.send(error);
+                                    response.json({student: students});
+                        });
+                    }
+                }
+                else
+                {
+                    if (gender == 0)
+                    {
+                        models.Students.find(
+                            {"firstName": {"$regex": firstName, "$options": "imx" },
+                            "lastName": {"$regex": lastName, "$options": "imx" },
+                            "resInfo": residency}, function (error, students) {
+                                if (error) response.send(error);
+                                    response.json({student: students});
+                        });
+                    }
+                    else
+                    {
+                        models.Students.find(
+                            {"firstName": {"$regex": firstName, "$options": "imx" },
+                            "lastName": {"$regex": lastName, "$options": "imx" },
+                            "resInfo": residency,
+                            "gender": gender}, function (error, students) {
+                                if (error) response.send(error);
+                                    response.json({student: students});
+                        });
+                    }
+                }
             }
             else
             { 
