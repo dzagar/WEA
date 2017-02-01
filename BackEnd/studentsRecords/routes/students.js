@@ -19,7 +19,7 @@ router.route('/')
         var number = request.query.number;
         var firstName = request.query.firstName;
         var lastName = request.query.lastName;
-        var gender = request.query.gender;
+        var gender = parseInt(request.query.gender);
         var dobFrom = request.query.DOBFrom;
         var dobTo = request.query.DOBTo;
         var residency = request.query.resInfo;
@@ -30,9 +30,10 @@ router.route('/')
                 models.Students.find(
                     {"firstName": {"$regex": firstName, "$options": "imx" },
                         "lastName": {"$regex": lastName, "$options": "imx" },
-                        "number": {"$regex": number, "$options": "imx" },
-                        $or: [{"gender": request.query.gender},{"gender":0}] ,
-                        $or: [{"residency": request.query.resInfo},{"residency":-1}]
+                        //"number": number,
+                        "gender": gender
+                        //$or: [{"gender": request.query.gender},{"gender":0}] ,
+                        //$or: [{"residency": request.query.resInfo},{"residency":-1}]
                         
                 }, function (error, students) {
                 if (error) response.send(error);
