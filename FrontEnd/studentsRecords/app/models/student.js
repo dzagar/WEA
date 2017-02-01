@@ -1,7 +1,7 @@
-import DS from 'ember-data';
+	import DS from 'ember-data';
 
 export default DS.Model.extend({
-  number: DS.attr(),
+  number: DS.attr('number'),
   firstName: DS.attr(),
   lastName: DS.attr(),
   gender: DS.attr('number'),
