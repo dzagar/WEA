@@ -16,13 +16,25 @@ router.route('/')
     .get(parseUrlencoded, parseJSON, function (request, response) {
         var l = parseInt(request.query.limit);
         var o = parseInt(request.query.offset);
+        var number = request.query.number;
         var firstName = request.query.firstName;
         var lastName = request.query.lastName;
+        var gender = request.query.gender;
+        var dobFrom = request.query.DOBFrom;
+        var dobTo = request.query.DOBTo;
+        var residency = request.query.resInfo;
         var Student = request.query.student;
         if (!Student) {
             if (firstName != null)
             {
-                models.Students.find({"firstName": {"$regex": request.query.firstName, "$options": "imx" }, "lastName": {"$regex": request.query.lastName, "$options": "imx" }}, function (error, students) {
+                models.Students.find(
+                    {"firstName": {"$regex": firstName, "$options": "imx" },
+                        "lastName": {"$regex": lastName, "$options": "imx" },
+                        "number": {"$regex": number, "$options": "imx" },
+                        $or: [{"gender": request.query.gender},{"gender":0}] ,
+                        $or: [{"residency": request.query.resInfo},{"residency":-1}]
+                        
+                }, function (error, students) {
                 if (error) response.send(error);
                 response.json({student: students});
             });
