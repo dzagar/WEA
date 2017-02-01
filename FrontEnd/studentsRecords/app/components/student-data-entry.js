@@ -73,9 +73,9 @@ export default Ember.Component.extend({
       this.set('studentPhoto', this.get('currentStudent').get('photo'));
       var date = this.get('currentStudent').get('DOB');
       var datestring = date.toISOString().substring(0, 10);
-      this.set('selectedDate', datestring);  
+      this.set('selectedDate', datestring);
       this.set('selectedGender', this.get('currentStudent').get('gender'));
-      this.set('selectedResidency', this.get('currentStudent').get('resInfo'));    
+      this.set('selectedResidency', this.get('currentStudent').get('resInfo'));
     }
     else
     {
@@ -150,7 +150,7 @@ export default Ember.Component.extend({
       //Reset date
       var date = this.get('currentStudent').get('DOB');
       var datestring = date.toISOString().substring(0, 10);
-      this.set('selectedDate', datestring); 
+      this.set('selectedDate', datestring);
       //Reset gender
       var gender = this.get('currentStudent').get('gender');
       Ember.$("#ddlGender").val(gender);
@@ -159,23 +159,25 @@ export default Ember.Component.extend({
       var resInfo = this.get('currentStudent').get('resInfo').get('id');
       Ember.$("#ddlResidency").val(resInfo);
       this.set('selectedResidency', this.get('currentStudent').get('resInfo'));
-      
+
     },
     findStudent(){
-      var self = this;
-      this.get('store').query('student', {
-        firstName: "a", 
-        lastName: "a"
-      }).then(function (records) {
-        console.log("did things");
-        self.set('studentsRecords', records);
-        self.set('firstIndex', records.indexOf(records.get("firstObject")));
-        self.set('lastIndex', records.indexOf(records.get("lastObject")));
-        // Show first student data
-        self.set('currentIndex', self.get('firstIndex'));
-        self.set('offset', 0);
-    });
-      //this.set('showFindStudent', true);
+      this.set("showFindStudent",true);
+      // var self = this;
+      // this.get('store').query('student', {
+      //   firstName: "a",
+      //   lastName: "a"
+      // }).then(function (records) {
+      //   console.log("did things");
+      //   self.set('studentsRecords', records);
+      //   self.set('firstIndex', records.indexOf(records.get("firstObject")));
+      //   self.set('lastIndex', records.indexOf(records.get("lastObject")));
+      //   // Show first student data
+      //   self.set('currentIndex', self.get('firstIndex'));
+      //   self.set('offset', 0);
+    //});
+
+
     },
     toggleProgramInfo() {
       if ($("#programInfoTab").is(":visible"))
@@ -184,9 +186,9 @@ export default Ember.Component.extend({
       }
       else
       {
-        $("#programInfoTab").show(200); 
+        $("#programInfoTab").show(200);
         $("#advancedInfoTab").hide(200);
-        $("#hsInfoTab").hide(200);       
+        $("#hsInfoTab").hide(200);
       }
     },
     toggleAdvancedInfo() {
@@ -196,9 +198,9 @@ export default Ember.Component.extend({
       }
       else
       {
-        $("#programInfoTab").hide(200); 
+        $("#programInfoTab").hide(200);
         $("#advancedInfoTab").show(200);
-        $("#hsInfoTab").hide(200);         
+        $("#hsInfoTab").hide(200);
       }
     },
     toggleHSInfo() {
@@ -210,7 +212,7 @@ export default Ember.Component.extend({
       {
         $("#programInfoTab").hide(200);
         $("#advancedInfoTab").hide(200);
-        $("#hsInfoTab").show(200);          
+        $("#hsInfoTab").show(200);
       }
     }
   }
