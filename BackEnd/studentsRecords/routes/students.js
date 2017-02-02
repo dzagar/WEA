@@ -31,7 +31,8 @@ router.route('/')
                     "firstName": 
                         {"$regex": firstName, "$options": "imx" },
                     "lastName": 
-                        {"$regex": lastName, "$options": "imx" }
+                        {"$regex": lastName, "$options": "imx" },
+                    "DOB":
                 };
                 if (number != ""){
                     conditions["number"] = {"$regex": number, "$options": "imx" };
