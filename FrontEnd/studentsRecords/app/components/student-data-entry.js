@@ -4,6 +4,8 @@ export default Ember.Component.extend({
   store: Ember.inject.service(),
   showAllStudents: false,
   showFindStudent: false,
+  showDeleteConfirmation: false,
+  showAddStudent: false,
   showHelp: false,
   residencyModel: null,
   selectedResidency: null,
@@ -138,6 +140,7 @@ export default Ember.Component.extend({
 
     allStudents() {
       this.set('showAllStudents', true);
+      this.set('showDeleteConfirmation', false);
     },
 
     selectGender (gender){
@@ -171,6 +174,7 @@ export default Ember.Component.extend({
     },
     findStudent(){
       this.set("showAllStudents", false);
+      this.set("showDeleteConfirmation", false);
       this.set("showHelp", false);
       this.set("showFindStudent",true);
       // var self = this;
@@ -191,17 +195,19 @@ export default Ember.Component.extend({
     },
     deleteCurrentStudent(){
       //Spawn confirmation modal window
-
-
+      this.set("showDeleteConfirmation", true);
+      this.set("showAllStudents", false);
     },
-    addStudent(){
+    createStudent(){
       //Spawn add student modal window
-
+      this.set("showAddStudent", true);
+      this.set("showAllStudents", false);
     },
     helpInfo(){
       this.set("showAllStudents", false);
       this.set("showHelp", true);
       this.set("showFindStudent",false);
+      this.set("showDeleteConfirmation", false);
     },
     toggleProgramInfo() {
       if ($("#programInfoTab").is(":visible"))
