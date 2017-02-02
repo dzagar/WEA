@@ -5,32 +5,32 @@
   <div class="ui form">
   	<div class="inline field">
             <label>Student Number</label>
-            {{input size="10" type="number"}}
+            {{input size="10" type="number" value = number}}
      </div>
      <div class="inline field">
             <label>First Name</label>
-            {{input type="text"}}
+            {{input type="text" value = firstName}}
      </div>
      <div class="inline field">
             <label>Last Name</label>
-            {{input type="text"}}
+            {{input type="text" value = lastName}}
      </div>
      <div class="inline field">
             <label>Gender</label>
-            <select id="ddlGender" >
-              <option value=1 selected={{eq 1 currentStudent.gender}}>Male</option>
-              <option value=2 selected={{eq 2 currentStudent.gender}}>Female</option>
+            <select id="ddlGender" onchange={{action 'selectGender' value = "target.value"}}>
+              <option value=1 selected={{eq 1 gender}}>Male</option>
+              <option value=2 selected={{eq 2 gender}}>Female</option>
             </select>
      </div>
      <div class="inline field">
             <label>Date of Birth</label>
-            <input value={{selectedDate}} type="date" >
+            <input value= {{DOB}} type="date" onchange={{action 'selectDate' value = "target.value"}} >
      </div>
      <div class="inline field">
             <label>Residency</label>
-            <select id="ddlResidency" >
+            <select id="ddlResidency" onchange = {{action 'selectResidency' value = "target.value"}}>
               {{#each residencyModel as |residencyChoice|}}
-                <option value={{residencyChoice.id}} selected={{eq currentStudent.resInfo.id residencyChoice.id}}>{{residencyChoice.name}} </option>
+                <option value={{residencyChoice.id}} selected={{eq resInfo.id residencyChoice.id}}>{{residencyChoice.name}} </option>
               {{/each}}
             </select>
      </div>
