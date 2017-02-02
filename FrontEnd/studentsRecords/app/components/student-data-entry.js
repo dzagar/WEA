@@ -78,7 +78,12 @@ export default Ember.Component.extend({
       var datestring = date.toISOString().substring(0, 10);
       this.set('selectedDate', datestring);
       this.set('selectedGender', this.get('currentStudent').get('gender'));
-      this.set('selectedResidency', this.get('currentStudent').get('resInfo'));
+      if (this.get('currentStudent.resInfo.id') == null)
+      {
+        this.get('currentStudent').set('resInfo', this.get('store').peekRecord('residency', Ember.$("#ddlResidency").val()));
+        this.get('currentStudent').save();
+      }
+      this.set('selectedResidency', this.get('currentStudent.resInfo.id'));
     }
     else
     {
@@ -141,6 +146,7 @@ export default Ember.Component.extend({
     },
 
     selectResidency (residency){
+      console.log(residency);
       this.set('selectedResidency', residency);
     },
 
