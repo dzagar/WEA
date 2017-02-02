@@ -34,7 +34,6 @@ router.route('/')
                         {"$regex": lastName, "$options": "imx" }
                 };
                 if (number != ""){
-                    conditions["number"] = "lastName": {"$regex": lastName, "$options": "imx" };
                     //conditions.push({"number": number});
                 }
                 if (residency != -1){
