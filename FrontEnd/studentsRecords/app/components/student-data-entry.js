@@ -8,6 +8,7 @@ export default Ember.Component.extend({
   showAddStudent: false,
   showHelp: false,
   residencyModel: null,
+  genderModel: null,
   selectedResidency: null,
   selectedGender: null,
   selectedDate: null,
@@ -51,6 +52,11 @@ export default Ember.Component.extend({
       self.set('residencyModel', records);
     });
 
+    // load Gender data model 
+    this.get('store').findAll('gender').then(function (records) {
+      self.set('genderModel',records);
+    });
+
     // load first page of the students records
     this.set('limit', 10);
     this.set('offset', 0);
@@ -79,18 +85,28 @@ export default Ember.Component.extend({
       var date = this.get('currentStudent').get('DOB');
       var datestring = date.toISOString().substring(0, 10);
       this.set('selectedDate', datestring);
-      this.set('selectedGender', this.get('currentStudent').get('gender'));
+      //this.set('selectedGender', this.get('currentStudent').get('gender'));
       if (this.get('currentStudent.resInfo.id') == null)
       {
         this.get('currentStudent').set('resInfo', this.get('store').peekRecord('residency', Ember.$("#ddlResidency").val()));
       }
       this.set('selectedResidency', this.get('currentStudent.resInfo.id'));
-    }
-    else
-    {
+      }
+      else
+      {
       this.set('offset', 0);
-    }
-  },
+      }
+
+      if(this.get('currentStudent.genInfo.id') == null)
+      {
+        this.get('currentStudent').set('genInfo',this.get('store').peekRecord('gender'), Ember.$("#ddlGender").val());
+      }
+      else
+      {
+        this.set('offset',0);
+      }
+
+      },
 
   didRender() {
     Ember.$('.menu .item').tab();
@@ -101,8 +117,10 @@ export default Ember.Component.extend({
     saveStudent () {
       var updatedStudent = this.get('currentStudent');
       var res = this.get('store').peekRecord('residency', this.get('selectedResidency')); 
-      updatedStudent.set('gender', this.get('selectedGender'));
+      var gen = this.get('store').peekRecord('gender', this.get('selectedGender'));
+      //updatedStudent.set('gender', this.get('selectedGender'));
       updatedStudent.set('DOB', new Date(this.get('selectedDate')));
+      updatedStudent.set('genInfo', gen);
       updatedStudent.set('resInfo', res);
       updatedStudent.save().then(() => {
         //     this.set('isStudentFormEditing', false);
@@ -162,10 +180,12 @@ export default Ember.Component.extend({
       var date = this.get('currentStudent').get('DOB');
       var datestring = date.toISOString().substring(0, 10);
       this.set('selectedDate', datestring);
+      
       //Reset gender
-      var gender = this.get('currentStudent').get('gender');
-      Ember.$("#ddlGender").val(gender);
-      this.set('selectedGender', gender);
+      var gender = this.get('currentStudent').get('genInfo').get('id');
+      Ember.$("#ddlGender").val(genInfo);
+      this.set('selectedGender', this.get('currentStudent').get('genInfo'));
+
       //Reset residency
       var resInfo = this.get('currentStudent').get('resInfo').get('id');
       Ember.$("#ddlResidency").val(resInfo);
