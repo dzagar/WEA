@@ -34,7 +34,7 @@ router.route('/')
                         {"$regex": lastName, "$options": "imx" }
                 };
                 if (number != ""){
-                    conditions["number"] = {$eq: number};
+                    conditions["number"] = "lastName": {"$regex": lastName, "$options": "imx" };
                     //conditions.push({"number": number});
                 }
                 if (residency != -1){
@@ -136,7 +136,7 @@ router.route('/:student_id')
                 response.send({error: error});
             }
             else {
-                student.number = Number(request.body.student.number);
+                student.number = request.body.student.number;
                 student.firstName = request.body.student.firstName;
                 student.lastName = request.body.student.lastName;
                 student.gender = request.body.student.gender;
