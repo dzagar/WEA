@@ -40,7 +40,22 @@ router.route('/:gender_id')
         });
     })
     .put(parseUrlencoded, parseJSON, function (request, response) {
-        //put
+        models.Genders.findById(request.params.gender_id, function(error, gender) {
+            if (error) {
+                response.send({error: error});
+            } else {
+                gender.name = request.body.gender.name;
+                gender.students = request.body.gender.students;
+
+                gender.save(function(error) {
+                    if (error) {
+                        response.send({error: error});
+                    } else {
+                        response.json({gender: gender});
+                    }
+                });
+            }
+        });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
         //delete
