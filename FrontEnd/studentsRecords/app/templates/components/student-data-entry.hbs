@@ -48,6 +48,8 @@
 {{#if showAllStudents}}
   <!-- Note that offset is an "in" and "out" parameter !-->
  {{all-students INDEX = currentIndex notDONE = showAllStudents offset = offset studentsModel = studentsRecords}}
+{{else if showDeleteConfirmation}}
+  {{delete-student INDEX = currentIndex student = currentStudent showWindow = showDeleteConfirmation}} 
 {{else if showFindStudent}}
  {{find-student notDONE = showFindStudent residency=residencyModel studentsRecords=studentsRecords}}
 {{else if showHelp}}
