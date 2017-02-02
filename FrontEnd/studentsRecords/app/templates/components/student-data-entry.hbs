@@ -81,8 +81,6 @@
           <div class="inline field">
             <label>Gender</label>
             <select id="ddlGender" onchange={{action 'selectGender' value="target.value"}}>
-              {{!--<option value=1 selected={{eq 1 currentStudent.gender}}>Male</option>
-              <option value=2 selected={{eq 2 currentStudent.gender}}>Female</option>--}}
               {{#each genderModel as |genderChoice|}}
               <option value={{genderChoice.id}} selected={{eq currentStudent.genInfo.id genderChoice.id}}>{{genderChoice.name}}</option>
               {{/each}}
