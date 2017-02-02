@@ -189,6 +189,15 @@ export default Ember.Component.extend({
 
 
     },
+    deleteCurrentStudent(){
+      //Spawn confirmation modal window
+
+
+    },
+    addStudent(){
+      //Spawn add student modal window
+
+    },
     helpInfo(){
       this.set("showAllStudents", false);
       this.set("showHelp", true);

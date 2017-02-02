@@ -39,6 +39,9 @@
   <a class = "item" {{action 'helpInfo'}}>
     Help
   </a>
+  <a class = "item" {{aciton 'createStudent'}}>
+    +
+  </a>
 </div> 
 
 
@@ -93,6 +96,11 @@
                 <option value={{residencyChoice.id}} selected={{eq currentStudent.resInfo.id residencyChoice.id}}>{{residencyChoice.name}} </option>
               {{/each}}
             </select>
+          </div>
+          <div class = "inline field">
+            <a class = "item" {{action 'deleteCurrentStudent'>
+              Delete
+            </a>
           </div>
         </div>
       </div>
