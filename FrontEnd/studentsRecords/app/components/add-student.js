@@ -4,7 +4,6 @@ export default Ember.Component.extend({
 	store: Ember.inject.service(),
 	newStudent: null,
 	INDEX: null,
-	showWindow: null,
 	residencyModel: null,
 	number: null,
 	firstName: null,
@@ -13,20 +12,21 @@ export default Ember.Component.extend({
 	DOB: null,
 	photo: null,
 	resInfo: null,
+	notDONE: null,
 
 	init() {
 		this._super(...arguments);
 		var self = this;
 		this.get('store').findAll('residency').then(function (records) {
 	      self.set('residencyModel', records);
-	      self.set('resInfo', records[0]);
+	      console.log(records.get('firstObject'));
+	      self.set('resInfo', records.get('firstObject'));
 	    });
 	},
 	actions: {
 		addStudent: function(student){
 			if (this.get('number') == null || this.get('firstName') == null || this.get('lastName') == null || this.get('gender') == null || this.get('DOB') == null || this.get('resInfo') == null){
 				console.log('u fucked up');
-				//let nick die.
 				return;
 			}
 			if (this.get('gender') == 1){
@@ -41,10 +41,12 @@ export default Ember.Component.extend({
 				firstName: this.get('firstName'),
 				lastName: this.get('lastName'),
 				gender: this.get('gender'),
-				DOB: this.get('DOB'),
+				DOB: new Date(this.get('DOB')),
 				photo: this.get('photo'),
-				resInfo: this.get('resInfo')
+				resInfo: this.get('store').peekRecord('residency', this.get('resInfo'))
 			}));
+			this.get('newStudent').save();
+			this.set('notDONE', false);
 			//somehow jump to this student afterwards
 			Ember.$('.ui.modal').modal('hide');
       		Ember.$('.ui.modal').remove();
@@ -60,7 +62,7 @@ export default Ember.Component.extend({
 			this.set('DOB', date);
 		},
 		cancel: function(){
-			this.set('showWindow', false);
+			this.set('notDONE', false);
 			Ember.$('.ui.modal').modal('hide');
       		Ember.$('.ui.modal').remove();
 		}
