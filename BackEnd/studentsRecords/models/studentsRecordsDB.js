@@ -10,6 +10,9 @@ var studentsSchema = mongoose.Schema(
         photo: String,
         resInfo: {type: mongoose.Schema.ObjectId, ref: 'Residencies'},
         genInfo: {type: mongoose.Schema.ObjectId, ref: 'Genders'}
+    },
+    {
+        versionKey: false
     }
 );
 studentsSchema.plugin(mongoosePaginate);
