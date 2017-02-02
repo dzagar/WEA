@@ -81,7 +81,6 @@ export default Ember.Component.extend({
       if (this.get('currentStudent.resInfo.id') == null)
       {
         this.get('currentStudent').set('resInfo', this.get('store').peekRecord('residency', Ember.$("#ddlResidency").val()));
-        this.get('currentStudent').save();
       }
       this.set('selectedResidency', this.get('currentStudent.resInfo.id'));
     }
