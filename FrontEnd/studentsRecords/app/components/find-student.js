@@ -50,8 +50,6 @@ export default Ember.Component.extend({
 		},
     	exit: function () {
     		this.set('notDONE', false);
-	    	Ember.$('.ui.modal').modal('hide');
-	    	Ember.$('.ui.modal').remove();
     	},
       clear: function () {
         Ember.$('#studentNumber').val('');
@@ -63,12 +61,5 @@ export default Ember.Component.extend({
         Ember.$('#dobTo').val('');
         this.set('findResults', null);
       }
-	},
-	didRender() {
-    Ember.$('.ui.modal')
-      .modal({
-        closable: false,
-      })
-      .modal('show');
-  }
+	}
 });
