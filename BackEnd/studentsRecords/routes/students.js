@@ -32,8 +32,6 @@ router.route('/')
                         {"$regex": firstName, "$options": "imx" },
                     "lastName": 
                         {"$regex": lastName, "$options": "imx" },
-                    "DOB":
-                        {"$gte": new Date(dobFrom), "$lte": new Date(dobTo)}
                 };
                 if (number != ""){
                     conditions["number"] = {"$regex": number, "$options": "imx" };
