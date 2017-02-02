@@ -118,7 +118,7 @@ export default Ember.Component.extend({
       var gen = this.get('store').peekRecord('gender', this.get('selectedGender'));
       //updatedStudent.set('gender', this.get('selectedGender'));
       updatedStudent.set('DOB', new Date(this.get('selectedDate')));
-      updatedStudent.set('genInfo', res);
+      updatedStudent.set('genInfo', gen);
       updatedStudent.set('resInfo', res);
       updatedStudent.save().then(() => {
         //     this.set('isStudentFormEditing', false);
