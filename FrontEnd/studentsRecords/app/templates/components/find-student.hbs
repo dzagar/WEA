@@ -1,32 +1,35 @@
-<div class="ui modal">
+
   <div class="header">Find Student By:</div>
   <div class="content">
   	<div>
   		<label>Student Number</label>
-  		<input class="text"/>
+  		<input id="studentNumber" class="text"/>
   	</div>
   	<div>
   		<label>First Name</label>
-  		<input class="text"/>
+  		<input id="firstName" class="text"/>
   	</div>
   	<div>
   		<label>Last Name</label>
-  		<input class="text"/>
+  		<input id="lastName" class="text"/>
   	</div>
   	<div>
 		<label>Gender</label>
-		<select>
+		<select id="gender">
+        <option value=0>Any</option>
     		<option value=1>Male</option>
-       		<option value=2>Female</option>
+        <option value=2>Female</option>
    		</select>
   	</div>
   	<div>
-        <label>Date of Birth</label>
-        <input type="date">
+        <label>Date of Birth</label><br>
+        <label>From</label><input id="dobFrom" type="date"><br>
+        <label>To</label><input id="dobTo" type="date">
   	</div>
   	<div>
   	    <label>Residency</label>
-  		<select>
+  		<select id="residency">
+        <option value=-1>Any</option>
   			{{#each residency as |residencyChoice|}}
                 <option value={{residencyChoice.id}}>{{residencyChoice.name}} </option>
             {{/each}}
@@ -35,12 +38,31 @@
     <div class="actions">
           <div class="ui button" {{action "search"}}>Search</div>
           <div class="ui button" {{action "exit"}}>Cancel</div>
+          <div class="ui button" {{action "clear"}}>Clear</div>
     </div>
+    {{#each findResults as |oneStudent|}}
+          <div class="ui grid">
+        <div class="ten wide column">
+          <div class="actions">
+            <div class="ui form">
+              <div class="grouped fields">
+                <div class="field">
+                  <div class="ui radio checkbox">
+                    <input type="radio" name="Frank;)"
+                           >
+                    <label>{{oneStudent.number}} {{oneStudent.firstName}}
+                      {{oneStudent.lastName}}  </label>
+                      </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="six wide column">
+        </div>
+      </div>
+                 
+    {{/each}}
   </div>
 
-
-
-
-  
-</div>
 
