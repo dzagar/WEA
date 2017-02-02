@@ -7,10 +7,28 @@ var parseJSON = bodyParser.json();
 
 router.route('/')
     .post(parseUrlencoded, parseJSON, function (request, response) {
-        //create a new gender
+        var gender = new models.Genders(request.body.gender);
+        gender.save(function(error) {
+            if (error)
+                response.send(error);
+            response.json({gender: gender});
+        });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
-        //get
+        var Student = request.query.filter;
+        if (!Student) {
+            models.Genders.find(function(error, genders) {
+                if (error)
+                    response.send(error);
+                response.json({gender: genders});
+            });
+        } else {
+            models.Genders.find({"student": Student.student}, function (error, students) {
+                if (error)
+                    response.send(error);
+                response.json({gender: students});
+            });
+        }
     });
 
 router.route('/:gender_id')
