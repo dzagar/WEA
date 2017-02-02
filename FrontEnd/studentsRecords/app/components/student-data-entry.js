@@ -94,7 +94,7 @@ export default Ember.Component.extend({
   actions: {
     saveStudent () {
       var updatedStudent = this.get('currentStudent');
-      var res = this.get('store').peekRecord('residency', this.get('selectedResidency'));
+      var res = this.get('store').peekRecord('residency', this.get('selectedResidency')); 
       updatedStudent.set('gender', this.get('selectedGender'));
       updatedStudent.set('DOB', new Date(this.get('selectedDate')));
       updatedStudent.set('resInfo', res);
