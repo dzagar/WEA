@@ -18,6 +18,9 @@ var residencySchema = mongoose.Schema(
     {
         name: String,
         students: [{type: mongoose.Schema.ObjectId, ref: ('Students')}]
+    },
+    {
+        versionKey: false
     }
 );
 
@@ -25,6 +28,9 @@ var genderSchema = mongoose.Schema(
     {
         name: String,
         students: [{type: mongoose.Schema.ObjectId, ref: ('Students')}]
+    },
+    {
+        versionKey: false
     }
 )
 
