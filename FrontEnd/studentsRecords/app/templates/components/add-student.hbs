@@ -1,0 +1,48 @@
+<div class="ui modal">
+  <div class="header">Add a new student:
+  </div>
+
+  <div class="ui form">
+  	<div class="inline field">
+            <label>Student Number</label>
+            {{input size="10" type="number"}}
+     </div>
+     <div class="inline field">
+            <label>First Name</label>
+            {{input type="text"}}
+     </div>
+     <div class="inline field">
+            <label>Last Name</label>
+            {{input type="text"}}
+     </div>
+     <div class="inline field">
+            <label>Gender</label>
+            <select id="ddlGender" >
+              <option value=1 selected={{eq 1 currentStudent.gender}}>Male</option>
+              <option value=2 selected={{eq 2 currentStudent.gender}}>Female</option>
+            </select>
+     </div>
+     <div class="inline field">
+            <label>Date of Birth</label>
+            <input value={{selectedDate}} type="date" >
+     </div>
+     <div class="inline field">
+            <label>Residency</label>
+            <select id="ddlResidency" >
+              {{#each residencyModel as |residencyChoice|}}
+                <option value={{residencyChoice.id}} selected={{eq currentStudent.resInfo.id residencyChoice.id}}>{{residencyChoice.name}} </option>
+              {{/each}}
+            </select>
+     </div>
+  </div>
+
+  <div class="actions">
+    <div class="ui button" {{action "addStudent"}}>
+    	Add
+    </div>
+    <div class="ui button" {{action "cancel"}}>
+    	Cancel
+    </div>
+  </div>
+</div>
+

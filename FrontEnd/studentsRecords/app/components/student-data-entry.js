@@ -5,6 +5,7 @@ export default Ember.Component.extend({
   showAllStudents: false,
   showFindStudent: false,
   showDeleteConfirmation: false,
+  showAddStudent: false,
   showHelp: false,
   residencyModel: null,
   selectedResidency: null,
@@ -197,9 +198,10 @@ export default Ember.Component.extend({
       this.set("showDeleteConfirmation", true);
       this.set("showAllStudents", false);
     },
-    addStudent(){
+    createStudent(){
       //Spawn add student modal window
-
+      this.set("showAddStudent", true);
+      this.set("showAllStudents", false);
     },
     helpInfo(){
       this.set("showAllStudents", false);
