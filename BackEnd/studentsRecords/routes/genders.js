@@ -33,7 +33,11 @@ router.route('/')
 
 router.route('/:gender_id')
     .get(parseUrlencoded, parseJSON, function (request, response) {
-        //get
+        models.Genders.findById(request.params.gender_id, function(error, gender) {
+            if (error)
+                response.send(error);
+            response.json({gender: gender})
+        });
     })
     .put(parseUrlencoded, parseJSON, function (request, response) {
         //put
