@@ -40,7 +40,22 @@ export default Ember.Component.extend({
         deleteGender()
         {
 
-        }
+        },
+
+        addResidency()
+        {
+
+        },
+
+        editResidency()
+        {
+
+        },
+
+        deleteResidency()
+        {
+
+        },
 
     }
 

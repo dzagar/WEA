@@ -20,7 +20,7 @@
             <td>{{gender.id}}</td>
             <td>{{gender.name}}</td>
             <td>
-                <button>Edit</button><button>Delete</button>
+                <button {{action "editGender"}}>Edit</button><button {{action "deleteGender"}}>Delete</button>
             </td>
         </tr>
         {{/each}}
@@ -30,13 +30,36 @@
                 <input type="text">
             </td>
             <td>
-                <button>Add</button>
+                <button {{action "addGender"}}>Add</button>
             </td>
         </tr>
     </table>
   </div>
 
   <div class="ui bottom attached tab segment" data-tab="residency">
-      <h3></h3>
+      <table>
+        <tr>
+          <th>Code</th>
+          <th>Residency</th>
+        </tr>
+        {{#each residencyModel as |residency|}}
+        <td>{{residency.id}}</td>
+        <td>{{residency.name}}</td>
+        <td>
+          <button {{action "editResidency"}}>Edit</button> <button {{action "deleteResidency"}}>Delete</button>
+          </td>
+        </tr>
+
+        {{/each}}
+        <tr>
+          <td></td>
+          <td>
+            <input type="text">
+            </td>
+            <td>
+              <button {{action "addResidency"}}>Add</button>
+            </td>
+        </tr>
+        </table>
   </div>
   
