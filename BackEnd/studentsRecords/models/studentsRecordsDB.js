@@ -8,7 +8,8 @@ var studentsSchema = mongoose.Schema(
         gender: {type: mongoose.Schema.ObjectId, ref: 'Genders'},
         DOB: String,
         photo: String,
-        resInfo: {type: mongoose.Schema.ObjectId, ref: 'Residencies'}
+        resInfo: {type: mongoose.Schema.ObjectId, ref: 'Residencies'},
+        scholarships: [{type: mongoose.Schema.ObjectId, ref: 'Scholarships'}]
     },
     {
         versionKey: false
@@ -36,9 +37,21 @@ var genderSchema = mongoose.Schema(
     }
 )
 
+var scholarshipSchema = mongoose.Schema(
+    {
+        student: {type: mongoose.Schema.ObjectId, ref: 'Students'},
+        name: String,
+        note: String
+    },
+    {
+        versionKey: false
+    }
+);
+
 var Students = mongoose.model('student', studentsSchema);
 var Residencies = mongoose.model('residency', residencySchema);
 var Genders = mongoose.model('gender',genderSchema);
+var Scholarships = mongoose.model('scholarship',scholarshipSchema);
 
 
 mongoose.connect('mongodb://localhost/studentsRecords');
@@ -49,6 +62,7 @@ db.once('open', function() {
     exports.Students = Students;
     exports.Residencies = Residencies;
     exports.Genders = Genders;
+    exports.Scholarships = Scholarships;
 
 });
 

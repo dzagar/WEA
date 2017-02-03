@@ -136,6 +136,9 @@
   </div>
   <div class="ui tab" data-tab="awards">
     <h2>Scholarship and Awards</h2>
+    {{#each studentScholarships as |oneScholarship|}}
+      <label>{{oneScholarship.name}}</label>
+    {{/each}}
   </div>
 
 

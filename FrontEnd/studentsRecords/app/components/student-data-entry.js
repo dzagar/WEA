@@ -9,6 +9,7 @@ export default Ember.Component.extend({
   showHelp: false,
   residencyModel: null,
   genderModel: null,
+  studentScholarhips: null,
   selectedResidency: null,
   selectedGender: null,
   selectedDate: null,
@@ -97,6 +98,10 @@ export default Ember.Component.extend({
       }
       this.set('selectedResidency', this.get('currentStudent.resInfo.id'));
       this.set('selectGender', this.get('currentStudent.gender.id'));
+
+      //loads student scholarships
+      this.set('studentScholarships', this.get('currentStudent.scholarships'));
+
     }
     else
     {
