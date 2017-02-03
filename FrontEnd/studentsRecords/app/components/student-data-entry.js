@@ -89,6 +89,7 @@ export default Ember.Component.extend({
       if (this.get('currentStudent.resInfo.id') == null)
       {
         this.get('currentStudent').set('resInfo', this.get('store').peekRecord('residency', Ember.$("#ddlResidency").val()));
+        this.get('currentStudent').save(); 
       }
       if(this.get('currentStudent.gender.id') == null || this.get('currentStudent.gender.id') == 1 || this.get('currentStudent.gender.id') == 2)
       {
@@ -96,7 +97,7 @@ export default Ember.Component.extend({
         this.get('currentStudent').save();
       }
       this.set('selectedResidency', this.get('currentStudent.resInfo.id'));
-      this.set('selectGender', this.get('currentStudent.gender.id'));
+      this.set('selectedGender', this.get('currentStudent.gender.id'));
     }
     else
     {
