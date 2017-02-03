@@ -7,8 +7,11 @@ export default Ember.Component.extend({
     showDeleteGenderConfirmation: false,
     showDeleteResidencyConfirmation: false,
     currentGender: null,
+    currentResidency: null,
     newGenderName: "",
     newGenderObj: null,
+    newResidencyName:"",
+    newResidencyObj: null,
 
     init() {
         this._super(...arguments);
@@ -55,7 +58,11 @@ export default Ember.Component.extend({
 
         addResidency()
         {
-
+            this.set('newResidencyObj',this.get('store').createRecord('residency'),{
+                name: this.get('newResidencyName')
+            }));
+            this.get('newResidencyObj').save();
+            this.set('newResidencyName',"");
         },
 
         editResidency()
@@ -63,9 +70,11 @@ export default Ember.Component.extend({
 
         },
 
-        deleteResidency()
+        deleteResidency(residency)
         {
-
+           this.set('currentResidency',residency);
+           this.set('showResidencyDeleteConfirmation', true);
+           this.set('showGenderDeleteConfirmation', false); 
         },
 
     }
