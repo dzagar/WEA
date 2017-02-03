@@ -55,8 +55,8 @@
         <td>{{residency.id}}</td>
         <td>{{input type="text" value = residency.name}}</td>
         <td>
-          <button {{action "saveResidency" residency}}>Save</button>
-          <button {{action "deleteResidency" residency}}>Delete</button>
+          <button class="ui button" {{action "saveResidency" residency}}>Save</button>
+          <button class="ui button" {{action "deleteResidency" residency}}>Delete</button>
           </td>
         </tr>
 
@@ -64,7 +64,7 @@
         <tr>
           <td></td>
           <td>
-            <input type="text">
+            {{input type="text" value = newResidencyName}}
             </td>
             <td>
               <button {{action "addResidency"}}>Add</button>
