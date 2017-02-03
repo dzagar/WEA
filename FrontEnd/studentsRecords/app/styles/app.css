@@ -1,0 +1,6 @@
+.ui.grid > [class*="three wide"].column {
+	padding-right: 0px !important;
+}
+.ui.grid > [class*="thirteen wide"].column {
+	padding-left: 0px !important;
+}
