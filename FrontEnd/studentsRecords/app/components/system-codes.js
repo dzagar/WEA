@@ -4,6 +4,9 @@ export default Ember.Component.extend({
     store: Ember.inject.service(),
     residencyModel: null,
     genderModel: null,
+    showDeleteGenderConfirmation: false,
+    showDeleteResidencyConfirmation: false,
+    currentGender: null,
 
     init() {
         this._super(...arguments);
@@ -37,9 +40,11 @@ export default Ember.Component.extend({
 
         },
 
-        deleteGender()
+        deleteGender(gender)
         {
-
+            this.set('currentGender', gender);
+            this.set('showGenderDeleteConfirmation', true);
+            this.set('showResidencyDeleteConfirmation', false);
         },
 
         addResidency()

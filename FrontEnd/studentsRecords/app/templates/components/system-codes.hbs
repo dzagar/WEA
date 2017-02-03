@@ -2,6 +2,11 @@
   <h2>System Codes</h2>
 </div>
 
+
+{{#if showGenderDeleteConfirmation}}
+    {{delete-gender gender = currentGender showWindow = showGenderDeleteConfirmation}}
+{{/if}}
+
   <!-- Show data entry form -->
 
   <div class="ui top attached tabular menu">
@@ -20,7 +25,7 @@
             <td>{{gender.id}}</td>
             <td>{{gender.name}}</td>
             <td>
-                <button {{action "editGender"}}>Edit</button><button {{action "deleteGender"}}>Delete</button>
+                <button {{action "editGender"}}>Edit</button><button {{action "deleteGender" gender}}>Delete</button>
             </td>
         </tr>
         {{/each}}
