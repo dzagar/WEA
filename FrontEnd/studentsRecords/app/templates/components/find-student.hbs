@@ -17,8 +17,9 @@
 		<label>Gender</label>
 		<select id="gender">
         <option value=0>Any</option>
-    		<option value=1>Male</option>
-        <option value=2>Female</option>
+        {{#each gender as |genderChoice|}}
+          <option value = {{genderChoice.id}}>{{genderChoice.name}}</option>
+        {{/each}}
    		</select>
   	</div>
   	<div>

@@ -5,10 +5,11 @@ export default Ember.Component.extend({
 	newStudent: null,
 	INDEX: null,
 	residencyModel: null,
+	genderModel: null,
 	number: null,
 	firstName: null,
 	lastName: null,
-	gender: 1,
+	gender: null,
 	DOB: null,
 	photo: null,
 	resInfo: null,
@@ -19,12 +20,16 @@ export default Ember.Component.extend({
 		var self = this;
 		this.get('store').findAll('residency').then(function (records) {
 	      self.set('residencyModel', records);
-	      console.log(records.get('firstObject'));
-	      self.set('resInfo', records.get('firstObject'));
+	      self.set('resInfo', records.get('firstObject').get('id'));
+	    });
+		this.get('store').findAll('gender').then(function (records) {
+	      self.set('genderModel', records);
+	      self.set('gender', records.get('firstObject').get('id'));
 	    });
 	},
 	actions: {
 		addStudent: function(student){
+			console.log(this.get('DOB'));
 			if (this.get('number') == null || this.get('firstName') == null || this.get('lastName') == null || this.get('gender') == null || this.get('DOB') == null || this.get('resInfo') == null){
 				console.log('u fucked up');
 				return;
@@ -34,14 +39,17 @@ export default Ember.Component.extend({
 			} else if (this.get('gender') == 2) {
 				this.set('photo', "/assets/studentsPhotos/female.png");
 			} else {
-				this.set('photo', "NOTHING!!!");
+				this.set('photo', "/assets/studentsPhotos/nonBinary.png");
 			}
+			var date = this.get('DOB');
+			var strDate = date.substring(0,10);
+			console.log(strDate);
 			this.set('newStudent', this.get('store').createRecord('student', {
 				number: this.get('number'),
 				firstName: this.get('firstName'),
 				lastName: this.get('lastName'),
-				gender: this.get('gender'),
-				DOB: new Date(this.get('DOB')),
+				gender: this.get('store').peekRecord('gender', this.get('gender')),
+				DOB: date,
 				photo: this.get('photo'),
 				resInfo: this.get('store').peekRecord('residency', this.get('resInfo'))
 			}));

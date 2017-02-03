@@ -19,7 +19,7 @@ router.route('/')
         var number = request.query.number;
         var firstName = request.query.firstName;
         var lastName = request.query.lastName;
-        var gender = parseInt(request.query.gender);
+        var gender = request.query.gender;
         var dobFrom = request.query.DOBFrom;
         var dobTo = request.query.DOBTo;
         var residency = request.query.resInfo;

@@ -5,11 +5,10 @@ var studentsSchema = mongoose.Schema(
         number: String,
         firstName: String,
         lastName: String,
-        //gender: Number,
-        DOB: Date,
+        gender: {type: mongoose.Schema.ObjectId, ref: 'Genders'},
+        DOB: String,
         photo: String,
-        resInfo: {type: mongoose.Schema.ObjectId, ref: 'Residencies'},
-        genInfo: {type: mongoose.Schema.ObjectId, ref: 'Genders'}
+        resInfo: {type: mongoose.Schema.ObjectId, ref: 'Residencies'}
     },
     {
         versionKey: false

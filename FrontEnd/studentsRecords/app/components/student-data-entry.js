@@ -83,30 +83,26 @@ export default Ember.Component.extend({
       this.set('currentStudent',record );
       this.set('studentPhoto', this.get('currentStudent').get('photo'));
       var date = this.get('currentStudent').get('DOB');
-      var datestring = date.toISOString().substring(0, 10);
+      var datestring = date.substring(0, 10);
       this.set('selectedDate', datestring);
       //this.set('selectedGender', this.get('currentStudent').get('gender'));
       if (this.get('currentStudent.resInfo.id') == null)
       {
         this.get('currentStudent').set('resInfo', this.get('store').peekRecord('residency', Ember.$("#ddlResidency").val()));
       }
+      if(this.get('currentStudent.gender.id') == null || this.get('currentStudent.gender.id') == 1 || this.get('currentStudent.gender.id') == 2)
+      {
+        this.get('currentStudent').set('gender',this.get('store').peekRecord('gender'), Ember.$("#ddlGender").val());
+        this.get('currentStudent').save();
+      }
       this.set('selectedResidency', this.get('currentStudent.resInfo.id'));
-      }
-      else
-      {
-      this.set('offset', 0);
-      }
-
-      if(this.get('currentStudent.genInfo.id') == null)
-      {
-        this.get('currentStudent').set('genInfo',this.get('store').peekRecord('gender'), Ember.$("#ddlGender").val());
-      }
-      else
-      {
-        this.set('offset',0);
-      }
-
-      },
+      this.set('selectGender', this.get('currentStudent.gender.id'));
+    }
+    else
+    {
+       this.set('offset',0);
+    }
+  },
 
   didRender() {
     Ember.$('.menu .item').tab();
@@ -120,7 +116,7 @@ export default Ember.Component.extend({
       var gen = this.get('store').peekRecord('gender', this.get('selectedGender'));
       //updatedStudent.set('gender', this.get('selectedGender'));
       updatedStudent.set('DOB', new Date(this.get('selectedDate')));
-      updatedStudent.set('genInfo', gen);
+      updatedStudent.set('gender', gen);
       updatedStudent.set('resInfo', res);
       updatedStudent.save().then(() => {
         //     this.set('isStudentFormEditing', false);
@@ -182,9 +178,9 @@ export default Ember.Component.extend({
       this.set('selectedDate', datestring);
       
       //Reset gender
-      var gender = this.get('currentStudent').get('genInfo').get('id');
-      Ember.$("#ddlGender").val(genInfo);
-      this.set('selectedGender', this.get('currentStudent').get('genInfo'));
+      var gender = this.get('currentStudent').get('gender.id');
+      Ember.$("#ddlGender").val(gender);
+      this.set('selectedGender', this.get('currentStudent').get('gender'));
 
       //Reset residency
       var resInfo = this.get('currentStudent').get('resInfo').get('id');
