@@ -37,11 +37,14 @@ export default Ember.Component.extend({
     {
         addGender()
         {
-            this.set('newGenderObj', this.get('store').createRecord('gender', {
-                name: this.get('newGenderName')
-            }));
-            this.get('newGenderObj').save();
-            this.set('newGenderName', "");
+            if (this.get('newGenderName').trim() != "")
+            {
+                this.set('newGenderObj', this.get('store').createRecord('gender', {
+                    name: this.get('newGenderName').trim()
+                }));
+                this.get('newGenderObj').save();
+                this.set('newGenderName', "");
+            }
         },
 
         saveGender(gender)
@@ -57,12 +60,15 @@ export default Ember.Component.extend({
         },
 
         addResidency()
-        {
-            this.set('newResidencyObj',this.get('store').createRecord('residency',{
-                name: this.get('newResidencyName')
-            }));
-            this.get('newResidencyObj').save();
-            this.set('newResidencyName',"");
+        {   
+            if (this.get('newResidencyName').trim() != "")
+            {
+                this.set('newResidencyObj',this.get('store').createRecord('residency',{
+                    name: this.get('newResidencyName').trim()
+                }));
+                this.get('newResidencyObj').save();
+                this.set('newResidencyName',"");
+            }
         },
 
         saveResidency(residency)
