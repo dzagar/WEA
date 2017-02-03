@@ -8,7 +8,6 @@ export default DS.Model.extend({
   photo: DS.attr(),
   resInfo: DS.belongsTo('residency'),
   gender: DS.belongsTo('gender'),
-  scholarships: DS.hasMany('scholarship'),
-  advancedStandings: DS.hasMany('advanced-standing')
+  scholarships: DS.hasMany('scholarship')
 
 });

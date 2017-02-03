@@ -97,10 +97,14 @@ export default Ember.Component.extend({
         this.get('currentStudent').save();
       }
       this.set('selectedResidency', this.get('currentStudent.resInfo.id'));
-      this.set('selectGender', this.get('currentStudent.gender.id'));
+      this.set('selectedGender', this.get('currentStudent.gender.id'));
 
+      var self = this;
       //loads student scholarships
-      this.set('studentScholarships', this.get('currentStudent.scholarships'));
+      var scholarshipStudent = this.get('currentStudent.id');
+      this.get('store').query('scholarship', {student : scholarshipStudent}).then(function(scholarships){
+        self.set('studentScholarhips', scholarships);
+      });
 
     }
     else
