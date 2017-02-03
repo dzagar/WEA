@@ -7,6 +7,8 @@ export default Ember.Component.extend({
     showDeleteGenderConfirmation: false,
     showDeleteResidencyConfirmation: false,
     currentGender: null,
+    newGenderName: "",
+    newGenderObj: null,
 
     init() {
         this._super(...arguments);
@@ -32,7 +34,11 @@ export default Ember.Component.extend({
     {
         addGender()
         {
-
+            this.set('newGenderObj', this.get('store').createRecord('gender', {
+                name: this.get('newGenderName')
+            }));
+            this.get('newGenderObj').save();
+            this.set('newGenderName', "");
         },
 
         editGender()
