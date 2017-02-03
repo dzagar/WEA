@@ -19,7 +19,30 @@ export default Ember.Component.extend({
             self.set('genderModel',records);
         });
     },
+    
     didRender() {
     Ember.$('.menu .item').tab();
+    },
+
+
+    actions:
+    {
+        addGender()
+        {
+
+        },
+
+        editGender()
+        {
+
+        },
+
+        deleteGender()
+        {
+
+        }
+
     }
+
+
 });
