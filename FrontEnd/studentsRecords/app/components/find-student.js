@@ -5,6 +5,7 @@ export default Ember.Component.extend({
   	store: Ember.inject.service(),
   	notDONE: null,
   	residency: null,
+    gender: null,
     studentsRecords: null,
     currentStudent: null,
     currentIndex: null,

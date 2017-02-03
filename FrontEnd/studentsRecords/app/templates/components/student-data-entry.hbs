@@ -48,8 +48,12 @@
 {{#if showAllStudents}}
   <!-- Note that offset is an "in" and "out" parameter !-->
  {{all-students INDEX = currentIndex notDONE = showAllStudents offset = offset studentsModel = studentsRecords}}
+{{else if showDeleteConfirmation}}
+  {{delete-student INDEX = currentIndex student = currentStudent showWindow = showDeleteConfirmation}} 
+{{else if showAddStudent}}
+  {{add-student INDEX = currentIndex student = currentStudent notDONE = showAddStudent}} 
 {{else if showFindStudent}}
- {{find-student notDONE = showFindStudent residency=residencyModel studentsRecords=studentsRecords}}
+ {{find-student notDONE = showFindStudent gender = genderModel residency=residencyModel studentsRecords=studentsRecords}}
 {{else if showHelp}}
   {{show-help}}
 {{else}}
@@ -81,8 +85,9 @@
           <div class="inline field">
             <label>Gender</label>
             <select id="ddlGender" onchange={{action 'selectGender' value="target.value"}}>
-              <option value=1 selected={{eq 1 currentStudent.gender}}>Male</option>
-              <option value=2 selected={{eq 2 currentStudent.gender}}>Female</option>
+              {{#each genderModel as |genderChoice|}}
+              <option value={{genderChoice.id}} selected={{eq currentStudent.genInfo.id genderChoice.id}}>{{genderChoice.name}}</option>
+              {{/each}}
             </select>
           </div>
           <div class="inline field">
@@ -98,7 +103,7 @@
             </select>
           </div>
           <div class = "inline field">
-            <a class = "item" {{action 'deleteCurrentStudent'}}>
+            <a class = "item" style="cursor: pointer;" {{action 'deleteCurrentStudent'}}>
               Delete
             </a>
           </div>
