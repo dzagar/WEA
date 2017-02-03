@@ -93,6 +93,8 @@ export default Ember.Component.extend({
       }
       if(this.get('currentStudent.gender.id') == null || this.get('currentStudent.gender.id') == 1 || this.get('currentStudent.gender.id') == 2)
       {
+        console.log(Ember.$("#ddlGender").val());
+        console.log(this.get('store').peekRecord('gender', Ember.$("#ddlGender").val()));
         this.get('currentStudent').set('gender',this.get('store').peekRecord('gender'), Ember.$("#ddlGender").val());
         this.get('currentStudent').save();
       }
@@ -116,7 +118,7 @@ export default Ember.Component.extend({
       var res = this.get('store').peekRecord('residency', this.get('selectedResidency')); 
       var gen = this.get('store').peekRecord('gender', this.get('selectedGender'));
       //updatedStudent.set('gender', this.get('selectedGender'));
-      updatedStudent.set('DOB', new Date(this.get('selectedDate')));
+      updatedStudent.set('DOB', this.get('selectedDate'));
       updatedStudent.set('gender', gen);
       updatedStudent.set('resInfo', res);
       updatedStudent.save().then(() => {
