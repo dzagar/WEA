@@ -17,57 +17,79 @@
   </div>
 
   <div class="ui bottom attached active tab segment" data-tab="gender">
-    <table>
+    <table class="ui fixed table">
+        <thead>
         <tr>
             <th>Code</th>
             <th>Gender</th>
+            <th><!--spacer--></th>
         </tr>
+        </thead>
         {{#each genderModel as |gender|}}
         <tr>
             <td>{{gender.id}}</td>
-            <td>{{input type="text" value = gender.name}}</td>
             <td>
-                <button {{action "saveGender" gender}}>Save</button>
-                <button {{action "deleteGender" gender}}>Delete</button>
+                <div class="ui fluid input">
+                    {{input type="text" value = gender.name}}
+                </div>
+            </td>
+            <td>
+                <div class="ui two buttons">
+                    <button class="ui button" {{action "saveGender" gender}}>Save</button>
+                    <button class="ui button" {{action "deleteGender" gender}}>Delete</button>
+                </div>
             </td>
         </tr>
         {{/each}}
         <tr>
-            <td></td>
+            <td><!--spacer--></td>
             <td>
-                {{input type="text" value = newGenderName}}
+                <div class="ui fluid input">
+                    {{input type="text" value = newGenderName}}
+                </div>
             </td>
             <td>
-                <button {{action "addGender"}}>Add</button>
+                <button class="ui button" {{action "addGender"}}>Add</button>
             </td>
         </tr>
     </table>
   </div>
 
   <div class="ui bottom attached tab segment" data-tab="residency">
-      <table>
-        <tr>
-          <th>Code</th>
-          <th>Residency</th>
-        </tr>
+      <table class="ui fixed table">
+        <thead>
+            <tr>
+            <th>Code</th>
+            <th>Residency</th>
+            <th><!--spacer--></th>
+            </tr>
+        </thead>
         {{#each residencyModel as |residency|}}
         <tr>
-        <td>{{residency.id}}</td>
-        <td>{{input type="text" value = residency.name}}</td>
-        <td>
-          <button class="ui button" {{action "saveResidency" residency}}>Save</button>
-          <button class="ui button" {{action "deleteResidency" residency}}>Delete</button>
-          </td>
+            <td>{{residency.id}}</td>
+            <td>
+                <div class="ui fluid input">
+                    {{input type="text" value = residency.name}}
+                </div>
+            </td>
+            <td>
+                <div class="ui two buttons">
+                    <button class="ui button" {{action "saveResidency" residency}}>Save</button>
+                    <button class="ui button" {{action "deleteResidency" residency}}>Delete</button>
+                </div>
+            </td>
         </tr>
 
         {{/each}}
         <tr>
-          <td></td>
-          <td>
-            {{input type="text" value = newResidencyName}}
+            <td><!--spacer--></td>
+            <td>
+                <div class="ui fluid input">
+                    {{input type="text" value = newResidencyName}}
+                </div>
             </td>
             <td>
-              <button {{action "addResidency"}}>Add</button>
+                <button class="ui button" {{action "addResidency"}}>Add</button>
             </td>
         </tr>
         </table>
