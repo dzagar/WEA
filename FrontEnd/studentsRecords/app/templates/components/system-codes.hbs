@@ -52,9 +52,10 @@
         {{#each residencyModel as |residency|}}
         <tr>
         <td>{{residency.id}}</td>
-        <td>{{residency.name}}</td>
+        <td>{{input type="text" value = residency.name}}</td>
         <td>
-          <button {{action "editResidency"}}>Edit</button> <button {{action "deleteResidency"}}>Delete</button>
+          <button {{action "editResidency" residency}}>Save</button>
+          <button {{action "deleteResidency" residency}}>Delete</button>
           </td>
         </tr>
 
