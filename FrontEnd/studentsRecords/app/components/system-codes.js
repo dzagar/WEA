@@ -41,9 +41,9 @@ export default Ember.Component.extend({
             this.set('newGenderName', "");
         },
 
-        editGender()
+        saveGender(gender)
         {
-
+            gender.save();
         },
 
         deleteGender(gender)

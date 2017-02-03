@@ -23,9 +23,10 @@
         {{#each genderModel as |gender|}}
         <tr>
             <td>{{gender.id}}</td>
-            <td>{{gender.name}}</td>
+            <td>{{input type="text" value = gender.name}}</td>
             <td>
-                <button {{action "editGender"}}>Edit</button><button {{action "deleteGender" gender}}>Delete</button>
+                <button {{action "saveGender" gender}}>Save</button>
+                <button {{action "deleteGender" gender}}>Delete</button>
             </td>
         </tr>
         {{/each}}
