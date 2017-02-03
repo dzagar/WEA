@@ -10,7 +10,7 @@ export default Ember.Component.extend({
     currentResidency: null,
     newGenderName: "",
     newGenderObj: null,
-    newResidencyName:"",
+    newResidencyName: "",
     newResidencyObj: null,
 
     init() {
@@ -58,7 +58,7 @@ export default Ember.Component.extend({
 
         addResidency()
         {
-            this.set('newResidencyObj',this.get('store').createRecord('residency'),{
+            this.set('newResidencyObj',this.get('store').createRecord('residency',{
                 name: this.get('newResidencyName')
             }));
             this.get('newResidencyObj').save();
