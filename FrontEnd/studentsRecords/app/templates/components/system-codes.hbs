@@ -26,7 +26,7 @@
             <td>{{gender.id}}</td>
             <td>{{input type="text" value = gender.name}}</td>
             <td>
-                <button {{action "saveGender"}}>Save</button><button 
+                <button {{action "saveGender" gender}}>Save</button>
                 <button {{action "deleteGender" gender}}>Delete</button>
             </td>
         </tr>
