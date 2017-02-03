@@ -10,7 +10,30 @@
   </div>
 
   <div class="ui bottom attached active tab segment" data-tab="gender">
-    <h3></h3>
+    <table>
+        <tr>
+            <th>Code</th>
+            <th>Gender</th>
+        </tr>
+        {{#each genderModel as |gender|}}
+        <tr>
+            <td>{{gender.id}}</td>
+            <td>{{gender.name}}</td>
+            <td>
+                <button>Edit</button><button>Delete</button>
+            </td>
+        </tr>
+        {{/each}}
+        <tr>
+            <td></td>
+            <td>
+                <input type="text">
+            </td>
+            <td>
+                <button>Add</button>
+            </td>
+        </tr>
+    </table>
   </div>
 
   <div class="ui bottom attached tab segment" data-tab="residency">
