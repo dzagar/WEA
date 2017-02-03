@@ -65,9 +65,9 @@ export default Ember.Component.extend({
             this.set('newResidencyName',"");
         },
 
-        editResidency()
+        saveResidency(residency)
         {
-
+            residency.save();
         },
 
         deleteResidency(residency)
