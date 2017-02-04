@@ -8,7 +8,7 @@ export default DS.Model.extend({
   lastName: DS.attr(),
   number: DS.attr(),
   photo: DS.attr(),
-  resInfo: DS.belongsTo('residency')
-  
+  resInfo: DS.belongsTo('residency'),
+  scholarships: DS.hasMany('scholarship')
 
 });

@@ -8,7 +8,8 @@ var studentsSchema = mongoose.Schema(
         lastName: String,
         number: String,
         photo: String,
-        resInfo: {type: mongoose.Schema.ObjectId, ref: 'Residencies'}
+        resInfo: {type: mongoose.Schema.ObjectId, ref: 'Residencies'},
+        scholarships: [{type: mongoose.Schema.ObjectId, ref: 'Scholarships'}]
     },
     {
         versionKey: false
@@ -36,12 +37,35 @@ var genderSchema = mongoose.Schema(
     }
 )
 
+var scholarshipSchema = mongoose.Schema(
+    {
+        student: {type: mongoose.Schema.ObjectId, ref: 'Students'},
+        name: String,
+        note: String
+    },
+    {
+        versionKey: false
+    }
+);
+var advancedStandingsSchema = mongoose.Schema(
+    {
+        student: {type: mongoose.Schema.ObjectId, ref: 'Students'},
+        course: String,
+        description: String,
+        units: String,
+        grade: Number,
+        from: String
+    },
+    {
+        versionKey: false
+    }
+);
 
-
-var Genders = mongoose.model('gender',genderSchema);
-var Residencies = mongoose.model('residency', residencySchema);
 var Students = mongoose.model('student', studentsSchema);
-
+var Residencies = mongoose.model('residency', residencySchema);
+var Genders = mongoose.model('gender',genderSchema);
+var Scholarships = mongoose.model('scholarship',scholarshipSchema);
+var AdvancedStandings = mongoose.model('advancedStandings', advancedStandingsSchema);
 
 mongoose.connect('mongodb://localhost/studentsRecords');
 var db = mongoose.connection;
@@ -51,6 +75,8 @@ db.once('open', function() {
     exports.Students = Students;
     exports.Residencies = Residencies;
     exports.Genders = Genders;
+    exports.Scholarships = Scholarships;
+    exports.AdvancedStandings = AdvancedStandings;
 
 });
 

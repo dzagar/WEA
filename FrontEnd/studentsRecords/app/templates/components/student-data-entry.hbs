@@ -44,12 +44,12 @@
   </a>
 </div> 
 
-
+{{#if showDeleteConfirmation}}
+  {{delete-student INDEX = currentIndex student = currentStudent showWindow = showDeleteConfirmation}}
+{{/if}}
 {{#if showAllStudents}}
   <!-- Note that offset is an "in" and "out" parameter !-->
- {{all-students INDEX = currentIndex notDONE = showAllStudents offset = offset studentsModel = studentsRecords}}
-{{else if showDeleteConfirmation}}
-  {{delete-student INDEX = currentIndex student = currentStudent showWindow = showDeleteConfirmation}} 
+ {{all-students INDEX = currentIndex notDONE = showAllStudents offset = offset studentsModel = studentsRecords}} 
 {{else if showAddStudent}}
   {{add-student INDEX = currentIndex student = currentStudent notDONE = showAddStudent}} 
 {{else if showFindStudent}}
@@ -127,7 +127,11 @@
     </div>
     <h3 style="cursor: pointer;" {{action "toggleAdvancedInfo"}}>Advanced Standings</h3>
     <div id="advancedInfoTab" style="display: none;">
-      <label>Advanced Standings Info</label>
+      {{#each studentAdvancedStandings as |oneAdvancedStandings|}}
+        <label>{{oneAdvancedStandings.course}}</label>
+        <br>
+        <label>{{oneAdvancedStandings.description}}</label>
+      {{/each}}
     </div>
     <h3 style="cursor: pointer;" {{action "toggleHSInfo"}}>Highschool Information</h3>
     <div id="hsInfoTab" style="display: none;">
@@ -136,6 +140,9 @@
   </div>
   <div class="ui bottom attached tab segment" data-tab="awards">
     <h2>Scholarship and Awards</h2>
+    {{#each studentScholarhips as |oneScholarship|}}
+      <label>{{oneScholarship.name}}</label>
+    {{/each}}
   </div>
 
 
