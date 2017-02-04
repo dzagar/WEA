@@ -9,6 +9,7 @@ export default Ember.Component.extend({
   showHelp: false,
   residencyModel: null,
   genderModel: null,
+  studentAdvancedStandings: null,
   studentScholarhips: null,
   selectedResidency: null,
   selectedGender: null,
@@ -104,6 +105,9 @@ export default Ember.Component.extend({
       var scholarshipStudent = this.get('currentStudent.id');
       this.get('store').query('scholarship', {student : scholarshipStudent}).then(function(scholarships){
         self.set('studentScholarhips', scholarships);
+      });
+      this.get('store').query('advancedStanding', {student : scholarshipStudent}).then(function(advancedStandings){
+        self.set('studentAdvancedStandings', advancedStandings);
       });
 
     }

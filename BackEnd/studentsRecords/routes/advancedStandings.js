@@ -8,7 +8,7 @@ var parseJSON = bodyParser.json();
 router.route('/')
     //posting new scholarship
     .post(parseUrlencoded, parseJSON, function (request, response) {
-        var advancedStandings = new models.advancedStandings(request.body.advancedStandings);
+        var advancedStandings = new models.AdvancedStandings(request.body.advancedStandings);
         advancedStandings.save(function(error) {
             if (error)
             {
@@ -22,7 +22,7 @@ router.route('/')
 
 
     })
-    
+
     .get(parseUrlencoded, parseJSON, function (request, response) {
         
         var Student = request.query.student;
@@ -32,9 +32,15 @@ router.route('/')
         }
         else
         {
-            models.advancedStandings.find({"student" : Student}, function(error, advancedStandings){
-                if (error) response.send(error);
-                    else response.json({advancedStandings: advancedStandings});
+            models.AdvancedStandings.find({"student" : Student}, function(error, advancedStandings){
+                if (error) 
+                    {
+                        response.send(error);
+                    }
+                else 
+                    {
+                        response.json({advancedStandings: advancedStandings});
+                    }
             });
         }
     });
