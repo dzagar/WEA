@@ -1,24 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-<<<<<<< HEAD
-  
-=======
-  store: Ember.inject.service(),
-  showAllStudents: false,
-  showFindStudent: false,
-  showDeleteConfirmation: false,
-  showAddStudent: false,
-  showHelp: false,
-  residencyModel: null,
-  genderModel: null,
-  studentAdvancedStandings: null,
-  studentScholarhips: null,
-  selectedResidency: null,
-  selectedGender: null,
-  selectedDate: null,
-  studentsRecords: null,
->>>>>>> master
+
   currentStudent: null,
   currentIndex: null,
   firstIndex: 0,
@@ -38,8 +21,10 @@ export default Ember.Component.extend({
   showFindStudent: false,
   showHelp: false,
   store: Ember.inject.service(),
+  studentAdvancedStandings: null,
   studentPhoto: null,
   studentsRecords: null,
+  studentScholarhips: null,
   
 
   studentModel: Ember.observer('offset', function () {
@@ -119,9 +104,7 @@ export default Ember.Component.extend({
       }
       this.set('selectedResidency', this.get('currentStudent.resInfo.id'));
       this.set('selectedGender', this.get('currentStudent.gender.id'));
-<<<<<<< HEAD
-=======
-
+      
       var self = this;
       //loads student scholarships
       var scholarshipStudent = this.get('currentStudent.id');
@@ -131,8 +114,6 @@ export default Ember.Component.extend({
       this.get('store').query('advancedStanding', {student : scholarshipStudent}).then(function(advancedStandings){
         self.set('studentAdvancedStandings', advancedStandings);
       });
-
->>>>>>> master
     }
     else
     {
