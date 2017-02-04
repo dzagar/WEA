@@ -1,9 +1,10 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  store: Ember.inject.service(),
+  
 	residency: null,
 	showWindow: null,
+	store: Ember.inject.service(),
 
 	actions: {
 		deleteResidency: function(){

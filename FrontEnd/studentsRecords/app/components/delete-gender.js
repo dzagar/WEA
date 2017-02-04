@@ -1,9 +1,10 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-    store: Ember.inject.service(),
+  
 	gender: null,
 	showWindow: null,
+	store: Ember.inject.service(),
 
 	actions: {
 		deleteGender: function(){

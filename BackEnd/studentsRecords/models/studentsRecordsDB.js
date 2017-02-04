@@ -2,11 +2,11 @@ var mongoose = require('mongoose');
 var mongoosePaginate = require('mongoose-paginate');
 var studentsSchema = mongoose.Schema(
     {
-        number: String,
-        firstName: String,
-        lastName: String,
-        gender: {type: mongoose.Schema.ObjectId, ref: 'Genders'},
         DOB: String,
+        firstName: String,
+        gender: {type: mongoose.Schema.ObjectId, ref: 'Genders'},
+        lastName: String,
+        number: String,
         photo: String,
         resInfo: {type: mongoose.Schema.ObjectId, ref: 'Residencies'}
     },
@@ -36,9 +36,11 @@ var genderSchema = mongoose.Schema(
     }
 )
 
-var Students = mongoose.model('student', studentsSchema);
-var Residencies = mongoose.model('residency', residencySchema);
+
+
 var Genders = mongoose.model('gender',genderSchema);
+var Residencies = mongoose.model('residency', residencySchema);
+var Students = mongoose.model('student', studentsSchema);
 
 
 mongoose.connect('mongodb://localhost/studentsRecords');

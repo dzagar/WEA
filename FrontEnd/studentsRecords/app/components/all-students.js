@@ -1,15 +1,14 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-
-  store: Ember.inject.service(),
+  
+  INDEX: null,
   limit: 10,
+  notDONE: null,
   offset: 0,
   pageSize: 10,
-
+  store: Ember.inject.service(),
   studentsModel: null,
-  INDEX: null,
-  notDONE: null,
 
   actions: {
     loadNext: function () {

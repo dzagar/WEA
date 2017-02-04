@@ -1,19 +1,19 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-	store: Ember.inject.service(),
-	newStudent: null,
-	INDEX: null,
-	residencyModel: null,
-	genderModel: null,
-	number: null,
-	firstName: null,
-	lastName: null,
-	gender: null,
 	DOB: null,
-	photo: null,
-	resInfo: null,
+	firstName: null,
+	gender: null,
+	genderModel: null,
+	INDEX: null,
+	lastName: null,
+	newStudent: null,
 	notDONE: null,
+	number: null,
+	photo: null,
+	residencyModel: null,
+	resInfo: null,
+	store: Ember.inject.service(),
 
 	init() {
 		this._super(...arguments);

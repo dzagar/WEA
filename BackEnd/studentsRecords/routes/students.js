@@ -14,14 +14,15 @@ router.route('/')
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
-        var l = parseInt(request.query.limit);
-        var o = parseInt(request.query.offset);
-        var number = request.query.number;
-        var firstName = request.query.firstName;
-        var lastName = request.query.lastName;
-        var gender = request.query.gender;
+        
         var dobFrom = request.query.DOBFrom;
         var dobTo = request.query.DOBTo;
+        var firstName = request.query.firstName;
+        var gender = request.query.gender;
+        var l = parseInt(request.query.limit);
+        var lastName = request.query.lastName;
+        var number = request.query.number;
+        var o = parseInt(request.query.offset);
         var residency = request.query.resInfo;
         var Student = request.query.student;
         if (!Student) {
