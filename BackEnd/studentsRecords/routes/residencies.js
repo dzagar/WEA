@@ -56,13 +56,18 @@ router.route('/:residency_id')
         })
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
-        models.Residencies.findByIdAndRemove(request.params.residency_id,
-            function (error, deleted) {
-                if (!error) {
+        models.Students.update({"resInfo": request.params.residency_id}, {"$set": {"resInfo": null}}, false, 
+        function(error, success){
+            if (error){
+                response.send(error);
+            } else {
+                models.Residencies.findByIdAndRemove(request.params.residency_id, function(error, deleted) {
+                    if (error)
+                        response.send(error);
                     response.json({residency: deleted});
-                }
+                });
             }
-        );
+        });
     });
 
 module.exports = router;
