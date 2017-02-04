@@ -88,16 +88,16 @@ export default Ember.Component.extend({
       var datestring = date.substring(0, 10);
       this.set('selectedDate', datestring);
       //this.set('selectedGender', this.get('currentStudent').get('gender'));
-      if (this.get('currentStudent.resInfo.id') == null)
+      if (this.get('currentStudent.resInfo') == null || this.get('currentStudent.resInfo.id') == null)
       {
         this.get('currentStudent').set('resInfo', this.get('store').peekRecord('residency', Ember.$("#ddlResidency").val()));
         this.get('currentStudent').save(); 
       }
-      if(this.get('currentStudent.gender.id') == null || this.get('currentStudent.gender.id') == 1 || this.get('currentStudent.gender.id') == 2)
+      if(this.get('currentStudent.gender') == null || this.get('currentStudent.gender.id') == null || this.get('currentStudent.gender.id') == 1 || this.get('currentStudent.gender.id') == 2)
       {
         console.log(Ember.$("#ddlGender").val());
         console.log(this.get('store').peekRecord('gender', Ember.$("#ddlGender").val()));
-        this.get('currentStudent').set('gender',this.get('store').peekRecord('gender'), Ember.$("#ddlGender").val());
+        this.get('currentStudent').set('gender',this.get('store').peekRecord('gender', Ember.$("#ddlGender").val()));
         this.get('currentStudent').save();
       }
       this.set('selectedResidency', this.get('currentStudent.resInfo.id'));
