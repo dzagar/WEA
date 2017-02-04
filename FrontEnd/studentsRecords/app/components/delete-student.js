@@ -1,10 +1,11 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-	store: Ember.inject.service(),
-	student: null,
+	
 	INDEX: null,
 	showWindow: null,
+	store: Ember.inject.service(),
+	student: null,
 
 	actions: {
 		deleteStudent: function(student){

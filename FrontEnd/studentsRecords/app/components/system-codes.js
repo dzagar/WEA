@@ -1,17 +1,18 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-    store: Ember.inject.service(),
-    residencyModel: null,
-    genderModel: null,
-    showDeleteGenderConfirmation: false,
-    showDeleteResidencyConfirmation: false,
+    
     currentGender: null,
     currentResidency: null,
+    genderModel: null,
     newGenderName: "",
     newGenderObj: null,
     newResidencyName: "",
     newResidencyObj: null,
+    residencyModel: null,
+    showDeleteGenderConfirmation: false,
+    showDeleteResidencyConfirmation: false,
+    store: Ember.inject.service(),
 
     init() {
         this._super(...arguments);

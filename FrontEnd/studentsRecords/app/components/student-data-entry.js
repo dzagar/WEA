@@ -1,27 +1,29 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  store: Ember.inject.service(),
-  showAllStudents: false,
-  showFindStudent: false,
-  showDeleteConfirmation: false,
-  showAddStudent: false,
-  showHelp: false,
-  residencyModel: null,
-  genderModel: null,
-  selectedResidency: null,
-  selectedGender: null,
-  selectedDate: null,
-  studentsRecords: null,
+  
   currentStudent: null,
   currentIndex: null,
   firstIndex: 0,
+  genderModel: null,
   lastIndex: 0,
-  studentPhoto: null,
   limit: null,
+  movingBackword: false,
   offset: null,
   pageSize: null,
-  movingBackword: false,
+  residencyModel: null,
+  selectedDate: null,
+  selectedGender: null,
+  selectedResidency: null,
+  showAddStudent: false,
+  showAllStudents: false,
+  showDeleteConfirmation: false,
+  showFindStudent: false,
+  showHelp: false,
+  store: Ember.inject.service(),
+  studentPhoto: null,
+  studentsRecords: null,
+  
 
   studentModel: Ember.observer('offset', function () {
     var self = this;
