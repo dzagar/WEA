@@ -127,7 +127,11 @@
     </div>
     <h3 style="cursor: pointer;" {{action "toggleAdvancedInfo"}}>Advanced Standings</h3>
     <div id="advancedInfoTab" style="display: none;">
-      <label>Advanced Standings Info</label>
+      {{#each studentAdvancedStandings as |oneAdvancedStandings|}}
+        <label>{{oneAdvancedStandings.course}}</label>
+        <br>
+        <label>{{oneAdvancedStandings.description}}</label>
+      {{/each}}
     </div>
     <h3 style="cursor: pointer;" {{action "toggleHSInfo"}}>Highschool Information</h3>
     <div id="hsInfoTab" style="display: none;">
@@ -136,6 +140,9 @@
   </div>
   <div class="ui tab" data-tab="awards">
     <h2>Scholarship and Awards</h2>
+    {{#each studentScholarhips as |oneScholarship|}}
+      <label>{{oneScholarship.name}}</label>
+    {{/each}}
   </div>
 
 
