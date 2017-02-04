@@ -2,20 +2,22 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
 
-  	store: Ember.inject.service(),
-  	notDONE: null,
-  	residency: null,
-    gender: null,
-    studentsRecords: null,
     currentStudent: null,
     currentIndex: null,
+    findResults: null,
     firstIndex: 0,
+    gender: null,
     lastIndex: 0,
-    studentPhoto: null,
     limit: null,
+    notDONE: null,
     offset: null,
     pageSize: null,
-    findResults: null,
+    residency: null,
+    store: Ember.inject.service(),
+    studentPhoto: null,
+    studentsRecords: null,
+    
+    
     
 	actions: {
 

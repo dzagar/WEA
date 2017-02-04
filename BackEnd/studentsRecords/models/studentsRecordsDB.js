@@ -2,11 +2,11 @@ var mongoose = require('mongoose');
 var mongoosePaginate = require('mongoose-paginate');
 var studentsSchema = mongoose.Schema(
     {
-        number: String,
-        firstName: String,
-        lastName: String,
-        gender: {type: mongoose.Schema.ObjectId, ref: 'Genders'},
         DOB: String,
+        firstName: String,
+        gender: {type: mongoose.Schema.ObjectId, ref: 'Genders'},
+        lastName: String,
+        number: String,
         photo: String,
         resInfo: {type: mongoose.Schema.ObjectId, ref: 'Residencies'},
         scholarships: [{type: mongoose.Schema.ObjectId, ref: 'Scholarships'}]
@@ -66,7 +66,6 @@ var Residencies = mongoose.model('residency', residencySchema);
 var Genders = mongoose.model('gender',genderSchema);
 var Scholarships = mongoose.model('scholarship',scholarshipSchema);
 var AdvancedStandings = mongoose.model('advancedStandings', advancedStandingsSchema);
-
 
 mongoose.connect('mongodb://localhost/studentsRecords');
 var db = mongoose.connection;

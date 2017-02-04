@@ -103,9 +103,9 @@
             </select>
           </div>
           <div class = "inline field">
-            <a class = "item" style="cursor: pointer;" {{action 'deleteCurrentStudent'}}>
-              Delete
-            </a>
+            <button class="ui inverted red icon button" {{action 'deleteCurrentStudent'}}>
+              Delete <i class="trash icon"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -116,7 +116,7 @@
     </div>
 
   </div>
-  <div class="ui tab" data-tab="program">
+  <div class="ui bottom attached tab segment" data-tab="program">
     <br>
       <h3> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.number}}</h3>
     <br>
@@ -138,14 +138,12 @@
       <label>Highschool Info</label>
     </div>
   </div>
-  <div class="ui tab" data-tab="awards">
+  <div class="ui bottom attached tab segment" data-tab="awards">
     <h2>Scholarship and Awards</h2>
     {{#each studentScholarhips as |oneScholarship|}}
       <label>{{oneScholarship.name}}</label>
     {{/each}}
   </div>
-
-
 
 
 

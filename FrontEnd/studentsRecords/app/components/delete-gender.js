@@ -1,16 +1,14 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-	
-	INDEX: null,
+  
+	gender: null,
 	showWindow: null,
 	store: Ember.inject.service(),
-	student: null,
 
 	actions: {
-		deleteStudent: function(student){
-			this.get('student').destroyRecord();
-			this.set('INDEX', this.get('INDEX')+1);
+		deleteGender: function(){
+			this.get('gender').destroyRecord();
 			this.set('showWindow', false);
 			Ember.$('.ui.modal').modal('hide');
       		Ember.$('.ui.modal').remove();
@@ -23,12 +21,11 @@ export default Ember.Component.extend({
 		}
 	},
 
-	didRender() {
+    didRender() {
     Ember.$('.ui.modal')
       .modal({
         closable: false,
       })
       .modal('show');
   }
-
 });
