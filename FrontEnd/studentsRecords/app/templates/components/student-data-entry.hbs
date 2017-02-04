@@ -44,12 +44,12 @@
   </a>
 </div> 
 
-
+{{#if showDeleteConfirmation}}
+  {{delete-student INDEX = currentIndex student = currentStudent showWindow = showDeleteConfirmation}}
+{{/if}}
 {{#if showAllStudents}}
   <!-- Note that offset is an "in" and "out" parameter !-->
- {{all-students INDEX = currentIndex notDONE = showAllStudents offset = offset studentsModel = studentsRecords}}
-{{else if showDeleteConfirmation}}
-  {{delete-student INDEX = currentIndex student = currentStudent showWindow = showDeleteConfirmation}} 
+ {{all-students INDEX = currentIndex notDONE = showAllStudents offset = offset studentsModel = studentsRecords}} 
 {{else if showAddStudent}}
   {{add-student INDEX = currentIndex student = currentStudent notDONE = showAddStudent}} 
 {{else if showFindStudent}}
