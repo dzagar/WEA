@@ -11,13 +11,9 @@ export default Ember.Component.extend({
     });
   },
 
-
-
-
-
+  isAboutShowing: false,
   isHomeShowing: true,
   isStudentsRecordsDataEntry: false,
-  isAboutShowing: false,
   isSystemCodesShowing: false,
 
   actions: {
