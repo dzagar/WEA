@@ -47,11 +47,25 @@ var scholarshipSchema = mongoose.Schema(
         versionKey: false
     }
 );
+var advancedStandingsSchema = mongoose.Schema(
+    {
+        student: {type: mongoose.Schema.ObjectId, ref: 'Students'},
+        course: String,
+        description: String,
+        units: String,
+        grade: Number,
+        from: String
+    },
+    {
+        versionKey: false
+    }
+);
 
 var Students = mongoose.model('student', studentsSchema);
 var Residencies = mongoose.model('residency', residencySchema);
 var Genders = mongoose.model('gender',genderSchema);
 var Scholarships = mongoose.model('scholarship',scholarshipSchema);
+var AdvancedStandings = mongoose.model('advancedStandings', advancedStandingsSchema);
 
 
 mongoose.connect('mongodb://localhost/studentsRecords');
@@ -63,6 +77,7 @@ db.once('open', function() {
     exports.Residencies = Residencies;
     exports.Genders = Genders;
     exports.Scholarships = Scholarships;
+    exports.AdvancedStandings = AdvancedStandings;
 
 });
 
