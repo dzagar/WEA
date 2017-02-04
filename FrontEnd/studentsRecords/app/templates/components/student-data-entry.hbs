@@ -71,20 +71,20 @@
 
     <div class="ui grid">
       <div class="ui right aligned  seven wide column">
-        <div class="ui form">
-          <div class="inline field">
+        <div class="ui relaxed items form">
+          <div class=" item inline field">
             <label>Student Number</label>
             {{input size="10" type="number"  value = currentStudent.number}}
           </div>
-          <div class="inline field">
+          <div class="item inline field">
             <label>First Name</label>
             {{input type="text"  value = currentStudent.firstName}}
           </div>
-          <div class="inline field">
+          <div class="item inline field">
             <label>Last Name</label>
             {{input type="text" value = currentStudent.lastName }}
           </div>
-          <div class="inline field">
+          <div class="item inline field">
             <label>Gender</label>
             <select id="ddlGender" onchange={{action 'selectGender' value="target.value"}}>
               {{#each genderModel as |genderChoice|}}
@@ -92,11 +92,11 @@
               {{/each}}
             </select>
           </div>
-          <div class="inline field">
+          <div class="item inline field">
             <label>Date of Birth</label>
             <input value={{selectedDate}} type="date" onchange={{action 'assignDate' value="target.value"}}>
           </div>
-          <div class="inline field">
+          <div class="item inline field">
             <label>Residency</label>
             <select id="ddlResidency" onchange={{action 'selectResidency' value="target.value"}}>
               {{#each residencyModel as |residencyChoice|}}
@@ -104,7 +104,7 @@
               {{/each}}
             </select>
           </div>
-          <div class = "inline field">
+          <div class = "item inline field">
             <button class="ui inverted red icon button" {{action 'deleteCurrentStudent'}}>
               Delete <i class="trash icon"></i>
             </button>
@@ -112,8 +112,8 @@
         </div>
       </div>
       <!-- Show student photo -->
-      <div class="ui center aligned  seven wide column segment">
-        <img src={{studentPhoto}}>
+      <div class=" ui relaxed items center aligned  seven wide column ">
+        <img src={{studentPhoto}} class="item">
       </div>
     </div>
 
