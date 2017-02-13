@@ -74,7 +74,7 @@
         <div class="ui relaxed items form">
           <div class=" item inline field">
             <label>Student Number</label>
-            {{input size="10" type="number"  value = currentStudent.number}}
+            {{input size="10" type="number"  value = currentStudent.studentNumber}}
           </div>
           <div class="item inline field">
             <label>First Name</label>
@@ -120,7 +120,7 @@
   </div>
   <div class="ui bottom attached tab segment" data-tab="program">
     <br>
-      <h3> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.number}}</h3>
+      <h3> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h3>
     <br>
 
     <h3 style="cursor: pointer;" {{action "toggleProgramInfo"}}>Program Information</h3>

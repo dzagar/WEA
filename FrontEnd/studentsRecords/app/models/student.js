@@ -6,7 +6,7 @@ export default DS.Model.extend({
   firstName: DS.attr(),
   gender: DS.belongsTo('gender'),
   lastName: DS.attr(),
-  number: DS.attr(),
+  studentNumber: DS.attr('number'),
   photo: DS.attr(),
   resInfo: DS.belongsTo('residency'),
   scholarships: DS.hasMany('scholarship')

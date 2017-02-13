@@ -25,6 +25,7 @@ router.route('/')
         var o = parseInt(request.query.offset);
         var residency = request.query.resInfo;
         var student = request.query.student;
+        //var studentNumLen = number.toString().length;
         if (!student) {
             if (firstName != null)
             {
@@ -32,21 +33,19 @@ router.route('/')
                     "firstName": 
                         {"$regex": firstName, "$options": "imx" },
                     "lastName": 
-                        {"$regex": lastName, "$options": "imx" },
-                    "DOB": {"$gte": new Date(dobFrom), "$lt": new Date(dobTo)}
+                        {"$regex": lastName, "$options": "imx" }
                 };
-                if (number != ""){
-                    conditions["number"] = {"$regex": number, "$options": "imx" };
-                    //conditions.push({"number": number});
-                }
-                if (residency != -1){
-                    conditions["resInfo"] = residency;
-                    //conditions.push({"resInfo": residency});
-                }
-                if (gender != 0){
-                    conditions["gender"] = gender;
-                    //conditions.push({"gender": gender});
-                }
+
+                //conditions["studentNumber"] = "ggg";
+                //conditions["studentNumber"] = {"$regex": number, "$options": "imx" };
+                // if (residency != -1){
+                //     conditions["resInfo"] = residency;
+                //     //conditions.push({"resInfo": residency});
+                // }
+                // if (gender != 0){
+                //     conditions["gender"] = gender;
+                //     //conditions.push({"gender": gender});
+                // }
                 Student.find(conditions, function(error, students){
                     if (error) response.send(error);
                     else response.json({student: students});
@@ -104,6 +103,7 @@ router.route('/')
                 Student.paginate({}, { offset: o, limit: l },
                     function (error, students) {
                         if (error) response.send(error);
+                        console.log(students.docs);
                         response.json({student: students.docs});
                     });
 

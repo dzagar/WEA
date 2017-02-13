@@ -13,29 +13,6 @@
   		<label>Last Name</label>
   		<input id="lastName" class="text"/>
   	</div>
-  	<div>
-		<label>Gender</label>
-		<select id="gender">
-        <option value=0>Any</option>
-        {{#each gender as |genderChoice|}}
-          <option value = {{genderChoice.id}}>{{genderChoice.name}}</option>
-        {{/each}}
-   		</select>
-  	</div>
-  	<div>
-        <label>Date of Birth</label><br>
-        <label>From</label><input id="dobFrom" type="date"><br>
-        <label>To</label><input id="dobTo" type="date">
-  	</div>
-  	<div>
-  	    <label>Residency</label>
-  		<select id="residency">
-        <option value=-1>Any</option>
-  			{{#each residency as |residencyChoice|}}
-                <option value={{residencyChoice.id}}>{{residencyChoice.name}} </option>
-            {{/each}}
-        </select>
-    </div>
     <div class="actions">
           <div class="ui button" {{action "search"}}>Search</div>
           <div class="ui button" {{action "exit"}}>Cancel</div>

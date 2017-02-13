@@ -4,12 +4,12 @@ var studentsSchema = mongoose.Schema(
     {
         DOB: String,
         firstName: String,
-        gender: {type: mongoose.Schema.ObjectId, ref: 'Genders'},
+        gender: {type: mongoose.Schema.ObjectId, ref: 'Gender'},
         lastName: String,
-        number: Number,
+        number: String,
         photo: String,
-        resInfo: {type: mongoose.Schema.ObjectId, ref: 'Residencies'},
-        scholarships: [{type: mongoose.Schema.ObjectId, ref: 'Scholarships'}]
+        resInfo: {type: mongoose.Schema.ObjectId, ref: 'Residency'},
+        scholarships: [{type: mongoose.Schema.ObjectId, ref: 'Scholarship'}]
     },
     {
         versionKey: false
@@ -18,12 +18,3 @@ var studentsSchema = mongoose.Schema(
 studentsSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('student', studentsSchema);
-
-// var Students = mongoose.model('student', studentsSchema);
-
-// mongoose.connect('mongodb://localhost/studentsRecords');
-// var db = mongoose.connection;
-// db.on('error', console.error.bind(console, 'connection error:'));
-// db.once('open', function() {
-//     exports.Students = Students;
-// });
