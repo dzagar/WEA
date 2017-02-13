@@ -2,6 +2,8 @@
 var express = require('express');
 var logger = require('./logger');
 var app = express();
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/studentsRecords');
 
 var students = require('./routes/students');
 var residencies = require('./routes/residencies');

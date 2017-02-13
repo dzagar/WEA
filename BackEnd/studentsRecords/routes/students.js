@@ -1,13 +1,13 @@
 var express = require('express');
 var router = express.Router();
-var models = require('../models/studentsRecordsDB');
+var Student = require('../models/student');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
 var parseJSON = bodyParser.json();
 
 router.route('/')
     .post(parseUrlencoded, parseJSON, function (request, response) {
-        var student = new models.Students(request.body.student);
+        var student = new Student(request.body.student);
         student.save(function (error) {
             if (error) response.send(error);
             response.json({student: student});
@@ -24,8 +24,8 @@ router.route('/')
         var number = request.query.number;
         var o = parseInt(request.query.offset);
         var residency = request.query.resInfo;
-        var Student = request.query.student;
-        if (!Student) {
+        var student = request.query.student;
+        if (!student) {
             if (firstName != null)
             {
                 var conditions = {
@@ -47,7 +47,7 @@ router.route('/')
                     conditions["gender"] = gender;
                     //conditions.push({"gender": gender});
                 }
-                models.Students.find(conditions, function(error, students){
+                Student.find(conditions, function(error, students){
                     if (error) response.send(error);
                     else response.json({student: students});
                 });
@@ -101,7 +101,7 @@ router.route('/')
             }
             else
             { 
-                models.Students.paginate({}, { offset: o, limit: l },
+                Student.paginate({}, { offset: o, limit: l },
                     function (error, students) {
                         if (error) response.send(error);
                         response.json({student: students.docs});
@@ -114,7 +114,7 @@ router.route('/')
             //});
         } else {
             //        if (Student == "residency")
-            models.Students.find({"residency": request.query.residency}, function (error, students) {
+            Student.find({"residency": request.query.residency}, function (error, students) {
                 if (error) response.send(error);
                 response.json({student: students});
             });
@@ -123,7 +123,7 @@ router.route('/')
 
 router.route('/:student_id')
     .get(parseUrlencoded, parseJSON, function (request, response) {
-        models.Students.findById(request.params.student_id, function (error, student) {
+        Student.findById(request.params.student_id, function (error, student) {
             if (error) {
                 response.send({error: error});
             }
@@ -133,7 +133,7 @@ router.route('/:student_id')
         });
     })
     .put(parseUrlencoded, parseJSON, function (request, response) {
-        models.Students.findById(request.params.student_id, function (error, student) {
+        Student.findById(request.params.student_id, function (error, student) {
             if (error) {
                 response.send({error: error});
             }
@@ -158,7 +158,7 @@ router.route('/:student_id')
         });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
-        models.Students.findByIdAndRemove(request.params.student_id,
+        Student.findByIdAndRemove(request.params.student_id,
             function (error, deleted) {
                 if (!error) {
                     response.json({student: deleted});

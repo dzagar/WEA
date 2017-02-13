@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var models = require('../models/studentsRecordsDB');
+var Scholarship = require('../models/scholarship');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
 var parseJSON = bodyParser.json();
@@ -8,7 +8,7 @@ var parseJSON = bodyParser.json();
 router.route('/')
     //posting new scholarship
     .post(parseUrlencoded, parseJSON, function (request, response) {
-        var scholarship = new models.Scholarships(request.body.scholarship);
+        var scholarship = new Scholarship(request.body.scholarship);
         scholarship.save(function(error) {
             if (error)
             {
@@ -32,7 +32,7 @@ router.route('/')
         }
         else
         {
-            models.Scholarships.find({"student" : Student}, function(error, scholarships){
+            Scholarship.find({"student" : Student}, function(error, scholarships){
                 if (error) response.send(error);
                     else response.json({scholarship: scholarships});
             });
