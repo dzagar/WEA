@@ -22,6 +22,7 @@
         <tr>
             <th>Gender</th>
             <th><!--spacer--></th>
+            <th><!--spacer--></th>
         </tr>
         </thead>
         {{#each genderModel as |gender|}}
@@ -32,9 +33,9 @@
                 </div>
             </td>
             <td>
-                <div class="ui two buttons">
-                    <button class="ui button" {{action "saveGender" gender}}>Save</button>
-                    <button class="ui button" {{action "deleteGender" gender}}>Delete</button>
+                <div class="ui inverted buttons">
+                    <button class="ui blue inverted button" {{action "saveGender" gender}}>Save</button>
+                    <button class="ui red inverted button" {{action "deleteGender" gender}}>Delete</button>
                 </div>
             </td>
         </tr>
@@ -47,7 +48,9 @@
                 </div>
             </td>
             <td>
-                <button class="ui button" {{action "addGender"}}>Add</button>
+                <button class="ui inverted green button" {{action "addGender"}}> 
+                Add &nbsp; <i class="add square icon"></i>
+                </button>
             </td>
         </tr>
     </table>
@@ -58,6 +61,7 @@
         <thead>
             <tr>
             <th>Residency</th>
+            <th><!--spacer--></th>
             <th><!--spacer--></th>
             </tr>
         </thead>
@@ -70,9 +74,9 @@
                 </div>
             </td>
             <td>
-                <div class="ui two buttons">
-                    <button class="ui button" {{action "saveResidency" residency}}>Save</button>
-                    <button class="ui button" {{action "deleteResidency" residency}}>Delete</button>
+                <div class="ui inverted buttons">
+                    <button class="ui blue inverted button" {{action "saveGender" gender}}>Save</button>
+                    <button class="ui red inverted button" {{action "deleteGender" gender}}>Delete</button>
                 </div>
             </td>
         </tr>
@@ -85,7 +89,9 @@
                 </div>
             </td>
             <td>
-                <button class="ui button" {{action "addResidency"}}>Add</button>
+                <button class="ui inverted green button" {{action "addResidency"}}> 
+                Add &nbsp; <i class="add square icon"></i>
+                </button>
             </td>
         </tr>
         </table>

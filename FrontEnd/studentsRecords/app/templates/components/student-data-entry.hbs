@@ -65,6 +65,9 @@
     <div style="cursor: pointer;" class="active item" data-tab="basics">Basic Info</div>
     <div style="cursor: pointer;" class="item" data-tab="program">Program Record</div>
     <div style="cursor: pointer;" class="item" data-tab="awards">Scholarships and Awards</div>
+    <div style="cursor: pointer;" class="item" data-tab="advanced">Advanced Standings</div>
+    <div style="cursor: pointer;" class="item" data-tab="hsinfo">HighSchool Info</div>
+
   </div>
   <div class="ui bottom attached active tab segment"data-tab="basics">
     <!-- student basic information !-->
@@ -117,35 +120,72 @@
         <img src={{studentPhoto}} class="item">
       </div>
     </div>
-
-  </div>
+</div>
   <div class="ui bottom attached tab segment" data-tab="program">
+    <h2>Program Info</h2>
     <br>
       <h3> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h3>
     <br>
+    
+</div>
 
-    <h3 style="cursor: pointer;" {{action "toggleProgramInfo"}}>Program Information</h3>
-    <div id="programInfoTab" >
-      <label>Program Info</label>
-    </div>
-    <h3 style="cursor: pointer;" {{action "toggleAdvancedInfo"}}>Advanced Standings</h3>
-    <div id="advancedInfoTab" style="display: none;">
+    <div class="ui bottom attached tab segment" data-tab="advanced">
+      <h2>Advanced Standings</h2>
       {{#each studentAdvancedStandings as |oneAdvancedStandings|}}
         <label>{{oneAdvancedStandings.course}}</label>
         <br>
         <label>{{oneAdvancedStandings.description}}</label>
       {{/each}}
     </div>
-    <h3 style="cursor: pointer;" {{action "toggleHSInfo"}}>Highschool Information</h3>
-    <div id="hsInfoTab" style="display: none;">
-      <label>Highschool Info</label>
+
+
+   
+    <div class="ui bottom attached tab segment" data-tab="hsinfo">
+      <h2>Highschool Info</h2>
     </div>
-  </div>
+
+
   <div class="ui bottom attached tab segment" data-tab="awards">
     <h2>Scholarship and Awards</h2>
-    {{#each studentScholarhips as |oneScholarship|}}
-      <label>{{oneScholarship.name}}</label>
+    
+    <table class="ui fixed table">
+        <thead>
+        <tr>
+            <th>Scholarships</th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>  
+        </tr>
+        </thead>
+        {{#each scholarshipModel  as |oneScholarship|}}
+        <tr>
+            <td>
+                <div class="ui fluid input">
+                    {{input type="text" value = oneScholarship.name}}
+                </div>
+            </td>
+            <td>
+                <div class="ui inverted buttons">
+                    <button class="ui blue inverted button" {{action "saveGender" gender}}>Save</button>
+                    <button class="ui red inverted button" {{action "deleteGender" gender}}>Delete</button>
+                </div> 
+            </td>
+            <td><!--spacer--></td>
+        </tr>
     {{/each}}
+    <tr>
+            <td><!--spacer--></td>
+            <td>
+                <div class="ui fluid input">
+                    {{input type="text" value = newScholarshipName}}
+                </div>
+            </td>
+            <td>
+                <button class="ui inverted green button" {{action "add"}}> 
+                Add &nbsp; <i class="add square icon"></i>
+                </button>
+            </td>
+        </tr>
+    </table>
   </div>
 
 
