@@ -1,13 +1,12 @@
-
-	{{#if showInitialDataImportBtn}}
-		<a item = "item" {{action 'showEraseDataModal'}}>
-			Import Student Data...
-		</a>
-	{{else if showDeleteConfirmation}}
+	{{#if showDeleteConfirmation}}
 		{{delete-data-confirmation notDONE = showDeleteConfirmation isImporting = importData}}
 	{{else if importData}}
 		<a item = "item" {{action 'importGender'}}>
 			Import all the things
+		</a>
+	{{else}}
+		<a item = "item" {{action 'showEraseDataModal'}}>
+			Import Student Data...
 		</a>
 	{{/if}}
 
