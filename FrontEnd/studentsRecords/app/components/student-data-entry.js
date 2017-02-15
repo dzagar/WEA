@@ -33,6 +33,7 @@ export default Ember.Component.extend({
       limit: self.get('limit'),
       offset: self.get('offset')
     }).then(function (records) {
+      console.log(records);
       self.set('studentsRecords', records);
       self.set('firstIndex', records.indexOf(records.get("firstObject")));
       self.set('lastIndex', records.indexOf(records.get("lastObject")));
