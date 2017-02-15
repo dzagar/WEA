@@ -9,6 +9,10 @@
         <i class="large leanpub icon"></i>
         Students Records
       </a>
+      <a class="item" {{action "studentsRecords"}}>
+        <i class="large leanpub icon"></i>
+        Students Records v2
+      </a>
       <a class="item" {{action "SystemCodes"}}>
         <i class="large settings icon"></i>
         System Codes        
@@ -32,6 +36,9 @@
       {{/if}}
       {{#if isSystemCodesShowing}}
         {{system-codes}}
+      {{/if}}
+      {{#if isStudentsRecordsShowing}}
+        {{student-records}}
       {{/if}}
     </div>
   </div>

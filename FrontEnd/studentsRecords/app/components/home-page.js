@@ -15,6 +15,7 @@ export default Ember.Component.extend({
   isHomeShowing: true,
   isStudentsRecordsDataEntry: false,
   isSystemCodesShowing: false,
+  isStudentsRecordsShowing: false,
 
   actions: {
     home () {
@@ -22,6 +23,7 @@ export default Ember.Component.extend({
       this.set('isStudentsRecordsDataEntry', false);
       this.set('isAboutShowing', false);
       this.set('isSystemCodesShowing', false);
+      this.set('isStudentsRecordsShowing', false);
     },
 
     studentsDataEntry (){
@@ -29,6 +31,7 @@ export default Ember.Component.extend({
       this.set('isStudentsRecordsDataEntry', true);
       this.set('isAboutShowing', false);
       this.set('isSystemCodesShowing', false);
+      this.set('isStudentsRecordsShowing', false);
     },
 
     about (){
@@ -36,12 +39,21 @@ export default Ember.Component.extend({
       this.set('isStudentsRecordsDataEntry', false);
       this.set('isAboutShowing', true);
       this.set('isSystemCodesShowing', false);
+      this.set('isStudentsRecordsShowing', false);
     },
     SystemCodes (){
       this.set('isHomeShowing', false);
       this.set('isStudentsRecordsDataEntry', false);
       this.set('isAboutShowing', false);
       this.set('isSystemCodesShowing', true);
+      this.set('isStudentsRecordsShowing', false);
+    },
+    studentsRecords () {
+      this.set('isHomeShowing', false);
+      this.set('isStudentsRecordsDataEntry', false);
+      this.set('isAboutShowing', false);
+      this.set('isSystemCodesShowing', false);
+      this.set('isStudentsRecordsShowing', true);
     }
   }
 });
