@@ -13,6 +13,10 @@
         <i class="large settings icon"></i>
         System Codes        
       </a>
+      <a class="item" {{action "import"}}>
+        <i class="large settings icon"></i>
+        Import New Records        
+      </a>
       <a class="item " {{action "about"}}>
         <i class="large user icon"></i>
         About
@@ -23,15 +27,14 @@
     <div class="ui segment container">
       {{#if isHomeShowing}}
         {{welcome-page}}
-      {{/if}}
-      {{#if isStudentsRecordsDataEntry}}
+      {{else if isStudentsRecordsDataEntry}}
         {{student-data-entry}}
-      {{/if}}
-      {{#if isAboutShowing}}
+      {{else if isAboutShowing}}
         {{about-us}}
-      {{/if}}
-      {{#if isSystemCodesShowing}}
+      {{else if isSystemCodesShowing}}
         {{system-codes}}
+      {{else if isImportShowing}}
+        {{initial-import}}
       {{/if}}
     </div>
   </div>
