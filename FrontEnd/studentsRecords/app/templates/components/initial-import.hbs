@@ -4,8 +4,10 @@
 			Import Student Data...
 		</a>
 	{{else if showDeleteConfirmation}}
-		{{delete-data-confirmation notDONE = showDeleteConfirmation}}
-	{{else}}
-		blah
+		{{delete-data-confirmation notDONE = showDeleteConfirmation isImporting = importData}}
+	{{else if importData}}
+		<a item = "item" {{action 'importGender'}}>
+			Import all the things
+		</a>
 	{{/if}}
 

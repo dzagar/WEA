@@ -3,10 +3,12 @@ import Ember from 'ember';
 export default Ember.Component.extend({
 	store: Ember.inject.service(),
 	notDONE: null,
+	isImporting: null,
 
 	actions: {
 		deleteAllData: function(){
 			console.log('deleted EVERYTHING!!');
+			this.set('isImporting', true);
 			this.set('notDONE', false);
 			Ember.$('.ui.modal').modal('hide');
       		Ember.$('.ui.modal').remove();
@@ -26,5 +28,5 @@ export default Ember.Component.extend({
       })
       .modal('show');
   }
-  
+
 });

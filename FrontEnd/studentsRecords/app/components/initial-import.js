@@ -6,6 +6,7 @@ export default Ember.Component.extend({
 	notDONE: null,
 	showDeleteConfirmation: false,
 	showInitialDataImportBtn: true,
+	importData: false,
 
 	actions: {
 		showEraseDataModal: function(){
