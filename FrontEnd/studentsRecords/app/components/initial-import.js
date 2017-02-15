@@ -4,16 +4,14 @@ import XLSX from 'npm:xlsx-browserify-shim';
 export default Ember.Component.extend({
 
 	store: Ember.inject.service(),
-	notDONE: null,
 	showDeleteConfirmation: false,
 	importData: false,
 
 	actions: {
 		showEraseDataModal: function(){
 			this.set('showDeleteConfirmation', true);
-		}
+		},
 		import() {
-
 			var files = $("#newFile")[0].files;
 			var i,f;
 			for (i = 0; i != files.length; ++i) {
@@ -29,7 +27,7 @@ export default Ember.Component.extend({
 			    	console.log(workbook.SheetNames[0]);
 		    	};
 		    reader.readAsBinaryString(f);
-		  }
+			}
 		}
 		
 	}
