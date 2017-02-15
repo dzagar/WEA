@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
 
-  currentAdvancedStanding: null;
+  currentAdvancedStanding: null,
   currentHighSchool: null,
   currentScholarship: null,
   currentStudent: null,
