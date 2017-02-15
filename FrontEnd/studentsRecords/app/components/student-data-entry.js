@@ -2,6 +2,9 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
 
+  currentAdvancedStanding: null;
+  currentHighSchool: null,
+  currentScholarship: null,
   currentStudent: null,
   currentIndex: null,
   firstIndex: 0,
@@ -23,7 +26,10 @@ export default Ember.Component.extend({
   selectedResidency: null,
   showAddStudent: false,
   showAllStudents: false,
+  showAdvancedStandingDeleteConfirmation: false,
   showDeleteConfirmation: false,
+  showHighSchoolDeleteConfirmation: false,
+  showScholarshipDeleteConfirmation: false,
   showFindStudent: false,
   showHelp: false,
   store: Ember.inject.service(),
@@ -301,7 +307,11 @@ export default Ember.Component.extend({
 
     deleteAS(AdvancedStanding)
     {
-
+      this.set('currentAdvancedStanding',AdvancedStanding);
+      this.set('showAdvancedStandingDeleteConfirmation', false);
+      this.set('showHighSchoolDeleteConfirmation', false); 
+      this.set('showScholarshipDeleteConfirmation',true);
+      this.set('showDeleteConfirmation',false);
     },
 
     saveAS(AdvancedStanding)
@@ -323,7 +333,11 @@ export default Ember.Component.extend({
 
     deleteScholarship(scholarship)
     {
-
+      this.set('currentScholarship',scholarship);
+      this.set('showAdvancedStandingDeleteConfirmation', false);
+      this.set('showHighSchoolDeleteConfirmation', false); 
+      this.set('showScholarshipDeleteConfirmation',true);
+      this.set('showDeleteConfirmation',false);
     },
 
     saveScholarship(scholarship)
@@ -345,16 +359,16 @@ export default Ember.Component.extend({
 
     deleteHighSchool(highSchool)
     {
-
+      this.set('currentHighSchool',highschool);
+      this.set('showAdvancedStandingDeleteConfirmation', false);
+      this.set('showHighSchoolDeleteConfirmation', true); 
+      this.set('showScholarshipDeleteConfirmation',false);
+      this.set('showDeleteConfirmation',false);
     },
 
     saveHighSchool(highSchool)
     {
       highSchool.save();
-    },
-
-
-
-
+    }
   }
 });

@@ -49,11 +49,11 @@
 {{#if showDeleteConfirmation}}
   {{delete-student INDEX = currentIndex student = currentStudent showWindow = showDeleteConfirmation total=totalStudents}}
   {{else if showHighSchoolDeleteConfirmation}}
-  {{}}
+  {{delete-highschool highschool=currentHighSchool showWindow = showHighSchoolDeleteConfirmation}}
   {{else if showAdvancedStandingDeleteConfirmation}}
-  {{}}
+  {{delete-advanced-standing AdvancedStanding=currentAdvancedStanding showWindow=showAdvancedStandingDeleteConfirmation}}
   {{else if showScholarshipDeleteConfirmation}}
-  {{}}
+  {{delete-scholarship Scholarship=currentScholarship showWindow=showScholarshipDeleteConfirmation}}
 {{/if}}
 {{#if showAllStudents}}
   <!-- Note that offset is an "in" and "out" parameter !-->
@@ -169,7 +169,7 @@
             <td><!--spacer--></td>
             <td>
                 <div class="ui fluid input">
-                    {{input type="text" value = newScholarshipName}}
+                    {{input type="text" value = AdvancedStandingsName}}
                 </div>
             </td>
             <td>
@@ -194,18 +194,18 @@
             <th><!--spacer--></th>  
         </tr>
         </thead>
-        {{#each scholarshipModel  as |oneScholarship|}}
+        {{#each highSchoolModel  as |highSchool|}}
         <tr>
             <td>
                 <div class="ui fluid input">
-                    {{input type="text" value = oneScholarship.name}}
+                    {{input type="text" value = highSchool.name}}
                 </div>
             </td>
             <td>
                 <div class="ui inverted buttons">
-                    <button class="ui blue inverted button" {{action "saveHighSchool" gender}}>Save</button>
+                    <button class="ui blue inverted button" {{action "saveHighSchool" highschool}}>Save</button>
                     <div class="divider"/>
-                    <button class="ui red inverted button" {{action "deleteHighSchool" gender}}>Delete</button>
+                    <button class="ui red inverted button" {{action "deleteHighSchool" highschool}}>Delete</button>
                 </div> 
             </td>
             <td><!--spacer--></td>
@@ -215,7 +215,7 @@
             <td><!--spacer--></td>
             <td>
                 <div class="ui fluid input">
-                    {{input type="text" value = newScholarshipName}}
+                    {{input type="text" value = newHighSchool}}
                 </div>
             </td>
             <td>
