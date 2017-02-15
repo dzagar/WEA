@@ -5,7 +5,7 @@ var advancedStandingsSchema = mongoose.Schema(
         student: {type: mongoose.Schema.ObjectId, ref: 'Students'},
         course: String,
         description: String,
-        units: String,
+        units: Number,
         grade: Number,
         from: String
     },
