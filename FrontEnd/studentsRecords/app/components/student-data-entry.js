@@ -25,6 +25,7 @@ export default Ember.Component.extend({
   studentPhoto: null,
   studentsRecords: null,
   studentScholarhips: null,
+  totalStudents: 0,
   
 
   studentModel: Ember.observer('offset', function () {
@@ -33,7 +34,7 @@ export default Ember.Component.extend({
       limit: self.get('limit'),
       offset: self.get('offset')
     }).then(function (records) {
-      console.log(records);
+      self.set('totalStudents', records.get('meta').total);
       self.set('studentsRecords', records);
       self.set('firstIndex', records.indexOf(records.get("firstObject")));
       self.set('lastIndex', records.indexOf(records.get("lastObject")));
@@ -71,6 +72,7 @@ export default Ember.Component.extend({
       limit: self.get('limit'),
       offset: self.get('offset')
     }).then(function (records) {
+      self.set('totalStudents', records.get("meta").total);
       self.set('studentsRecords', records);
       self.set('firstIndex', records.indexOf(records.get("firstObject")));
       self.set('lastIndex', records.indexOf(records.get("lastObject")));

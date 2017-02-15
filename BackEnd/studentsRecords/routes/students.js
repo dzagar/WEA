@@ -103,8 +103,9 @@ router.route('/')
                 Student.paginate({}, { offset: o, limit: l },
                     function (error, students) {
                         if (error) response.send(error);
-                        console.log(students.docs);
-                        response.json({student: students.docs});
+                        Student.count({}, function(err, num) {
+                            response.json({student: students.docs, meta: {total: num}});
+                        });
                     });
 
             }
