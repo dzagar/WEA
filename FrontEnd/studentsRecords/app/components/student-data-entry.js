@@ -9,6 +9,12 @@ export default Ember.Component.extend({
   lastIndex: 0,
   limit: null,
   movingBackword: false,
+  newASName:"",
+  newASObj: null,
+  newHighSchoolName:"",
+  newHighSchoolObj: null,
+  newScholarshipName:"",
+  newScholarshipObj: null,
   offset: null,
   pageSize: null,
   residencyModel: null,
@@ -280,6 +286,75 @@ export default Ember.Component.extend({
         $("#advancedInfoTab").hide(200);
         $("#hsInfoTab").show(200);
       }
-    }
+    },
+    addAS()
+    {
+        if (this.get('newASName').trim() != "")
+        {
+            this.set('newASObj', this.get('store').createRecord('advancedStandings', {
+                name: this.get('newASName').trim()
+            }));
+            this.get('newASObj').save();
+            this.set('newASName', "");
+        }
+    },
+
+    deleteAS(AdvancedStanding)
+    {
+
+    },
+
+    saveAS(AdvancedStanding)
+    {
+      AdvancedStanding.save();
+    },
+
+    addScholarship()
+    {
+      if (this.get('newScholarshipName').trim() != "")
+        {
+            this.set('newScholarshipObj', this.get('store').createRecord('scholarship', {
+                name: this.get('newScholarshipName').trim()
+            }));
+            this.get('newScholarshipObj').save();
+            this.set('newScholarshipName', "");
+        }
+    },
+
+    deleteScholarship(scholarship)
+    {
+
+    },
+
+    saveScholarship(scholarship)
+    {
+      scholarship.save();
+    },
+
+    addHighSchool()
+    {
+      if (this.get('newHighSchoolName').trim() != "")
+        {
+            this.set('newHighSchoolObj', this.get('store').createRecord('highSchool', {
+                name: this.get('newHighSchoolName').trim()
+            }));
+            this.get('newHighSchoolObj').save();
+            this.set('newHighSchoolName', "");
+        }
+    },
+
+    deleteHighSchool(highSchool)
+    {
+
+    },
+
+    saveHighSchool(highSchool)
+    {
+      highSchool.save();
+    },
+
+
+
+
   }
 });

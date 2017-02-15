@@ -48,6 +48,12 @@
 
 {{#if showDeleteConfirmation}}
   {{delete-student INDEX = currentIndex student = currentStudent showWindow = showDeleteConfirmation total=totalStudents}}
+  {{else if showHighSchoolDeleteConfirmation}}
+  {{}}
+  {{else if showAdvancedStandingDeleteConfirmation}}
+  {{}}
+  {{else if showScholarshipDeleteConfirmation}}
+  {{}}
 {{/if}}
 {{#if showAllStudents}}
   <!-- Note that offset is an "in" and "out" parameter !-->
@@ -151,8 +157,9 @@
             </td>
             <td>
                 <div class="ui inverted buttons">
-                    <button class="ui blue inverted button" {{action "saveGender" advancedStandings}}>Save</button>
-                    <button class="ui red inverted button" {{action "deleteGender" advancedStandings}}>Delete</button>
+                    <button class="ui blue inverted button" {{action "saveAS" advancedStandings}}>Save</button>
+                    <div class="divider"/>
+                    <button class="ui red inverted button" {{action "deleteAS" advancedStandings}}>Delete</button>
                 </div> 
             </td>
             <td><!--spacer--></td>
@@ -166,7 +173,7 @@
                 </div>
             </td>
             <td>
-                <button class="ui inverted green button" {{action "add"}}> 
+                <button class="ui inverted green button" {{action "addAS"}}> 
                 Add &nbsp; <i class="add square icon"></i>
                 </button>
             </td>
@@ -196,8 +203,9 @@
             </td>
             <td>
                 <div class="ui inverted buttons">
-                    <button class="ui blue inverted button" {{action "saveGender" gender}}>Save</button>
-                    <button class="ui red inverted button" {{action "deleteGender" gender}}>Delete</button>
+                    <button class="ui blue inverted button" {{action "saveHighSchool" gender}}>Save</button>
+                    <div class="divider"/>
+                    <button class="ui red inverted button" {{action "deleteHighSchool" gender}}>Delete</button>
                 </div> 
             </td>
             <td><!--spacer--></td>
@@ -211,7 +219,7 @@
                 </div>
             </td>
             <td>
-                <button class="ui inverted green button" {{action "add"}}> 
+                <button class="ui inverted green button" {{action "addHighSchool"}}> 
                 Add &nbsp; <i class="add square icon"></i>
                 </button>
             </td>
@@ -240,8 +248,9 @@
             </td>
             <td>
                 <div class="ui inverted buttons">
-                    <button class="ui blue inverted button" {{action "saveGender" gender}}>Save</button>
-                    <button class="ui red inverted button" {{action "deleteGender" gender}}>Delete</button>
+                    <button class="ui blue inverted button" {{action "saveScholarship" scholarship}}>Save</button>
+                    <div class="divider"/>
+                    <button class="ui red inverted button" {{action "deleteScholarship" scholarship}}>Delete</button>
                 </div> 
             </td>
             <td><!--spacer--></td>
@@ -255,7 +264,7 @@
                 </div>
             </td>
             <td>
-                <button class="ui inverted green button" {{action "add"}}> 
+                <button class="ui inverted green button" {{action "addScholarship"}}> 
                 Add &nbsp; <i class="add square icon"></i>
                 </button>
             </td>
