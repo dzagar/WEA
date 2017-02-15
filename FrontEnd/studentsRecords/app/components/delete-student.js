@@ -10,13 +10,14 @@ export default Ember.Component.extend({
 
 	actions: {
 		deleteStudent: function(student){
-			this.get('student').destroyRecord();
-			this.set('INDEX', this.get('INDEX')+1);
-			this.set('total', this.get('total')-1);
-			this.set('showWindow', false);
-			Ember.$('.ui.modal').modal('hide');
-      		Ember.$('.ui.modal').remove();
-
+			let self = this;
+			this.get('student').destroyRecord().then(function() {
+					self.set('INDEX', self.get('INDEX')+1);
+					self.set('total', self.get('total')-1);
+					self.set('showWindow', false);
+					Ember.$('.ui.modal').modal('hide');
+					Ember.$('.ui.modal').remove();
+			});
 		},
 		cancel: function(){
 			this.set('showWindow', false);
