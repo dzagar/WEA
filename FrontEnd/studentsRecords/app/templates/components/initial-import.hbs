@@ -1,1 +1,12 @@
-{{yield}}
+
+	{{#if showInitialDataImportBtn}}
+		<a item = "item" {{action 'showEraseDataModal'}}>
+			Import Student Data...
+		</a>
+	{{else if showDeleteConfirmation}}
+		<!-- insert delete data modal window -->
+		boo
+	{{else}}
+		blah
+	{{/if}}
+

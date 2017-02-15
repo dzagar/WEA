@@ -4,9 +4,15 @@ export default Ember.Component.extend({
 
 	store: Ember.inject.service(),
 	notDONE: null,
+	showDeleteConfirmation: false,
+	showInitialDataImportBtn: true,
 
 	actions: {
-
+		showEraseDataModal: function(){
+			this.set('showDeleteConfirmation', true);
+			this.set('showInitialDataImportBtn', false);
+		}
+		
 	}
 
 
