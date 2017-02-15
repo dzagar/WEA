@@ -20,14 +20,12 @@
     <table class="ui fixed table">
         <thead>
         <tr>
-            <th>Code</th>
             <th>Gender</th>
             <th><!--spacer--></th>
         </tr>
         </thead>
         {{#each genderModel as |gender|}}
         <tr>
-            <td>{{gender.id}}</td>
             <td>
                 <div class="ui fluid input">
                     {{input type="text" value = gender.name}}
@@ -59,7 +57,6 @@
       <table class="ui fixed table">
         <thead>
             <tr>
-            <th>Code</th>
             <th>Residency</th>
             <th><!--spacer--></th>
             </tr>
@@ -67,7 +64,6 @@
         
         {{#each residencyModel as |residency|}}
         <tr>
-            <td>{{residency.id}}</td>
             <td>
                 <div class="ui fluid input">
                     {{input type="text" value = residency.name}}
