@@ -8,6 +8,10 @@ var studentsSchema = mongoose.Schema(
         lastName: String,
         number: String,
         photo: String,
+        registrationComments: String,
+        BasisOfAdmission: String,
+        admissionAverage: Number,
+        admissionComments: String,
         resInfo: {type: mongoose.Schema.ObjectId, ref: 'Residency'},
         scholarships: [{type: mongoose.Schema.ObjectId, ref: 'Scholarship'}]
     },
