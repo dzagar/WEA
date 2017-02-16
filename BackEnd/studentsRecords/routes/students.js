@@ -14,9 +14,7 @@ router.route('/')
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
-        
-        var dobFrom = request.query.DOBFrom;
-        var dobTo = request.query.DOBTo;
+        var deleteAll = request.query.deleteAll;
         var firstName = request.query.firstName;
         var gender = request.query.gender;
         var l = parseInt(request.query.limit);
@@ -25,7 +23,14 @@ router.route('/')
         var o = parseInt(request.query.offset);
         var residency = request.query.resInfo;
         var student = request.query.student;
-        //var studentNumLen = number.toString().length;
+
+        if (deleteAll) {
+            Student.remove({}, function(err){
+                if (err) response.send(err);
+                else console.log('killed all students');
+            });
+        }
+
         if (!student) {
             if (firstName != null)
             {
@@ -33,7 +38,9 @@ router.route('/')
                     "firstName": 
                         {"$regex": firstName, "$options": "imx" },
                     "lastName": 
-                        {"$regex": lastName, "$options": "imx" }
+                        {"$regex": lastName, "$options": "imx" },
+                    "studentNumber":
+                        {"$regex": studentNumber, "$options": "imx"}
                 };
 
                 //conditions["studentNumber"] = "ggg";
@@ -51,52 +58,6 @@ router.route('/')
                     else response.json({student: students});
                 });
 
-                // if (residency == -1)
-                // {
-                //     if (gender == 0)
-                //     {
-                //         models.Students.find(
-                //             {"firstName": {"$regex": firstName, "$options": "imx" },
-                //             "lastName": {"$regex": lastName, "$options": "imx" }}, function (error, students) {
-                //                 if (error) response.send(error);
-                //                     response.json({student: students});
-                //         });
-                //     }
-                //     else
-                //     {
-                //         models.Students.find(
-                //             {"firstName": {"$regex": firstName, "$options": "imx" },
-                //             "lastName": {"$regex": lastName, "$options": "imx" },
-                //             "gender": gender}, function (error, students) {
-                //                 if (error) response.send(error);
-                //                     response.json({student: students});
-                //         });
-                //     }
-                // }
-                // else
-                // {
-                //     if (gender == 0)
-                //     {
-                //         models.Students.find(
-                //             {"firstName": {"$regex": firstName, "$options": "imx" },
-                //             "lastName": {"$regex": lastName, "$options": "imx" },
-                //             "resInfo": residency}, function (error, students) {
-                //                 if (error) response.send(error);
-                //                     response.json({student: students});
-                //         });
-                //     }
-                //     else
-                //     {
-                //         models.Students.find(
-                //             {"firstName": {"$regex": firstName, "$options": "imx" },
-                //             "lastName": {"$regex": lastName, "$options": "imx" },
-                //             "resInfo": residency,
-                //             "gender": gender}, function (error, students) {
-                //                 if (error) response.send(error);
-                //                     response.json({student: students});
-                //         });
-                //     }
-                // }
             }
             else
             { 

@@ -24,9 +24,14 @@ router.route('/')
     })
     //get all scholarship
     .get(parseUrlencoded, parseJSON, function (request, response) {
-        
+        var deleteAll = request.query.deleteAll;
         var Student = request.query.student;
-        
+        if (deleteAll){
+            Scholarship.remove({}, function(err){
+                if (err) response.send(err);
+                else console.log('removed scholarships');
+            });
+        }
         if (!Student) {
 
         }
@@ -39,7 +44,7 @@ router.route('/')
         }
     });
 
-// router.route('/:scholarship_id')
+router.route('/:scholarship_id')
 //     //get specific scholarship
 //     .get(parseUrlencoded, parseJSON, function (request, response) {
 //     })
@@ -49,6 +54,11 @@ router.route('/')
 //         })
 //     })
 //     //removes user scholarship
-//     .delete(parseUrlencoded, parseJSON, function (request, response) {
-//     });
+    // .delete(parseUrlencoded, parseJSON, function (request, response) {
+    //     Scholarship.findByIdAndRemove(request.params.scholarship_id, function(error, deleted) {
+    //         if (error)
+    //             response.send(error);
+    //         response.json({scholarship: deleted});
+    //     });
+    // });
 module.exports = router;

@@ -17,6 +17,13 @@ router.route('/')
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
         var Student = request.query.filter;
+        var deleteAll = request.query.deleteAll;
+        if (deleteAll){
+            Gender.remove({}, function(err){
+                if (err) response.send(err);
+                else console.log('all genders removed');
+            })
+        }
         if (!Student) {
             Gender.find(function(error, genders) {
                 if (error)

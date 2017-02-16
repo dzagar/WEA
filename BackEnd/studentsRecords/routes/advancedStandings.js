@@ -26,6 +26,14 @@ router.route('/')
     .get(parseUrlencoded, parseJSON, function (request, response) {
         
         var Student = request.query.student;
+        var deleteAll = request.query.deleteAll;
+
+        if (deleteAll){
+            AdvancedStanding.remove({}, function(err){
+                if (err) response.send(err);
+                else console.log('removed advanced standings');
+            });
+        }
         
         if (!Student) {
 
@@ -44,5 +52,14 @@ router.route('/')
             });
         }
     });
+
+// router.route('/:advancedStanding_id')
+//     .delete(parseUrlencoded, parseJSON, function (request, response){
+//         AdvancedStanding.findByIdAndRemove(request.params.advancedStanding_id, function(error, deleted) {
+//             if (error)
+//                 response.send(error);
+//             response.json({advancedStanding: deleted});
+//         });
+//     });
 
 module.exports = router;
