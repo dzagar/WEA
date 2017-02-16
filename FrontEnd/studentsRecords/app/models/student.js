@@ -9,5 +9,6 @@ export default DS.Model.extend({
   photo: DS.attr(),
   resInfo: DS.belongsTo('residency'),
   scholarships: DS.hasMany('scholarship'),
-  advancedStandings: DS.hasMany('advanced-standing')
+  advancedStandings: DS.hasMany('advanced-standing'),
+  highSchoolCourses: DS.hasMany('high-school-grade')
 });
