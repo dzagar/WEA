@@ -162,6 +162,36 @@ function studentVerification(worksheet)
 	return true;
 }
 
+function secondarySchoolVerification(worksheet)
+{
+	
+}
+
+function studentHighSchoolVerification(worksheet)
+{
+
+}
+
+function ScholarshipVerification(worksheet)
+{
+
+}
+
+function AdvancedStandingVerification(worksheet)
+{
+
+}
+
+function UndergraduateRPVerification(worksheet)
+{
+
+}
+
+function UndergraduateCGVerification(worksheet)
+{
+
+}
+
 function DisplayErrorMessage(message)
 {
 	console.log(message);
