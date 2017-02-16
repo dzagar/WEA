@@ -5,7 +5,7 @@ ImportState = {
 	GENDER : 1,
 	RESIDENCY : 2,
 	TERMCODE : 3,
-	UNDERGRADCOURSE : 4,
+	COURSECODE : 4,
 	HIGHSCHOOL : 5
 };
 
@@ -338,13 +338,63 @@ export default Ember.Component.extend({
 								}
 							}
 							break;
-						case ImportState.UNDERGRADCOURSE:
+						case ImportState.COURSECODE:
+							if (courseCodeVerification(worksheet)) {
+								var rollBackImport = false;
+								var doneImporting = false;
+								var courseCodesToImport = [];
+								var uniqueCourseCodeNames = [];
+								for (var i = 2; !doneImporting; i++) {
+									//get the next course code name
+									var courseCode1 = worksheet['A' + i];
+									var courseCode2 = worksheet['B' + i];
+									var courseCode3 = worksheet['C' + i];
+									var courseCode4 = worksheet['D' + i];
+									//if the course code exists
+									if (courseCode1 && courseCode2 && courseCode3 && courseCode4) {
+										//gets the courseCodeNameString
+										var courseCodeLetter = courseCode1.v;
+										var courseCodeNum = courseCode2.v;
+										var courseCodeName = courseCode3.v;
+										var courseCodeUnit = courseCode4.v;
+										//if the course code has already been added
+										if (uniqueCourseCodeNames.includes(courseCodeName)) {
+											DisplayErrorMessage("Import cancelled. Your excel sheet contains duplicate course code names '" + courseCodeName + "'");
+											rollBackImport = true;
+											doneImporting = true;
+										} else { //create new course code object
+											courseCodesToImport[i - 2] = self.get('store').createRecord('course-code', 
+											{
+												courseLetter: courseCodeLetter,
+												courseNumber: courseCodeNum,
+												name: courseCodeName,
+												unit: courseCodeUnit
+											});
+										}
+									} else {
+										doneImporting = true;
+										//if no course code was imported
+										if (i == 2) {
+											rollBackImport = true;
+											DisplayErrorMessage("File does not contain any Values...")
+										}
+									}
+								}
+								//delete course codes from the store
+								if (rollBackImport) {
+									for (var i = 0; i < courseCodesToImport.length; i++) {
+										courseCodesToImport[i].deleteRecord();
+									}
+								} else {
+									for (var i = 0; i < courseCodesToImport.length; i++) {
+										console.log("trying to save");
+										courseCodesToImport[i].save();
+									}
+								}
+							}
 							break;
 						case ImportState.HIGHSCHOOL:
 							break;
-						// case 444004040:	
-						// 	courseCodeVerification(worksheet);
-						// 	break;
 						// case 4606064:	
 						// 	studentVerification(worksheet);
 						// 	break;
