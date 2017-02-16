@@ -1,9 +1,10 @@
 {{#if showDeleteConfirmation}}
 {{delete-data-confirmation notDONE = showDeleteConfirmation isImporting = importData}}
 {{else if importData}}
+
 <div class="ui grid">
-	<div class="four wide column">
-		<div class="ui violet vertical pointing menu">
+	<div class="five wide column">
+		<div class="ui violet vertical fluid tabular menu">
 			<a class="item active" {{action "setIndex" 0}}>
 				Import Genders
 			</a>
@@ -21,8 +22,8 @@
 			</a>
 		</div>
 	</div>
-	<div class="ten wide column ">
-		<div class="ui segment container">
+	<div class="ten wide stretchered column ">
+		<div class="ui segment">
 			<input type="file" id = "newFile" onchange = {{action 'import'}}>
 		</div>
 	</div>
