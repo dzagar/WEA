@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import XLSX from 'npm:xlsx-browserify-shim';
 
-ImportState = {
+var ImportState = {
 	GENDER : 1,
 	RESIDENCY : 2,
 	TERMCODE : 3,
@@ -393,11 +393,12 @@ export default Ember.Component.extend({
 								}
 							}
 							break;
-						case ImportState.HIGHSCHOOL:
-							break;
-						// case 4606064:	
+						// case ImportState.STUDENT:
+						// 	break;
+						// case ImportState.HIGHSCHOOL:	
 						// 	studentVerification(worksheet);
 						// 	break;
+						// etc.
 						default:
 							break;
 					}
