@@ -2,14 +2,7 @@ import Ember from 'ember';
 import XLSX from 'npm:xlsx-browserify-shim';
 
 export default Ember.Component.extend({
-	didInsertElement() {
-		Ember.$(document).ready(function(){
-		  Ember.$('.ui .item').on('click', function() {
-		    Ember.$('.ui .item').removeClass('active');
-		    Ember.$(this).addClass('active');
-		  });
-		});
-	},
+	
 	store: Ember.inject.service(),
 	showDeleteConfirmation: false,
 	importData: false,
@@ -36,9 +29,5 @@ export default Ember.Component.extend({
 		    reader.readAsBinaryString(f);
 			}
 		}
-		
 	}
-
-
-
 });
