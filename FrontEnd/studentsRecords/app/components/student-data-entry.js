@@ -59,9 +59,15 @@ export default Ember.Component.extend({
       self.set('firstIndex', records.indexOf(records.get("firstObject")));
       self.set('lastIndex', records.indexOf(records.get("lastObject")));
       if (self.get('movingBackword')) {
+        let oldIndex = self.get('currentIndex');
         self.set('currentIndex', records.indexOf(records.get("lastObject")));
+        if(oldIndex == self.get('currentIndex'))
+          self.showStudentData(self.get('currentIndex'));
       } else {
+        let oldIndex = self.get('currentIndex');
         self.set('currentIndex', records.indexOf(records.get("firstObject")));
+        if(oldIndex == self.get('currentIndex'))
+          self.showStudentData(self.get('currentIndex'));
       }
     });
   }),
@@ -171,7 +177,6 @@ export default Ember.Component.extend({
       this.set('movingBackword' , false);
       if (this.get('currentIndex') < this.get('lastIndex')) {
         this.set('currentIndex', this.get('currentIndex') + 1);
-        //     console.log(JSON.stringify(this.get('currentStudent')));
       }
       else {
         this.set('offset', this.get('offset') + this.get('pageSize'));
