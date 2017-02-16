@@ -7,7 +7,7 @@ function genderVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='NAME')
 	{
-		DisplayErrorMessage();
+		DisplayErrorMessage("Please fix the name header in the imported file!");
 		return false;
 	}
 
@@ -20,7 +20,7 @@ function residencyVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='NAME')
 	{
-		DisplayErrorMessage();
+		DisplayErrorMessage("Please fix the name header in the imported file!");
 		return false;
 	}
 
@@ -33,7 +33,7 @@ function termCodeVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='NAME')
 	{
-		DisplayErrorMessage();
+		DisplayErrorMessage("Please fix the name header in the imported file!");
 		return false;
 	}
 
@@ -46,7 +46,7 @@ function courseCodeVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='STUDENTNUMBER')
 	{
-		DisplayErrorMessage();
+		DisplayErrorMessage("Please fix the studentnumber header in the imported file!");
 		return false;
 	}
 
@@ -54,7 +54,7 @@ function courseCodeVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='TERM')
 	{
-		DisplayErrorMessage();
+		DisplayErrorMessage("Please fix the term header in the imported file!");
 		return false;
 	}
 
@@ -62,7 +62,7 @@ function courseCodeVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='COURSELETTER')
 	{
-		DisplayErrorMessage();
+		DisplayErrorMessage("Please fix the courseletter header in the imported file!");
 		return false;
 	}
 
@@ -70,7 +70,7 @@ function courseCodeVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='COURSENUMBER')
 	{
-		DisplayErrorMessage();
+		DisplayErrorMessage("Please fix the coursenumber header in the imported file!");
 		return false;
 	}
 
@@ -78,7 +78,7 @@ function courseCodeVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='SECTION')
 	{
-		DisplayErrorMessage();
+		DisplayErrorMessage("Please fix the section header in the imported file!");
 		return false;
 	}
 
@@ -86,7 +86,7 @@ function courseCodeVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='GRADE')
 	{
-		DisplayErrorMessage();
+		DisplayErrorMessage("Please fix the grade header in the imported file!");
 		return false;
 	}
 
@@ -94,7 +94,7 @@ function courseCodeVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='NOTE')
 	{
-		DisplayErrorMessage();
+		DisplayErrorMessage("Please fix the note header in the imported file!");
 		return false;
 	}
 
@@ -103,11 +103,11 @@ function courseCodeVerification(worksheet)
 
 function studentVerification(worksheet)
 {
-	currentString=worksheet['A1'].v;
+	var currentString=worksheet['A1'].v;
 	currentString=currentString.toUpperCase();
 	if(currentString!='STUDENTNUMBER')
 	{
-		DisplayErrorMessage();
+		DisplayErrorMessage("Please fix the studentnumber header in the imported file!");
 		return false;
 	}
 
@@ -115,7 +115,7 @@ function studentVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='FIRSTNAME')
 	{
-		DisplayErrorMessage();
+		DisplayErrorMessage("Please fix the firstname header in the imported file!");
 		return false;
 	}
 
@@ -123,7 +123,7 @@ function studentVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='LASTNAME')
 	{
-		DisplayErrorMessage();
+		DisplayErrorMessage("Please fix the lastname header in the imported file!");
 		return false;
 	}
 
@@ -131,7 +131,7 @@ function studentVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='GENDER')
 	{
-		DisplayErrorMessage();
+		DisplayErrorMessage("Please fix the gender header in the imported file!");
 		return false;
 	}
 
@@ -139,7 +139,7 @@ function studentVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='DOB')
 	{
-		DisplayErrorMessage();
+		DisplayErrorMessage("Please fix the DOB header in the imported file!");
 		return false;
 	}
 
@@ -147,16 +147,16 @@ function studentVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='RESIDENCY')
 	{
-		DisplayErrorMessage();
+		DisplayErrorMessage("Please fix the residency header in the imported file!");
 		return false;
 	}
 
 	return true;
 }
 
-function DisplayErrorMessage()
+function DisplayErrorMessage(message)
 {
-	console.log('You fucked up the import bruh!');
+	console.log(message);
 }
 
 export default Ember.Component.extend({
