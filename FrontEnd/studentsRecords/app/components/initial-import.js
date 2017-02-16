@@ -493,6 +493,7 @@ export default Ember.Component.extend({
 											{
 												name: genderName
 											});
+											uniqueGenderNames[i] = genderName;
 										}
 									} else {
 										doneImporting = true;
@@ -539,6 +540,7 @@ export default Ember.Component.extend({
 											{
 												name: residencyName
 											});
+											uniqueResidencyNames[i] = residencyName;
 										}
 									} else {
 										doneImporting = true;
@@ -585,6 +587,7 @@ export default Ember.Component.extend({
 											{
 												name: termCodeName
 											});
+											uniqueTermCodeNames[i] = termCodeName;
 										}
 									} else {
 										doneImporting = true;
@@ -640,6 +643,7 @@ export default Ember.Component.extend({
 												name: courseCodeName,
 												unit: courseCodeUnit
 											});
+											uniqueCourseCodeNames[i] = courseCodeName;
 										}
 									} else {
 										doneImporting = true;
@@ -688,6 +692,7 @@ export default Ember.Component.extend({
 											{
 												name: highSchoolName
 											});
+											uniqueHighSchoolNames[i] = highSchoolName;
 										}
 									} else {
 										doneImporting = true;
