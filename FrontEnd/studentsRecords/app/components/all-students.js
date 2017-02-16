@@ -16,13 +16,11 @@ export default Ember.Component.extend({
 
   actions: {
     loadNext: function () {
-      this.set('offset', this.get('offset') + this.get('pageSize'));
+      this.get('changeOffset')(this.get('pageSize'), true);
     },
 
     loadPrevious: function () {
-      if (this.get('offset') >= this.get('pageSize')) {
-        this.set('offset', this.get('offset') - this.get('pageSize'));
-      }
+      this.get('changeOffset')(this.get('pageSize'), true);
     },
 
     getStudent: function (student) {

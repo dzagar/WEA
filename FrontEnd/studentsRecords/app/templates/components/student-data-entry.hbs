@@ -57,7 +57,7 @@
 {{/if}}
 {{#if showAllStudents}}
   <!-- Note that offset is an "in" and "out" parameter !-->
- {{all-students INDEX = currentIndex notDONE = showAllStudents offset = offset studentsModel = studentsRecords totalPages = totalPages pageNumber = pageNumber}} 
+ {{all-students INDEX = currentIndex notDONE = showAllStudents offset = offset studentsModel = studentsRecords totalPages = totalPages pageNumber = pageNumber changeOffset = (action 'changeOffset')}} 
 {{else if showAddStudent}}
   {{add-student INDEX = currentIndex student = currentStudent notDONE = showAddStudent total=totalStudents}} 
 {{else if showFindStudent}}

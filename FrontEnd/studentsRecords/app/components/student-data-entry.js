@@ -19,8 +19,8 @@ export default Ember.Component.extend({
   newScholarshipName:"",
   newScholarshipObj: null,
   offset: null,
-  pageNumber: Ember.computed('offset', 'limit', function() {
-      let num = this.get('offset')/this.get('limit')+1;
+  pageNumber: Ember.computed('offset', 'pageSize', function() {
+      let num = this.get('offset')/this.get('pageSize')+1;
       return num;
   }),
   pageSize: null,
@@ -42,8 +42,8 @@ export default Ember.Component.extend({
   studentsRecords: null,
   studentScholarhips: null,
   totalStudents: 0,
-  totalPages: Ember.computed('totalStudents', 'limit', function() {
-      let ttl = Math.ceil(this.get('totalStudents')/this.get('limit'));
+  totalPages: Ember.computed('totalStudents', 'pageSize', function() {
+      let ttl = Math.ceil(this.get('totalStudents')/this.get('pageSize'));
       return ttl;
   }),
   
@@ -59,22 +59,21 @@ export default Ember.Component.extend({
       self.set('firstIndex', records.indexOf(records.get("firstObject")));
       self.set('lastIndex', records.indexOf(records.get("lastObject")));
       if (self.get('movingBackword')) {
-        let oldIndex = self.get('currentIndex');
         self.set('currentIndex', records.indexOf(records.get("lastObject")));
-        if(oldIndex == self.get('currentIndex'))
-          self.showStudentData(self.get('currentIndex'));
+        self.setCurrentStudent(self.get('currentIndex'));
       } else {
-        let oldIndex = self.get('currentIndex');
         self.set('currentIndex', records.indexOf(records.get("firstObject")));
-        if(oldIndex == self.get('currentIndex'))
-          self.showStudentData(self.get('currentIndex'));
+        self.setCurrentStudent(self.get('currentIndex'));
       }
     });
   }),
 
-  fetchStudent: Ember.observer('currentIndex', function () {
-    this.showStudentData(this.get('currentIndex'));
+  currentIndexChange: Ember.observer('currentIndex', function () {
+    this.setCurrentStudent(this.get('currentIndex'));
+  }),
 
+  fetchStudent: Ember.observer('currentStudent', function () {
+    this.showStudentData(this.get('currentStudent'));
   }),
 
   init() {
@@ -108,13 +107,17 @@ export default Ember.Component.extend({
     });
   },
 
-  showStudentData: function (index) {
+  setCurrentStudent: function (index) {
+    var student = this.get('studentsRecords').objectAt(index);
+    if (student != null)
+      this.set('currentStudent', student);
+  },
+
+  showStudentData: function (student) {
     if (!this.get('showAllStudents')) { //Disables showStudentData while the all students window is showing to speed things up
       this.set("showHelp", false);
       this.set("showFindStudent",false);
-      var record = this.get('studentsRecords').objectAt(index);
-      if (record != null) {
-        this.set('currentStudent',record );
+      if (student != null) {
         this.set('studentPhoto', this.get('currentStudent').get('photo'));
         var date = this.get('currentStudent').get('DOB');
         var datestring = date.substring(0, 10);
@@ -145,10 +148,6 @@ export default Ember.Component.extend({
           self.set('studentAdvancedStandings', advancedStandings);
         });
       }
-      else
-      {
-        this.set('offset',0);
-      }
     } //end if(!showAllStudents)
   },
 
@@ -158,6 +157,24 @@ export default Ember.Component.extend({
 
 
   actions: {
+
+    //Changes the offset based on offsetDelta and relative.
+    //If relative is true, the offsetDelta is added to offset
+    //If relative is false, the offsetDelta becomes the new offset
+    //Checks and deals with the edge of the set
+    changeOffset: function (offsetDelta, relative) {
+      if (relative) {
+        if (this.get('offset') + offsetDelta >= this.get('totalStudents'))
+          this.set('offset', (this.get('totalPages') - 1) * this.get('pageSize'));
+        else if (this.get('offset') + offsetDelta < 0)
+          this.set('offset', 0);
+        else
+          this.set('offset', this.get('offset') + offsetDelta);
+      } else {
+        this.set('offset', offsetDelta);
+      }
+    },
+
     saveStudent () {
       var updatedStudent = this.get('currentStudent');
       var res = this.get('store').peekRecord('residency', this.get('selectedResidency')); 
@@ -181,7 +198,7 @@ export default Ember.Component.extend({
         this.set('currentIndex', this.get('currentIndex') + 1);
       }
       else {
-        this.set('offset', this.get('offset') + this.get('pageSize'));
+        this.changeOffset(this.get('pageSize'), true);
       }
     },
 
@@ -190,8 +207,8 @@ export default Ember.Component.extend({
       if (this.get('currentIndex') > 0) {
         this.set('currentIndex', this.get('currentIndex') - 1);
       }
-      else if (this.get('offset') > 0) {
-        this.set('offset', this.get('offset') - this.get('pageSize'));
+      else {
+        this.changeOffset(-this.get('pageSize'), true);
       }
     },
 
