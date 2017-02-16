@@ -16,7 +16,7 @@ function genderVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='NAME')
 	{
-		DisplayErrorMessage("Please fix the name header in the imported file!");
+		DisplayErrorMessage("Please fix the 'name' header in the imported file!");
 		return false;
 	}
 
@@ -29,7 +29,7 @@ function residencyVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='NAME')
 	{
-		DisplayErrorMessage("Please fix the name header in the imported file!");
+		DisplayErrorMessage("Please fix the 'name' header in the imported file!");
 		return false;
 	}
 
@@ -42,7 +42,7 @@ function termCodeVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='NAME')
 	{
-		DisplayErrorMessage("Please fix the name header in the imported file!");
+		DisplayErrorMessage("Please fix the 'name' header in the imported file!");
 		return false;
 	}
 
@@ -55,7 +55,7 @@ function courseCodeVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='STUDENTNUMBER')
 	{
-		DisplayErrorMessage("Please fix the studentnumber header in the imported file!");
+		DisplayErrorMessage("Please fix the 'studentnumber' header in the imported file!");
 		return false;
 	}
 
@@ -63,7 +63,7 @@ function courseCodeVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='TERM')
 	{
-		DisplayErrorMessage("Please fix the term header in the imported file!");
+		DisplayErrorMessage("Please fix the 'term' header in the imported file!");
 		return false;
 	}
 
@@ -71,7 +71,7 @@ function courseCodeVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='COURSELETTER')
 	{
-		DisplayErrorMessage("Please fix the courseletter header in the imported file!");
+		DisplayErrorMessage("Please fix the 'courseletter' header in the imported file!");
 		return false;
 	}
 
@@ -79,7 +79,7 @@ function courseCodeVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='COURSENUMBER')
 	{
-		DisplayErrorMessage("Please fix the coursenumber header in the imported file!");
+		DisplayErrorMessage("Please fix the 'coursenumber' header in the imported file!");
 		return false;
 	}
 
@@ -87,7 +87,7 @@ function courseCodeVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='SECTION')
 	{
-		DisplayErrorMessage("Please fix the section header in the imported file!");
+		DisplayErrorMessage("Please fix the 'section' header in the imported file!");
 		return false;
 	}
 
@@ -95,7 +95,7 @@ function courseCodeVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='GRADE')
 	{
-		DisplayErrorMessage("Please fix the grade header in the imported file!");
+		DisplayErrorMessage("Please fix the 'grade' header in the imported file!");
 		return false;
 	}
 
@@ -103,7 +103,7 @@ function courseCodeVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='NOTE')
 	{
-		DisplayErrorMessage("Please fix the note header in the imported file!");
+		DisplayErrorMessage("Please fix the 'note' header in the imported file!");
 		return false;
 	}
 
@@ -116,7 +116,7 @@ function studentVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='STUDENTNUMBER')
 	{
-		DisplayErrorMessage("Please fix the studentnumber header in the imported file!");
+		DisplayErrorMessage("Please fix the 'studentnumber' header in the imported file!");
 		return false;
 	}
 
@@ -124,7 +124,7 @@ function studentVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='FIRSTNAME')
 	{
-		DisplayErrorMessage("Please fix the firstname header in the imported file!");
+		DisplayErrorMessage("Please fix the 'firstname' header in the imported file!");
 		return false;
 	}
 
@@ -132,7 +132,7 @@ function studentVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='LASTNAME')
 	{
-		DisplayErrorMessage("Please fix the lastname header in the imported file!");
+		DisplayErrorMessage("Please fix the 'lastname' header in the imported file!");
 		return false;
 	}
 
@@ -140,7 +140,7 @@ function studentVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='GENDER')
 	{
-		DisplayErrorMessage("Please fix the gender header in the imported file!");
+		DisplayErrorMessage("Please fix the 'gender' header in the imported file!");
 		return false;
 	}
 
@@ -148,7 +148,7 @@ function studentVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='DOB')
 	{
-		DisplayErrorMessage("Please fix the DOB header in the imported file!");
+		DisplayErrorMessage("Please fix the 'DOB' header in the imported file!");
 		return false;
 	}
 
@@ -156,7 +156,7 @@ function studentVerification(worksheet)
 	currentString=currentString.toUpperCase();
 	if(currentString!='RESIDENCY')
 	{
-		DisplayErrorMessage("Please fix the residency header in the imported file!");
+		DisplayErrorMessage("Please fix the 'residency' header in the imported file!");
 		return false;
 	}
 
@@ -165,32 +165,271 @@ function studentVerification(worksheet)
 
 function secondarySchoolVerification(worksheet)
 {
-	
+	var currentString=worksheet['A1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='SCHOOL NAME')
+	{
+		DisplayErrorMessage("Please fix the 'school name' header in the imported file!");
+	}
+
+	return true;
 }
 
 function studentHighSchoolVerification(worksheet)
 {
+	var currentString=worksheet['A1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='STUDENTNUMBER')
+	{
+		DisplayErrorMessage("Please fix the 'studentnumber' header in the imported file!");
+		return false;
+	}
 
+	currentString=worksheet['B1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='SCHOOLNAME')
+	{
+		DisplayErrorMessage("Please fix the 'schoolname' header in the imported file!");
+		return false;
+	}
+
+	currentString=worksheet['C1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='LEVEL')
+	{
+		DisplayErrorMessage("Please fix the 'level' header in the imported file!");
+		return false;
+	}
+
+	currentString=worksheet['D1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='SUBJECT')
+	{
+		DisplayErrorMessage("Please fix the 'subject' header in the imported file!");
+		return false;
+	}
+
+	currentString=worksheet['E1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='DESCRIPTION')
+	{
+		DisplayErrorMessage("Please fix the 'description' header in the imported file!");
+		return false;
+	}
+
+	currentString=worksheet['F1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='SOURCE')
+	{
+		DisplayErrorMessage("Please fix the 'source' header in the imported file!");
+		return false;
+	}
+
+	currentString=worksheet['G1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='UNITS')
+	{
+		DisplayErrorMessage("Please fix the 'units' header in the imported file!");
+		return false;
+	}
+
+	currentString=worksheet['H1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='GRADE')
+	{
+		DisplayErrorMessage("Please fix the 'grade' header in the imported file!");
+		return false;
+	}
+
+	return true;
 }
 
 function ScholarshipVerification(worksheet)
 {
+	var currentString=worksheet['A1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='STUDENTNUMBER')
+	{
+		DisplayErrorMessage("Please fix the 'studentnumber' header in the imported file!");
+		return false;
+	}
 
+	currentString=worksheet['B1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='NOTE')
+	{
+		DisplayErrorMessage("Please fix the 'note' header in the imported file!");
+		return false;
+	}
+
+	return true;
 }
 
 function AdvancedStandingVerification(worksheet)
 {
+	var currentString=worksheet['A1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='STUDENTNUMBER')
+	{
+		DisplayErrorMessage("Please fix the 'studentnumber' header in the imported file!");
+		return false;
+	}
 
+	currentString=worksheet['B1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='COURSE')
+	{
+		DisplayErrorMessage("Please fix the 'course' header in the imported file!");
+		return false;
+	}
+
+	currentString=worksheet['C1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='DESCRIPTION')
+	{
+		DisplayErrorMessage("Please fix the 'description' header in the imported file!");
+		return false;
+	}
+
+	currentString=worksheet['D1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='UNITS')
+	{
+		DisplayErrorMessage("Please fix the 'units' header in the imported file!");
+		return false;
+	}
+
+	currentString=worksheet['E1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='GRADE')
+	{
+		DisplayErrorMessage("Please fix the 'grade' header in the imported file!");
+		return false;
+	}
+
+	currentString=worksheet['F1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='FROM')
+	{
+		DisplayErrorMessage("Please fix the 'from' header in the imported file!");
+		return false;
+	}
+
+	return true;
 }
 
 function UndergraduateRPVerification(worksheet)
 {
+	var currentString=worksheet['A1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='STUDENTNUMBER')
+	{
+		DisplayErrorMessage("Please fix the 'studentnumber' header in the imported file!");
+		return false;
+	}
 
+	currentString=worksheet['B1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='TERM')
+	{
+		DisplayErrorMessage("Please fix the 'term' header in the imported file!");
+		return false;
+	}
+
+	currentString=worksheet['C1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='PROGRAM')
+	{
+		DisplayErrorMessage("Please fix the 'program' header in the imported file!");
+		return false;
+	}
+
+	currentString=worksheet['D1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='LEVEL')
+	{
+		DisplayErrorMessage("Please fix the 'level' header in the imported file!");
+		return false;
+	}
+
+	currentString=worksheet['E1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='LOAD')
+	{
+		DisplayErrorMessage("Please fix the 'load' header in the imported file!");
+		return false;
+	}
+
+	currentString=worksheet['F1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='PLAN')
+	{
+		DisplayErrorMessage("Please fix the 'plan' header in the imported file!");
+		return false;
+	}
+
+	return true;
 }
 
 function UndergraduateCGVerification(worksheet)
 {
+	var currentString=worksheet['A1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='STUDENTNUMBER')
+	{
+		DisplayErrorMessage("Please fix the 'studentnumber' header in the imported file!");
+		return false;
+	}
 
+	currentString=worksheet['B1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='TERM')
+	{
+		DisplayErrorMessage("Please fix the 'term' header in the imported file!");
+		return false;
+	}
+
+	currentString=worksheet['C1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='COURSELETTER')
+	{
+		DisplayErrorMessage("Please fix the 'courseletter' header in the imported file!");
+		return false;
+	}
+
+	currentString=worksheet['D1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='COURSENUMBER')
+	{
+		DisplayErrorMessage("Please fix the 'coursenumber' header in the imported file!");
+		return false;
+	}
+
+	currentString=worksheet['E1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='SECTION')
+	{
+		DisplayErrorMessage("Please fix the 'section' header in the imported file!");
+		return false;
+	}
+
+	currentString=worksheet['F1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='GRADE')
+	{
+		DisplayErrorMessage("Please fix the 'grade' header in the imported file!");
+		return false;
+	}
+
+	var currentString=worksheet['G1'].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!='NOTE')
+	{
+		DisplayErrorMessage("Please fix the 'note' header in the imported file!");
+		return false;
+	}
+
+	return true;
 }
 
 function DisplayErrorMessage(message)
