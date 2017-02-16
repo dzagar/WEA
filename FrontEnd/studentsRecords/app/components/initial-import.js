@@ -6,7 +6,8 @@ var ImportState = {
 	RESIDENCY : 2,
 	TERMCODE : 3,
 	COURSECODE : 4,
-	HIGHSCHOOL : 5
+	HIGHSCHOOL : 5,
+	HSCOURSEINFO : 6
 };
 
 function genderVerification(worksheet)
@@ -425,10 +426,54 @@ export default Ember.Component.extend({
 							break;
 						// case ImportState.STUDENT:
 						// 	break;
-						// case ImportState.HIGHSCHOOL:	
-						// 	studentVerification(worksheet);
+						case ImportState.HIGHSCHOOL:	
+							if (secondarySchoolVerification(worksheet)) {
+								var rollBackImport = false;
+								var doneImporting = false;
+								var highSchoolsToImport = [];
+								var uniqueHighSchoolNames = [];
+								for (var i = 2; !doneImporting; i++) {
+									//get the next hs name
+									var highSchool = worksheet['A' + i];
+									//if the hs exists
+									if (highSchool) {
+										//gets the highSchoolNameString
+										var highSchoolName = highSchool.v;
+										//if the hs has already been added
+										if (uniqueHighSchoolNames.includes(highSchoolName)) {
+											DisplayErrorMessage("Import cancelled. Your excel sheet contains duplicate course code names '" + highSchoolName + "'");
+											rollBackImport = true;
+											doneImporting = true;
+										} else { //create new hs object
+											highSchoolsToImport[i - 2] = self.get('store').createRecord('high-school', 
+											{
+												name: highSchoolName
+											});
+										}
+									} else {
+										doneImporting = true;
+										//if no hs was imported
+										if (i == 2) {
+											rollBackImport = true;
+											DisplayErrorMessage("File does not contain any Values...")
+										}
+									}
+								}
+								//delete high schools from the store
+								if (rollBackImport) {
+									for (var i = 0; i < highSchoolsToImport.length; i++) {
+										highSchoolsToImport[i].deleteRecord();
+									}
+								} else {
+									for (var i = 0; i < highSchoolsToImport.length; i++) {
+										console.log("trying to save");
+										highSchoolsToImport[i].save();
+									}
+								}
+							}
+							break;
+						// case ImportState.HSCOURSEINFO:
 						// 	break;
-						// etc.
 						default:
 							break;
 					}
