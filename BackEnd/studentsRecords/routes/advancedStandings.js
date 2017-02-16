@@ -25,7 +25,7 @@ router.route('/')
 
     .get(parseUrlencoded, parseJSON, function (request, response) {
         
-        var Student = request.query.student;
+        var Student = parseInt(request.query.student);
         var deleteAll = request.query.deleteAll;
 
         if (deleteAll){
@@ -50,14 +50,15 @@ router.route('/')
         }
         else
         {
-            AdvancedStanding.find({"student" : Student}, function(error, advancedStandings){
+            AdvancedStanding.find({"studentNumber" : Student}, function(error, advancedStandings){
                 if (error) 
                     {
                         response.send(error);
                     }
                 else 
                     {
-                        response.json({advancedStanding: advancedStandings});
+                        console.log(advancedStandings);
+                        response.json({advancedStandings: advancedStandings});
                     }
             });
         }

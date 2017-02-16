@@ -151,8 +151,43 @@
       {{#each studentAdvancedStandings as |oneAdvancedStandings|}}
          <tr>
             <td>
+                <label>
+                  Course: 
+                </label>
                 <div class="ui fluid input">
-                    {{input type="text" value = oneAdvancedStandings.name}}
+                    {{input type="text" value = oneAdvancedStandings.course}}
+                </div>
+            </td>
+            <td>
+                <label>
+                  Description: 
+                </label>
+                <div class="ui fluid input">
+                    {{input type="text" value = oneAdvancedStandings.description}}
+                </div>
+            </td>
+            <td>
+                <label>
+                  Units: 
+                </label>
+                <div class="ui fluid input">
+                    {{input type="text" value = oneAdvancedStandings.units}}
+                </div>
+            </td>
+            <td>
+                <label>
+                  Grade: 
+                </label>
+                <div class="ui fluid input">
+                    {{input type="text" value = oneAdvancedStandings.grade}}
+                </div>
+            </td>
+            <td>
+                <label>
+                  From: 
+                </label>
+                <div class="ui fluid input">
+                    {{input type="text" value = oneAdvancedStandings.from}}
                 </div>
             </td>
             <td>
@@ -162,7 +197,6 @@
                     <button class="ui red inverted button" {{action "deleteAS" advancedStandings}}>Delete</button>
                 </div> 
             </td>
-            <td><!--spacer--></td>
         </tr>
       {{/each}}
       <tr>
@@ -239,11 +273,11 @@
             <th><!--spacer--></th>  
         </tr>
         </thead>
-        {{#each scholarshipModel  as |oneScholarship|}}
+        {{#each studentScholarhips  as |oneScholarship|}}
         <tr>
             <td>
                 <div class="ui fluid input">
-                    {{input type="text" value = oneScholarship.name}}
+                    {{input type="text" value = oneScholarship.note}}
                 </div>
             </td>
             <td>

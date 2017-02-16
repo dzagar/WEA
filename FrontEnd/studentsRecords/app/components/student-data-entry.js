@@ -68,7 +68,6 @@ export default Ember.Component.extend({
 
   fetchStudent: Ember.observer('currentIndex', function () {
     this.showStudentData(this.get('currentIndex'));
-
   }),
 
   init() {
@@ -120,8 +119,8 @@ export default Ember.Component.extend({
       }
       if(this.get('currentStudent.gender') == null || this.get('currentStudent.gender.id') == null || this.get('currentStudent.gender.id') == 1 || this.get('currentStudent.gender.id') == 2)
       {
-        console.log(Ember.$("#ddlGender").val());
-        console.log(this.get('store').peekRecord('gender', Ember.$("#ddlGender").val()));
+        //console.log(Ember.$("#ddlGender").val());
+        //console.log(this.get('store').peekRecord('gender', Ember.$("#ddlGender").val()));
         this.get('currentStudent').set('gender',this.get('store').peekRecord('gender', Ember.$("#ddlGender").val()));
         this.get('currentStudent').save();
       }
@@ -130,11 +129,15 @@ export default Ember.Component.extend({
       
       var self = this;
       //loads student scholarships
-      var scholarshipStudent = this.get('currentStudent.id');
-      this.get('store').query('scholarship', {student : scholarshipStudent}).then(function(scholarships){
+      var student = this.get('currentStudent.studentNumber');
+      this.get('store').query('scholarship', {
+        student : student
+      }).then(function(scholarships){
         self.set('studentScholarhips', scholarships);
       });
-      this.get('store').query('advancedStanding', {student : scholarshipStudent}).then(function(advancedStandings){
+      this.get('store').query('advanced-standing', {
+        student : student
+      }).then(function(advancedStandings){
         self.set('studentAdvancedStandings', advancedStandings);
       });
     }
@@ -202,7 +205,7 @@ export default Ember.Component.extend({
     },
 
     selectResidency (residency){
-      console.log(residency);
+      //console.log(residency);
       this.set('selectedResidency', residency);
     },
 
