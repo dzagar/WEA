@@ -1,6 +1,14 @@
 import Ember from 'ember';
 import XLSX from 'npm:xlsx-browserify-shim';
 
+ImportState = {
+	GENDER : 1,
+	RESIDENCY : 2,
+	TERMCODE : 3,
+	UNDERGRADCOURSE : 4,
+	HIGHSCHOOL : 5
+};
+
 function genderVerification(worksheet)
 {
 	var currentString=worksheet['A1'].v;
@@ -164,7 +172,7 @@ export default Ember.Component.extend({
 	store: Ember.inject.service(),
 	showDeleteConfirmation: false,
 	importData: false,
-	changingIndex: 0,
+	changingIndex: 1,
 	
 	actions: {
 		showEraseDataModal: function(){
@@ -192,7 +200,7 @@ export default Ember.Component.extend({
 
 					switch(currentIndex)
 					{
-						case 0: //Gender
+						case ImportState.GENDER: 
 							if (genderVerification(worksheet)){
 								var rollBackImport = false;
 								var doneImporting = false;
@@ -238,7 +246,7 @@ export default Ember.Component.extend({
 								}
 							}
 							break;
-						case 1: //Residency
+						case ImportState.RESIDENCY:
 							if (residencyVerification(worksheet)) {
 								var rollBackImport = false;
 								var doneImporting = false;
@@ -284,7 +292,7 @@ export default Ember.Component.extend({
 								}
 							}
 							break;
-						case 2:
+						case ImportState.TERMCODE:
 							if (termCodeVerification(worksheet)) {
 								var rollBackImport = false;
 								var doneImporting = false;
@@ -330,10 +338,18 @@ export default Ember.Component.extend({
 								}
 							}
 							break;
-						case 3:	courseCodeVerification(worksheet);
-						break;
-						case 4:	studentVerification(worksheet);
-						break;
+						case ImportState.UNDERGRADCOURSE:
+							break;
+						case ImportState.HIGHSCHOOL:
+							break;
+						// case 444004040:	
+						// 	courseCodeVerification(worksheet);
+						// 	break;
+						// case 4606064:	
+						// 	studentVerification(worksheet);
+						// 	break;
+						default:
+							break;
 					}
 					console.log(currentWorkSheet);
 				};
