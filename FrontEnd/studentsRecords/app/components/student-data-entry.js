@@ -10,6 +10,10 @@ export default Ember.Component.extend({
   limit: null,
   movingBackword: false,
   offset: null,
+  pageNumber: Ember.computed('offset', 'limit', function() {
+      let num = this.get('offset')/this.get('limit')+1;
+      return num;
+  }),
   pageSize: null,
   residencyModel: null,
   selectedDate: null,
@@ -26,6 +30,10 @@ export default Ember.Component.extend({
   studentsRecords: null,
   studentScholarhips: null,
   totalStudents: 0,
+  totalPages: Ember.computed('totalStudents', 'limit', function() {
+      let ttl = Math.ceil(this.get('totalStudents')/this.get('limit'));
+      return ttl;
+  }),
   
 
   studentModel: Ember.observer('offset', function () {

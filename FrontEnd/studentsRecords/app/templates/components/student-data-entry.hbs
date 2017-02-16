@@ -111,7 +111,6 @@
             <button class="ui inverted red icon button" {{action 'deleteCurrentStudent'}}>
               Delete <i class="trash icon"></i>
             </button>
-            {{totalStudents}}
           </div>
         </div>
       </div>
@@ -119,6 +118,7 @@
       <div class=" ui relaxed items center aligned six wide column ">
         <img src={{studentPhoto}} class="item">
       </div>
+
     </div>
 </div>
   <div class="ui bottom attached tab segment" data-tab="program">
@@ -262,7 +262,9 @@
         </tr>
     </table>
   </div>
-
+  <div style="text-align: center">
+      Page {{pageNumber}} of {{totalPages}}
+  </div>
 
 
 {{/if}}
