@@ -14,6 +14,7 @@ export default Ember.Component.extend({
 	residencyModel: null,
 	resInfo: null,
 	store: Ember.inject.service(),
+	total: 0,
 
 	init() {
 		this._super(...arguments);
@@ -54,6 +55,7 @@ export default Ember.Component.extend({
 				resInfo: this.get('store').peekRecord('residency', this.get('resInfo'))
 			}));
 			this.get('newStudent').save();
+			this.set('total',this.get('total')+1);
 			this.set('notDONE', false);
 			//somehow jump to this student afterwards
 			Ember.$('.ui.modal').modal('hide');

@@ -2,6 +2,9 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
 
+  currentAdvancedStanding: null,
+  currentHighSchool: null,
+  currentScholarship: null,
   currentStudent: null,
   currentIndex: null,
   firstIndex: 0,
@@ -9,7 +12,17 @@ export default Ember.Component.extend({
   lastIndex: 0,
   limit: null,
   movingBackword: false,
+  newASName:"",
+  newASObj: null,
+  newHighSchoolName:"",
+  newHighSchoolObj: null,
+  newScholarshipName:"",
+  newScholarshipObj: null,
   offset: null,
+  pageNumber: Ember.computed('offset', 'limit', function() {
+      let num = this.get('offset')/this.get('limit')+1;
+      return num;
+  }),
   pageSize: null,
   residencyModel: null,
   selectedDate: null,
@@ -17,7 +30,10 @@ export default Ember.Component.extend({
   selectedResidency: null,
   showAddStudent: false,
   showAllStudents: false,
+  showAdvancedStandingDeleteConfirmation: false,
   showDeleteConfirmation: false,
+  showHighSchoolDeleteConfirmation: false,
+  showScholarshipDeleteConfirmation: false,
   showFindStudent: false,
   showHelp: false,
   store: Ember.inject.service(),
@@ -25,6 +41,11 @@ export default Ember.Component.extend({
   studentPhoto: null,
   studentsRecords: null,
   studentScholarhips: null,
+  totalStudents: 0,
+  totalPages: Ember.computed('totalStudents', 'limit', function() {
+      let ttl = Math.ceil(this.get('totalStudents')/this.get('limit'));
+      return ttl;
+  }),
   
 
   studentModel: Ember.observer('offset', function () {
@@ -33,6 +54,7 @@ export default Ember.Component.extend({
       limit: self.get('limit'),
       offset: self.get('offset')
     }).then(function (records) {
+      self.set('totalStudents', records.get('meta').total);
       self.set('studentsRecords', records);
       self.set('firstIndex', records.indexOf(records.get("firstObject")));
       self.set('lastIndex', records.indexOf(records.get("lastObject")));
@@ -70,6 +92,7 @@ export default Ember.Component.extend({
       limit: self.get('limit'),
       offset: self.get('offset')
     }).then(function (records) {
+      self.set('totalStudents', records.get("meta").total);
       self.set('studentsRecords', records);
       self.set('firstIndex', records.indexOf(records.get("firstObject")));
       self.set('lastIndex', records.indexOf(records.get("lastObject")));
@@ -277,6 +300,83 @@ export default Ember.Component.extend({
         $("#advancedInfoTab").hide(200);
         $("#hsInfoTab").show(200);
       }
+    },
+    addAS()
+    {
+        if (this.get('newASName').trim() != "")
+        {
+            this.set('newASObj', this.get('store').createRecord('advancedStandings', {
+                name: this.get('newASName').trim()
+            }));
+            this.get('newASObj').save();
+            this.set('newASName', "");
+        }
+    },
+
+    deleteAS(AdvancedStanding)
+    {
+      this.set('currentAdvancedStanding',AdvancedStanding);
+      this.set('showAdvancedStandingDeleteConfirmation', false);
+      this.set('showHighSchoolDeleteConfirmation', false); 
+      this.set('showScholarshipDeleteConfirmation',true);
+      this.set('showDeleteConfirmation',false);
+    },
+
+    saveAS(AdvancedStanding)
+    {
+      AdvancedStanding.save();
+    },
+
+    addScholarship()
+    {
+      if (this.get('newScholarshipName').trim() != "")
+        {
+            this.set('newScholarshipObj', this.get('store').createRecord('scholarship', {
+                name: this.get('newScholarshipName').trim()
+            }));
+            this.get('newScholarshipObj').save();
+            this.set('newScholarshipName', "");
+        }
+    },
+
+    deleteScholarship(scholarship)
+    {
+      this.set('currentScholarship',scholarship);
+      this.set('showAdvancedStandingDeleteConfirmation', false);
+      this.set('showHighSchoolDeleteConfirmation', false); 
+      this.set('showScholarshipDeleteConfirmation',true);
+      this.set('showDeleteConfirmation',false);
+    },
+
+    saveScholarship(scholarship)
+    {
+      scholarship.save();
+    },
+
+    addHighSchool()
+    {
+      if (this.get('newHighSchoolName').trim() != "")
+        {
+            this.set('newHighSchoolObj', this.get('store').createRecord('highSchool', {
+                name: this.get('newHighSchoolName').trim()
+            }));
+            this.get('newHighSchoolObj').save();
+            this.set('newHighSchoolName', "");
+        }
+    },
+
+    deleteHighSchool(highSchool)
+    {
+      this.set('currentHighSchool',highschool);
+      this.set('showAdvancedStandingDeleteConfirmation', false);
+      this.set('showHighSchoolDeleteConfirmation', true); 
+      this.set('showScholarshipDeleteConfirmation',false);
+      this.set('showDeleteConfirmation',false);
+    },
+
+    saveHighSchool(highSchool)
+    {
+      highSchool.save();
     }
   }
 });

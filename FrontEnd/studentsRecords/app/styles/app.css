@@ -4,3 +4,9 @@
 .ui.grid > [class*="thirteen wide"].column {
 	padding-left: 0px !important;
 }
+
+.divider{
+    width:5px;
+    height:auto;
+    display:inline-block;
+}

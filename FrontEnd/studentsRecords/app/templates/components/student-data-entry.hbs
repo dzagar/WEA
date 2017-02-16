@@ -47,13 +47,19 @@
 </div> 
 
 {{#if showDeleteConfirmation}}
-  {{delete-student INDEX = currentIndex student = currentStudent showWindow = showDeleteConfirmation}}
+  {{delete-student INDEX = currentIndex student = currentStudent showWindow = showDeleteConfirmation total=totalStudents}}
+  {{else if showHighSchoolDeleteConfirmation}}
+  {{delete-highschool highschool=currentHighSchool showWindow = showHighSchoolDeleteConfirmation}}
+  {{else if showAdvancedStandingDeleteConfirmation}}
+  {{delete-advanced-standing AdvancedStanding=currentAdvancedStanding showWindow=showAdvancedStandingDeleteConfirmation}}
+  {{else if showScholarshipDeleteConfirmation}}
+  {{delete-scholarship Scholarship=currentScholarship showWindow=showScholarshipDeleteConfirmation}}
 {{/if}}
 {{#if showAllStudents}}
   <!-- Note that offset is an "in" and "out" parameter !-->
- {{all-students INDEX = currentIndex notDONE = showAllStudents offset = offset studentsModel = studentsRecords}} 
+ {{all-students INDEX = currentIndex notDONE = showAllStudents offset = offset studentsModel = studentsRecords totalPages = totalPages pageNumber = pageNumber}} 
 {{else if showAddStudent}}
-  {{add-student INDEX = currentIndex student = currentStudent notDONE = showAddStudent}} 
+  {{add-student INDEX = currentIndex student = currentStudent notDONE = showAddStudent total=totalStudents}} 
 {{else if showFindStudent}}
  {{find-student notDONE = showFindStudent gender = genderModel residency=residencyModel studentsRecords=studentsRecords}}
 {{else if showHelp}}
@@ -65,6 +71,9 @@
     <div style="cursor: pointer;" class="active item" data-tab="basics">Basic Info</div>
     <div style="cursor: pointer;" class="item" data-tab="program">Program Record</div>
     <div style="cursor: pointer;" class="item" data-tab="awards">Scholarships and Awards</div>
+    <div style="cursor: pointer;" class="item" data-tab="advanced">Advanced Standings</div>
+    <div style="cursor: pointer;" class="item" data-tab="hsinfo">HighSchool Info</div>
+
   </div>
   <div class="ui bottom attached active tab segment"data-tab="basics">
     <!-- student basic information !-->
@@ -115,38 +124,156 @@
       <div class=" ui relaxed items center aligned six wide column ">
         <img src={{studentPhoto}} class="item">
       </div>
-    </div>
 
-  </div>
+    </div>
+</div>
   <div class="ui bottom attached tab segment" data-tab="program">
+    <h2>Program Info</h2>
     <br>
-      <h3> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h3>
+   <font face="impact" size="6">Student</font>
+      <h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
     <br>
+    
+</div>
 
-    <h3 style="cursor: pointer;" {{action "toggleProgramInfo"}}>Program Information</h3>
-    <div id="programInfoTab" >
-      <label>Program Info</label>
-    </div>
-    <h3 style="cursor: pointer;" {{action "toggleAdvancedInfo"}}>Advanced Standings</h3>
-    <div id="advancedInfoTab" style="display: none;">
+    <div class="ui bottom attached tab segment" data-tab="advanced">
+      <h2>Advanced Standings</h2>
+               
+    <table class="ui fixed table">
+        <thead>
+        <tr>
+            <th>Advanced Standings</th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>  
+        </tr>
+        </thead>
+
       {{#each studentAdvancedStandings as |oneAdvancedStandings|}}
-        <label>{{oneAdvancedStandings.course}}</label>
-        <br>
-        <label>{{oneAdvancedStandings.description}}</label>
+         <tr>
+            <td>
+                <div class="ui fluid input">
+                    {{input type="text" value = oneAdvancedStandings.name}}
+                </div>
+            </td>
+            <td>
+                <div class="ui inverted buttons">
+                    <button class="ui blue inverted button" {{action "saveAS" advancedStandings}}>Save</button>
+                    <div class="divider"/>
+                    <button class="ui red inverted button" {{action "deleteAS" advancedStandings}}>Delete</button>
+                </div> 
+            </td>
+            <td><!--spacer--></td>
+        </tr>
       {{/each}}
+      <tr>
+            <td><!--spacer--></td>
+            <td>
+                <div class="ui fluid input">
+                    {{input type="text" value = AdvancedStandingsName}}
+                </div>
+            </td>
+            <td>
+                <button class="ui inverted green button" {{action "addAS"}}> 
+                Add &nbsp; <i class="add square icon"></i>
+                </button>
+            </td>
+        </tr>
+    </table>
     </div>
-    <h3 style="cursor: pointer;" {{action "toggleHSInfo"}}>Highschool Information</h3>
-    <div id="hsInfoTab" style="display: none;">
-      <label>Highschool Info</label>
-    </div>
-  </div>
+
+
+   
+    <div class="ui bottom attached tab segment" data-tab="hsinfo">
+      <h2>Highschool Info</h2>
+          
+    <table class="ui fixed table">
+        <thead>
+        <tr>
+            <th>HighSchools</th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>  
+        </tr>
+        </thead>
+        {{#each highSchoolModel  as |highSchool|}}
+        <tr>
+            <td>
+                <div class="ui fluid input">
+                    {{input type="text" value = highSchool.name}}
+                </div>
+            </td>
+            <td>
+                <div class="ui inverted buttons">
+                    <button class="ui blue inverted button" {{action "saveHighSchool" highschool}}>Save</button>
+                    <div class="divider"/>
+                    <button class="ui red inverted button" {{action "deleteHighSchool" highschool}}>Delete</button>
+                </div> 
+            </td>
+            <td><!--spacer--></td>
+        </tr>
+    {{/each}}
+    <tr>
+            <td><!--spacer--></td>
+            <td>
+                <div class="ui fluid input">
+                    {{input type="text" value = newHighSchool}}
+                </div>
+            </td>
+            <td>
+                <button class="ui inverted green button" {{action "addHighSchool"}}> 
+                Add &nbsp; <i class="add square icon"></i>
+                </button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
   <div class="ui bottom attached tab segment" data-tab="awards">
     <h2>Scholarship and Awards</h2>
-    {{#each studentScholarhips as |oneScholarship|}}
-      <label>{{oneScholarship.name}}</label>
+    
+    <table class="ui fixed table">
+        <thead>
+        <tr>
+            <th>Scholarships</th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>  
+        </tr>
+        </thead>
+        {{#each scholarshipModel  as |oneScholarship|}}
+        <tr>
+            <td>
+                <div class="ui fluid input">
+                    {{input type="text" value = oneScholarship.name}}
+                </div>
+            </td>
+            <td>
+                <div class="ui inverted buttons">
+                    <button class="ui blue inverted button" {{action "saveScholarship" scholarship}}>Save</button>
+                    <div class="divider"/>
+                    <button class="ui red inverted button" {{action "deleteScholarship" scholarship}}>Delete</button>
+                </div> 
+            </td>
+            <td><!--spacer--></td>
+        </tr>
     {{/each}}
+    <tr>
+            <td><!--spacer--></td>
+            <td>
+                <div class="ui fluid input">
+                    {{input type="text" value = newScholarshipName}}
+                </div>
+            </td>
+            <td>
+                <button class="ui inverted green button" {{action "addScholarship"}}> 
+                Add &nbsp; <i class="add square icon"></i>
+                </button>
+            </td>
+        </tr>
+    </table>
   </div>
-
+  <div style="text-align: center">
+      Page {{pageNumber}} of {{totalPages}}
+  </div>
 
 
 {{/if}}

@@ -9,6 +9,8 @@ export default Ember.Component.extend({
   pageSize: 10,
   store: Ember.inject.service(),
   studentsModel: null,
+  totalPages: 0,
+  pageNumber: 0,
 
   actions: {
     loadNext: function () {
