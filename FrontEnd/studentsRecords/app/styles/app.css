@@ -10,3 +10,6 @@
     height:auto;
     display:inline-block;
 }
+div > div > div> .step{
+	height:35px;
+}
