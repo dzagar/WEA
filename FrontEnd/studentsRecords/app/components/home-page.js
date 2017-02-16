@@ -49,6 +49,11 @@ export default Ember.Component.extend({
       this.set('isImportShowing', false);
     },
     import (){
+      this.set('isHomeShowing', false);
+      this.set('isStudentsRecordsDataEntry', false);
+      this.set('isAboutShowing', false);
+      this.set('isSystemCodesShowing', false);
+      this.set('isImportShowing', true);
     },
     studentsRecords () {
       this.set('isHomeShowing', false);
