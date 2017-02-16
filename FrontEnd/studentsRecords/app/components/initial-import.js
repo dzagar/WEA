@@ -1,133 +1,133 @@
 import Ember from 'ember';
 import XLSX from 'npm:xlsx-browserify-shim';
 
-	function genderVerification(worksheet)
-	{
+function genderVerification(worksheet)
+{
 	var currentString=worksheet['A1'];
 	currentString=currentString.toUpperCase();
-		if(currentString!='NAME')
-		{
-			DisplayErrorMessage();
-		}
+	if(currentString!='NAME')
+	{
+		DisplayErrorMessage();
 	}
+}
 
-	function residencyVerification(worksheet)
-	{
+function residencyVerification(worksheet)
+{
 	var currentString=worksheet['A1'];
 	currentString=currentString.toUpperCase();
-		if(currentString!='NAME')
-		{
-			DisplayErrorMessage();
-		}
+	if(currentString!='NAME')
+	{
+		DisplayErrorMessage();
 	}
+}
 
-	function termCodeVerification(worksheet)
-	{
+function termCodeVerification(worksheet)
+{
 	var currentString=worksheet['A1'];
 	currentString=currentString.toUpperCase();
-		if(currentString!='NAME')
-		{
-			DisplayErrorMessage();
-		}
+	if(currentString!='NAME')
+	{
+		DisplayErrorMessage();
 	}
+}
 
-	function courseCodeVerification(worksheet)
-	{
+function courseCodeVerification(worksheet)
+{
 	var currentString=worksheet['A1'];
 	currentString=currentString.toUpperCase();
-		if(currentString!='STUDENTNUMBER')
-		{
-			DisplayErrorMessage();
-		}
+	if(currentString!='STUDENTNUMBER')
+	{
+		DisplayErrorMessage();
+	}
 
 	currentString=worksheet['B1'];
 	currentString=currentString.toUpperCase();
-		if(currentString!='TERM')
-		{
-			DisplayErrorMessage();
-		}
+	if(currentString!='TERM')
+	{
+		DisplayErrorMessage();
+	}
 
 	currentString=worksheet['C1'];
 	currentString=currentString.toUpperCase();
-		if(currentString!='COURSELETTER')
-		{
-			DisplayErrorMessage();
-		}
+	if(currentString!='COURSELETTER')
+	{
+		DisplayErrorMessage();
+	}
 
 	currentString=worksheet['D1'];
 	currentString=currentString.toUpperCase();
-		if(currentString!='COURSENUMBER')
-		{
-			DisplayErrorMessage();
-		}
+	if(currentString!='COURSENUMBER')
+	{
+		DisplayErrorMessage();
+	}
 
 	currentString=worksheet['E1'];
 	currentString=currentString.toUpperCase();
-		if(currentString!='SECTION')
-		{
-			DisplayErrorMessage();
-		}
+	if(currentString!='SECTION')
+	{
+		DisplayErrorMessage();
+	}
 
 	currentString=worksheet['F1'];
 	currentString=currentString.toUpperCase();
-		if(currentString!='GRADE')
-		{
-			DisplayErrorMessage();
-		}
+	if(currentString!='GRADE')
+	{
+		DisplayErrorMessage();
+	}
 
 	currentString=worksheet['G1'];
 	currentString=currentString.toUpperCase();
-		if(currentString!='NOTE')
-		{
-			DisplayErrorMessage();
-		}
-	}
-
-	function studentVerification(worksheet)
+	if(currentString!='NOTE')
 	{
+		DisplayErrorMessage();
+	}
+}
+
+function studentVerification(worksheet)
+{
 	currentString=worksheet['A1'];
 	currentString=currentString.toUpperCase();
-		if(currentString!='STUDENTNUMBER')
-		{
-			DisplayErrorMessage();
-		}
+	if(currentString!='STUDENTNUMBER')
+	{
+		DisplayErrorMessage();
+	}
 
 	currentString=worksheet['B1'];
 	currentString=currentString.toUpperCase();
-		if(currentString!='FIRSTNAME')
-		{
-			DisplayErrorMessage();
-		}
+	if(currentString!='FIRSTNAME')
+	{
+		DisplayErrorMessage();
+	}
 
 	currentString=worksheet['C1'];
 	currentString=currentString.toUpperCase();
-		if(currentString!='LASTNAME')
-		{
-			DisplayErrorMessage();
-		}
+	if(currentString!='LASTNAME')
+	{
+		DisplayErrorMessage();
+	}
 
 	currentString=worksheet['D1'];
 	currentString=currentString.toUpperCase();
-		if(currentString!='GENDER')
-		{
-			DisplayErrorMessage();
-		}
+	if(currentString!='GENDER')
+	{
+		DisplayErrorMessage();
+	}
 
 	currentString=worksheet['E1'];
 	currentString=currentString.toUpperCase();
-		if(currentString!='DOB')
-		{
-			DisplayErrorMessage();
-		}
+	if(currentString!='DOB')
+	{
+		DisplayErrorMessage();
+	}
 
 	currentString=worksheet['F1'];
 	currentString=currentString.toUpperCase();
-		if(currentString!='RESIDENCY')
-		{
-			DisplayErrorMessage();
-		}
-
+	if(currentString!='RESIDENCY')
+	{
+		DisplayErrorMessage();
 	}
+
+}
 
 function DisplayErrorMessage()
 {
@@ -149,33 +149,33 @@ export default Ember.Component.extend({
 			var files = $("#newFile")[0].files;
 			var i,f;
 			for (i = 0; i != files.length; ++i) {
-			    f = files[i];
-			    console.log(f);
-			    var reader = new FileReader();
-			    var name = f.name;
-			    reader.onload = function(e) {
-			    	var data = e.target.result;
-			    	var workbook;
-			    	workbook = XLSX.read(data, {type: 'binary'});
+				f = files[i];
+				console.log(f);
+				var reader = new FileReader();
+				var name = f.name;
+				reader.onload = function(e) {
+					var data = e.target.result;
+					var workbook;
+					workbook = XLSX.read(data, {type: 'binary'});
 					var currentWorkSheet=workbook.SheetNames[0];
 					var worksheet=workbook.Sheets[currentWorkSheet];
-		
-			    	switch(currentIndex)
+					
+					switch(currentIndex)
 					{
 						case 0: genderVerfication(worksheet);
-								break;
+						break;
 						case 1:	residencyVerification(worksheet);
-								break;
+						break;
 						case 2:	termCodeVerification(worksheet);
-								break;
+						break;
 						case 3:	courseCodeVerification(worksheet);
-								break;
+						break;
 						case 4:	studentVerification(worksheet);
-								break;
+						break;
 					}
-			    	console.log(currentWorkSheet);
-		    	};
-		    reader.readAsBinaryString(f);
+					console.log(currentWorkSheet);
+				};
+				reader.readAsBinaryString(f);
 			}
 		},
 
