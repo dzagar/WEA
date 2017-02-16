@@ -6,7 +6,7 @@ export default Ember.Component.extend({
 	store: Ember.inject.service(),
 	showDeleteConfirmation: false,
 	importData: false,
-	index: null,
+	currentIndex: null,
 
 	actions: {
 		showEraseDataModal: function(){
@@ -26,7 +26,8 @@ export default Ember.Component.extend({
 			    	workbook = XLSX.read(data, {type: 'binary'});
 					var currentWorkSheet=workbook.SheetNames[0];
 					var worksheet=workbook.Sheets[currentWorkSheet];
-			    	switch(index)
+		
+			    	switch(currentIndex)
 					{
 						case 0: genderVerfication();
 								break;
@@ -45,13 +46,18 @@ export default Ember.Component.extend({
 			}
 		},
 
+		setIndex(index)
+		{
+			this.set('currentIndex',index);
+		},
+
 		genderVerification()
 		{
 			var currentString=worksheet['A1'];
 			currentString=currentString.toUpperCase();
 			if(currentString!='NAME')
 			{
-
+				DisplayErrorMessage();
 			}
 		},
 
