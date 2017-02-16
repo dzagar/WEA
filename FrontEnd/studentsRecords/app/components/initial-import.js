@@ -192,7 +192,68 @@ export default Ember.Component.extend({
 
 					switch(currentIndex)
 					{
-						case 0: genderVerification(worksheet);
+						case 0:
+						if (genderVerfication(worksheet))
+						{
+							var rollBackImport = false;
+							var doneImporting = false;
+							var gendersToImport = [];
+							var uniqueGenderNames = [];
+							for (var i = 2; !doneImporting; i++)
+							{
+								//get the next gender name
+								var gender = worksheet['A' + i];
+								//if the gender exists
+								if (gender)
+								{
+									//gets the genderNameString
+									var genderName = gender.v;
+									//if the gender has already been added
+									if (uniqueGenderNames.includes(genderName))
+									{
+										DisplayErrorMessage("Import cancelled. Your excel sheet contains duplicate gender names '" + genderName + "'");
+										rollBackImport = true;
+										doneImporting = true;
+									}
+									//create new gender object
+									else
+									{
+										gendersToImport[i - 2] = self.get('store').createRecord('gender', 
+										{
+											name: genderName
+										});
+									}
+								}
+								else
+								{
+									doneImporting = true;
+									//if no gender was imported
+									if (i == 2)
+									{
+										rollBackImport = true;
+										DisplayErrorMessage("File does not contain any Values...")
+
+									}
+								}
+								//if the gender is a duplicate, cancel import and display error message
+							}
+							//delete genders from the store
+							if (rollBackImport)
+							{
+								for (var i = 0; i < gendersToImport.length; i++)
+								{
+									gendersToImport[i].deleteRecord();
+								}
+							}
+							else
+							{
+								for (var i = 0; i < gendersToImport.length; i++)
+								{
+									console.log("trying to save");
+									gendersToImport[i].save();
+								}
+							}
+						}
 						break;
 						case 1:	residencyVerification(worksheet);
 						break;
