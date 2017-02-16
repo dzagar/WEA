@@ -12,18 +12,6 @@ export default Ember.Component.extend({
 		deleteAllData: function(){
 			var self = this;
 
-			this.get('store').query('scholarship', {
-				deleteAll: true
-			}).then(function(response){
-				console.log(response);
-			});
-			console.log('deleted scholarships');
-
-			this.get('store').query('advanced-standing', {
-				deleteAll: true
-			});
-			console.log('deleted advanced standings');
-
 			this.get('store').query('gender', {
 				deleteAll: true
 			});
@@ -36,6 +24,19 @@ export default Ember.Component.extend({
 
 			this.get('store').query('student', {
 				deleteAll: true
+			}).then(function(){
+				self.get('store').query('scholarship', {
+					deleteAll: true
+				}).then(function(response){
+					console.log(response);
+				});
+				console.log('deleted scholarships');
+
+				self.get('store').query('advanced-standing', {
+					deleteAll: true
+				}).then(function(response){
+					console.log(response);
+				});
 			});
 			console.log('deleted students');
 

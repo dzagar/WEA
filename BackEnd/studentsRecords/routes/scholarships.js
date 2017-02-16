@@ -33,7 +33,11 @@ router.route('/')
             });
         }
         if (!Student) {
-
+            Scholarship.find(function(err, scholarships){
+                if (err)
+                    response.send(err);
+                response.json({scholarships: scholarships});
+            });
         }
         else
         {

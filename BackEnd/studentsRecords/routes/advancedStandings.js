@@ -8,7 +8,7 @@ var parseJSON = bodyParser.json();
 router.route('/')
     //posting new advanced standing
     .post(parseUrlencoded, parseJSON, function (request, response) {
-        var advancedStandings = new AdvancedStanding(request.body.advancedStandings);
+        var advancedStandings = new AdvancedStanding(request.body.advancedStanding);
         advancedStandings.save(function(error) {
             if (error)
             {
@@ -16,7 +16,7 @@ router.route('/')
             } 
             else
             {
-                response.json({advancedStandings: advancedStandings});                
+                response.json({advancedStanding: advancedStandings});                
             }
         });
 
@@ -31,12 +31,22 @@ router.route('/')
         if (deleteAll){
             AdvancedStanding.remove({}, function(err){
                 if (err) response.send(err);
-                else console.log('removed advanced standings');
+                else
+                {
+                    AdvancedStanding.find(function (err, advancedStandings){
+                        if (err) response.send(err);
+                        response.json({advancedStanding: advancedStandings});
+                    });
+                } console.log('removed advanced standings');
             });
         }
         
-        if (!Student) {
-
+        else if (!Student) {
+            AdvancedStanding.find(function (err, advancedStandings){
+                if (err)
+                    response.send(err);
+                response.json({advancedStanding: advancedStandings});
+            });
         }
         else
         {
@@ -47,7 +57,7 @@ router.route('/')
                     }
                 else 
                     {
-                        response.json({advancedStandings: advancedStandings});
+                        response.json({advancedStanding: advancedStandings});
                     }
             });
         }
