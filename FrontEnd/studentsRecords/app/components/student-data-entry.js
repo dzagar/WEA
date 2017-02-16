@@ -36,6 +36,7 @@ export default Ember.Component.extend({
   showScholarshipDeleteConfirmation: false,
   showFindStudent: false,
   showHelp: false,
+  showDataEntry: true,
   store: Ember.inject.service(),
   studentAdvancedStandings: null,
   studentPhoto: null,
