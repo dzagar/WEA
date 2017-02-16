@@ -109,45 +109,47 @@ export default Ember.Component.extend({
   },
 
   showStudentData: function (index) {
-    this.set("showHelp", false);
-    this.set("showFindStudent",false);
-    var record = this.get('studentsRecords').objectAt(index);
-    if (record != null) {
-      this.set('currentStudent',record );
-      this.set('studentPhoto', this.get('currentStudent').get('photo'));
-      var date = this.get('currentStudent').get('DOB');
-      var datestring = date.substring(0, 10);
-      this.set('selectedDate', datestring);
-      //this.set('selectedGender', this.get('currentStudent').get('gender'));
-      if (this.get('currentStudent.resInfo') == null || this.get('currentStudent.resInfo.id') == null)
-      {
-        this.get('currentStudent').set('resInfo', this.get('store').peekRecord('residency', Ember.$("#ddlResidency").val()));
-        this.get('currentStudent').save(); 
+    if (!this.get('showAllStudents')) { //Disables showStudentData while the all students window is showing to speed things up
+      this.set("showHelp", false);
+      this.set("showFindStudent",false);
+      var record = this.get('studentsRecords').objectAt(index);
+      if (record != null) {
+        this.set('currentStudent',record );
+        this.set('studentPhoto', this.get('currentStudent').get('photo'));
+        var date = this.get('currentStudent').get('DOB');
+        var datestring = date.substring(0, 10);
+        this.set('selectedDate', datestring);
+        //this.set('selectedGender', this.get('currentStudent').get('gender'));
+        if (this.get('currentStudent.resInfo') == null || this.get('currentStudent.resInfo.id') == null)
+        {
+          this.get('currentStudent').set('resInfo', this.get('store').peekRecord('residency', Ember.$("#ddlResidency").val()));
+          this.get('currentStudent').save(); 
+        }
+        if(this.get('currentStudent.gender') == null || this.get('currentStudent.gender.id') == null || this.get('currentStudent.gender.id') == 1 || this.get('currentStudent.gender.id') == 2)
+        {
+          console.log(Ember.$("#ddlGender").val());
+          console.log(this.get('store').peekRecord('gender', Ember.$("#ddlGender").val()));
+          this.get('currentStudent').set('gender',this.get('store').peekRecord('gender', Ember.$("#ddlGender").val()));
+          this.get('currentStudent').save();
+        }
+        this.set('selectedResidency', this.get('currentStudent.resInfo.id'));
+        this.set('selectedGender', this.get('currentStudent.gender.id'));
+        
+        var self = this;
+        //loads student scholarships
+        var scholarshipStudent = this.get('currentStudent.id');
+        this.get('store').query('scholarship', {student : scholarshipStudent}).then(function(scholarships){
+          self.set('studentScholarhips', scholarships);
+        });
+        this.get('store').query('advancedStanding', {student : scholarshipStudent}).then(function(advancedStandings){
+          self.set('studentAdvancedStandings', advancedStandings);
+        });
       }
-      if(this.get('currentStudent.gender') == null || this.get('currentStudent.gender.id') == null || this.get('currentStudent.gender.id') == 1 || this.get('currentStudent.gender.id') == 2)
+      else
       {
-        console.log(Ember.$("#ddlGender").val());
-        console.log(this.get('store').peekRecord('gender', Ember.$("#ddlGender").val()));
-        this.get('currentStudent').set('gender',this.get('store').peekRecord('gender', Ember.$("#ddlGender").val()));
-        this.get('currentStudent').save();
+        this.set('offset',0);
       }
-      this.set('selectedResidency', this.get('currentStudent.resInfo.id'));
-      this.set('selectedGender', this.get('currentStudent.gender.id'));
-      
-      var self = this;
-      //loads student scholarships
-      var scholarshipStudent = this.get('currentStudent.id');
-      this.get('store').query('scholarship', {student : scholarshipStudent}).then(function(scholarships){
-        self.set('studentScholarhips', scholarships);
-      });
-      this.get('store').query('advancedStanding', {student : scholarshipStudent}).then(function(advancedStandings){
-        self.set('studentAdvancedStandings', advancedStandings);
-      });
-    }
-    else
-    {
-       this.set('offset',0);
-    }
+    } //end if(!showAllStudents)
   },
 
   didRender() {
