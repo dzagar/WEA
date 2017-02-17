@@ -445,6 +445,7 @@ export default Ember.Component.extend({
 	showDeleteConfirmation: false,
 	importData: false,
 	changingIndex: 1,
+
 	
 	actions: {
 		showEraseDataModal: function(){
@@ -721,13 +722,18 @@ export default Ember.Component.extend({
 						case ImportState.STUDENT:
 							console.log("In student import");
 							var mutex = Mutex.create();
+							var savingMutex = Mutex.create();
+							var deleteMutex = Mutex.create();
 							if (studentVerification(worksheet))
 							{
 								console.log("validated student import");
 								var rollBackImport = false;
 								var doneImporting = false;
+								var startedSave = false;
+								var startedRollback = false;
 								var studentsToImport = [];
 								var uniqueStudentNumbers = [];
+								var numberOfStudent = -1;
 								for (var i = 2; !doneImporting; i++)
 								{
 									console.log("in the loop at i = " + i);
@@ -750,7 +756,7 @@ export default Ember.Component.extend({
 										else
 										{
 											console.log("not duplicates");
-											uniqueStudentNumbers[i] = studentSheetA.v;
+											uniqueStudentNumbers[i - 2] = studentSheetA.v;
 											//query res by id then gender then create student
 											mutex.lock(function(){
 												var inMutexIndex = i;
@@ -761,11 +767,11 @@ export default Ember.Component.extend({
 												var dateOfBirth = studentSheetE.w;
 												var residency = studentSheetF.v;
 												self.get('store').queryRecord('gender', {name: gender}).then(function(genderObj) {
-													console.log("got gender: ");
-													console.log(genderObj);
+													//console.log("got gender: ");
+													//console.log(genderObj);
 													self.get('store').queryRecord('residency', {name: residency}).then(function(residencyObj) {
-														console.log("got resicdency");
-														console.log(residencyObj);
+														//console.log("got resicdency");
+														//console.log(residencyObj);
 														var newStudent = self.get('store').createRecord('student', {
 															studentNumber: studentNumber,
 															firstName: firstName,
@@ -775,6 +781,27 @@ export default Ember.Component.extend({
 															resInfo: residencyObj.id
 														});
 														studentsToImport[inMutexIndex - 2] = newStudent;
+														deleteMutex.lock(function() {
+															if (doneImporting && rollBackImport && !startedRollback && studentsToImport.length === numberOfStudent)
+															{
+																startedRollback = true;
+																for (var j = 0; j < studentsToImport.length; j++)
+																{
+																	studentsToImport[j].destroyRecord();
+																}
+															}	
+														})
+														savingMutex.lock(function() {
+															if (doneImporting && studentsToImport.length === numberOfStudent && !startedSave)
+															{
+																startedSave = true;
+																console.log("trying to save!")
+																for (var j = 0; j < studentsToImport.length; j++)
+																{
+																	studentsToImport[j].save();
+																}
+															}
+														});
 													});
 												});
 											});
@@ -795,22 +822,7 @@ export default Ember.Component.extend({
 										}
 									}
 								}
-
-								if (rollBackImport)
-								{
-									for (var i = 0; i < studentsToImport.length; i++)
-									{
-										studentsToImport[i].destroyRecord();
-									}
-								}
-								else
-								{
-									console.log(uniqueStudentNumbers.length);
-									for (var i = 0; i < studentsToImport.length; i++)
-									{
-										studentsToImport[i].save();
-									}
-								}
+								numberOfStudent = uniqueStudentNumbers.length;
 							}
 							break;
 						default:
