@@ -19,7 +19,7 @@ router.route('/')
         var gender = request.query.gender;
         var l = parseInt(request.query.limit);
         var lastName = request.query.lastName;
-        var number = request.query.number;
+        var studentNumber = request.query.number;
         var o = parseInt(request.query.offset);
         var residency = request.query.resInfo;
         var student = request.query.student;
@@ -32,32 +32,23 @@ router.route('/')
         }
 
         if (!student) {
-            if (firstName != null)
+            if (firstName != null || lastName != null || studentNumber != null)
             {
-                var conditions = {
-                    "firstName": 
-                        {"$regex": firstName, "$options": "imx" },
-                    "lastName": 
-                        {"$regex": lastName, "$options": "imx" },
-                    "studentNumber":
-                        {"$regex": studentNumber, "$options": "imx"}
-                };
+                var regexFName = new RegExp(firstName, "img");
+                var regexLName = new RegExp(lastName, "img");
+                var regexStudentNum = new RegExp(studentNumber, "img");
+                var conditions = {};
+                if (firstName != "") conditions["firstName"] = regexFName;
+                if (lastName != "") conditions["lastName"] = regexLName;
+                if (studentNumber != "") conditions["studentNumber"] = regexStudentNum;
 
-                //conditions["studentNumber"] = "ggg";
-                //conditions["studentNumber"] = {"$regex": number, "$options": "imx" };
-                // if (residency != -1){
-                //     conditions["resInfo"] = residency;
-                //     //conditions.push({"resInfo": residency});
-                // }
-                // if (gender != 0){
-                //     conditions["gender"] = gender;
-                //     //conditions.push({"gender": gender});
-                // }
                 Student.find(conditions, function(error, students){
                     if (error) response.send(error);
-                    else response.json({student: students});
+                    else {
+                        console.log(students);
+                        response.json({student: students});
+                    }
                 });
-
             }
             else
             { 
