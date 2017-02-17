@@ -313,52 +313,82 @@
   </div>
 {{/if}}
 
-<div class="ui pagination menu">
-  {{#if (greater-than pageNumber 1)}}
-    <a class="item" {{action "switchPage" 1}}>
-      1
-    </a>
-    {{#if (greater-than pageNumber 2)}}
-      {{#if (greater-than pageNumber 3)}}
-        {{#if (greater-than pageNumber 4)}}
-          <div class="disabled item">
-            ...
-          </div>
-        {{/if}}
-        <a class="item" {{action "switchPage" (inline-math pageNumber '-' 2)}}>
-          {{inline-math pageNumber '-' 2}}
+<div style="margin: auto; width: 50%;">
+  <div class="ui fluid pagination nine item menu">
+    {{#if (inline-compare pageNumber '<' 5)}}
+      <div class="disabled item"></div>
+    {{/if}}
+    {{#if (inline-compare pageNumber '>' 3)}}
+      <a class="item" {{action "switchPage" 1}}>
+        1
+      </a>
+    {{else}}
+      <div class="disabled item"></div>
+    {{/if}}
+    {{#if (inline-compare pageNumber '>' 5)}}
+      <div class="disabled item">
+        ...
+      </div>
+    {{else}}
+      {{#if (inline-compare pageNumber '===' 5)}}
+        <a class="item" {{action "switchPage" 2}}>
+          2
         </a>
       {{/if}}
+    {{/if}}
+    {{#if (inline-compare pageNumber '>' 2)}}
+      <a class="item" {{action "switchPage" (inline-math pageNumber '-' 2)}}>
+        {{inline-math pageNumber '-' 2}}
+      </a>
+    {{else}}
+      <div class="disabled item"></div>
+    {{/if}}
+    {{#if (inline-compare pageNumber '>' 1)}}
       <a class="item" {{action "switchPage" (inline-math pageNumber '-' 1)}}>
         {{inline-math pageNumber '-' 1}}
       </a>
+    {{else}}
+      <div class="disabled item"></div>
     {{/if}}
-  {{/if}}
-  <a class="active item">
-    {{pageNumber}}
-  </a>
-  {{#if (less-than pageNumber totalPages)}}
-    <a class="item" {{action "switchPage" (inline-math pageNumber '+' 1)}}>
-      {{inline-math pageNumber '+' 1}}
+
+    <a class="active item">
+      {{pageNumber}}
     </a>
-    {{#if (less-than pageNumber (inline-math totalPages '-' 1))}}
+
+    {{#if (inline-compare pageNumber '<' totalPages)}}
+      <a class="item" {{action "switchPage" (inline-math pageNumber '+' 1)}}>
+        {{inline-math pageNumber '+' 1}}
+      </a>
+    {{else}}
+      <div class="disabled item"></div>
+    {{/if}}
+    {{#if (inline-compare pageNumber '<' (inline-math totalPages '-' 1))}}
       <a class="item" {{action "switchPage" (inline-math pageNumber '+' 2)}}>
         {{inline-math pageNumber '+' 2}}
       </a>
-      {{#if (less-than pageNumber (inline-math totalPages '-' 3))}}
-        <div class="disabled item">
-          ...
-        </div>
-      {{/if}}
-      {{#if (less-than pageNumber (inline-math totalPages '-' 2))}}
-        <a class="item" {{action "switchPage" totalPages}}>
-          {{totalPages}}
+    {{else}}
+      <div class="disabled item"></div>
+    {{/if}}
+    {{#if (inline-compare pageNumber '<' (inline-math totalPages '-' 4))}}
+      <div class="disabled item">
+        ...
+      </div>
+    {{else}}
+      {{#if (inline-compare pageNumber '===' (inline-math totalPages '-' 4))}}
+        <a class="item" {{action "switchPage" (inline-math totalPages '-' 1 )}}>
+          {{inline-math totalPages '-' 1 }}
         </a>
       {{/if}}
     {{/if}}
-  {{/if}}
-</div>
-
-<div style="text-align: center">
-    Page {{pageNumber}} of {{totalPages}}
+    {{#if (inline-compare pageNumber '<' (inline-math totalPages '-' 2))}}
+      <a class="item" {{action "switchPage" totalPages}}>
+        {{totalPages}}
+      </a>
+    {{else}}
+      <div class="disabled item"></div>
+    {{/if}}
+    {{#if (inline-compare pageNumber '>' (inline-math totalPages '-' 4))}}
+      <div class="disabled item"></div>
+    {{/if}}
+  </div>
 </div>
