@@ -10,6 +10,7 @@ var residencies = require('./routes/residencies');
 var genders = require('./routes/genders');
 var scholarships = require('./routes/scholarships');
 var advancedStandings = require('./routes/advancedStandings');
+var highschools = require('./routes/highSchools');
 
 
 app.use(function (request, response, next) {
@@ -26,6 +27,7 @@ app.use('/residencies', residencies);
 app.use('/genders', genders);
 app.use('/scholarships', scholarships);
 app.use('/advancedStandings', advancedStandings);
+app.use('/highSchools', highschools);
 
 
 app.listen(3700, function () {

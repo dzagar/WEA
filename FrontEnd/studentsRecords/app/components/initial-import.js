@@ -9,7 +9,11 @@ var ImportState = {
 	COURSECODE : 4,
 	STUDENT : 5,
 	HIGHSCHOOL : 6,
-	HSCOURSEINFO : 7
+	HSCOURSEINFO : 7,
+	SCHOLARSHIPS : 8,
+	ADVANCEDSTANDINGS : 9,
+	RECORDPLANS : 10,
+	RECORDGRADES : 11
 };
 
 function genderVerification(worksheet)
@@ -862,6 +866,181 @@ export default Ember.Component.extend({
 								numberOfStudent = uniqueStudentNumbers.length;
 							}
 							break;
+							case ImportState.HSCOURSEINFO:
+							{
+								if (studentHighSchoolVerification(worksheet))
+								{
+									var gradeValues = [];
+									var highschoolSubjectValues = [];
+									var highschoolCourseValues = [];
+									var studentNumberValues = [];
+									var studentNumberIndexes = [];
+									var schoolNameValues = [];
+									var schoolNameIndexes = [];
+									var doneReading = false;
+									var rollBackImport = false;
+
+									var currentStudentNumber;
+									var currentSchoolName;
+									for (var i = 2; !doneReading; i++)
+									{
+										console.log("in row " + i);
+										var studentNumber = worksheet['A' + i];
+										var schoolName = worksheet['B' + i];
+										var level = worksheet['C' + i];
+										var subject = worksheet['D' + i];
+										var description = worksheet['E' + i];
+										var source = worksheet['F' + i];
+										var units = worksheet['G' + i];
+										var grade = worksheet['H' + i];
+
+
+										//if they are at a new student
+										if (studentNumber)
+										{
+											console.log("new student importing");
+											//if there is not school listed throw an error
+											if (!schoolName)
+											{
+												console.log("no schoolname");
+												rollBackImport = true;
+												doneReading = true;
+												DisplayErrorMessage("Improperly formated data in  row " (i - 2));
+											}
+											//otherwise get data
+											else
+											{
+												currentSchoolName = schoolName.v;
+												currentStudentNumber = studentNumber.v;
+												console.log("adding new student and new school");
+												//gets indexes and values for later when importing
+												studentNumberValues[studentNumberValues.length] = studentNumber.v;
+												studentNumberIndexes[studentNumberValues.length] = i - 2;
+												schoolNameValues[schoolNameValues.length] = schoolName.v;
+												schoolNameIndexes[schoolNameIndexes.length] = i - 2;
+
+												//if there is information to include...
+												if (!(schoolName.v == "NONE FOUND"))
+												{
+													gradeValues[i - 2] = {"grade": grade.v};
+													highschoolSubjectValues[i - 2] = {"name" : subject.v, "description": description.v};
+													highschoolCourseValues[i - 2] = {"schoolName" : schoolName.v, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v};
+												}
+											}
+
+										}
+										else if (!studentNumber && !schoolName && !level && !subject && !description && !source && !units && !grade)
+										{
+											console.log("all fields are empty");
+											doneReading = true;
+										}
+										else
+										{
+											//switching school but not student
+											if (schoolName)
+											{
+												currentSchoolName = schoolName.v;
+												console.log("adding course/subject for existing student and school");
+												gradeValues[i] = {"grade": grade};
+												highschoolSubjectValues[i - 2] = {"name" : subject.v, "description": description.v};
+												highschoolCourseValues[i - 2] = {"schoolName" : schoolName.v,"level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v};
+											}
+											//switching neither school not student
+											else
+											{
+												console.log("adding course/subject for existing student and school");
+												gradeValues[i - 2] = {"grade": grade};
+												highschoolSubjectValues[i - 2] = {"name" : subject.v, "description": description.v};
+												highschoolCourseValues[i - 2] = {"schoolName" : currentSchoolName,"level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v};
+
+											}
+										}
+									}
+									console.log(highschoolCourseValues);
+									console.log(highschoolSubjectValues);
+									if (!rollBackImport)
+									{
+										console.log("in import for highscoolInfo!");
+										var subjectsToImport = [];
+										var uniqueSubjects = [];
+										var numberOfSubjects = -1;
+										for (var i = 0; i < highschoolSubjectValues.length; i++)
+										{
+											//if the subject has not yet been added create it and then course then grade
+											if (!uniqueSubjects.includes(highschoolSubjectValues[i]))
+											{
+												console.log("importing for " + i);
+												console.log(highschoolSubjectValues[i]);
+												uniqueSubjects[uniqueSubjects.length] = highschoolSubjectValues[i];
+												var subjectName = highschoolSubjectValues[i].name;
+												var subjectDescription = highschoolSubjectValues[i].description;
+												subjectsToImport[subjectsToImport.length] = self.get('store').createRecord('high-school-subject', {
+													name: subjectName,
+													description: subjectDescription
+												});
+												subjectsToImport[subjectsToImport.length - 1].save().then(function() {
+													console.log("created a subject");
+													//if the last unique subject has been uploaded
+													if (subjectsToImport.length === numberOfSubjects)
+													{
+														console.log("saving and moving on")
+														for (var j = 0; j < subjectsToImport.length; j++)
+														{
+															subjectsToImport[j].save();
+														}
+														//begin importing the courses
+														var coursesToImport = [];
+														var uniqueCourses = [];
+														var numberOfCourses = -1;
+
+														//loop through each course record
+														for (var k = 0; k < highschoolCourseValues.length; k++)
+														{
+															if (!uniqueCourses.includes(highschoolCourseValues[k]))
+															{
+																//add course to array of unique courses
+																uniqueCourses[uniqueCourses.length] = highschoolCourseValues[k];
+																var courseSchoolName = highschoolCourseValues[k].schoolName;
+																var courseLevel = highschoolCourseValues[k].level;
+																var courseUnit = highschoolCourseValues[k].unit;
+																var courseSource = highschoolCourseValues[k].source;
+																var subjectNameParam = highschoolCourseValues[k].name;
+																var subjectDescParam = highschoolCourseValues[k].description;
+																//get the subject reference for the course
+																self.get('store').queryRecord('high-school-subject', {name: subjectNameParam, description: subjectDescParam}).then(function(subjectObj) {
+																	self.get('store').queryRecord('high-school', {name: courseSchoolName}).then(function(highSchoolObj) {
+																		coursesToImport[coursesToImport.length] = self.get('store').createRecord('high-school-course', {
+																			level: courseLevel,
+																			unit: courseUnit,
+																			source: courseSource,
+																			school: highSchoolObj.id,
+																			subject: subjectObj.id
+																			//Once the course is created
+																		}).then(function() {
+																			if (coursesToImport.length === numberOfCourses)
+																			{
+																				for (var m = 0; m < coursesToImport.length; m++)
+																				{
+																					coursesToImport[m].save();
+																				}
+																			}
+																		});
+																	});
+																});
+
+															}
+														}
+														numberOfCourses = uniqueCourses.length
+													}
+
+												});
+											}
+										}
+										numberOfSubjects = uniqueSubjects.length;
+									}
+									}
+								}
+
 							default:
 							break;
 						}
