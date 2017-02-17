@@ -876,7 +876,66 @@ export default Ember.Component.extend({
 				console.log(index);
 				this.set('changingIndex',index);
 				console.log("index is now " + this.get('changingIndex'));
-			}	
+			},	
+			continue(){
+				this.set('changingIndex', this.get('changingIndex')+1);
+				switch(this.get('changingIndex')){
+					case 2:
+						$("#residencies").addClass("active");
+						$("#gender").removeClass("active");
+						$("#gender").addClass("completed");
+						break;
+					case 3:
+						$("#termCodes").addClass("active");
+						$("#residencies").removeClass("active");
+						$("#residencies").addClass("completed");
+						break;
+					case 4:
+						$("#courseCodes").addClass("active");
+						$("#termCodes").removeClass("active");
+						$("#termCodes").addClass("completed");
+						break;
+					case 5:
+						$("#students").addClass("active");
+						$("#courseCodes").removeClass("active");
+						$("#courseCodes").addClass("completed");
+						break;
+					case 6:
+						$("#secondary").addClass("active");
+						$("#students").removeClass("active");
+						$("#students").addClass("completed");
+						break;
+					case 7:
+						$("#highschool").addClass("active");
+						$("#secondary").removeClass("active");
+						$("#secondary").addClass("completed");
+						break;
+					case 8:
+						$("#awards").addClass("active");
+						$("#highschool").removeClass("active");
+						$("#highschool").addClass("completed");
+						break;
+					case 9:
+						$("#advancedStandings").addClass("active");
+						$("#awards").removeClass("active");
+						$("#awards").addClass("completed");
+						break;
+					case 10:
+						$("#recordPlans").addClass("active");
+						$("#advancedStandings").removeClass("active");
+						$("#advancedStandings").addClass("completed");
+						break;
+					case 11:
+						$("#courseGrades").addClass("active");
+						$("#recordPlans").removeClass("active");
+						$("#recordPlans").addClass("completed");
+						break;
+					case 12:
+						$("#courseGrades").removeClass("active");
+						$("#courseGrades").addClass("completed");
+						break;
+				}
+		}	
 
 		}
 	});
