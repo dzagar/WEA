@@ -151,6 +151,24 @@ export default Ember.Component.extend({
     } //end if(!showAllStudents)
   },
 
+  //Changes the offset based on offsetDelta and relative.
+  //If relative is true, the offsetDelta is added to offset
+  //If relative is false, the offsetDelta becomes the new offset
+  //Checks and deals with the edge of the set
+  changeOffset: function (offsetDelta, relative) {
+    console.log('changeOffset called');
+    if (relative) {
+      if (this.get('offset') + offsetDelta >= this.get('totalStudents'))
+        this.set('offset', (this.get('totalPages') - 1) * this.get('pageSize'));
+      else if (this.get('offset') + offsetDelta < 0)
+        this.set('offset', 0);
+      else
+        this.set('offset', this.get('offset') + offsetDelta);
+    } else {
+      this.set('offset', offsetDelta);
+    }
+  },
+
   didRender() {
     Ember.$('.menu .item').tab();
   },
@@ -158,21 +176,10 @@ export default Ember.Component.extend({
 
   actions: {
 
-    //Changes the offset based on offsetDelta and relative.
-    //If relative is true, the offsetDelta is added to offset
-    //If relative is false, the offsetDelta becomes the new offset
-    //Checks and deals with the edge of the set
-    changeOffset: function (offsetDelta, relative) {
-      if (relative) {
-        if (this.get('offset') + offsetDelta >= this.get('totalStudents'))
-          this.set('offset', (this.get('totalPages') - 1) * this.get('pageSize'));
-        else if (this.get('offset') + offsetDelta < 0)
-          this.set('offset', 0);
-        else
-          this.set('offset', this.get('offset') + offsetDelta);
-      } else {
-        this.set('offset', offsetDelta);
-      }
+    //Calls the change offset function
+    //The action is necessary for passing to all-students
+    changeOffset(offsetDelta, relative) {
+      this.changeOffset(offsetDelta, relative)
     },
 
     saveStudent () {
