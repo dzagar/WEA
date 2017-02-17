@@ -313,6 +313,30 @@
   </div>
 {{/if}}
 
+<div class="ui pagination menu">
+  <a class="item">
+    1
+  </a>
+  <a class="item">
+    {{inline-math pageNumber '-' 2}}
+  </a>
+  <a class="item">
+    {{inline-math pageNumber '-' 1}}
+  </a>
+  <a class="active item">
+    {{pageNumber}}
+  </a>
+  <a class="item">
+    {{inline-math pageNumber '+' 1}}
+  </a>
+  <a class="item">
+    {{inline-math pageNumber '+' 2}}
+  </a>
+  <a class="item">
+    {{totalPages}}
+  </a>
+</div>
+
 <div style="text-align: center">
     Page {{pageNumber}} of {{totalPages}}
 </div>
