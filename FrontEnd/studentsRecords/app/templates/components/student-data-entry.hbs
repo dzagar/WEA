@@ -286,8 +286,8 @@
   <div class="ui grid">
     {{#each studentsRecords as |student|}}
       <div class="eight wide column">
-        <div class="ui fluid button" {{action "selectStudent" student}}>
-          <img class="ui avatar image" src={{student.photo}}>
+        <div class="ui labeled icon button" {{action "selectStudent" student}}>
+          <img class="ui avatar image icon" src={{student.photo}}>
           {{student.firstName}} {{student.lastName}}
         </div>
       </div>
