@@ -166,7 +166,7 @@ function studentVerification(worksheet)
 }
 function UndergraduateCoursesVerification(workbook)
 {
-	var currentString=workbook[‘A1’].v;
+	var currentString=workbook['A1'].v;
 	currentString=currentString.toUpperCase();
 	if(currentString!=’COURSELETTER’)
 	{
@@ -174,7 +174,7 @@ function UndergraduateCoursesVerification(workbook)
 		return false;
 	}
 
-	currentString=workbook[‘B1’].v;
+	currentString=workbook['B1'].v;
 	currentString=currentString.toUpperCase();
 	if(currentString!=’COURSENUMBER’)
 	{
@@ -182,7 +182,7 @@ function UndergraduateCoursesVerification(workbook)
 		return false;
 	}
 
-	currentString=workbook[‘C1’].v;
+	currentString=workbook['C1'].v;
 	currentString=currentString.toUpperCase();
 	if(currentString!=’NAME’)
 	{
@@ -190,7 +190,7 @@ function UndergraduateCoursesVerification(workbook)
 		return false;
 	}
 
-	currentString=workbook[‘D1’].v;
+	currentString=workbook['D1'].v;
 	currentString=currentString.toUpperCase();
 	if(currentString!=’UNIT’)
 	{
