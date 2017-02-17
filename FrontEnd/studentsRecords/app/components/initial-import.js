@@ -168,7 +168,7 @@ function UndergraduateCoursesVerification(workbook)
 {
 	var currentString=workbook['A1'].v;
 	currentString=currentString.toUpperCase();
-	if(currentString!=’COURSELETTER’)
+	if(currentString!='COURSELETTER')
 	{
 		DisplayErrorMessage("Please fix the 'courseletter' header in the imported file!");
 		return false;
@@ -176,7 +176,7 @@ function UndergraduateCoursesVerification(workbook)
 
 	currentString=workbook['B1'].v;
 	currentString=currentString.toUpperCase();
-	if(currentString!=’COURSENUMBER’)
+	if(currentString!='COURSENUMBER')
 	{
 		DisplayErrorMessage("Please fix the 'coursenumber' header in the imported file!");
 		return false;
@@ -184,7 +184,7 @@ function UndergraduateCoursesVerification(workbook)
 
 	currentString=workbook['C1'].v;
 	currentString=currentString.toUpperCase();
-	if(currentString!=’NAME’)
+	if(currentString!='NAME')
 	{
 		DisplayErrorMessage("Please fix the 'name' header in the imported file!");
 		return false;
@@ -192,7 +192,7 @@ function UndergraduateCoursesVerification(workbook)
 
 	currentString=workbook['D1'].v;
 	currentString=currentString.toUpperCase();
-	if(currentString!=’UNIT’)
+	if(currentString!='UNIT')
 	{
 		DisplayErrorMessage("Please fix the 'unit' header in the imported file!");
 		return false;
