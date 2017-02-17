@@ -716,8 +716,84 @@ export default Ember.Component.extend({
 								}
 							}
 							break;
-						// case ImportState.HSCOURSEINFO:
-						// 	break;
+						case ImportState.STUDENT:
+							if (studentVerification(worksheet))
+						{
+							var rollBackImport = false;
+							var doneImporting = false;
+							var studentsToImport = [];
+							var uniqueStudentNumbers = [];
+							for (var i = 2; !doneImporting; i++)
+							{
+								var studentSheetA = worksheet['A' + i];
+								var studentSheetB = worksheet['B' + i];
+								var studentSheetC = worksheet['C' + i];
+								var studentSheetD = worksheet['D' + i];
+								var studentSheetE = worksheet['E' + i];
+								var studentSheetF = worksheet['F' + i];
+								if (studentSheetA && studentSheetB && studentSheetC && studentSheetD && studentSheetE && studentSheetF)
+								{
+									if (uniqueStudentNumbers.contains(studentSheetA.v))
+									{
+										rollBackImport = true;
+										doneImporting = true;
+										DisplayErrorMessage("Imported file contains duplicate records for student number " + studentNumber.v);
+									}
+									else
+									{
+										var studentNumber = studentSheetA.v;
+										var firstName = studentSheetB.v;
+										var lastName = studentSheetC.v;
+										var gender = studentSheetD.v;
+										var dateOfBirth = studentSheetE.v;
+										var residency = studentSheetF.v;
+										//query res by id then gender then create student
+										this.get('store').queryRecord('gender', {name: gender}).then(function(genderObj) {
+											this.get('store').queryRecord('residency', {name: residency}).then(function(residencyOBJ) {
+												studentsToImport[i - 2] = this.get('store').createRecord('student', {
+													studentNumber: studentNumber,
+													firstName: firstName,
+													lastName: lastName,
+													gender: genderOBJ.id,
+													DOB: dateOfBirth,
+													resInfo: residencyOBJ.id
+												})
+											});
+										});
+									}
+								}
+								else
+								{
+									doneImporting = true;
+									if (studentSheetA || studentSheetB || studentSheetC || studentSheetD || studentSheetE || studentSheetF)
+									{
+										rollBackImport = true;
+										DisplayErrorMessage("Imported file contains records with missing information on row" + i);
+									}
+									if (i === 2)
+									{
+										rollBackImport = true;
+										DisplayErrorMessage("Student sheet did not contain any properly formated students students...")
+									}
+								}
+							}
+
+							if (rollBackImport)
+							{
+								for (var i = 0; i < studentsToImport.length; i++)
+								{
+									studentsToImport[i].destroyRecord();
+								}
+							}
+							else
+							{
+								for (var i = 0; i < studentsToImport.length; i++)
+								{
+									studentsToImport[i].save();
+								}
+							}
+						}
+						break;
 						default:
 							break;
 					}
