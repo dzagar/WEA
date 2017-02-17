@@ -305,11 +305,6 @@ export default Ember.Component.extend({
       this.set("showAddStudent", true);
       this.set("showAllStudents", false);
     },
-    selectStudent(student, index) {
-      this.set('currentIndex', index);
-      this.set('currentStudent', student);
-      this.set('showDataEntry', true);
-    },
     toggleDataEntry() {
       this.set("showDataEntry", !this.get("showDataEntry"));
     },
@@ -425,6 +420,13 @@ export default Ember.Component.extend({
     saveHighSchool(highSchool)
     {
       highSchool.save();
+    },
+
+    //This is where all of the actions that will later move to all-students should go\\
+    selectStudent(student, index) {
+      this.set('currentIndex', index);
+      this.set('currentStudent', student);
+      this.set('showDataEntry', true);
     }
   }
 });

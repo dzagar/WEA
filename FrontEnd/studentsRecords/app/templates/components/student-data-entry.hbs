@@ -314,27 +314,49 @@
 {{/if}}
 
 <div class="ui pagination menu">
-  <a class="item">
-    1
-  </a>
-  <a class="item">
-    {{inline-math pageNumber '-' 2}}
-  </a>
-  <a class="item">
-    {{inline-math pageNumber '-' 1}}
-  </a>
+  {{#if (greater-than pageNumber 1)}}
+    <a class="item">
+      1
+    </a>
+    {{#if (greater-than pageNumber 2)}}
+      {{#if (greater-than pageNumber 3)}}
+        {{#if (greater-than pageNumber 4)}}
+          <div class="disabled item">
+            ...
+          </div>
+        {{/if}}
+        <a class="item">
+          {{inline-math pageNumber '-' 2}}
+        </a>
+      {{/if}}
+      <a class="item">
+        {{inline-math pageNumber '-' 1}}
+      </a>
+    {{/if}}
+  {{/if}}
   <a class="active item">
     {{pageNumber}}
   </a>
-  <a class="item">
-    {{inline-math pageNumber '+' 1}}
-  </a>
-  <a class="item">
-    {{inline-math pageNumber '+' 2}}
-  </a>
-  <a class="item">
-    {{totalPages}}
-  </a>
+  {{#if (less-than pageNumber totalPages)}}
+    <a class="item">
+      {{inline-math pageNumber '+' 1}}
+    </a>
+    {{#if (less-than pageNumber (inline-math totalPages '-' 1))}}
+      <a class="item">
+        {{inline-math pageNumber '+' 2}}
+      </a>
+      {{#if (less-than pageNumber (inline-math totalPages '-' 3))}}
+        <div class="disabled item">
+          ...
+        </div>
+      {{/if}}
+      {{#if (less-than pageNumber (inline-math totalPages '-' 2))}}
+        <a class="item">
+          {{totalPages}}
+        </a>
+      {{/if}}
+    {{/if}}
+  {{/if}}
 </div>
 
 <div style="text-align: center">
