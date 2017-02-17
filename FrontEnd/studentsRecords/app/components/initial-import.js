@@ -164,7 +164,44 @@ function studentVerification(worksheet)
 
 	return true;
 }
+function UndergraduateCoursesVerification(workbook)
+{
+	var currentString=workbook[‘A1’].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!=’COURSELETTER’)
+	{
+		DisplayErrorMessage("Please fix the 'courseletter' header in the imported file!");
+		return false;
+	}
 
+	currentString=workbook[‘B1’].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!=’COURSENUMBER’)
+	{
+		DisplayErrorMessage("Please fix the 'coursenumber' header in the imported file!");
+		return false;
+	}
+
+	currentString=workbook[‘C1’].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!=’NAME’)
+	{
+		DisplayErrorMessage("Please fix the 'name' header in the imported file!");
+		return false;
+	}
+
+	currentString=workbook[‘D1’].v;
+	currentString=currentString.toUpperCase();
+	if(currentString!=’UNIT’)
+	{
+		DisplayErrorMessage("Please fix the 'unit' header in the imported file!");
+		return false;
+	}
+
+
+	return true;
+
+}
 function secondarySchoolVerification(worksheet)
 {
 	var currentString=worksheet['A1'].v;
@@ -474,12 +511,12 @@ export default Ember.Component.extend({
 					switch(currentIndex)
 					{
 						case ImportState.GENDER: 
-							if (genderVerification(worksheet)){
-								var rollBackImport = false;
-								var doneImporting = false;
-								var gendersToImport = [];
-								var uniqueGenderNames = [];
-								for (var i = 2; !doneImporting; i++){
+						if (genderVerification(worksheet)){
+							var rollBackImport = false;
+							var doneImporting = false;
+							var gendersToImport = [];
+							var uniqueGenderNames = [];
+							for (var i = 2; !doneImporting; i++){
 									//get the next gender name
 									var gender = worksheet['A' + i];
 									//if the gender exists
@@ -520,7 +557,7 @@ export default Ember.Component.extend({
 								}
 							}
 							break;
-						case ImportState.RESIDENCY:
+							case ImportState.RESIDENCY:
 							if (residencyVerification(worksheet)) {
 								var rollBackImport = false;
 								var doneImporting = false;
@@ -567,7 +604,7 @@ export default Ember.Component.extend({
 								}
 							}
 							break;
-						case ImportState.TERMCODE:
+							case ImportState.TERMCODE:
 							if (termCodeVerification(worksheet)) {
 								var rollBackImport = false;
 								var doneImporting = false;
@@ -614,7 +651,7 @@ export default Ember.Component.extend({
 								}
 							}
 							break;
-						case ImportState.COURSECODE:
+							case ImportState.COURSECODE:
 							if (courseCodeVerification(worksheet)) {
 								var rollBackImport = false;
 								var doneImporting = false;
@@ -673,12 +710,12 @@ export default Ember.Component.extend({
 						// case ImportState.STUDENT:
 						// 	break;
 						case ImportState.HIGHSCHOOL:	
-							if (secondarySchoolVerification(worksheet)) {
-								var rollBackImport = false;
-								var doneImporting = false;
-								var highSchoolsToImport = [];
-								var uniqueHighSchoolNames = [];
-								for (var i = 2; !doneImporting; i++) {
+						if (secondarySchoolVerification(worksheet)) {
+							var rollBackImport = false;
+							var doneImporting = false;
+							var highSchoolsToImport = [];
+							var uniqueHighSchoolNames = [];
+							for (var i = 2; !doneImporting; i++) {
 									//get the next hs name
 									var highSchool = worksheet['A' + i];
 									//if the hs exists
@@ -719,7 +756,7 @@ export default Ember.Component.extend({
 								}
 							}
 							break;
-						case ImportState.STUDENT:
+							case ImportState.STUDENT:
 							console.log("In student import");
 							var mutex = Mutex.create();
 							var savingMutex = Mutex.create();
@@ -825,21 +862,21 @@ export default Ember.Component.extend({
 								numberOfStudent = uniqueStudentNumbers.length;
 							}
 							break;
-						default:
+							default:
 							break;
-					}
-					console.log(currentWorkSheet);
-				};
-				reader.readAsBinaryString(f);
-			}
-		},
+						}
+						console.log(currentWorkSheet);
+					};
+					reader.readAsBinaryString(f);
+				}
+			},
 
-		setIndex(index)
-		{
-			console.log(index);
-			this.set('changingIndex',index);
-			console.log("index is now " + this.get('changingIndex'));
-		}	
+			setIndex(index)
+			{
+				console.log(index);
+				this.set('changingIndex',index);
+				console.log("index is now " + this.get('changingIndex'));
+			}	
 
-	}
-});
+		}
+	});
