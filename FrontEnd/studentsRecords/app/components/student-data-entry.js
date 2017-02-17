@@ -290,6 +290,10 @@ export default Ember.Component.extend({
       this.set("showAddStudent", true);
       this.set("showAllStudents", false);
     },
+    selectStudent(student) {
+      this.set('currentStudent', student);
+      this.set('showDataEntry', true);
+    },
     helpInfo(){
       this.set("showAllStudents", false);
       this.set("showHelp", true);
