@@ -315,7 +315,7 @@
 
 <div class="ui pagination menu">
   {{#if (greater-than pageNumber 1)}}
-    <a class="item">
+    <a class="item" {{action "switchPage" 1}}>
       1
     </a>
     {{#if (greater-than pageNumber 2)}}
@@ -325,11 +325,11 @@
             ...
           </div>
         {{/if}}
-        <a class="item">
+        <a class="item" {{action "switchPage" (inline-math pageNumber '-' 2)}}>
           {{inline-math pageNumber '-' 2}}
         </a>
       {{/if}}
-      <a class="item">
+      <a class="item" {{action "switchPage" (inline-math pageNumber '-' 1)}}>
         {{inline-math pageNumber '-' 1}}
       </a>
     {{/if}}
@@ -338,11 +338,11 @@
     {{pageNumber}}
   </a>
   {{#if (less-than pageNumber totalPages)}}
-    <a class="item">
+    <a class="item" {{action "switchPage" (inline-math pageNumber '+' 1)}}>
       {{inline-math pageNumber '+' 1}}
     </a>
     {{#if (less-than pageNumber (inline-math totalPages '-' 1))}}
-      <a class="item">
+      <a class="item" {{action "switchPage" (inline-math pageNumber '+' 2)}}>
         {{inline-math pageNumber '+' 2}}
       </a>
       {{#if (less-than pageNumber (inline-math totalPages '-' 3))}}
@@ -351,7 +351,7 @@
         </div>
       {{/if}}
       {{#if (less-than pageNumber (inline-math totalPages '-' 2))}}
-        <a class="item">
+        <a class="item" {{action "switchPage" totalPages}}>
           {{totalPages}}
         </a>
       {{/if}}

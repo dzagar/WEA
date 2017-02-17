@@ -422,6 +422,11 @@ export default Ember.Component.extend({
       highSchool.save();
     },
 
+    switchPage(pageNum)
+    {
+      this.changeOffset((pageNum - 1) * this.get('pageSize'), false);
+    },
+
     //This is where all of the actions that will later move to all-students should go\\
     selectStudent(student, index) {
       this.set('currentIndex', index);
