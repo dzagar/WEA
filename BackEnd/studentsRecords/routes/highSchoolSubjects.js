@@ -16,7 +16,7 @@ router.route('/')
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
-            HighSchoolSubject.find({}, function (error, students) {
+            HighSchoolSubject.find({name: request.query.name, description: request.query.description}, function (error, students) {
                 if (error)
                     response.send(error);
                 response.json({highSchoolSubjects: students});
