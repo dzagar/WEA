@@ -275,18 +275,14 @@
           </tr>
       </table>
     </div>
-    <div style="text-align: center">
-        Page {{pageNumber}} of {{totalPages}}
-    </div>
 
   {{/if}}
 
 {{else}}
-  <div class="ui horizontal divider"></div>
-  <div class="ui grid">
-    {{#each studentsRecords as |student|}}
+  <div class="ui vertically padded grid">
+    {{#each studentsRecords as |student index|}}
       <div class="eight wide column">
-        <div class="ui labeled icon button" {{action "selectStudent" student}}>
+        <div class="ui fluid labeled icon button" {{action "selectStudent" student index}}>
           <img class="ui avatar image icon" src={{student.photo}}>
           {{student.firstName}} {{student.lastName}}
         </div>
@@ -294,3 +290,7 @@
     {{/each}}
   </div>
 {{/if}}
+
+<div style="text-align: center">
+    Page {{pageNumber}} of {{totalPages}}
+</div>
