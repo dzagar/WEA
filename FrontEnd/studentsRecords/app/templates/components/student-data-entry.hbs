@@ -7,7 +7,7 @@
 
 {{#if showDataEntry}}
   <!-- Show the menu bar-->
-  <div class="ui stackable container inverted ten item menu">
+  <div class="ui stackable container inverted nine item menu">
     <a class="item" {{action 'saveStudent'}}>
       <i class="save icon"></i>
       Save
@@ -40,10 +40,6 @@
       <i class="search icon"></i>
       Find Record
     </a>
-    <a class = "item" {{action 'helpInfo'}}>
-      <i class="help icon"></i>
-      Help
-    </a>
     <a class = "item" {{action 'createStudent'}}>
       <i class="add user icon"></i>
       Add Student
@@ -65,9 +61,7 @@
   {{else if showAddStudent}}
     {{add-student INDEX = currentIndex student = currentStudent notDONE = showAddStudent total=totalStudents}} 
   {{else if showFindStudent}}
-  {{find-student notDONE = showFindStudent gender = genderModel residency=residencyModel studentsRecords=studentsRecords}}
-  {{else if showHelp}}
-    {{show-help}}
+    {{find-student notDONE = showFindStudent gender = genderModel residency=residencyModel studentsRecords=studentsRecords}}
   {{else}}
     <!-- Show data entry form -->
 
@@ -280,7 +274,7 @@
 
 {{else}}
   
-  <div class="ui stackable container inverted seven item menu">
+  <div class="ui stackable container inverted six item menu">
     <a class="item" {{action 'firstPage'}}>
       <i class="step backward icon"></i>
       First
@@ -300,10 +294,6 @@
     <a class="item" {{action 'findStudent'}}>
       <i class="search icon"></i>
       Find Record
-    </a>
-    <a class = "item" {{action 'helpInfo'}}>
-      <i class="help icon"></i>
-      Help
     </a>
     <a class = "item" {{action 'createStudent'}}>
       <i class="add user icon"></i>

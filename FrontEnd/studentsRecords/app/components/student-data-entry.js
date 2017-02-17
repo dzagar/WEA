@@ -35,7 +35,6 @@ export default Ember.Component.extend({
   showHighSchoolDeleteConfirmation: false,
   showScholarshipDeleteConfirmation: false,
   showFindStudent: false,
-  showHelp: false,
   showDataEntry: false,
   store: Ember.inject.service(),
   studentAdvancedStandings: null,
@@ -310,12 +309,6 @@ export default Ember.Component.extend({
       this.set('currentIndex', index);
       this.set('currentStudent', student);
       this.set('showDataEntry', true);
-    },
-    helpInfo(){
-      this.set("showAllStudents", false);
-      this.set("showHelp", true);
-      this.set("showFindStudent",false);
-      this.set("showDeleteConfirmation", false);
     },
     toggleDataEntry() {
       this.set("showDataEntry", !this.get("showDataEntry"));
