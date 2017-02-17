@@ -279,6 +279,38 @@
   {{/if}}
 
 {{else}}
+  
+  <div class="ui stackable container inverted seven item menu">
+    <a class="item" {{action 'firstPage'}}>
+      <i class="step backward icon"></i>
+      First
+    </a>
+    <a class="item" {{action 'previousPage'}}>
+      <i class="arrow left icon"></i>
+      Previous
+    </a>
+    <a class="item" {{action 'nextPage'}}>
+      <i class="arrow right icon"></i>
+      Next
+    </a>
+    <a class="item" {{action 'lastPage'}}>
+      <i class="step forward icon"></i>
+      Last
+    </a>
+    <a class="item" {{action 'findStudent'}}>
+      <i class="search icon"></i>
+      Find Record
+    </a>
+    <a class = "item" {{action 'helpInfo'}}>
+      <i class="help icon"></i>
+      Help
+    </a>
+    <a class = "item" {{action 'createStudent'}}>
+      <i class="add user icon"></i>
+      Add Student
+    </a>
+  </div> 
+
   <div class="ui vertically padded grid">
     {{#each studentsRecords as |student index|}}
       <div class="eight wide column">

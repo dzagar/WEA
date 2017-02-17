@@ -228,6 +228,22 @@ export default Ember.Component.extend({
       this.set('showDeleteConfirmation', false);
     },
 
+    firstPage() {
+      this.changeOffset(0, false);
+    },
+
+    nextPage() {
+      this.changeOffset(this.get('pageSize'), true);
+    },
+
+    previousPage() {
+      this.changeOffset(-this.get('pageSize'), true);
+    },
+
+    lastPage() {
+      this.changeOffset((this.get('totalPages') - 1) * this.get('pageSize'), false);
+    },
+
     selectGender (gender){
       this.set('selectedGender', gender);
     },
