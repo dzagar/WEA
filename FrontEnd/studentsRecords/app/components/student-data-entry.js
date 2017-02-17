@@ -36,7 +36,7 @@ export default Ember.Component.extend({
   showScholarshipDeleteConfirmation: false,
   showFindStudent: false,
   showHelp: false,
-  showDataEntry: true,
+  showDataEntry: false,
   store: Ember.inject.service(),
   studentAdvancedStandings: null,
   studentPhoto: null,
@@ -157,7 +157,6 @@ export default Ember.Component.extend({
   //If relative is false, the offsetDelta becomes the new offset
   //Checks and deals with the edge of the set
   changeOffset: function (offsetDelta, relative) {
-    console.log('changeOffset called');
     if (relative) {
       if (this.get('offset') + offsetDelta >= this.get('totalStudents'))
         this.set('offset', (this.get('totalPages') - 1) * this.get('pageSize'));
@@ -296,6 +295,9 @@ export default Ember.Component.extend({
       this.set("showHelp", true);
       this.set("showFindStudent",false);
       this.set("showDeleteConfirmation", false);
+    },
+    toggleDataEntry() {
+      this.set("showDataEntry", !this.get("showDataEntry"));
     },
     toggleProgramInfo() {
       if ($("#programInfoTab").is(":visible"))

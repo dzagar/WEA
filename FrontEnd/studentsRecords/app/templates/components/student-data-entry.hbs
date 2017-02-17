@@ -1,6 +1,9 @@
 <div class="ui center aligned header">
   <h2>Students Records</h2>
 </div>
+<div class="ui fluid button" {{action 'toggleDataEntry'}}>
+  Switch
+</div>
 
 {{#if showDataEntry}}
   <!-- Show the menu bar-->
@@ -279,5 +282,14 @@
   {{/if}}
 
 {{else}}
-
+  <div class="ui horizontal divider"></div>
+  <div class="ui grid">
+    {{#each studentsRecords as |student|}}
+      <div class="eight wide column">
+        <div class="ui fluid button">
+            {{student.firstName}} {{student.lastName}}
+        </div>
+      </div>
+    {{/each}}
+  </div>
 {{/if}}
