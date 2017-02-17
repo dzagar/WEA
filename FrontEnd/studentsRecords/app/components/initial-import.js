@@ -964,10 +964,12 @@ export default Ember.Component.extend({
 										var subjectsToImport = [];
 										var uniqueSubjects = [];
 										var numberOfSubjects = -1;
+										var startedSavingSubjects = false;
+										var subjectSavingMutex = Mutex.create();
 										for (var i = 0; i < highschoolSubjectValues.length; i++)
 										{
 											//if the subject has not yet been added create it and then course then grade
-											if (!uniqueSubjects.includes(highschoolSubjectValues[i]))
+											if (!uniqueSubjects.includes(highschoolSubjectValues[i]) && highschoolSubjectValues[i])
 											{
 												console.log("importing for " + i);
 												console.log(highschoolSubjectValues[i]);
@@ -981,57 +983,61 @@ export default Ember.Component.extend({
 												subjectsToImport[subjectsToImport.length - 1].save().then(function() {
 													console.log("created a subject");
 													//if the last unique subject has been uploaded
-													if (subjectsToImport.length === numberOfSubjects)
-													{
-														console.log("saving and moving on")
-														for (var j = 0; j < subjectsToImport.length; j++)
+													subjectSavingMutex.lock(function() {
+														if (subjectsToImport.length === numberOfSubjects && !startedSavingSubjects)
 														{
-															subjectsToImport[j].save();
-														}
-														//begin importing the courses
-														var coursesToImport = [];
-														var uniqueCourses = [];
-														var numberOfCourses = -1;
 
-														//loop through each course record
-														for (var k = 0; k < highschoolCourseValues.length; k++)
-														{
-															if (!uniqueCourses.includes(highschoolCourseValues[k]))
+															startedSavingSubjects = true;
+															//begin importing the courses
+															var coursesToImport = [];
+															var uniqueCourses = [];
+															var numberOfCourses = -1;
+
+															//loop through each course record
+															for (var k = 0; k < highschoolCourseValues.length; k++)
 															{
-																//add course to array of unique courses
-																uniqueCourses[uniqueCourses.length] = highschoolCourseValues[k];
-																var courseSchoolName = highschoolCourseValues[k].schoolName;
-																var courseLevel = highschoolCourseValues[k].level;
-																var courseUnit = highschoolCourseValues[k].unit;
-																var courseSource = highschoolCourseValues[k].source;
-																var subjectNameParam = highschoolCourseValues[k].name;
-																var subjectDescParam = highschoolCourseValues[k].description;
-																//get the subject reference for the course
-																self.get('store').queryRecord('high-school-subject', {name: subjectNameParam, description: subjectDescParam}).then(function(subjectObj) {
-																	self.get('store').queryRecord('high-school', {name: courseSchoolName}).then(function(highSchoolObj) {
-																		coursesToImport[coursesToImport.length] = self.get('store').createRecord('high-school-course', {
-																			level: courseLevel,
-																			unit: courseUnit,
-																			source: courseSource,
-																			school: highSchoolObj.id,
-																			subject: subjectObj.id
-																			//Once the course is created
-																		}).then(function() {
-																			if (coursesToImport.length === numberOfCourses)
-																			{
-																				for (var m = 0; m < coursesToImport.length; m++)
+
+																if (!uniqueCourses.includes(highschoolCourseValues[k]) && highschoolCourseValues[k])
+																{
+																	console.log("in a unique course");
+																	//add course to array of unique courses
+																	uniqueCourses[uniqueCourses.length] = highschoolCourseValues[k];
+																	var courseSchoolName = highschoolCourseValues[k].schoolName;
+																	var courseLevel = highschoolCourseValues[k].level;
+																	var courseUnit = highschoolCourseValues[k].unit;
+																	var courseSource = highschoolCourseValues[k].source;
+																	var subjectNameParam = highschoolCourseValues[k].name;
+																	var subjectDescParam = highschoolCourseValues[k].description;
+																	//get the subject reference for the course
+																	self.get('store').queryRecord('high-school-subject', {name: subjectNameParam, description: subjectDescParam}).then(function(subjectObj) {
+																		console.log("got subject back");
+																		self.get('store').queryRecord('high-school', {name: courseSchoolName}).then(function(highSchoolObj) {
+																			coursesToImport[coursesToImport.length] = self.get('store').createRecord('high-school-course', {
+																				level: courseLevel,
+																				unit: courseUnit,
+																				source: courseSource,
+																				school: highSchoolObj.id,
+																				subject: subjectObj.id
+																				//Once the course is created
+																			});
+																			coursesToImport[coursesToImport.length].save().then(function() {
+																				if (coursesToImport.length === numberOfCourses)
 																				{
-																					coursesToImport[m].save();
+																					for (var m = 0; m < coursesToImport.length; m++)
+																					{
+																						coursesToImport[m].save();
+																					}
 																				}
-																			}
+																			});
 																		});
 																	});
-																});
 
+																}
 															}
+															numberOfCourses = uniqueCourses.length
 														}
-														numberOfCourses = uniqueCourses.length
-													}
+
+													});
 
 												});
 											}
