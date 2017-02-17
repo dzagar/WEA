@@ -717,83 +717,96 @@ export default Ember.Component.extend({
 							}
 							break;
 						case ImportState.STUDENT:
+							console.log("In student import")
 							if (studentVerification(worksheet))
-						{
-							var rollBackImport = false;
-							var doneImporting = false;
-							var studentsToImport = [];
-							var uniqueStudentNumbers = [];
-							for (var i = 2; !doneImporting; i++)
 							{
-								var studentSheetA = worksheet['A' + i];
-								var studentSheetB = worksheet['B' + i];
-								var studentSheetC = worksheet['C' + i];
-								var studentSheetD = worksheet['D' + i];
-								var studentSheetE = worksheet['E' + i];
-								var studentSheetF = worksheet['F' + i];
-								if (studentSheetA && studentSheetB && studentSheetC && studentSheetD && studentSheetE && studentSheetF)
+								console.log("validated student import");
+								var rollBackImport = false;
+								var doneImporting = false;
+								var studentsToImport = [];
+								var uniqueStudentNumbers = [];
+								for (var i = 2; !doneImporting; i++)
 								{
-									if (uniqueStudentNumbers.contains(studentSheetA.v))
+									console.log("in the loop at i = " + i);
+									var studentSheetA = worksheet['A' + i];
+									var studentSheetB = worksheet['B' + i];
+									var studentSheetC = worksheet['C' + i];
+									var studentSheetD = worksheet['D' + i];
+									var studentSheetE = worksheet['E' + i];
+									var studentSheetF = worksheet['F' + i];
+									if (studentSheetA && studentSheetB && studentSheetC && studentSheetD && studentSheetE && studentSheetF)
 									{
-										rollBackImport = true;
-										doneImporting = true;
-										DisplayErrorMessage("Imported file contains duplicate records for student number " + studentNumber.v);
+										console.log("values exist");
+										if (uniqueStudentNumbers.contains(studentSheetA.v))
+										{
+											console.log("duplicate value");
+											rollBackImport = true;
+											doneImporting = true;
+											DisplayErrorMessage("Imported file contains duplicate records for student number " + studentNumber.v);
+										}
+										else
+										{
+											console.log("not duplicates");
+											var studentNumber = studentSheetA.v;
+											var firstName = studentSheetB.v;
+											var lastName = studentSheetC.v;
+											var gender = studentSheetD.v;
+											var dateOfBirth = studentSheetE.v;
+											var residency = studentSheetF.v;
+											console.log(studentNumber + firstName + lastName + gender + dateOfBirth + residency);
+											//query res by id then gender then create student
+											this.get('store').queryRecord('gender', {name: gender}).then(function(genderObj) {
+												console.log("got gender: ");
+												console.log(genderObj);
+												this.get('store').queryRecord('residency', {name: residency}).then(function(residencyObj) {
+													console.log("got resicdency");
+													console.log(residencyObj)
+													studentsToImport[i - 2] = this.get('store').createRecord('student', {
+														studentNumber: studentNumber,
+														firstName: firstName,
+														lastName: lastName,
+														gender: genderObj.id,
+														DOB: dateOfBirth,
+														resInfo: residencyObj.id
+													});
+													console.log("done creating student");
+													console.log(studentsToImport[i - 2]);
+												});
+											});
+										}
 									}
 									else
 									{
-										var studentNumber = studentSheetA.v;
-										var firstName = studentSheetB.v;
-										var lastName = studentSheetC.v;
-										var gender = studentSheetD.v;
-										var dateOfBirth = studentSheetE.v;
-										var residency = studentSheetF.v;
-										//query res by id then gender then create student
-										this.get('store').queryRecord('gender', {name: gender}).then(function(genderObj) {
-											this.get('store').queryRecord('residency', {name: residency}).then(function(residencyOBJ) {
-												studentsToImport[i - 2] = this.get('store').createRecord('student', {
-													studentNumber: studentNumber,
-													firstName: firstName,
-													lastName: lastName,
-													gender: genderOBJ.id,
-													DOB: dateOfBirth,
-													resInfo: residencyOBJ.id
-												})
-											});
-										});
+										doneImporting = true;
+										if (studentSheetA || studentSheetB || studentSheetC || studentSheetD || studentSheetE || studentSheetF)
+										{
+											rollBackImport = true;
+											DisplayErrorMessage("Imported file contains records with missing information on row" + i);
+										}
+										if (i === 2)
+										{
+											rollBackImport = true;
+											DisplayErrorMessage("Student sheet did not contain any properly formated students students...")
+										}
+									}
+								}
+
+								if (rollBackImport)
+								{
+									for (var i = 0; i < studentsToImport.length; i++)
+									{
+										studentsToImport[i].destroyRecord();
 									}
 								}
 								else
 								{
-									doneImporting = true;
-									if (studentSheetA || studentSheetB || studentSheetC || studentSheetD || studentSheetE || studentSheetF)
+									for (var i = 0; i < studentsToImport.length; i++)
 									{
-										rollBackImport = true;
-										DisplayErrorMessage("Imported file contains records with missing information on row" + i);
-									}
-									if (i === 2)
-									{
-										rollBackImport = true;
-										DisplayErrorMessage("Student sheet did not contain any properly formated students students...")
+										studentsToImport[i].save();
 									}
 								}
 							}
-
-							if (rollBackImport)
-							{
-								for (var i = 0; i < studentsToImport.length; i++)
-								{
-									studentsToImport[i].destroyRecord();
-								}
-							}
-							else
-							{
-								for (var i = 0; i < studentsToImport.length; i++)
-								{
-									studentsToImport[i].save();
-								}
-							}
-						}
-						break;
+							break;
 						default:
 							break;
 					}
@@ -806,6 +819,7 @@ export default Ember.Component.extend({
 		setIndex(index)
 		{
 			this.set('changingIndex',index);
+			console.log("index is now " + this.get('changingIndex'));
 		}	
 
 	}
