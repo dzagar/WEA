@@ -1,13 +1,15 @@
 import Ember from 'ember';
 import XLSX from 'npm:xlsx-browserify-shim';
+import Mutex from 'ember-mutex';
 
 var ImportState = {
 	GENDER : 1,
 	RESIDENCY : 2,
 	TERMCODE : 3,
 	COURSECODE : 4,
-	HIGHSCHOOL : 5,
-	HSCOURSEINFO : 6
+	STUDENT : 5,
+	HIGHSCHOOL : 6,
+	HSCOURSEINFO : 7
 };
 
 function genderVerification(worksheet)
@@ -717,7 +719,8 @@ export default Ember.Component.extend({
 							}
 							break;
 						case ImportState.STUDENT:
-							console.log("In student import")
+							console.log("In student import");
+							var mutex = Mutex.create();
 							if (studentVerification(worksheet))
 							{
 								console.log("validated student import");
@@ -737,7 +740,7 @@ export default Ember.Component.extend({
 									if (studentSheetA && studentSheetB && studentSheetC && studentSheetD && studentSheetE && studentSheetF)
 									{
 										console.log("values exist");
-										if (uniqueStudentNumbers.contains(studentSheetA.v))
+										if (uniqueStudentNumbers.includes(studentSheetA.v))
 										{
 											console.log("duplicate value");
 											rollBackImport = true;
@@ -747,30 +750,32 @@ export default Ember.Component.extend({
 										else
 										{
 											console.log("not duplicates");
-											var studentNumber = studentSheetA.v;
-											var firstName = studentSheetB.v;
-											var lastName = studentSheetC.v;
-											var gender = studentSheetD.v;
-											var dateOfBirth = studentSheetE.v;
-											var residency = studentSheetF.v;
-											console.log(studentNumber + firstName + lastName + gender + dateOfBirth + residency);
+											uniqueStudentNumbers[i] = studentSheetA.v;
 											//query res by id then gender then create student
-											this.get('store').queryRecord('gender', {name: gender}).then(function(genderObj) {
-												console.log("got gender: ");
-												console.log(genderObj);
-												this.get('store').queryRecord('residency', {name: residency}).then(function(residencyObj) {
-													console.log("got resicdency");
-													console.log(residencyObj)
-													studentsToImport[i - 2] = this.get('store').createRecord('student', {
-														studentNumber: studentNumber,
-														firstName: firstName,
-														lastName: lastName,
-														gender: genderObj.id,
-														DOB: dateOfBirth,
-														resInfo: residencyObj.id
+											mutex.lock(function(){
+												var inMutexIndex = i;
+												var studentNumber = studentSheetA.v;
+												var firstName = studentSheetB.v;
+												var lastName = studentSheetC.v;
+												var gender = studentSheetD.v;
+												var dateOfBirth = studentSheetE.w;
+												var residency = studentSheetF.v;
+												self.get('store').queryRecord('gender', {name: gender}).then(function(genderObj) {
+													console.log("got gender: ");
+													console.log(genderObj);
+													self.get('store').queryRecord('residency', {name: residency}).then(function(residencyObj) {
+														console.log("got resicdency");
+														console.log(residencyObj);
+														var newStudent = self.get('store').createRecord('student', {
+															studentNumber: studentNumber,
+															firstName: firstName,
+															lastName: lastName,
+															gender: genderObj.id,
+															DOB: dateOfBirth,
+															resInfo: residencyObj.id
+														});
+														studentsToImport[inMutexIndex - 2] = newStudent;
 													});
-													console.log("done creating student");
-													console.log(studentsToImport[i - 2]);
 												});
 											});
 										}
@@ -800,6 +805,7 @@ export default Ember.Component.extend({
 								}
 								else
 								{
+									console.log(uniqueStudentNumbers.length);
 									for (var i = 0; i < studentsToImport.length; i++)
 									{
 										studentsToImport[i].save();
@@ -818,6 +824,7 @@ export default Ember.Component.extend({
 
 		setIndex(index)
 		{
+			console.log(index);
 			this.set('changingIndex',index);
 			console.log("index is now " + this.get('changingIndex'));
 		}	
