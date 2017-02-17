@@ -24,22 +24,34 @@ router.route('/')
     })
     //get all scholarship
     .get(parseUrlencoded, parseJSON, function (request, response) {
-        
-        var Student = request.query.student;
-        
+        var deleteAll = request.query.deleteAll;
+        var Student = parseInt(request.query.student);
+        if (deleteAll){
+            Scholarship.remove({}, function(err){
+                if (err) response.send(err);
+                else console.log('removed scholarships');
+            });
+        }
         if (!Student) {
-
+            Scholarship.find(function(err, scholarships){
+                if (err)
+                    response.send(err);
+                response.json({scholarships: scholarships});
+            });
         }
         else
         {
-            Scholarship.find({"student" : Student}, function(error, scholarships){
+            
+            Scholarship.find({"studentNumber" : Student}, function(error, scholarships){
                 if (error) response.send(error);
-                    else response.json({scholarship: scholarships});
+                else {
+                    response.json({scholarship: scholarships});
+                }
             });
         }
     });
 
-// router.route('/:scholarship_id')
+router.route('/:scholarship_id')
 //     //get specific scholarship
 //     .get(parseUrlencoded, parseJSON, function (request, response) {
 //     })
@@ -49,6 +61,11 @@ router.route('/')
 //         })
 //     })
 //     //removes user scholarship
-//     .delete(parseUrlencoded, parseJSON, function (request, response) {
-//     });
+    // .delete(parseUrlencoded, parseJSON, function (request, response) {
+    //     Scholarship.findByIdAndRemove(request.params.scholarship_id, function(error, deleted) {
+    //         if (error)
+    //             response.send(error);
+    //         response.json({scholarship: deleted});
+    //     });
+    // });
 module.exports = router;

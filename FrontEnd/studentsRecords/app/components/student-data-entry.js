@@ -106,7 +106,6 @@ export default Ember.Component.extend({
       self.set('currentIndex', self.get('firstIndex'));
     });
   },
-
   setCurrentStudent: function (index) {
     var student = this.get('studentsRecords').objectAt(index);
     if (student != null)
@@ -233,7 +232,7 @@ export default Ember.Component.extend({
     },
 
     selectResidency (residency){
-      console.log(residency);
+      //console.log(residency);
       this.set('selectedResidency', residency);
     },
 

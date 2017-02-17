@@ -1,0 +1,90 @@
+{{#if showDeleteConfirmation}}
+{{delete-data-confirmation notDONE = showDeleteConfirmation isImporting = importData}}
+{{else if importData}}
+
+<div class="ui grid">
+	<div class="six wide column">
+		<div class="ui violet small vertical steps">
+			<a id="gender" class="active step" {{action "setIndex" 1}}>
+				<i class="minus icon"></i>
+				<div class="content">
+	     			<div class="title" >Genders</div>
+	    		</div>
+			</a>
+			<a id="residencies" class=" step" {{action "setIndex" 2 }}>
+				<i class="minus icon"></i>
+				<div class="content">
+	     			<div class="title" >Residencies</div>
+	    		</div>
+			</a>
+			<a id="termCodes" class=" step" {{action "setIndex" 3 }}>
+				<i class="minus icon"></i>
+				<div class="content">
+	     			<div class="title" >Term Codes</div>
+	    		</div>
+			</a>
+			<a id="courseCodes" class=" step" {{action "setIndex" 4 }}>
+				<i class="minus icon"></i>
+				<div class="content">
+	     			<div class="title" >Course Codes</div>
+	    		</div>
+			</a>
+			<a id="students" class=" step" {{action "setIndex" 5 }}>
+				<i class="minus icon"></i>
+				<div class="content">
+	     			<div class="title" >Students</div>
+	    		</div>
+			</a>
+			<a id="secondary" class=" step" {{action "setIndex" 6 }}>
+				<i class="minus icon"></i>
+				<div class="content">
+	     			<div class="title" >Secondary Schools</div>
+	    		</div>
+			</a>
+			<a id="highschool" class=" step" {{action "setIndex" 7 }}>
+				<i class="minus icon"></i>
+				<div class="content">
+	     			<div class="title" >Student Highschool Information</div>
+	    		</div>
+			</a>
+			<a id="awards" class=" step" {{action "setIndex" 8 }}>
+				<i class="minus icon"></i>
+				<div class="content">
+	     			<div class="title" >Awards and Scholarships</div>
+	    		</div>
+			</a>
+			<a id="advancedStandings" class=" step" {{action "setIndex" 9}}>
+				<i class="minus icon"></i>
+				<div class="content">
+	     			<div class="title" >Advanced Standings</div>
+	    		</div>
+			</a>
+			<a id="recordPlans" class=" step" {{action "setIndex" 10}}>
+				<i class="minus icon"></i>
+				<div class="content">
+	     			<div class="title" >Undergraduate Record Plans</div>
+	    		</div>
+			</a>
+			<a id="courseGrades" class=" step" {{action "setIndex" 11}}>
+				<i class="minus icon"></i>
+				<div class="content">
+	     			<div class="title" >Undergraduate Course Grades</div>
+	    		</div>
+			</a>
+		</div>
+	</div>
+	<div class="ten wide stretchered column ">
+		<div class="ui segment">
+			<input type="file" id = "newFile" onchange = {{action 'import'}}>
+			<button class="ui primary button" {{action 'continue' }}>
+  				Continue
+			</button>
+		</div>
+	</div>
+</div>
+{{else}}
+<a item = "item" {{action 'showEraseDataModal'}}>
+	Import Student Data...
+</a>
+{{/if}}
+

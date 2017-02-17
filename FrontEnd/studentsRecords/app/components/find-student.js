@@ -27,6 +27,7 @@ export default Ember.Component.extend({
         lastName: Ember.$('#lastName').val()
       }).then(function (records) {
         console.log("did things");
+        console.log(records);
         self.set('findResults', records);
       });
 
