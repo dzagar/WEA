@@ -11,4 +11,4 @@ var highSchoolCourseSchema = mongoose.Schema(
     }
 );
 
-module.exports = mongoose.model('highSchoolCourse', highSchoolCourseSchema);
+module.exports = mongoose.model('HighSchoolCourse', highSchoolCourseSchema);

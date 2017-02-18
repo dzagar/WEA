@@ -925,7 +925,7 @@ export default Ember.Component.extend({
 												{
 													gradeValues[i - 2] = {"grade": grade.v};
 													highschoolSubjectValues[i - 2] = {"name" : subject.v, "description": description.v};
-													highschoolCourseValues[i - 2] = {"schoolName" : schoolName.v, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v};
+													highschoolCourseValues[i - 2] = {"studentNumber": currentStudentNumber, "grade": grade, "schoolName" : schoolName.v, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v};
 												}
 											}
 
@@ -944,7 +944,7 @@ export default Ember.Component.extend({
 												console.log("adding course/subject for existing student and school");
 												gradeValues[i] = {"grade": grade};
 												highschoolSubjectValues[i - 2] = {"name" : subject.v, "description": description.v};
-												highschoolCourseValues[i - 2] = {"schoolName" : schoolName.v,"level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v};
+												highschoolCourseValues[i - 2] = {"studentNumber": currentStudentNumber, "grade": grade, "schoolName" : schoolName.v,"level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v};
 											}
 											//switching neither school not student
 											else
@@ -952,13 +952,11 @@ export default Ember.Component.extend({
 												console.log("adding course/subject for existing student and school");
 												gradeValues[i - 2] = {"grade": grade};
 												highschoolSubjectValues[i - 2] = {"name" : subject.v, "description": description.v};
-												highschoolCourseValues[i - 2] = {"schoolName" : currentSchoolName,"level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v};
+												highschoolCourseValues[i - 2] = {"studentNumber": currentStudentNumber, "grade": grade, "schoolName" : currentSchoolName,"level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v};
 
 											}
 										}
 									}
-									console.log(highschoolCourseValues);
-									console.log(highschoolSubjectValues);
 									if (!rollBackImport)
 									{
 										console.log("in import for highscoolInfo!");
@@ -995,6 +993,7 @@ export default Ember.Component.extend({
 															var courseMutex = Mutex.create();
 															var numberOfCourses = -1;
 															var inMutexCount = 0;
+															var doneCourseSave = false;
 															//loop through each course record
 															for (var k = 0; k < highschoolCourseValues.length; k++)
 															{
@@ -1003,12 +1002,15 @@ export default Ember.Component.extend({
 																{
 																	console.log("in a unique course");
 																	//add course to array of unique courses
-																	var doneCourseSave = false;
 																	uniqueCourses[uniqueCourses.length] = highschoolCourseValues[k];
 																	courseMutex.lock(function() {
 																		var inMutexIndex = inMutexCount++;
+																		while (!highschoolCourseValues[inMutexIndex])
+																		{
+																			inMutexIndex = inMutexCount++;
+																		}
 																		if (highschoolCourseValues[inMutexIndex])
-																		{	
+																		{
 																			console.log(highschoolCourseValues[inMutexIndex]);
 																			var courseSchoolName = highschoolCourseValues[inMutexIndex].schoolName;
 																			var courseLevel = highschoolCourseValues[inMutexIndex].level;
@@ -1032,14 +1034,57 @@ export default Ember.Component.extend({
 																							if (coursesToImport.length === numberOfCourses && !doneCourseSave)
 																							{
 																								doneCourseSave = true;
-																								
+																								var courseGradesToImport = [];
+																								var uniqueCourseGrades = [];
+																								var gradeMutex = Mutex.create();
+																								var numberOfGrades = -1;
+																								var inGradeMutexCount = 0;
+																								var doneGradeImport = false;
+																								//import grades here
+																								for (var n = 0; n < highschoolCourseValues.length; n++)
+																								{
+																									if (!uniqueCourseGrades.includes(highschoolCourseValues[n]) && highschoolCourseValues[n])
+																									{
+																										console.log("in a unique grade");
+																										uniqueCourseGrades[uniqueCourseGrades.length] = highschoolCourseValues[n];
+																										gradeMutex.lock(function() {
+																											var inGradeMutexIndex = inGradeMutexCount++;
+																											while (!highschoolCourseValues[inGradeMutexIndex])
+																											{
+																												inGradeMutexIndex = inGradeMutexCount++;
+																											}
+																											
+																											console.log(highschoolCourseValues[inGradeMutexIndex]);
+																											var gradeCourseSchoolName = highschoolCourseValues[inGradeMutexIndex].schoolName;
+																											var gradeCourseLevel = highschoolCourseValues[inGradeMutexIndex].level;
+																											var gradeCourseUnit = highschoolCourseValues[inGradeMutexIndex].unit;
+																											var gradeCourseSource = highschoolCourseValues[inGradeMutexIndex].source;
+																											var gradeSubjectNameParam = highschoolCourseValues[inGradeMutexIndex].name;
+																											var gradeSubjectDescParam = highschoolCourseValues[inGradeMutexIndex].description;
+																											var gradeStudentNumber = highschoolCourseValues[inGradeMutexIndex].studentNumber;
+																											var recordGrade = highschoolCourseValues[inGradeMutexIndex].grade;
+																											self.get('store').queryRecord('student', {studentNumber: gradeStudentNumber}).then(function(studentObj) {
+																												self.get('store').queryRecord('high-school-course', {}).then(function(highSchoolCourseObj) {
+																													var studentNumberID = studentObj.id;
+																													var courseID = highSchoolCourseObj.id;
+																													courseGradesToImport[courseGradesToImport.length] = self.get('store').createRecord('high-school-grade', {
+																														mark: recordGrade,
+																														student: studentNumberID,
+																														source: courseID
+																													});
+																													courseGradesToImport[courseGradesToImport.length].save();
+																												});
+																											});
+
+																										});
+																									}
+																								}
 																							}
 																					});
 																				});
 																			});
 																		}
 																	});
-																	console.log("below thing " + k)
 																	//get the subject reference for the course
 																}
 															}
