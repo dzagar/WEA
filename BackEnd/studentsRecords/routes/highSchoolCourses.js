@@ -25,6 +25,12 @@ router.route('/')
                     response.send(error);
                 }
                 else{
+                     HighSchoolCourse.find(function (err, highSchoolCourse){
+                        if (err) response.send(err);
+                        else{
+                            response.json({highSchoolCourse: highSchoolCourse});
+                        }console.log('removed high school courses');
+                    });
                 }
             });
         }

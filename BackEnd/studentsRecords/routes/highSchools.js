@@ -25,9 +25,15 @@ router.route('/')
             HighSchool.remove({}, function(error) {
                     if (error)
                         response.send(error);
-                        else{
-                            console.log("deleted highschools");
-                        }
+                    else{
+                        HighSchool.find({}, function(error, highSchools) {
+                            if (error)
+                                response.send(error);
+                                else{
+                                    response.json({highSchool: highSchools});
+                                }
+                        });
+                    } console.log("removed highschools");
                 });
          }
         else{
