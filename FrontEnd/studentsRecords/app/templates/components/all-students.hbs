@@ -1,40 +1,41 @@
-<div class="ui modal">
-  <div class="header">Page {{pageNumber}} of {{totalPages}}, click the arrow keys to get more students</div>
-  <div class="content">
-    {{#each studentsModel as |oneStudent|}}
-      <div class="ui grid">
-        <div class="ten wide column">
-          <div class="actions">
-            <div class="ui form">
-              <div class="grouped fields">
-                <div class="field">
-                  <div class="ui radio checkbox">
-                    <input type="radio" name="Frank;)"
-                           onchange={{action 'getStudent' oneStudent}}>
-                    <label>{{oneStudent.studentNumber}} {{oneStudent.firstName}}
-                      {{oneStudent.lastName}}  </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="six wide column">
+<div class="ui stackable container inverted six item menu">
+    <a class="item" {{action 'firstPage'}}>
+      <i class="step backward icon"></i>
+      First
+    </a>
+    <a class="item" {{action 'previousPage'}}>
+      <i class="arrow left icon"></i>
+      Previous
+    </a>
+    <a class="item" {{action 'nextPage'}}>
+      <i class="arrow right icon"></i>
+      Next
+    </a>
+    <a class="item" {{action 'lastPage'}}>
+      <i class="step forward icon"></i>
+      Last
+    </a>
+    <a class="item" {{action 'findStudent'}}>
+      <i class="search icon"></i>
+      Find Record
+    </a>
+    <a class = "item" {{action 'createStudent'}}>
+      <i class="add user icon"></i>
+      Add Student
+    </a>
+  </div> 
+
+  <div class="ui vertically padded grid">
+    {{#each studentsRecords as |student index|}}
+      <div class="eight wide column">
+        <div class="ui fluid labeled icon button" {{action "selectStudent" student index}}>
+          <img class="ui avatar image icon" src={{student.photo}}>
+          {{student.firstName}} {{student.lastName}}
         </div>
       </div>
     {{/each}}
-
-    <div class="actions">
-      <hr>
-      <div class="ui button" {{action "loadPrevious"}}>
-        <i class="arrow left icon"></i>
-      </div>
-      <div class="ui button" {{action "loadNext"}}>
-        <i class="arrow right icon"></i>
-      </div>
-      <div class="ui button" {{action "exit"}}>OK</div>
-    </div>
-
   </div>
-</div>
-
+  
+  <div class="ui button" {{action 'back'}}>
+    Back
+  </div>

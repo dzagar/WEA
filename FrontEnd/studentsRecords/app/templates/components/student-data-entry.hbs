@@ -1,63 +1,64 @@
 <div class="ui center aligned header">
   <h2>Students Records</h2>
 </div>
-<div class="ui fluid button" {{action 'toggleDataEntry'}}>
-  Switch
-</div>
 
-{{#if showDataEntry}}
-  <!-- Show the menu bar-->
-  <div class="ui stackable container inverted nine item menu">
-    <a class="item" {{action 'saveStudent'}}>
-      <i class="save icon"></i>
-      Save
-    </a>
-    <a class="item" {{action 'undoSave'}}>
-      <i class="undo icon"></i>
-      Undo
-    </a>
-    <a class="item" {{action 'firstStudent'}}>
-      <i class="step backward icon"></i>
-      First
-    </a>
-    <a class="item" {{action 'previousStudent'}}>
-      <i class="arrow left icon"></i>
-      Previous
-    </a>
-    <a class="item" {{action 'nextStudent'}}>
-      <i class="arrow right icon"></i>
-      Next
-    </a>
-    <a class="item" {{action 'lastStudent'}}>
-      <i class="step forward icon"></i>
-      Last
-    </a>
-    <a class="item" {{action 'allStudents'}}>
-      <i class="content icon"></i>
-      All Records
-    </a>
-    <a class="item" {{action 'findStudent'}}>
-      <i class="search icon"></i>
-      Find Record
-    </a>
-    <a class = "item" {{action 'createStudent'}}>
-      <i class="add user icon"></i>
-      Add Student
-    </a>
-  </div> 
+  {{#if showMenuBar}}
+    <!-- Show the menu bar-->
+    <div class="ui stackable container inverted nine item menu">
+      <a class="item" {{action 'saveStudent'}}>
+        <i class="save icon"></i>
+        Save
+      </a>
+      <a class="item" {{action 'undoSave'}}>
+        <i class="undo icon"></i>
+        Undo
+      </a>
+      <a class="item" {{action 'firstStudent'}}>
+        <i class="step backward icon"></i>
+        First
+      </a>
+      <a class="item" {{action 'previousStudent'}}>
+        <i class="arrow left icon"></i>
+        Previous
+      </a>
+      <a class="item" {{action 'nextStudent'}}>
+        <i class="arrow right icon"></i>
+        Next
+      </a>
+      <a class="item" {{action 'lastStudent'}}>
+        <i class="step forward icon"></i>
+        Last
+      </a>
+      <a class="item" {{action 'allStudents'}}>
+        <i class="content icon"></i>
+        All Records
+      </a>
+      <a class="item" {{action 'findStudent'}}>
+        <i class="search icon"></i>
+        Find Record
+      </a>
+      <a class = "item" {{action 'createStudent'}}>
+        <i class="add user icon"></i>
+        Add Student
+      </a>
+    </div> 
+{{/if}}
 
+  <!-- Delete confirmation popups -->
   {{#if showDeleteConfirmation}}
     {{delete-student INDEX = currentIndex student = currentStudent showWindow = showDeleteConfirmation total=totalStudents}}
-    {{else if showHighSchoolDeleteConfirmation}}
+  {{else if showHighSchoolDeleteConfirmation}}
     {{delete-highschool highschool=currentHighSchool showWindow = showHighSchoolDeleteConfirmation}}
-    {{else if showAdvancedStandingDeleteConfirmation}}
+  {{else if showAdvancedStandingDeleteConfirmation}}
     {{delete-advanced-standing AdvancedStanding=currentAdvancedStanding showWindow=showAdvancedStandingDeleteConfirmation}}
-    {{else if showScholarshipDeleteConfirmation}}
+  {{else if showScholarshipDeleteConfirmation}}
     {{delete-scholarship Scholarship=currentScholarship showWindow=showScholarshipDeleteConfirmation}}
   {{/if}}
+
+  <!-- Other non-popup screens -->
   {{#if showAllStudents}}
     <!-- Note that offset is an "in" and "out" parameter !-->
-  {{all-students INDEX = currentIndex notDONE = showAllStudents offset = offset studentsModel = studentsRecords totalPages = totalPages pageNumber = pageNumber changeOffset = (action 'changeOffset')}} 
+    {{all-students currentIndex = currentIndex currentStudent = currentStudent showAllStudents = showAllStudents  showMenuBar = showMenuBar offset = offset studentsRecords = studentsRecords totalPages = totalPages pageNumber = pageNumber changeOffset = (action 'changeOffset')}} 
   {{else if showAddStudent}}
     {{add-student INDEX = currentIndex student = currentStudent notDONE = showAddStudent total=totalStudents}} 
   {{else if showFindStudent}}
@@ -270,47 +271,6 @@
       </table>
     </div>
 
-  {{/if}}
-
-{{else}}
-  
-  <div class="ui stackable container inverted six item menu">
-    <a class="item" {{action 'firstPage'}}>
-      <i class="step backward icon"></i>
-      First
-    </a>
-    <a class="item" {{action 'previousPage'}}>
-      <i class="arrow left icon"></i>
-      Previous
-    </a>
-    <a class="item" {{action 'nextPage'}}>
-      <i class="arrow right icon"></i>
-      Next
-    </a>
-    <a class="item" {{action 'lastPage'}}>
-      <i class="step forward icon"></i>
-      Last
-    </a>
-    <a class="item" {{action 'findStudent'}}>
-      <i class="search icon"></i>
-      Find Record
-    </a>
-    <a class = "item" {{action 'createStudent'}}>
-      <i class="add user icon"></i>
-      Add Student
-    </a>
-  </div> 
-
-  <div class="ui vertically padded grid">
-    {{#each studentsRecords as |student index|}}
-      <div class="eight wide column">
-        <div class="ui fluid labeled icon button" {{action "selectStudent" student index}}>
-          <img class="ui avatar image icon" src={{student.photo}}>
-          {{student.firstName}} {{student.lastName}}
-        </div>
-      </div>
-    {{/each}}
-  </div>
 {{/if}}
 
 <div style="margin: auto; width: 50%;">

@@ -28,6 +28,7 @@ export default Ember.Component.extend({
   selectedDate: null,
   selectedGender: null,
   selectedResidency: null,
+  showMenuBar: true,
   showAddStudent: false,
   showAllStudents: false,
   showAdvancedStandingDeleteConfirmation: false,
@@ -35,7 +36,6 @@ export default Ember.Component.extend({
   showHighSchoolDeleteConfirmation: false,
   showScholarshipDeleteConfirmation: false,
   showFindStudent: false,
-  showDataEntry: false,
   store: Ember.inject.service(),
   studentAdvancedStandings: null,
   studentPhoto: null,
@@ -224,23 +224,8 @@ export default Ember.Component.extend({
 
     allStudents() {
       this.set('showAllStudents', true);
+      this.set('showMenuBar', false);
       this.set('showDeleteConfirmation', false);
-    },
-
-    firstPage() {
-      this.changeOffset(0, false);
-    },
-
-    nextPage() {
-      this.changeOffset(this.get('pageSize'), true);
-    },
-
-    previousPage() {
-      this.changeOffset(-this.get('pageSize'), true);
-    },
-
-    lastPage() {
-      this.changeOffset((this.get('totalPages') - 1) * this.get('pageSize'), false);
     },
 
     selectGender (gender){
@@ -304,9 +289,6 @@ export default Ember.Component.extend({
       //Spawn add student modal window
       this.set("showAddStudent", true);
       this.set("showAllStudents", false);
-    },
-    toggleDataEntry() {
-      this.set("showDataEntry", !this.get("showDataEntry"));
     },
     toggleProgramInfo() {
       if ($("#programInfoTab").is(":visible"))
@@ -425,13 +407,6 @@ export default Ember.Component.extend({
     switchPage(pageNum)
     {
       this.changeOffset((pageNum - 1) * this.get('pageSize'), false);
-    },
-
-    //This is where all of the actions that will later move to all-students should go\\
-    selectStudent(student, index) {
-      this.set('currentIndex', index);
-      this.set('currentStudent', student);
-      this.set('showDataEntry', true);
     }
   }
 });
