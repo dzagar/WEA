@@ -12,23 +12,42 @@ router.route('/')
         highSchool.save(function(error) {
             if (error)
                 response.send(error);
-            response.json({highSchool: highSchool});
+            else{
+                response.json({highSchool: highSchool});
+
+            }
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
-        var Student = request.query.filter;
-        if (!Student) {
-            HighSchool.find(function(error, highSchools) {
-                if (error)
-                    response.send(error);
-                response.json({highSchool: highSchools});
-            });
-        } else {
-            HighSchool.find({"student": Student.student}, function (error, students) {
-                if (error)
-                    response.send(error);
-                response.json({highSchool: students});
-            });
+        if (request.query.deleteAll)
+        {
+            console.log("delete All was true");
+            HighSchool.remove({}, function(error) {
+                    if (error)
+                        response.send(error);
+                        else{
+                            console.log("deleted highschools");
+                        }
+                });
+         }
+        else{
+             var Student = request.query.filter;
+            if (!Student) {
+                console.log("no Student passed into hs get");
+                HighSchool.find({schoolName: request.query.schoolName}, function(error, highSchools) {
+                    if (error)
+                        response.send(error);
+                        else{
+                            response.json({highSchool: highSchools});
+                        }
+                });
+            } else {
+                HighSchool.find({"student": Student.student}, function (error, students) {
+                    if (error)
+                        response.send(error);
+                    response.json({highSchool: students});
+                });
+            } 
         }
     });
 

@@ -726,6 +726,7 @@ export default Ember.Component.extend({
 									if (highSchool) {
 										//gets the highSchoolNameString
 										var highSchoolName = highSchool.v;
+										console.log(highSchoolName);
 										//if the hs has already been added
 										if (uniqueHighSchoolNames.includes(highSchoolName)) {
 											DisplayErrorMessage("Import cancelled. Your excel sheet contains duplicate course code names '" + highSchoolName + "'");
@@ -734,7 +735,7 @@ export default Ember.Component.extend({
 										} else { //create new hs object
 											highSchoolsToImport[i - 2] = self.get('store').createRecord('high-school', 
 											{
-												name: highSchoolName
+												schoolName: highSchoolName
 											});
 											uniqueHighSchoolNames[i] = highSchoolName;
 										}
@@ -964,6 +965,7 @@ export default Ember.Component.extend({
 										var subjectsToImport = [];
 										var uniqueSubjects = [];
 										var numberOfSubjects = -1;
+										var numberOfSubjectsSaved = 0;
 										var startedSavingSubjects = false;
 										var subjectSavingMutex = Mutex.create();
 										for (var i = 0; i < highschoolSubjectValues.length; i++)
@@ -981,18 +983,18 @@ export default Ember.Component.extend({
 													description: subjectDescription
 												});
 												subjectsToImport[subjectsToImport.length - 1].save().then(function() {
+													numberOfSubjectsSaved++;
 													console.log("created a subject");
 													//if the last unique subject has been uploaded
-													subjectSavingMutex.lock(function() {
-														if (subjectsToImport.length === numberOfSubjects && !startedSavingSubjects)
+														if (subjectsToImport.length === numberOfSubjects && numberOfSubjectsSaved === numberOfSubjects && !startedSavingSubjects)
 														{
-
 															startedSavingSubjects = true;
 															//begin importing the courses
 															var coursesToImport = [];
 															var uniqueCourses = [];
+															var courseMutex = Mutex.create();
 															var numberOfCourses = -1;
-
+															var inMutexCount = 0;
 															//loop through each course record
 															for (var k = 0; k < highschoolCourseValues.length; k++)
 															{
@@ -1001,44 +1003,48 @@ export default Ember.Component.extend({
 																{
 																	console.log("in a unique course");
 																	//add course to array of unique courses
+																	var doneCourseSave = false;
 																	uniqueCourses[uniqueCourses.length] = highschoolCourseValues[k];
-																	var courseSchoolName = highschoolCourseValues[k].schoolName;
-																	var courseLevel = highschoolCourseValues[k].level;
-																	var courseUnit = highschoolCourseValues[k].unit;
-																	var courseSource = highschoolCourseValues[k].source;
-																	var subjectNameParam = highschoolCourseValues[k].name;
-																	var subjectDescParam = highschoolCourseValues[k].description;
-																	//get the subject reference for the course
-																	self.get('store').queryRecord('high-school-subject', {name: subjectNameParam, description: subjectDescParam}).then(function(subjectObj) {
-																		console.log("got subject back");
-																		self.get('store').queryRecord('high-school', {name: courseSchoolName}).then(function(highSchoolObj) {
-																			coursesToImport[coursesToImport.length] = self.get('store').createRecord('high-school-course', {
-																				level: courseLevel,
-																				unit: courseUnit,
-																				source: courseSource,
-																				school: highSchoolObj.id,
-																				subject: subjectObj.id
-																				//Once the course is created
+																	courseMutex.lock(function() {
+																		var inMutexIndex = inMutexCount++;
+																		if (highschoolCourseValues[inMutexIndex])
+																		{	
+																			console.log(highschoolCourseValues[inMutexIndex]);
+																			var courseSchoolName = highschoolCourseValues[inMutexIndex].schoolName;
+																			var courseLevel = highschoolCourseValues[inMutexIndex].level;
+																			var courseUnit = highschoolCourseValues[inMutexIndex].unit;
+																			var courseSource = highschoolCourseValues[inMutexIndex].source;
+																			var subjectNameParam = highschoolCourseValues[inMutexIndex].name;
+																			var subjectDescParam = highschoolCourseValues[inMutexIndex].description;
+																			self.get('store').queryRecord('high-school-subject', {name: subjectNameParam, description: subjectDescParam}).then(function(subjectObj) {
+																				var subjectID = subjectObj.id;
+																				self.get('store').queryRecord('high-school', {schoolName: courseSchoolName}).then(function(highSchoolObj) {
+																					var highSchoolID = highSchoolObj.id;
+																					coursesToImport[coursesToImport.length] = self.get('store').createRecord('high-school-course', {
+																						level: courseLevel,
+																						unit: courseUnit,
+																						source: courseSource,
+																						school: highSchoolID,
+																						subject: subjectID
+																						//Once the course is created
+																					});
+																					coursesToImport[coursesToImport.length - 1].save().then(function() {
+																							if (coursesToImport.length === numberOfCourses && !doneCourseSave)
+																							{
+																								doneCourseSave = true;
+																								
+																							}
+																					});
+																				});
 																			});
-																			coursesToImport[coursesToImport.length].save().then(function() {
-																				if (coursesToImport.length === numberOfCourses)
-																				{
-																					for (var m = 0; m < coursesToImport.length; m++)
-																					{
-																						coursesToImport[m].save();
-																					}
-																				}
-																			});
-																		});
+																		}
 																	});
-
+																	console.log("below thing " + k)
+																	//get the subject reference for the course
 																}
 															}
 															numberOfCourses = uniqueCourses.length
 														}
-
-													});
-
 												});
 											}
 										}

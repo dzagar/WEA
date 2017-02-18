@@ -28,11 +28,14 @@ router.route('/')
                 }
             });
         }
-            HighSchoolSubject.find({name: request.query.name, description: request.query.description}, function (error, students) {
+        else{
+          
+            HighSchoolSubject.find({name: request.query.name, description: request.query.description}, function (error, subjects) {
                 if (error)
                     response.send(error);
-                response.json({highSchoolSubjects: students});
-            });
+                response.json({highSchoolSubjects: subjects});
+            });  
+        }
     });
 
     router.route('/:highSchoolSubjects_id')

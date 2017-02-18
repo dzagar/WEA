@@ -25,7 +25,6 @@ router.route('/')
                     response.send(error);
                 }
                 else{
-                    console.log("deleted Courses");
                 }
             });
         }
