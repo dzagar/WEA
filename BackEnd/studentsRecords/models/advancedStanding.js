@@ -6,7 +6,7 @@ var advancedStandingsSchema = mongoose.Schema(
         course: String,
         description: String,
         units: Number,
-        grade: Number,
+        grade: String,
         from: String
     },
     {
@@ -14,4 +14,4 @@ var advancedStandingsSchema = mongoose.Schema(
     }
 );
 
-module.exports = mongoose.model('advancedStandings', advancedStandingsSchema);
+module.exports = mongoose.model('advancedStanding', advancedStandingsSchema);

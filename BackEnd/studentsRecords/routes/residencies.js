@@ -16,6 +16,13 @@ router.route('/')
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
         var Student = request.query.filter;
+        var deleteAll = request.query.deleteAll;
+        if (deleteAll){
+            Residency.remove({}, function(err){
+                if (err) response.send(err);
+                else console.log('residencies removed');
+            });
+        }
         if (!Student) {
             Residency.find(function (error, residencies) {
                 if (error) response.send(error);

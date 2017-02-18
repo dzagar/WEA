@@ -52,7 +52,6 @@ export default Ember.Component.extend({
 
   init() {
     this._super(...arguments);
-    console.log('allStudents init triggered!')
     this.set('oldOffset', this.get('offset'));
     this.set('oldIndex', this.get('currentIndex'));
     this.set('oldStudent', this.get('currentStudent'));

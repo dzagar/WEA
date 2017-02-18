@@ -6,7 +6,7 @@ var studentsSchema = mongoose.Schema(
         firstName: String,
         gender: {type: mongoose.Schema.ObjectId, ref: 'Gender'},
         lastName: String,
-        number: String,
+        studentNumber: String,
         photo: String,
         registrationComments: String,
         BasisOfAdmission: String,
