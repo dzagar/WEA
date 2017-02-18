@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var highSchoolSchema = mongoose.Schema(
     {
         schoolName: String,
-        students: [{type: mongoose.Schema.ObjectId, ref: ('Students')}]
+        courses: [{type: mongoose.Schema.ObjectId, ref: ('HighSchoolCourses')}]
     },
     {
         versionKey: false

@@ -4,7 +4,9 @@ var highSchoolCourseSchema = mongoose.Schema(
     {
         level: String,
         source: String,
-        unit: Number
+        unit: Number,
+        subject: {type: mongoose.Schema.ObjectId, ref: ('HighSchoolSubjects')},
+        school: {type: mongoose.Schema.ObjectId, ref: ('HighSchools')}
     },
     {
         versionKey: false
