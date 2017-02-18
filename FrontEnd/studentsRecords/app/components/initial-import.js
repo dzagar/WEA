@@ -1064,7 +1064,7 @@ export default Ember.Component.extend({
 																											var gradeStudentNumber = highschoolCourseValues[inGradeMutexIndex].studentNumber;
 																											var recordGrade = highschoolCourseValues[inGradeMutexIndex].grade;
 																											self.get('store').queryRecord('student', {studentNumber: gradeStudentNumber}).then(function(studentObj) {
-																												self.get('store').queryRecord('high-school-course', {}).then(function(highSchoolCourseObj) {
+																												self.get('store').queryRecord('high-school-course', {schoolName: gradeCourseSchoolName, subjectName: gradeSubjectNameParam, subjectDescription: gradeSubjectDescParam,  level: gradeCourseLevel, source: gradeCourseSource, unit: gradeCourseUnit}).then(function(highSchoolCourseObj) {
 																													var studentNumberID = studentObj.id;
 																													var courseID = highSchoolCourseObj.id;
 																													courseGradesToImport[courseGradesToImport.length] = self.get('store').createRecord('high-school-grade', {
