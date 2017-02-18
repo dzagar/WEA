@@ -16,6 +16,18 @@ router.route('/')
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
+        if (request.query.deleteAll)
+        {
+            HighSchoolSubject.remove({}, function(error) {
+                if (error)
+                {
+                    response.send(error);
+                }
+                else{
+                    console.log("removed subjects");
+                }
+            });
+        }
             HighSchoolSubject.find({name: request.query.name, description: request.query.description}, function (error, students) {
                 if (error)
                     response.send(error);
