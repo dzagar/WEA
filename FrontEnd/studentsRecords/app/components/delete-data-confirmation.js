@@ -45,11 +45,11 @@ export default Ember.Component.extend({
 				console.log(response);
 			});
 			
-			// this.get('store').query('course-code', {
-			// 	deleteAll: true
-			// }).then(function(response) {
-			// 	console.log(response);
-			// });
+			this.get('store').query('course-code', {
+				deleteAll: true
+			}).then(function(response) {
+				console.log(response);
+			});
 			this.get('store').query('high-school', {
 				deleteAll: true
 			}).then(function(response) {
@@ -60,11 +60,11 @@ export default Ember.Component.extend({
 			}).then(function(response) {
 				console.log(response);
 			});
-			// this.get('store').query('high-school-grade', {
-			// 	deleteAll: true
-			// }).then(function(response) {
-			// 	console.log(response);
-			// });
+			this.get('store').query('high-school-grade', {
+				deleteAll: true
+			}).then(function(response) {
+				console.log(response);
+			});
 			this.get('store').query('high-school-course', {
 				deleteAll: true
 			}).then(function(response) {

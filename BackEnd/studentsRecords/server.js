@@ -13,7 +13,9 @@ var advancedStandings = require('./routes/advancedStandings');
 var highschools = require('./routes/highSchools');
 var highSchoolSubjects = require('./routes/highSchoolSubjects');
 var highSchoolCourses = require('./routes/highSchoolCourses');
+var highSchoolGrades = require('./routes/highSchoolGrades');
 var termCodes = require('./routes/termCodes');
+var courseCodes = require('./routes/courseCodes');
 
 
 app.use(function (request, response, next) {
@@ -34,6 +36,8 @@ app.use('/highSchools', highschools);
 app.use('/highSchoolSubjects', highSchoolSubjects);
 app.use('/highSchoolCourses', highSchoolCourses);
 app.use('/termCodes', termCodes);
+app.use('/courseCodes', courseCodes);
+app.use('/highSchoolGrades', highSchoolGrades);
 
 
 app.listen(3700, function () {

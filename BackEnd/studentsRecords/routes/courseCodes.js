@@ -37,4 +37,5 @@ router.route('/')
             }
     });
 
+module.exports = router;
     //Expand later.
