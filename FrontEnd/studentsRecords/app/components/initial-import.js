@@ -874,10 +874,6 @@ export default Ember.Component.extend({
 									var gradeValues = [];
 									var highschoolSubjectValues = [];
 									var highschoolCourseValues = [];
-									var studentNumberValues = [];
-									var studentNumberIndexes = [];
-									var schoolNameValues = [];
-									var schoolNameIndexes = [];
 									var doneReading = false;
 									var rollBackImport = false;
 
@@ -914,18 +910,19 @@ export default Ember.Component.extend({
 												currentSchoolName = schoolName.v;
 												currentStudentNumber = studentNumber.v;
 												console.log("adding new student and new school");
-												//gets indexes and values for later when importing
-												studentNumberValues[studentNumberValues.length] = studentNumber.v;
-												studentNumberIndexes[studentNumberValues.length] = i - 2;
-												schoolNameValues[schoolNameValues.length] = schoolName.v;
-												schoolNameIndexes[schoolNameIndexes.length] = i - 2;
 
 												//if there is information to include...
 												if (!(schoolName.v == "NONE FOUND"))
 												{
 													gradeValues[i - 2] = {"grade": grade.v};
-													highschoolSubjectValues[i - 2] = {"name" : subject.v, "description": description.v};
-													highschoolCourseValues[i - 2] = {"studentNumber": currentStudentNumber, "grade": grade, "schoolName" : schoolName.v, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v};
+													if (!highschoolSubjectValues.contains({"name" : subject.v, "description": description.v}))
+													{
+														highschoolSubjectValues[i - 2] = {"name" : subject.v, "description": description.v};
+													}
+													if (!highschoolCourseValues[i - 2].contains({"studentNumber": currentStudentNumber, "schoolName" : schoolName.v, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v}))
+													{
+														highschoolCourseValues[i - 2] = {"studentNumber": currentStudentNumber, "schoolName" : schoolName.v, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v};
+													}
 												}
 											}
 
@@ -942,18 +939,29 @@ export default Ember.Component.extend({
 											{
 												currentSchoolName = schoolName.v;
 												console.log("adding course/subject for existing student and school");
-												gradeValues[i] = {"grade": grade};
-												highschoolSubjectValues[i - 2] = {"name" : subject.v, "description": description.v};
-												highschoolCourseValues[i - 2] = {"studentNumber": currentStudentNumber, "grade": grade, "schoolName" : schoolName.v,"level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v};
+												gradeValues[i - 2] = {"grade": grade};
+												if (!highschoolSubjectValues.contains({"name" : subject.v, "description": description.v}))
+												{
+													highschoolSubjectValues[i - 2] = {"name" : subject.v, "description": description.v};
+												}
+												if (!highschoolCourseValues[i - 2].contains({"studentNumber": currentStudentNumber, "schoolName" : schoolName.v, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v}))
+												{
+													highschoolCourseValues[i - 2] = {"studentNumber": currentStudentNumber, "schoolName" : schoolName.v, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v};
+												}
 											}
 											//switching neither school not student
 											else
 											{
 												console.log("adding course/subject for existing student and school");
 												gradeValues[i - 2] = {"grade": grade};
-												highschoolSubjectValues[i - 2] = {"name" : subject.v, "description": description.v};
-												highschoolCourseValues[i - 2] = {"studentNumber": currentStudentNumber, "grade": grade, "schoolName" : currentSchoolName,"level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v};
-
+												if (!highschoolSubjectValues.contains({"name" : subject.v, "description": description.v}))
+												{
+													highschoolSubjectValues[i - 2] = {"name" : subject.v, "description": description.v};
+												}
+												if (!highschoolCourseValues[i - 2].contains({"studentNumber": currentStudentNumber, "schoolName" : currentSchoolName, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v}))
+												{
+													highschoolCourseValues[i - 2] = {"studentNumber": currentStudentNumber, "schoolName" : currentSchoolName, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v};
+												}
 											}
 										}
 									}
@@ -1062,7 +1070,7 @@ export default Ember.Component.extend({
 																											var gradeSubjectNameParam = highschoolCourseValues[inGradeMutexIndex].name;
 																											var gradeSubjectDescParam = highschoolCourseValues[inGradeMutexIndex].description;
 																											var gradeStudentNumber = highschoolCourseValues[inGradeMutexIndex].studentNumber;
-																											var recordGrade = highschoolCourseValues[inGradeMutexIndex].grade;
+																											var recordGrade = gradeValues[inGradeMutexIndex].grade;
 																											self.get('store').queryRecord('student', {studentNumber: gradeStudentNumber}).then(function(studentObj) {
 																												self.get('store').queryRecord('high-school-course', {schoolName: gradeCourseSchoolName, subjectName: gradeSubjectNameParam, subjectDescription: gradeSubjectDescParam,  level: gradeCourseLevel, source: gradeCourseSource, unit: gradeCourseUnit}).then(function(highSchoolCourseObj) {
 																													var studentNumberID = studentObj.id;
@@ -1085,7 +1093,6 @@ export default Ember.Component.extend({
 																			});
 																		}
 																	});
-																	//get the subject reference for the course
 																}
 															}
 															numberOfCourses = uniqueCourses.length
@@ -1097,7 +1104,6 @@ export default Ember.Component.extend({
 									}
 									}
 								}
-
 							default:
 							break;
 						}
