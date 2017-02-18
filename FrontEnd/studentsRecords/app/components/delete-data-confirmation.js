@@ -38,6 +38,38 @@ export default Ember.Component.extend({
 					console.log(response);
 				});
 			});
+			
+			this.get('store').query('term-code', {
+				deleteAll: true
+			}).then(function(response) {
+				console.log(response);
+			});
+			
+			this.get('store').query('course-code', {
+				deleteAll: true
+			}).then(function(response) {
+				console.log(response);
+			});
+			this.get('store').query('high-school', {
+				deleteAll: true
+			}).then(function(response) {
+				console.log(response);
+			});
+			this.get('store').query('high-school-subject', {
+				deleteAll: true
+			}).then(function(response) {
+				console.log(response);
+			});
+			this.get('store').query('high-school-grade', {
+				deleteAll: true
+			}).then(function(response) {
+				console.log(response);
+			});
+			this.get('store').query('high-school-course', {
+				deleteAll: true
+			}).then(function(response) {
+				console.log(response);
+			});
 			console.log('deleted students');
 
 			this.set('isImporting', true);
