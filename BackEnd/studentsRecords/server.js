@@ -13,6 +13,7 @@ var advancedStandings = require('./routes/advancedStandings');
 var highschools = require('./routes/highSchools');
 var highSchoolSubjects = require('./routes/highSchoolSubjects');
 var highSchoolCourses = require('./routes/highSchoolCourses');
+var termCodes = require('./routes/termCodes');
 
 
 app.use(function (request, response, next) {
@@ -32,6 +33,7 @@ app.use('/advancedStandings', advancedStandings);
 app.use('/highSchools', highschools);
 app.use('/highSchoolSubjects', highSchoolSubjects);
 app.use('/highSchoolCourses', highSchoolCourses);
+app.use('/termCodes', termCodes);
 
 
 app.listen(3700, function () {

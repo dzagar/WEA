@@ -15,11 +15,21 @@ router.route('/')
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
+        if (request.query.deleteAll)
+        {
+            TermCode.remove({}, function(error) {
+                if (error)
+                    response.send(error);
+                else
+                    console.log("removed term codes");
+            });
+        }
         TermCode.find(function(error, termCodes) {
                 if (error)
                     response.send(error);
                 response.json({termCodes: termCodes});
         });
     });
+module.exports = router;
 
     //Expand later.

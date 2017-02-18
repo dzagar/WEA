@@ -19,7 +19,7 @@ router.route('/')
         var deleteAll = request.query.deleteAll;
         if (deleteAll)
         {
-            highSchoolCourse.remove({}, function(error) {
+            HighSchoolCourse.remove({}, function(error) {
                 if (error)
                 {
                     response.send(error);
