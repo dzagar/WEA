@@ -20,7 +20,7 @@ export default Ember.Component.extend({
     },
 
     loadPrevious: function () {
-      this.get('changeOffset')(this.get('pageSize'), true);
+      this.get('changeOffset')(-this.get('pageSize'), true);
     },
 
     getStudent: function (student) {
