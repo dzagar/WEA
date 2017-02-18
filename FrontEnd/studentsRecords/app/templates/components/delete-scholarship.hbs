@@ -1,8 +1,12 @@
-<div class="ui modal">
-  <div class="header">Are you sure you want to delete this scholarship?
+<div class="ui small modal">
+  <div class="header">Are you sure you want to delete this scholarship?</div>
+  <div class="content">
+  <p>
+    This action is irreversible.
+  </p>
   </div>
   <div class="actions">
-    <div class="ui button" {{action "deleteScholarship"}}>
+    <div class="ui inverted red button" {{action "deleteScholarship"}}>
     	Delete
     </div>
     <div class="ui button" {{action "cancel"}}>

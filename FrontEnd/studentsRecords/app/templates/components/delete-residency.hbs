@@ -1,8 +1,12 @@
-<div class="ui modal">
-  <div class="header">Are you sure you want to delete this residency?
+<div class="ui small modal">
+  <div class="header">Are you sure you want to delete this residency?</div>
+  <div class="content">
+  <p>
+    This action is irreversible.
+  </p>
   </div>
   <div class="actions">
-    <div class="ui button" {{action "deleteResidency"}}>
+    <div class="ui inverted red button" {{action "deleteResidency"}}>
     	Delete
     </div>
     <div class="ui button" {{action "cancel"}}>
