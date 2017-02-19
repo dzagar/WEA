@@ -15,6 +15,7 @@ var highSchoolSubjects = require('./routes/highSchoolSubjects');
 var highSchoolCourses = require('./routes/highSchoolCourses');
 var highSchoolGrades = require('./routes/highSchoolGrades');
 var termCodes = require('./routes/termCodes');
+var planCodes = require('./routes/planCodes');
 var courseCodes = require('./routes/courseCodes');
 var programRecords = require('./routes/programRecords');
 
@@ -37,6 +38,7 @@ app.use('/highSchools', highschools);
 app.use('/highSchoolSubjects', highSchoolSubjects);
 app.use('/highSchoolCourses', highSchoolCourses);
 app.use('/termCodes', termCodes);
+app.use('/planCodes', planCodes);
 app.use('/courseCodes', courseCodes);
 app.use('/highSchoolGrades', highSchoolGrades);
 app.use('/programRecords', programRecords);

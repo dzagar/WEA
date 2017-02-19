@@ -1366,6 +1366,36 @@ export default Ember.Component.extend({
 																				startedSavingPrograms = false;
 																				console.log("done saving programs");
 
+																				//now we save plans...
+																				var inPlanMutexIndex = 0;
+																				var planMutex = Mutex.create();
+																				for (var k = 0; k < planValues.length; k++)
+																				{
+																					planMutex.lock(function() {																											
+																						var inPlanMutexCountIndex = inPlanMutexIndex++;
+																						var planStudentNumber = planValues[inPlanMutexCountIndex].studentNumber;
+																						var planTerm = planValues[inPlanMutexCountIndex].term;
+																						var planProgramName = planValues[inPlanMutexCountIndex].program;
+																						var planLevel = planValues[inPlanMutexCountIndex].level;
+																						var planLoad = planValues[inPlanMutexCountIndex].load;
+																						var planName = planValues[inPlanMutexCountIndex].plan;
+																						self.get('store').queryRecord('program-record', {
+																							studentNumber: planStudentNumber,
+																							termName: planTerm,
+																							programName: planProgramName,
+																							level: planLevel,
+																							load: planLoad
+																						}).then(function(programRecordObj) {
+																							var newPlanToImport = self.get('store').createRecord('plan-code', {
+																								name: planName
+																							});
+																							newPlanToImport.set('programRecord', programRecordObj);
+																							newPlanToImport.save();
+																						});
+
+																					});
+																				}
+
 																			}
 																		});
 																	});
