@@ -1178,23 +1178,18 @@ export default Ember.Component.extend({
 										//new student number
 										else if (studentNumber && studentNumber.v !== "")
 										{
-											console.log(studentNumber);
-											console.log("there was a student Number");
 											//if there is a missing field then the data is invalid
-											if (!term || !program || !level || !load || !plan)
+											if (!term || !program || !level || !load || !plan || term.v == "" || program.v == "" || level.v === "" || load.v == "" || plan.v == "")
 											{
-												DisplayErrorMessage("Imporperly formated data on row " + i);
-												rollBackImport = true;
+												rollbackImport = true;
 												doneReading = true;
+												DisplayErrorMessage("Imporperly formated data on row " + i);
 											}
 											//populate new value fields for proper data
 											else
 											{
-
-												console.log("chaning student number to");
 												//set the current values
 												currentStudentNumber = studentNumber.v;
-												console.log(currentStudentNumber);
 												currentTerm = term.v;
 												currentProgram = program.v;
 												currentLevel = level.v;
@@ -1202,17 +1197,17 @@ export default Ember.Component.extend({
 												//if all fields are unique then there is a new plan
 												if (checkUniquePlan(planValues, studentNumber.v, term.v, program.v, level.v, load.v, plan.v))
 												{
-													planValues[i - 2] = {"studentNumber": studentNumber.v, "term": term.v, "program": program.v, "level": level.v, "load": load.v, "plan": plan.v};
+													planValues[planValues.length] = {"studentNumber": studentNumber.v, "term": term.v, "program": program.v, "level": level.v, "load": load.v, "plan": plan.v};
 													
 													//if all fields but the plan is unique then there is a new program
 													if (checkUniqueProgram(programValues, studentNumber.v, term.v, program.v, level.v, load.v))
 													{
-														programValues[i - 2] = {"studentNumber": studentNumber.v, "term": term.v, "program": program.v, "level": level.v, "load": load.v};
+														programValues[programValues.length] = {"studentNumber": studentNumber.v, "term": term.v, "program": program.v, "level": level.v, "load": load.v};
 														
 														//if the term and student number is unique then there is a new term to import
 														if (checkUniqueTerm(termValues, studentNumber.v, term.v))
 														{
-															termValues[i - 2] = {"studentNumber" : studentNumber.v, "termCode": term.v};
+															termValues[termValues.length] = {"studentNumber" : studentNumber.v, "termCode": term.v};
 														}
 													}
 												}
@@ -1220,13 +1215,13 @@ export default Ember.Component.extend({
 											}
 										}
 										//if the student number is the same but term is different
-										else if (term)
+										else if (term && term.v != "")
 										{
 											//if there is a missing field then the data is invalid
-											if (!program || !level || !load || !plan)
+											if (!program || !level || !load || !plan || program.v == "" || level.v === "" || load.v == "" || plan.v == "")
 											{
 												DisplayErrorMessage("Imporperly formated data on row " + i);
-												rollBackImport = true;
+												rollbackImport = true;
 												doneReading = true;
 											}
 											else
@@ -1239,30 +1234,30 @@ export default Ember.Component.extend({
 												//if all fields are unique then there is a new plan
 												if (checkUniquePlan(planValues, currentStudentNumber, term.v, program.v, level.v, load.v, plan.v))
 												{
-													planValues[i - 2] = {"studentNumber": currentStudentNumber, "term": term.v, "program": program.v, "level": level.v, "load": load.v, "plan": plan.v};
+													planValues[planValues.length] = {"studentNumber": currentStudentNumber, "term": term.v, "program": program.v, "level": level.v, "load": load.v, "plan": plan.v};
 													
 													//if all fields but the plan is unique then there is a new program
 													if (checkUniqueProgram(programValues, currentStudentNumber, term.v, program.v, level.v, load.v))
 													{
-														programValues[i - 2] = {"studentNumber": currentStudentNumber, "term": term.v, "program": program.v, "level": level.v, "load": load.v};
+														programValues[programValues.length] = {"studentNumber": currentStudentNumber, "term": term.v, "program": program.v, "level": level.v, "load": load.v};
 														
 														//if the term and student number is unique then there is a new term to import
 														if (checkUniqueTerm(termValues, currentStudentNumber, term.v))
 														{
-															termValues[i - 2] = {"studentNumber" : currentStudentNumber, "termCode": term.v};
+															termValues[termValues.length] = {"studentNumber" : currentStudentNumber, "termCode": term.v};
 														}
 													}
 												}
 											}
 										}
 										//if there is a new program
-										else if (program)
+										else if (program && program.v != "")
 										{
 											//if there is a missing field then the data is invalid
-											if (!level || !load || !plan)
+											if (!level || !load || !plan || level.v === "" || load.v == "" || plan.v == "")
 											{
 												DisplayErrorMessage("Imporperly formated data on row " + i);
-												rollBackImport = true;
+												rollbackImport = true;
 												doneReading = true;
 											}
 											else
@@ -1274,12 +1269,12 @@ export default Ember.Component.extend({
 												//if all fields are unique then there is a new plan
 												if (checkUniquePlan(planValues, currentStudentNumber, currentTerm, program.v, level.v, load.v, plan.v))
 												{
-													planValues[i - 2] = {"studentNumber": currentStudentNumber, "term": currentTerm, "program": program.v, "level": level.v, "load": load.v, "plan": plan.v};
+													planValues[planValues.length] = {"studentNumber": currentStudentNumber, "term": currentTerm, "program": program.v, "level": level.v, "load": load.v, "plan": plan.v};
 													
 													//if all fields but the plan is unique then there is a new program
 													if (checkUniqueProgram(programValues, currentStudentNumber, currentTerm, program.v, level.v, load.v))
 													{
-														programValues[i - 2] = {"studentNumber": currentStudentNumber, "term": currentTerm, "program": program.v, "level": level.v, "load": load.v};
+														programValues[programValues.length] = {"studentNumber": currentStudentNumber, "term": currentTerm, "program": program.v, "level": level.v, "load": load.v};
 														
 													}
 												}
@@ -1289,10 +1284,10 @@ export default Ember.Component.extend({
 										else
 										{
 											//if there is a field in load or level then the data is invalid
-											if (level || load)
+											if (level && level.v !== "" || load && load.v != "")
 											{
 												DisplayErrorMessage("Imporperly formated data on row " + i);
-												rollBackImport = true;
+												rollbackImport = true;
 												doneReading = true;
 											}
 											else
@@ -1300,25 +1295,51 @@ export default Ember.Component.extend({
 												//if all fields are unique then there is a new plan
 												if (checkUniquePlan(planValues, currentStudentNumber, currentTerm, currentProgram, currentLevel, currentLoad, plan.v))
 												{
-													planValues[i - 2] = {"studentNumber": currentStudentNumber, "term": currentTerm, "program": currentProgram, "level": currentLevel, "load": currentLoad, "plan": plan.v};
+													planValues[planValues.length] = {"studentNumber": currentStudentNumber, "term": currentTerm, "program": currentProgram, "level": currentLevel, "load": currentLoad, "plan": plan.v};
 													
 												}
 											}
 										}
-										console.log("at the bottom of for loop with i = " +  i);
 									}
 									//done reading the files
-
 									//if the import was successful
 									if (!rollbackImport)
 									{
-										console.log("succesful reading");
-										console.log(termValues);
-										console.log(programValues);
-										console.log(planValues);
 										//start importing
-										//import terms, then programs, then plans
 
+										var inMutexIndex = 0;
+										var termMutex = Mutex.create();
+										var startedSavingTerms = false;
+										var termsToimport = [];
+										console.log(termValues);
+										for (var i = 0; i < termValues.length; i++)
+										{
+											termMutex.lock(function() {
+												var inMutexCountIndex = inMutexIndex++	
+												var termStudentNumber = termValues[inMutexCountIndex].studentNumber;								
+												self.get('store').queryRecord('student', {
+													number: termStudentNumber
+												}).then(function(studentObj) {	
+													var termName = termValues[inMutexCountIndex].termCode;										
+													var newTermToImport = self.get('store').createRecord('term-code', {
+														name: termName
+													});
+													newTermToImport.set('student', studentObj);
+													termsToimport[termsToimport.length] = newTermToImport;
+													newTermToImport.save().then(function() {
+														//wait until all terms have been uploaded
+														if (termValues.length === termsToimport.length && !startedSavingTerms)
+														{
+															startedSavingTerms = true;
+															console.log("done saving new term codes");
+
+														}
+													});
+												});
+											});
+										
+										//import terms, then programs, then plans
+										}
 									}
 								}
 								break;
