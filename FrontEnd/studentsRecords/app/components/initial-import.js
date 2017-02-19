@@ -47,11 +47,11 @@ function checkUniqueTerm(sourceArray, newStudentNumber, newTermCode)
 	return true;
 }
 
-function checkUniqueProgram(sourceArray, newStudentNumber, newTermCode, newName, newLevel, newLoad, newStatus)
+function checkUniqueProgram(sourceArray, newStudentNumber, newTermCode, newName, newLevel, newLoad)
 {
 	return true;
 }
-function checkUniquePlan(sourceArray, newStudentNumber, newTermCode, newProgramName, newLevel, newLoad, newStatus, newPlanName)
+function checkUniquePlan(sourceArray, newStudentNumber, newTermCode, newProgramName, newLevel, newLoad, newPlanName)
 {
 	return true;
 }
@@ -1184,10 +1184,127 @@ export default Ember.Component.extend({
 											//populate new value fields for proper data
 											else
 											{
+												//set the current values
+												currentStudentNumber = studentNumber.v;
+												currentTerm = term.v;
+												currentProgram = program.v;
+												currentLevel = level.v;
+												currentLoad = load.v;
+												//if all fields are unique then there is a new plan
+												if (checkUniquePlan(planValues, studentNumber.v, term.v, program.v, level.v, load.v, plan.v))
+												{
+													planValues[i - 2] = {"studentNumber": studentNumber.v, "term": term.v, "program": program.v, "level": level.v, "load": load.v, "plan": plan.v};
+													
+													//if all fields but the plan is unique then there is a new program
+													if (checkUniqueProgram(programValues, studentNumber.v, term.v, program.v, level.v, load.v))
+													{
+														programValues[i = 2] = {"studentNumber": studentNumber.v, "term": term.v, "program": program.v, "level": level.v, "load": load.v};
+														
+														//if the term and student number is unique then there is a new term to import
+														if (checkUniqueTerm(termValues, studentNumber.v, term.v))
+														{
+															termValues[i - 2] = {"studentNumber" : studentNumber.v, "termCode": term.v};
+														}
+													}
+												}
 
 											}
 										}
+										//if the student number is the same but term is different
+										else if (term)
+										{
+											//if there is a missing field then the data is invalid
+											if (!program || !level || !load || !plan)
+											{
+												DisplayErrorMessage("Imporperly formated data on row " + i);
+												rollBackImport = true;
+												doneReading = true;
+											}
+											else
+											{
+												//set the current values
+												currentTerm = term.v;
+												currentProgram = program.v;
+												currentLevel = level.v;
+												currentLoad = load.v;
+												//if all fields are unique then there is a new plan
+												if (checkUniquePlan(planValues, currentStudentNumber, term.v, program.v, level.v, load.v, plan.v))
+												{
+													planValues[i - 2] = {"studentNumber": currentStudentNumber, "term": term.v, "program": program.v, "level": level.v, "load": load.v, "plan": plan.v};
+													
+													//if all fields but the plan is unique then there is a new program
+													if (checkUniqueProgram(programValues, currentStudentNumber, term.v, program.v, level.v, load.v))
+													{
+														programValues[i = 2] = {"studentNumber": currentStudentNumber, "term": term.v, "program": program.v, "level": level.v, "load": load.v};
+														
+														//if the term and student number is unique then there is a new term to import
+														if (checkUniqueTerm(termValues, currentStudentNumber, term.v))
+														{
+															termValues[i - 2] = {"studentNumber" : currentStudentNumber, "termCode": term.v};
+														}
+													}
+												}
+											}
+										}
+										//if there is a new program
+										else if (program)
+										{
+											//if there is a missing field then the data is invalid
+											if (!level || !load || !plan)
+											{
+												DisplayErrorMessage("Imporperly formated data on row " + i);
+												rollBackImport = true;
+												doneReading = true;
+											}
+											else
+											{
+												//set the current values
+												currentProgram = program.v;
+												currentLevel = level.v;
+												currentLoad = load.v;
+												//if all fields are unique then there is a new plan
+												if (checkUniquePlan(planValues, currentStudentNumber, currentTerm, program.v, level.v, load.v, plan.v))
+												{
+													planValues[i - 2] = {"studentNumber": currentStudentNumber, "term": currentTerm, "program": program.v, "level": level.v, "load": load.v, "plan": plan.v};
+													
+													//if all fields but the plan is unique then there is a new program
+													if (checkUniqueProgram(programValues, currentStudentNumber, currentTerm, program.v, level.v, load.v))
+													{
+														programValues[i = 2] = {"studentNumber": currentStudentNumber, "term": currentTerm, "program": program.v, "level": level.v, "load": load.v};
+														
+													}
+												}
+											}
+										}
+										//plan must be the only field
+										else
+										{
+											//if there is a field in load or level then the data is invalid
+											if (level || load)
+											{
+												DisplayErrorMessage("Imporperly formated data on row " + i);
+												rollBackImport = true;
+												doneReading = true;
+											}
+											else
+											{
+												//if all fields are unique then there is a new plan
+												if (checkUniquePlan(planValues, currentStudentNumber, currentTerm, currentProgram, currentLevel, currentLoad, plan.v))
+												{
+													planValues[i - 2] = {"studentNumber": currentStudentNumber, "term": currentTerm, "program": program.v, "level": level.v, "load": load.v, "plan": plan.v};
+													
+												}
+											}
+										}
+									}
+									//done reading the files
 
+									//if the import was successful
+									if (!rollbackImport)
+									{
+
+										//start importing
+										//import terms, then programs, then plans
 
 									}
 								}
