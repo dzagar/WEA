@@ -36,20 +36,18 @@ router.route('/')
                 }
             });
         } else if (request.query.schoolName && request.query.subjectName && request.query.subjectDescription) {
-            HighSchool.find({schoolName: request.query.schoolName}, function(error, schools) {
+            HighSchool.findOne({schoolName: request.query.schoolName}, function(error, school) {
                 if (error)
-                    response.send(error);
-                let school = schools[0];    //should only return one record anyway
+                    response.send(error);   //should only return one record anyway
                 if(school) {
-                    HighSchoolSubject.find({name: request.query.subjectName, description: request.query.subjectDescription}, function (error, subjects) {
+                    HighSchoolSubject.findOne({name: request.query.subjectName, description: request.query.subjectDescription}, function (error, subject) {
                         if (error)
                             response.send(error);
-                        let subject = subjects[0];
                         if(subject) {
-                            HighSchoolCourse.find({level: request.query.level, source: request.query.source, unit: request.query.unit, school: school.id, subject: subject.id}, function (error, courses) {
+                            HighSchoolCourse.findOne({level: request.query.level, source: request.query.source, unit: request.query.unit, school: school.id, subject: subject.id}, function (error, course) {
                                 if (error)
                                     response.send(error);
-                                response.json({highSchoolCourses: courses});
+                                response.json({highSchoolCourse: course});
                             });
                         } else 
                             response.json({error: "No subject was found"});
