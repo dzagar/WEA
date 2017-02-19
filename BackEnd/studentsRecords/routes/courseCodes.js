@@ -15,11 +15,27 @@ router.route('/')
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
+        if (request.query.deleteAll){
+            CourseCode.remove({}, function(err){
+                if (err) response.send(err);
+                else
+                {
+                    CourseCode.find(function (err, courseCode){
+                        if (err) response.send(err);
+                        response.json({courseCode: courseCode});
+                    });
+                } console.log('removed courseCodes');
+            });
+        }
+        else{
         CourseCode.find(function(error, courseCodes) {
                 if (error)
                     response.send(error);
                 response.json({courseCodes: courseCodes});
         });
+
+            }
     });
 
+module.exports = router;
     //Expand later.
