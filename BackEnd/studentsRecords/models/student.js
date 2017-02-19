@@ -13,7 +13,8 @@ var studentsSchema = mongoose.Schema(
         admissionAverage: Number,
         admissionComments: String,
         resInfo: {type: mongoose.Schema.ObjectId, ref: 'Residency'},
-        scholarships: [{type: mongoose.Schema.ObjectId, ref: 'Scholarship'}]
+        scholarships: [{type: mongoose.Schema.ObjectId, ref: 'Scholarship'}],
+        termCodes: [{type: mongoose.Schema.ObjectId, ref: 'TermCode'}]
     },
     {
         versionKey: false

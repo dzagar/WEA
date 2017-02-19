@@ -3,7 +3,8 @@ var mongoose = require('mongoose');
 var termCodeSchema = mongoose.Schema(
     {
         name: String,
-        programRecord: [{type: mongoose.Schema.ObjectId, ref: 'ProgramRecord'}]
+        programRecords: [{type: mongoose.Schema.ObjectId, ref: 'ProgramRecord'}],
+        grades: [{type: mongoose.Schema.ObjectId, ref: 'Grade'}]
         // Adjudication
     },
     {
