@@ -24,7 +24,12 @@ router.route('/')
                     response.send(error);
                 }
                 else{
-                    console.log("removed subjects");
+                    HighSchoolSubject.find(function (err, highSchoolSubject){
+                        if (err) response.send(err);
+                        else{
+                            response.json({highSchoolSubject: highSchoolSubject});
+                        }console.log("removed subjects");
+                    });
                 }
             });
         }

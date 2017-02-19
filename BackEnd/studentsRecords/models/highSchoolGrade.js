@@ -2,7 +2,9 @@ var mongoose = require('mongoose');
 
 var highSchoolGradeSchema = mongoose.Schema(
     {
-        mark: String
+        mark: String,
+        source: {type: mongoose.Schema.ObjectId, ref: ('HighSchoolCourse')},
+        student: {type: mongoose.Schema.ObjectId, ref: ('Student')}
     },
     {
         versionKey: false
