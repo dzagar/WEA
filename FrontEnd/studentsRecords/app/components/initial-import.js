@@ -696,7 +696,7 @@ export default Ember.Component.extend({
 							}
 							break;
 							case ImportState.COURSECODE:
-							if (courseCodeVerification(worksheet)) {
+							if (UndergraduateCoursesVerification(worksheet)) {
 								var rollBackImport = false;
 								var doneImporting = false;
 								var courseCodesToImport = [];
