@@ -1,3 +1,7 @@
+<div class="ui center aligned header">
+  <h2>Import Data</h2>
+</div>
+
 {{#if showDeleteConfirmation}}
 {{delete-data-confirmation notDONE = showDeleteConfirmation isImporting = importData}}
 {{else if importData}}
@@ -83,8 +87,16 @@
 	</div>
 </div>
 {{else}}
-<a item = "item" {{action 'showEraseDataModal'}}>
-	Import Student Data...
-</a>
+<div class="content">
+	<p>
+		To import new data, you must delete all old data. This action is irreversible, so be sure you are ready before proceeding.
+	</p>
+</div>
+<div class="ui horizontal divider"></div>
+<div style="width: 50%; margin: auto;">
+	<div class="ui fluid button" {{action 'showEraseDataModal'}}>
+		Import New Data
+	</div>
+</div>
 {{/if}}
 
