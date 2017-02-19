@@ -41,6 +41,21 @@ function checkUniqueCourse(sourceArray, newSchool, newLevel, newSource, newUnit,
 	return true;
 }
 
+function checkUniqueTerm(sourceArray, newStudentNumber, newTermCode)
+{
+
+	return true;
+}
+
+function checkUniqueProgram(sourceArray, newStudentNumber, newTermCode, newName, newLevel, newLoad, newStatus)
+{
+	return true;
+}
+function checkUniquePlan(sourceArray, newStudentNumber, newTermCode, newProgramName, newLevel, newLoad, newStatus, newPlanName)
+{
+	return true;
+}
+
 function genderVerification(worksheet)
 {
 	var currentString=worksheet['A1'].v;
@@ -1123,9 +1138,59 @@ export default Ember.Component.extend({
 								//Unique terms 
 								//Unique Program REcords 
 								//Unique Plan codes
+								if (UndergraduateRPVerification(worksheet))
+								{
+									var termValues = [];
+									var programValues = [];
+									var planValues = [];
+									var doneReading = false;
+									var rollbackImport = false;
 
-								
+									var currentStudentNumber = "";
+									var currentTerm = "";
+									var currentProgram = "";
+									var currentLevel = "";
+									var currentLoad = "";
 
+									for (var i = 2; !doneReading; i++)
+									{
+										var studentNumber = worksheet['A' + i];
+										var term = worksheet['B' + i];
+										var program = worksheet['C' + i];
+										var level = worksheet['D' + i];
+										var load = worksheet['E' + i];
+										var plan = worksheet['F' + i];
+
+										//this means the reading is done
+										if (!plan)
+										{
+											if (i === 2)
+											{
+												DisplayErrorMessage("Sheet does not contain any properly formated data");
+												rollbackImport = true;
+											}
+											doneReading = true;
+										}
+										//new student number
+										else if (studentNumber)
+										{
+											//if there is a missing field then the data is invalid
+											if (!term || !program || !level || !load || !plan)
+											{
+												DisplayErrorMessage("Imporperly formated data on row " + i);
+												rollBackImport = true;
+												doneReading = true;
+											}
+											//populate new value fields for proper data
+											else
+											{
+
+											}
+										}
+
+
+									}
+								}
 							}
 							case ImportState.RECORDGRADES:
 							{
