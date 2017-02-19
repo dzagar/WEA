@@ -16,6 +16,10 @@ var ImportState = {
 	RECORDGRADES : 11
 };
 
+function DisplayErrorMessage(message)
+{
+	console.log(message);
+}
 function checkUniqueSubject(sourceArray, newName, newDescription)
 {
 	for (var i = 0; i < sourceArray.length; i++)
@@ -515,10 +519,6 @@ function UndergraduateCGVerification(worksheet)
 	return true;
 }
 
-function DisplayErrorMessage(message)
-{
-	console.log(message);
-}
 
 export default Ember.Component.extend({
 	
@@ -1131,15 +1131,18 @@ export default Ember.Component.extend({
 										}
 										numberOfSubjects = uniqueSubjects.length;
 									}
-									}
+								}
+								break;
 								}
 							case ImportState.RECORDPLANS:
 							{
+								console.log("in records plans");
 								//Unique terms 
 								//Unique Program REcords 
 								//Unique Plan codes
 								if (UndergraduateRPVerification(worksheet))
 								{
+									console.log("successful verification");
 									var termValues = [];
 									var programValues = [];
 									var planValues = [];
@@ -1164,6 +1167,7 @@ export default Ember.Component.extend({
 										//this means the reading is done
 										if (!plan)
 										{
+											console.log("there was no plan");
 											if (i === 2)
 											{
 												DisplayErrorMessage("Sheet does not contain any properly formated data");
@@ -1172,8 +1176,10 @@ export default Ember.Component.extend({
 											doneReading = true;
 										}
 										//new student number
-										else if (studentNumber)
+										else if (studentNumber && studentNumber.v !== "")
 										{
+											console.log(studentNumber);
+											console.log("there was a student Number");
 											//if there is a missing field then the data is invalid
 											if (!term || !program || !level || !load || !plan)
 											{
@@ -1184,8 +1190,11 @@ export default Ember.Component.extend({
 											//populate new value fields for proper data
 											else
 											{
+
+												console.log("chaning student number to");
 												//set the current values
 												currentStudentNumber = studentNumber.v;
+												console.log(currentStudentNumber);
 												currentTerm = term.v;
 												currentProgram = program.v;
 												currentLevel = level.v;
@@ -1198,7 +1207,7 @@ export default Ember.Component.extend({
 													//if all fields but the plan is unique then there is a new program
 													if (checkUniqueProgram(programValues, studentNumber.v, term.v, program.v, level.v, load.v))
 													{
-														programValues[i = 2] = {"studentNumber": studentNumber.v, "term": term.v, "program": program.v, "level": level.v, "load": load.v};
+														programValues[i - 2] = {"studentNumber": studentNumber.v, "term": term.v, "program": program.v, "level": level.v, "load": load.v};
 														
 														//if the term and student number is unique then there is a new term to import
 														if (checkUniqueTerm(termValues, studentNumber.v, term.v))
@@ -1235,7 +1244,7 @@ export default Ember.Component.extend({
 													//if all fields but the plan is unique then there is a new program
 													if (checkUniqueProgram(programValues, currentStudentNumber, term.v, program.v, level.v, load.v))
 													{
-														programValues[i = 2] = {"studentNumber": currentStudentNumber, "term": term.v, "program": program.v, "level": level.v, "load": load.v};
+														programValues[i - 2] = {"studentNumber": currentStudentNumber, "term": term.v, "program": program.v, "level": level.v, "load": load.v};
 														
 														//if the term and student number is unique then there is a new term to import
 														if (checkUniqueTerm(termValues, currentStudentNumber, term.v))
@@ -1270,7 +1279,7 @@ export default Ember.Component.extend({
 													//if all fields but the plan is unique then there is a new program
 													if (checkUniqueProgram(programValues, currentStudentNumber, currentTerm, program.v, level.v, load.v))
 													{
-														programValues[i = 2] = {"studentNumber": currentStudentNumber, "term": currentTerm, "program": program.v, "level": level.v, "load": load.v};
+														programValues[i - 2] = {"studentNumber": currentStudentNumber, "term": currentTerm, "program": program.v, "level": level.v, "load": load.v};
 														
 													}
 												}
@@ -1291,26 +1300,33 @@ export default Ember.Component.extend({
 												//if all fields are unique then there is a new plan
 												if (checkUniquePlan(planValues, currentStudentNumber, currentTerm, currentProgram, currentLevel, currentLoad, plan.v))
 												{
-													planValues[i - 2] = {"studentNumber": currentStudentNumber, "term": currentTerm, "program": program.v, "level": level.v, "load": load.v, "plan": plan.v};
+													planValues[i - 2] = {"studentNumber": currentStudentNumber, "term": currentTerm, "program": currentProgram, "level": currentLevel, "load": currentLoad, "plan": plan.v};
 													
 												}
 											}
 										}
+										console.log("at the bottom of for loop with i = " +  i);
 									}
 									//done reading the files
 
 									//if the import was successful
 									if (!rollbackImport)
 									{
-
+										console.log("succesful reading");
+										console.log(termValues);
+										console.log(programValues);
+										console.log(planValues);
 										//start importing
 										//import terms, then programs, then plans
 
 									}
 								}
+								break;
 							}
 							case ImportState.RECORDGRADES:
 							{
+
+								break;
 
 							}
 							default:
