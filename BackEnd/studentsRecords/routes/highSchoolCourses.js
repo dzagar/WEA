@@ -46,7 +46,7 @@ router.route('/')
                             response.send(error);
                         let subject = subjects[0];
                         if(subject) {
-                            HighSchoolCourse.find({level: request.query.level, source: request.query.source, unit: request.query.unit, subject: subject._id, school: school._id}, function (error, courses) {
+                            HighSchoolCourse.find({level: request.query.level, source: request.query.source, unit: request.query.unit, school: school.id, subject: subject.id}, function (error, courses) {
                                 if (error)
                                     response.send(error);
                                 response.json({highSchoolCourses: courses});
