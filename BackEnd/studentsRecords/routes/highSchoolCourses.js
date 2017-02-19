@@ -57,6 +57,52 @@ router.route('/')
                 } else
                     response.json({error: "No highschool was found"});
             });
+
+            /*
+            HighSchoolCourse.find({level: request.query.level, source: request.query.source, unit: request.query.unit}, function (error, courses) {
+                if (error)
+                    response.send(error);
+                
+                HighSchool.find({schoolName: request.query.schoolName}, function(error, schools) {
+                    if(error)
+                        response.send(error);
+                    
+                    let hsCourses = [];
+                    for (let c = 0; c < courses.length; c++) {
+                        var keep = false;
+                        for (let hs = 0; hs < schools.length; hs++) {
+                            if (courses[c].school == schools[hs]._id) {
+                                keep = true;
+                                break;
+                            }
+                        }
+                        if (keep) {
+                            hsCourses.push(courses[c]);
+                        }
+                    }
+
+                    HighSchoolSubject.find({name: request.query.subjectName, description: request.query.subjectDescription}, function (error, subjects) {
+                        if (error)
+                            response.send(error);
+                        
+                        let hsSubCourses = [];
+                        for (let c = 0; c < hsCourses.length; c++) {
+                            keep = false;
+                            for (let s = 0; s < subjects.length; s++) {
+                                if (hsCourses[c].subject == subjects[s]._id) {
+                                    keep = true;
+                                    break;
+                                }
+                            }
+                            if (keep) {
+                                hsSubCourses.push(hsCourses[c]);
+                            }
+                        }
+
+                        response.json({highSchoolCourses: hsSubCourses});
+                    });
+                });
+            });*/
         } else {
             HighSchoolCourse.find({level: request.query.level, source: request.query.source, unit: request.query.unit}, function (error, courses) {
                 if (error)
