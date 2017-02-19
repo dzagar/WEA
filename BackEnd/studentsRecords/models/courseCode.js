@@ -6,7 +6,8 @@ var courseCodeSchema = mongoose.Schema(
         courseLetter: String,
         courseNumber: String,
         name: String,
-        unit: Number
+        unit: Number,
+        programRecord: [{type: mongoose.Schema.ObjectId, ref: 'Grade'}]
     },
     {
         versionKey: false

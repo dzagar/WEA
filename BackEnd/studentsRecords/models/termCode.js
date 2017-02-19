@@ -2,8 +2,8 @@ var mongoose = require('mongoose');
 
 var termCodeSchema = mongoose.Schema(
     {
-        name: String
-        // Program Record
+        name: String,
+        programRecord: [{type: mongoose.Schema.ObjectId, ref: 'ProgramRecord'}]
         // Adjudication
     },
     {
