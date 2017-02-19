@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var TermCode = require('../models/termCode');
+var Student = require('../models/student');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
 var parseJSON = bodyParser.json();
@@ -24,11 +25,29 @@ router.route('/')
                     console.log("removed term codes");
             });
         }
-        TermCode.find(function(error, termCodes) {
+        else if (request.query.studentNumber && request.query.name) {
+            Student.find({number: request.query.studentNumber}, function(error, students) {
                 if (error)
                     response.send(error);
-                response.json({termCodes: termCodes});
-        });
+                let student = students[0];    //should only return one record anyway
+                if(student) {
+                    TermCode.find({name: request.query.name}, function (error, termCode) {
+                        if (error)
+                            response.send(error);
+                        else 
+                            response.json({termCode: termCode});
+                    });
+                } else
+                    response.json({error: "No student was found"});
+            });
+        }
+        else{ 
+            TermCode.find(function(error, termCodes) {
+                    if (error)
+                        response.send(error);
+                    response.json({termCodes: termCodes});
+            });
+        }
     });
 module.exports = router;
 
