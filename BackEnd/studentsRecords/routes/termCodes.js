@@ -26,19 +26,21 @@ router.route('/')
             });
         }
         else if (request.query.studentNumber && request.query.name) {
-            Student.find({number: request.query.studentNumber}, function(error, students) {
+            Student.find({studentNumber: request.query.studentNumber}, function(error, students) {
                 if (error)
                     response.send(error);
-                let student = students[0];    //should only return one record anyway
-                if(student) {
-                    TermCode.find({name: request.query.name}, function (error, termCode) {
-                        if (error)
-                            response.send(error);
-                        else 
-                            response.json({termCode: termCode});
-                    });
-                } else
-                    response.json({error: "No student was found"});
+                else{                    
+                    let student = students[0];    //should only return one record anyway
+                    if(student) {
+                        TermCode.find({name: request.query.name, student: student.id}, function (error, termCode) {
+                            if (error)
+                                response.send(error);
+                            else 
+                                response.json({termCode: termCode});
+                        });
+                    } else
+                        response.json({error: "No student was found"});
+                }
             });
         }
         else{ 

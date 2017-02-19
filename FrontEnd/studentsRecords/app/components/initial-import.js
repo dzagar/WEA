@@ -1332,7 +1332,46 @@ export default Ember.Component.extend({
 														{
 															startedSavingTerms = true;
 															console.log("done saving new term codes");
+															//now we start saving programs
 
+															var inProgramMutexIndex = 0;
+															var programMutex = Mutex.create();
+															var startedSavingPrograms = false;
+															var programsToImport = [];
+															
+															for (var j = 0; j < programValues.length; j++)
+															{
+																programMutex.lock(function() {
+																	var inProgramMutexCountIndex = inProgramMutexIndex++;
+																	var programStudentNumber = programValues[inProgramMutexCountIndex].studentNumber;
+																	var programTerm = programValues[inProgramMutexCountIndex].term;
+																	var programName = programValues[inProgramMutexCountIndex].program;
+																	var programLevel = programValues[inProgramMutexCountIndex].level;
+																	var programLoad = programValues[inProgramMutexCountIndex].load;
+																	self.get('store').queryRecord('term-code', {
+																		studentNumber: programStudentNumber,
+																		name: programTerm
+																	}).then(function(termNameObj) {
+																		var newProgramToImport = self.get('store').createRecord('program-record', {
+																			name: programName,
+																			level: programLevel,
+																			load: programLoad
+																		});
+																		newProgramToImport.set('termCode', termNameObj);
+																		programsToImport[programsToImport.length] = newProgramToImport;
+																		programsToImport[programsToImport.length - 1].save().then(function() {
+
+																			if (programsToImport.length === programValues.length && ! startedSavingPrograms)
+																			{
+																				startedSavingPrograms = false;
+																				console.log("done saving programs");
+
+																			}
+																		});
+																	});
+
+																});
+															}
 														}
 													});
 												});
