@@ -22,7 +22,16 @@ router.route('/')
                 if (error)
                     response.send(error);
                 else
-                    console.log("removed term codes");
+                {
+                    TermCode.find(function(error, termCodes) {
+                        if (error)
+                            response.send(error);
+                        else{
+                            response.json({termCodes: termCodes});
+                            console.log("removed term codes");
+                        }
+                    });
+                }
             });
         }
         else if (request.query.studentNumber && request.query.name) {
