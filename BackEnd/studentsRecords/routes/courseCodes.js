@@ -48,13 +48,28 @@ router.route('/')
 
         }
         else{
-        CourseCode.find(function(error, courseCodes) {
-                if (error)
-                    response.send(error);
-                response.json({courseCodes: courseCodes});
-        });
+            CourseCode.find(function(error, courseCodes) {
+                    if (error)
+                        response.send(error);
+                    response.json({courseCodes: courseCodes});
+            });
+        }
+    });
 
-            }
+router.route('/:courseCode_id')
+    .get(parseUrlencoded, parseJSON, function (request, response) {
+        CourseCode.findById(request.params.courseCode_id, function (error, courseCode) {
+            if (error)
+                response.send(error);
+            response.json({courseCode: courseCode});
+        });
+    })
+    .delete(parseUrlencoded, parseJSON, function (request, response) {
+        CourseCode.findByIdAndRemove(request.params.courseCode_id, function(error, courseCode) {
+            if(error)
+                response.send(error);
+            response.send({deleted: courseCode});
+        });
     });
 
 module.exports = router;
