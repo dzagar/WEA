@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Grade = require('../models/grade');
+var TermCode = require('../models/termCode');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
 var parseJSON = bodyParser.json();
@@ -8,10 +9,21 @@ var parseJSON = bodyParser.json();
 router.route('/')
 	.post(parseUrlencoded, parseJSON, function (request, response) {
         var grade = new Grade(request.body.grade);
-        grade.save(function(error) {
-            if (error)
-                response.send(error);
-            response.json({grade: grade});
+
+        TermCode.findById(grade.termCode, function (error, termCode) {
+            termCode.grades.push(grade._id);
+
+            grade.save(function(error) {
+                if (error)
+                    response.send(error);
+
+                termCode.save(function(error) {
+                    if (error)
+                        response.send(error);
+
+                    response.json({grade: grade});
+                });
+            });
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {

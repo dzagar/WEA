@@ -9,10 +9,21 @@ var parseJSON = bodyParser.json();
 router.route('/')
 	.post(parseUrlencoded, parseJSON, function (request, response) {
         var termCode = new TermCode(request.body.termCode);
-        termCode.save(function(error) {
+        Student.findById(termCode.student, function (error, student) {
             if (error)
                 response.send(error);
-            response.json({termCode: termCode});
+
+            student.termCodes.push(termCode._id);
+            termCode.save(function (error) {
+                if (error)
+                    response.send(error);
+
+                student.save(function(error) {
+                    if (error)
+                        response.send(error);
+                    response.json({termCode: termCode});
+                });
+            });
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
