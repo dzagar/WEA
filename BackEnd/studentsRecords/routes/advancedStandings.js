@@ -64,13 +64,20 @@ router.route('/')
         }
     });
 
-// router.route('/:advancedStanding_id')
-//     .delete(parseUrlencoded, parseJSON, function (request, response){
-//         AdvancedStanding.findByIdAndRemove(request.params.advancedStanding_id, function(error, deleted) {
-//             if (error)
-//                 response.send(error);
-//             response.json({advancedStanding: deleted});
-//         });
-//     });
+router.route('/:advancedStanding_id')
+    .get(parseUrlencoded, parseJSON, function (request, response) {
+        AdvancedStanding.findById(request.params.advancedStanding_id, function (error, advancedStanding) {
+            if (error)
+                response.send(error);
+            response.json({advancedStanding: advancedStanding});
+        });
+    })
+    .delete(parseUrlencoded, parseJSON, function (request, response) {
+        AdvancedStanding.findByIdAndRemove(request.params.advancedStanding_id, function(error, advancedStanding) {
+            if(error)
+                response.send(error);
+            response.send({deleted: advancedStanding});
+        });
+    });
 
 module.exports = router;

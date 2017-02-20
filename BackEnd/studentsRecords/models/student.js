@@ -9,7 +9,7 @@ var studentsSchema = mongoose.Schema(
         studentNumber: String,
         photo: String,
         registrationComments: String,
-        BasisOfAdmission: String,
+        basisOfAdmission: String,
         admissionAverage: Number,
         admissionComments: String,
         resInfo: {type: mongoose.Schema.ObjectId, ref: 'Residency'},

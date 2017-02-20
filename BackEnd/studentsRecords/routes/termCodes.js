@@ -52,13 +52,29 @@ router.route('/')
                 }
             });
         }
-        else{ 
+        else { 
             TermCode.find(function(error, termCodes) {
                     if (error)
                         response.send(error);
                     response.json({termCodes: termCodes});
             });
         }
+    });
+
+router.route('/:termCode_id')
+    .get(parseUrlencoded, parseJSON, function (request, response) {
+        TermCode.findById(request.params.termCode_id, function (error, termCode) {
+            if (error)
+                response.send(error);
+            response.json({termCode: termCode});
+        });
+    })
+    .delete(parseUrlencoded, parseJSON, function (request, response) {
+        TermCode.findByIdAndRemove(request.params.termCode_id, function(error, termCode) {
+            if(error)
+                response.send(error);
+            response.send({deleted: termCode});
+        });
     });
 module.exports = router;
 

@@ -91,13 +91,19 @@ router.route('/:student_id')
                 response.send({error: error});
             }
             else {
-                student.number = request.body.student.number;
+                student.studentNumber = request.body.student.number;
                 student.firstName = request.body.student.firstName;
                 student.lastName = request.body.student.lastName;
                 student.gender = request.body.student.gender;
                 student.DOB = request.body.student.DOB;
                 student.photo = request.body.student.photo;
                 student.resInfo = request.body.student.resInfo;
+                student.registrationComments = request.body.student.registrationComments;
+                student.basisOfAdmission = request.body.student.basisOfAdmission;
+                student.admissionAverage = request.body.student.admissionAverage;
+                student.admissionComments = request.body.student.admissionComments;
+                student.scholarships = request.body.student.scholarships;
+                student.termCodes = request.body.student.termCodes;
 
                 student.save(function (error) {
                     if (error) {
