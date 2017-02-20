@@ -620,7 +620,7 @@ export default Ember.Component.extend({
 											{
 												name: genderName
 											});
-											uniqueGenderNames[i] = genderName;
+											uniqueGenderNames[i-2] = genderName;
 										}
 									} else {
 										doneImporting = true;
@@ -667,7 +667,7 @@ export default Ember.Component.extend({
 											{
 												name: residencyName
 											});
-											uniqueResidencyNames[i] = residencyName;
+											uniqueResidencyNames[i-2] = residencyName;
 										}
 									} else {
 										doneImporting = true;
@@ -714,7 +714,7 @@ export default Ember.Component.extend({
 											{
 												name: termCodeName
 											});
-											uniqueTermCodeNames[i] = termCodeName;
+											uniqueTermCodeNames[i-2] = termCodeName;
 										}
 									} else {
 										doneImporting = true;
@@ -906,7 +906,7 @@ export default Ember.Component.extend({
 														});
 														newStudent.set('resInfo',residencyObj);
 														newStudent.set('gender', genderObj);
-														studentsToImport[inMutexStudentCount] = newStudent;
+														studentsToImport.push(newStudent);
 														deleteMutex.lock(function() {
 															if (doneImporting && rollBackImport && !startedRollback && studentsToImport.length === numberOfStudent)
 															{
