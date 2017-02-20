@@ -11,6 +11,9 @@ router.route('/')
         var planCode = new PlanCode(request.body.planCode);
 
         ProgramRecord.findById(planCode.programRecord, function(error, programRecord) {
+            if (error)
+                response.send(error);
+                
             programRecord.planCodes.push(planCode._id);
 
             planCode.save(function(error) {

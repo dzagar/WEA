@@ -12,9 +12,15 @@ router.route('/')
         var grade = new Grade(request.body.grade);
 
         TermCode.findById(grade.termCode, function (error, termCode) {
+            if (error)
+                response.send(error);
+
             termCode.grades.push(grade._id);
 
             CourseCode.findById(grade.courseCode, function (error, course) {
+                if (error)
+                    response.send(error);
+                    
                 course.grades.push(grade._id);
 
                 grade.save(function(error) {

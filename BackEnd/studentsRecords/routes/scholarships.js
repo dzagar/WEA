@@ -12,6 +12,9 @@ router.route('/')
         var scholarship = new Scholarship(request.body.scholarship);
 
         Student.findById(scholarship.student, function(error, student) {
+            if (error)
+                response.send(error);
+                
             student.scholarships.push(scholarship._id);
 
             scholarship.save(function(error) {

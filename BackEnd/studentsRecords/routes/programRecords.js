@@ -12,6 +12,9 @@ router.route('/')
         var programRecord = new ProgramRecord(request.body.programRecord);
 
         TermCode.findById(programRecord.termCode, function (error, termCode) {
+            if(error)
+                response.send(error);
+                
             termCode.programRecords.push(programRecord._id);
 
             programRecord.save(function(error) {

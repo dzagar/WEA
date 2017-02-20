@@ -12,6 +12,9 @@ router.route('/')
         var advancedStanding = new AdvancedStanding(request.body.advancedStanding);
 
         Student.findById(advancedStanding.student, function (error, student) {
+            if (error)
+                response.send(error);
+                
             student.advancedStandings.push(advancedStanding._id);
 
             advancedStanding.save(function(error) {

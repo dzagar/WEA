@@ -12,9 +12,15 @@ router.route('/')
         var highSchoolGrade = new HighSchoolGrade(request.body.highSchoolGrade);
 
         Student.findById(highSchoolGrade.student, function (error, student) {
+            if (error)
+                response.send(error);
+
             student.highSchoolGrades.push(highSchoolGrade._id);
 
             HighSchoolCourse.findById(highSchoolGrade.source, function (error, course) { 
+                if (error)
+                    response.send(error);
+                    
                 course.grades.push(highSchoolGrade._id);
 
                 highSchoolGrade.save(function (error) {
