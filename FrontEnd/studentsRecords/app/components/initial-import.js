@@ -621,7 +621,7 @@ export default Ember.Component.extend({
 					{
 						case ImportState.GENDER: 
 						if (genderVerification(worksheet)){
-							self.pushOutput("Importing new student genders");
+							self.setOutput("Importing new student genders");
 							var rollBackImport = false;
 							var doneImporting = false;
 							var gendersToImport = [];
@@ -650,7 +650,7 @@ export default Ember.Component.extend({
 										//if no gender was imported
 										if (i == 2) {
 											rollBackImport = true;
-											self.pushOutput("<font color='red'>Import cancelled. File does not contain any Values...</font>")
+											self.pushOutput("<span style='color:red'>Import cancelled. File does not contain any Values...</span>")
 										}
 									}
 								}
@@ -668,7 +668,7 @@ export default Ember.Component.extend({
 											gendersImportedCount++;
 											if (gendersImportedCount == gendersToImport.length)
 											{
-												self.pushOutput("Import Successful!");
+												self.pushOutput("<span style='color:green'>Import Successful!</span>");
 											}
 										});
 									}
@@ -677,6 +677,7 @@ export default Ember.Component.extend({
 							break;
 							case ImportState.RESIDENCY:
 							if (residencyVerification(worksheet)) {
+								self.setOutput("Importing residencies");
 								var rollBackImport = false;
 								var doneImporting = false;
 								var residenciesToImport = [];
