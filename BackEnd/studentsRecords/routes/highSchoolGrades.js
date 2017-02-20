@@ -84,7 +84,7 @@ router.route('/:highSchoolGrade_id')
                 if (error)
                     response.send(error);
 
-                response.json({highSchoolGrades: highSchoolGrades});
+                response.json({highSchoolGrade: highSchoolGrade});
             });
         });
     })

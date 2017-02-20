@@ -160,7 +160,7 @@ router.route('/:highSchoolCourses_id')
                 if (error)
                     response.send(error);
 
-                response.json({highSchoolCourses: highSchoolCourses});
+                response.json({highSchoolCourse: highSchoolCourse});
             });
         });
     })

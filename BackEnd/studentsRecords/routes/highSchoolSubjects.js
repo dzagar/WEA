@@ -43,46 +43,37 @@ router.route('/')
         }
     });
 
-    router.route('/:highSchoolSubjects_id')
+router.route('/:highSchoolSubject_id')
     .get(parseUrlencoded, parseJSON, function (request, response) {
-        // HighSchoolSubject.findById(request.params.highSchoolSubjects_id, function(error, highSchoolSubject) {
-        //     if (error)
-        //         response.send(error);
-        //     response.json({highSchoolSubject: highSchoolSubject})
-        // });
+        HighSchoolSubject.findById(request.params.highSchoolSubject_id, function(error, highSchoolSubject) {
+            if (error)
+                response.send(error);
+            response.json({highSchoolSubject: highSchoolSubject})
+        });
     })
     .put(parseUrlencoded, parseJSON, function (request, response) {
-        //HighSchoolSubject.findById(request.params.highSchool_id, function(error, highSchoolSubject) {
-            // if (error) {
-            //     response.send({error: error});
-            // } else {
-            //     highSchoolSubject.name = request.body.highSchool.name;
-            //     highSchoolSubject.students = request.body.highSchoolSubject.students;
+        HighSchoolSubject.findById(request.params.highSchool_id, function(error, highSchoolSubject) {
+            if (error)
+                response.send(error);
 
-            //     highSchoolSubject.save(function(error) {
-            //         if (error) {
-            //             response.send({error: error});
-            //         } else {
-            //             response.json({highSchool: highSchool});
-            //         }
-            //     });
-            // }
-        //});
+            highSchoolSubject.name = request.body.highSchoolSubject.name;
+            highSchoolSubject.description = request.body.highSchoolSubject.description;
+            highSchoolSubject.courses = request.body.highSchoolSubject.courses;
+
+            highSchoolSubject.save(function(error) {
+                if (error)
+                    response.send(error);
+
+                response.json({highSchoolSubject: highSchoolSubject});
+            });
+        });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
-        // Student.update({"highSchool": request.params.highSchool_id}, {"$set": {"highSchool": null}}, false, 
-        // function(error, success){
-        //     if (error){
-        //         response.send(error);
-        //     } else {
-        //         HighSchool.findByIdAndRemove(request.params.highSchool_id, function(error, deleted) {
-        //             if (error)
-        //                 response.send(error);
-        //             response.json({highSchool: deleted});
-        //         });
-        //     }
-        // });
-        
+        HighSchoolSubject.findByIdAndRemove(request.params.highSchoolSubject_id, function(error, highSchoolSubject) {
+            if (error)
+                response.send(error);
+            response.json({deleted: highSchoolSubject});
+        });
     });
 
 module.exports = router;
