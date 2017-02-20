@@ -113,6 +113,7 @@
 
     </div>
   </div>
+
   <div class="ui bottom attached tab segment" data-tab="program">
     <h2>Program Info</h2>
     <h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
@@ -122,6 +123,24 @@
         <option value={{index}}>{{semester.name}}</option>
       {{/each}}
     </select>
+
+    <table class="ui fixed table">
+      <thead>
+        <tr>
+          <th>Course</th>
+          <th><!--spacer--></th>
+          <th><!--spacer--></th>
+          <th>Grade</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      {{#each semseter.courses as grade}}
+        <tr>
+          <td>Mark</td>
+          <td>name</td>
+        </tr>
+      {{/each}}
+    </table>
   </div>
 
   <div class="ui bottom attached tab segment" data-tab="advanced">
