@@ -118,10 +118,16 @@ router.route('/:student_id')
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
         Student.findByIdAndRemove(request.params.student_id,
-            function (error, deleted) {
-                if (!error) {
-                    response.json({student: deleted});
+            function (error, student) {
+                if (error)
+                    response.send(error);
+
+                for(let tc = 0; tc < student.termCodes.length; tc++)
+                {
+                    console.log(student.termCodes[tc]);
                 }
+
+                response.json({deleted: student});
             }
         );
     });
