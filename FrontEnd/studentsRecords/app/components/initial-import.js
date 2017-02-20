@@ -5,15 +5,18 @@ import Mutex from 'ember-mutex';
 var ImportState = {
 	GENDER : 1,
 	RESIDENCY : 2,
-	TERMCODE : 3,
-	COURSECODE : 4,
-	STUDENT : 5,
-	HIGHSCHOOL : 6,
-	HSCOURSEINFO : 7,
-	SCHOLARSHIPS : 8,
-	ADVANCEDSTANDINGS : 9,
-	RECORDPLANS : 10,
-	RECORDGRADES : 11
+	COURSECODE : 3,
+	STUDENT : 4,
+	SCHOLARSHIPS : 5,
+	ADVANCEDSTANDINGS : 6,
+	REGISTRATIONCOMMENTS : 7,
+	BASISOFADMISSION : 8,
+	ADMISSIONAVERAGE : 9,
+	ADMINSSIONCOMMENTS : 10,
+	HIGHSCHOOL : 11,
+	HSCOURSEINFO : 12,
+	RECORDPLANS : 13,
+	RECORDGRADES : 14,
 };
 
 function DisplayErrorMessage(message)
@@ -569,11 +572,30 @@ export default Ember.Component.extend({
 	showDeleteConfirmation: false,
 	importData: false,
 	changingIndex: 1,
+	fileFormat: "The file must have one header with the title <b>'name'</b>",
+	fileOutput: "",
 
-	
+	clearOutput: function() {
+		this.set('fileOutput', "");
+
+	},
+	pushOutput: function(newLine) {
+		var lineToAdd = this.get('fileOutput') + "</br>" + newLine;
+		this.set('fileOutput', lineToAdd);
+	},
+	setOutput: function(newOutput) {
+		this.set('fileOutput', newOutput);
+
+	},
+	changeHeaderRequirements: function(newHeader) {
+		this.set('fileFormat', newHeader);
+	},	
 	actions: {
 		showEraseDataModal: function(){
 			this.set('showDeleteConfirmation', true);
+		},
+		changeFile() {
+			this.setOutput("");
 		},
 
 		import() {
@@ -599,6 +621,7 @@ export default Ember.Component.extend({
 					{
 						case ImportState.GENDER: 
 						if (genderVerification(worksheet)){
+							self.setOutput("Importing new student genders");
 							var rollBackImport = false;
 							var doneImporting = false;
 							var gendersToImport = [];
@@ -612,7 +635,7 @@ export default Ember.Component.extend({
 										var genderName = gender.v;
 										//if the gender has already been added
 										if (uniqueGenderNames.includes(genderName)){
-											DisplayErrorMessage("Import cancelled. Your excel sheet contains duplicate gender names '" + genderName + "'");
+											self.pushOutput("<font color='red'>Import cancelled. Your excel sheet contains duplicate gender names '" + genderName + "'</font>");
 											rollBackImport = true;
 											doneImporting = true;
 										} else { //create new gender object
@@ -627,7 +650,7 @@ export default Ember.Component.extend({
 										//if no gender was imported
 										if (i == 2) {
 											rollBackImport = true;
-											DisplayErrorMessage("File does not contain any Values...")
+											self.pushOutput("<span style='color:red'>Import cancelled. File does not contain any Values...</span>")
 										}
 									}
 								}
@@ -637,15 +660,24 @@ export default Ember.Component.extend({
 										gendersToImport[i].deleteRecord();
 									}
 								} else {
+									self.pushOutput("Successful read of file has completed. Beginning import of " + gendersToImport.length + " genders.");
+									var gendersImportedCount = 0;
 									for (var i = 0; i < gendersToImport.length; i++) {
 										console.log("trying to save");
-										gendersToImport[i].save();
+										gendersToImport[i].save().then(function() {
+											gendersImportedCount++;
+											if (gendersImportedCount == gendersToImport.length)
+											{
+												self.pushOutput("<span style='color:green'>Import Successful!</span>");
+											}
+										});
 									}
 								}
 							}
 							break;
 							case ImportState.RESIDENCY:
 							if (residencyVerification(worksheet)) {
+								self.setOutput("Importing residencies");
 								var rollBackImport = false;
 								var doneImporting = false;
 								var residenciesToImport = [];
@@ -659,7 +691,7 @@ export default Ember.Component.extend({
 										var residencyName = residency.v;
 										//if the residency has already been added
 										if (uniqueResidencyNames.includes(residencyName)) {
-											DisplayErrorMessage("Import cancelled. Your excel sheet contains duplicate residency names '" + residencyName + "'");
+											this.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate residency names '" + residencyName + "'</span>");
 											rollBackImport = true;
 											doneImporting = true;
 										} else { //create new residency object
@@ -674,7 +706,7 @@ export default Ember.Component.extend({
 										//if no residency was imported
 										if (i == 2) {
 											rollBackImport = true;
-											DisplayErrorMessage("File does not contain any Values...")
+											this.pushOutput("<span style='color:red'>File does not contain any Values...</span>")
 										}
 									}
 								}
@@ -1601,14 +1633,91 @@ export default Ember.Component.extend({
 										});									
 									}
 								}
-
-								//iterate through each row
-								//qeury term code with SN and Term Name for TC 
-								//query courseCode with courseLetter and CourseName for CC 
-
-
 								break;
 							}
+							case ImportState.SCHOLARSHIPS:
+							{
+
+							}
+							break;
+							case ImportState.ADVANCEDSTANDINGS: 
+							{
+
+							}
+							break;
+							case ImportState.REGISTRATIONCOMMENTS:
+							{
+								//add header checker thing
+								var currentStudentNumber = "";
+								var doneReading = false;
+								var uniqueStudents = [];
+								var rollbackImport = false;
+								var studentIndex = -1;
+								
+								for (var i = 2; !doneReading; i++)
+								{
+									var studentNumber = worksheet['A' + i];
+									var note = worksheet['B' + i];
+
+									//if we're on a new student
+									if (studentNumber && studentNumber.v != "")
+									{
+										studentIndex++;
+										currentStudentNumber = studentNumber.v;
+										uniqueStudents[studentIndex] = {"studentNumber": currentStudentNumber, "note": note.v};
+
+									}
+									//if we're on a new note for the same student
+									else if (note && note.v != "")
+									{
+										var newNote = uniqueStudents.note + note.v;
+										uniqueStudents[studentIndex] = {"studentNmber": currentStudentNumber, "note": newNote};
+
+									}
+									//import is done
+									else
+									{
+										doneReading = true;
+									}
+								}
+								//begin importing
+								if (!rollbackImport)
+								{
+									var registrationCommentsToImport = [];
+									var inRegistrationMutexIndex = 0;
+									var registrationMutex = Mutex.create();
+
+									for(var i = 0; i < uniqueStudents.length; i++)
+									{
+										registrationMutex.lock(function() {
+											var inRegistrationMutexCount = inRegistrationMutexIndex++;
+											var importStudentNumber = uniqueStudents[inRegistrationMutexCount].studentNumber;
+											var importNote = uniqueStudents[inRegistrationMutexCount].note;
+											self.get('store').queryRecord('student', {studentNumber: importStudentNumber}).then(function(studentObj) {
+												studentObj.set('registrationComments', importNote);
+												studentObj.save();
+											});
+										});
+									}
+								}
+
+							}
+							break;
+							case ImportState.BASISOFADMISSION:
+							{
+
+							}
+							break;
+							case ImportState.ADMISSIONAVERAGE:
+							{
+
+							}
+							break;
+							case ImportState.ADMINSSIONCOMMENTS:
+							{
+
+							}
+							break;
 							default:
 							break;
 						}
@@ -1626,63 +1735,88 @@ export default Ember.Component.extend({
 			},	
 			continue(){
 				this.set('changingIndex', this.get('changingIndex')+1);
+				console.log("changed Index to " + this.get('changingIndex'));
 				switch(this.get('changingIndex')){
-					case 2:
-						$("#residencies").addClass("active");
-						$("#gender").removeClass("active");
-						$("#gender").addClass("completed");
-						break;
-					case 3:
-						$("#termCodes").addClass("active");
-						$("#residencies").removeClass("active");
-						$("#residencies").addClass("completed");
-						break;
-					case 4:
-						$("#courseCodes").addClass("active");
-						$("#termCodes").removeClass("active");
-						$("#termCodes").addClass("completed");
-						break;
-					case 5:
-						$("#students").addClass("active");
-						$("#courseCodes").removeClass("active");
-						$("#courseCodes").addClass("completed");
-						break;
-					case 6:
-						$("#secondary").addClass("active");
-						$("#students").removeClass("active");
-						$("#students").addClass("completed");
-						break;
-					case 7:
-						$("#highschool").addClass("active");
-						$("#secondary").removeClass("active");
-						$("#secondary").addClass("completed");
-						break;
-					case 8:
-						$("#awards").addClass("active");
-						$("#highschool").removeClass("active");
-						$("#highschool").addClass("completed");
-						break;
-					case 9:
-						$("#advancedStandings").addClass("active");
-						$("#awards").removeClass("active");
-						$("#awards").addClass("completed");
-						break;
-					case 10:
-						$("#recordPlans").addClass("active");
-						$("#advancedStandings").removeClass("active");
-						$("#advancedStandings").addClass("completed");
-						break;
-					case 11:
-						$("#courseGrades").addClass("active");
-						$("#recordPlans").removeClass("active");
-						$("#recordPlans").addClass("completed");
-						break;
-					case 12:
-						$("#courseGrades").removeClass("active");
-						$("#courseGrades").addClass("completed");
-						break;
-				}
-		}	
+  					case 2:
+  						$("#residencies").addClass("active");
+ 						$("#residencies").removeClass("disabled");
+  						$("#gender").removeClass("active");
+  						$("#gender").addClass("completed");
+  						break;
+  					case 3:
+  						$("#courseCodes").addClass("active");
+ 						$("#courseCodes").removeClass("disabled");
+  						$("#residencies").removeClass("active");
+  						$("#residencies").addClass("completed");
+  						break;
+  					case 4:
+  						$("#students").addClass("active");
+ 						$("#students").removeClass("disabled");
+  						$("#courseCodes").removeClass("active");
+  						$("#courseCodes").addClass("completed");
+  						break;
+  					case 5:
+  						$("#awards").addClass("active");
+ 						$("#awards").removeClass("disabled");
+  						$("#students").removeClass("active");
+  						$("#students").addClass("completed");
+  						break;
+  					case 6:
+  						$("#advancedStandings").addClass("active");
+ 						$("#advancedStandings").removeClass("disabled");
+  						$("#awards").removeClass("active");
+  						$("#awards").addClass("completed");
+  						break;
+  					case 7:
+  						$("#registrationComments").addClass("active");
+ 						$("#registrationComments").removeClass("disabled");
+  						$("#advancedStandings").removeClass("active");
+  						$("#advancedStandings").addClass("completed");
+  						break;
+  					case 8:
+  						$("#basisOfAdmission").addClass("active");
+ 						$("#basisOfAdmission").removeClass("disabled");
+  						$("#registrationComments").removeClass("active");
+  						$("#registrationComments").addClass("completed");
+  						break;
+  					case 9:
+  						$("#admissionAverage").addClass("active");
+ 						$("#admissionAverage").removeClass("disabled");
+  						$("#basisOfAdmission").removeClass("active");
+  						$("#basisOfAdmission").addClass("completed");
+  						break;
+  					case 10:
+  						$("#admissionComments").addClass("active");
+ 						$("#admissionComments").removeClass("disabled");
+  						$("#admissionAverage").removeClass("active");
+  						$("#admissionAverage").addClass("completed");
+  						break;
+  					case 11:
+  						$("#secondary").addClass("active");
+						$("#secondary").removeClass("disabled");
+  						$("#admissionComments").removeClass("active");
+  						$("#admissionComments").addClass("completed");
+  						break;
+  					case 12:
+  						$("#highschoolInfo").addClass("active");
+						$("#highschoolInfo").removeClass("disabled");
+  						$("#secondary").removeClass("active");
+  						$("#secondary").addClass("completed");
+  						break;
+  					case 13:
+  						$("#recordPlans").addClass("active");
+						$("#recordPlans").removeClass("disabled");
+  						$("#highschoolInfo").removeClass("active");
+  						$("#highschoolInfo").addClass("completed");
+  						break;
+  					case 14:
+  						$("#courseGrades").addClass("active");
+						$("#courseGrades").removeClass("disabled");
+  						$("#recordPlans").removeClass("active");
+  						$("#recordPlans").addClass("completed");
+  						break;
+				}	
 
-		}
-	});
+			}
+	}
+});
