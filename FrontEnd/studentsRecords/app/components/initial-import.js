@@ -1605,14 +1605,38 @@ export default Ember.Component.extend({
 										});									
 									}
 								}
-
-								//iterate through each row
-								//qeury term code with SN and Term Name for TC 
-								//query courseCode with courseLetter and CourseName for CC 
-
-
 								break;
 							}
+							case ImportState.SCHOLARSHIPS:
+							{
+
+							}
+							break;
+							case ImportState.ADVANCEDSTANDINGS: 
+							{
+
+							}
+							break;
+							case ImportState.REGISTRATIONCOMMENTS:
+							{
+
+							}
+							break;
+							case ImportState.BASISOFADMISSION:
+							{
+
+							}
+							break;
+							case ImportState.ADMISSIONAVERAGE:
+							{
+
+							}
+							break;
+							case ImportState.ADMINSSIONCOMMENTS:
+							{
+
+							}
+							break;
 							default:
 							break;
 						}
