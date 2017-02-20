@@ -869,7 +869,7 @@ export default Ember.Component.extend({
 									var studentSheetD = worksheet['D' + i];
 									var studentSheetE = worksheet['E' + i];
 									var studentSheetF = worksheet['F' + i];
-									if (studentSheetA && studentSheetB && studentSheetC && studentSheetD && studentSheetE && studentSheetF)
+									if (studentSheetA && studentSheetA.v != "" && studentSheetB && studentSheetC && studentSheetD && studentSheetE && studentSheetF)
 									{
 										console.log("values exist");
 										if (uniqueStudentNumbers.includes(studentSheetA.v))
@@ -906,7 +906,7 @@ export default Ember.Component.extend({
 														});
 														newStudent.set('resInfo',residencyObj);
 														newStudent.set('gender', genderObj);
-														studentsToImport[inMutexStudentCount - 2] = newStudent;
+														studentsToImport[inMutexStudentCount] = newStudent;
 														deleteMutex.lock(function() {
 															if (doneImporting && rollBackImport && !startedRollback && studentsToImport.length === numberOfStudent)
 															{
