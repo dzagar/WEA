@@ -14,7 +14,8 @@ var studentsSchema = mongoose.Schema(
         admissionComments: String,
         resInfo: {type: mongoose.Schema.ObjectId, ref: 'Residency'},
         scholarships: [{type: mongoose.Schema.ObjectId, ref: 'Scholarship'}],
-        termCodes: [{type: mongoose.Schema.ObjectId, ref: 'TermCode'}]
+        termCodes: [{type: mongoose.Schema.ObjectId, ref: 'TermCode'}],
+        advancedStandings: [{type: mongoose.Schema.ObjectId, ref: 'AdvancedStandings'}]
     },
     {
         versionKey: false

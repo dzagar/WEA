@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var AdvancedStanding = require('../models/advancedStanding');
+var Student = require('../models/student');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
 var parseJSON = bodyParser.json();
@@ -8,19 +9,23 @@ var parseJSON = bodyParser.json();
 router.route('/')
     //posting new advanced standing
     .post(parseUrlencoded, parseJSON, function (request, response) {
-        var advancedStandings = new AdvancedStanding(request.body.advancedStanding);
-        advancedStandings.save(function(error) {
-            if (error)
-            {
-                response.send(error);
-            } 
-            else
-            {
-                response.json({advancedStanding: advancedStandings});                
-            }
+        var advancedStanding = new AdvancedStanding(request.body.advancedStanding);
+
+        Student.findById(advancedStanding.student, function (error, student) {
+            student.advancedStandings.push(advancedStanding._id);
+
+            advancedStanding.save(function(error) {
+                if (error)
+                    response.send(error);
+                
+                student.save(function(error) {
+                    if (error)
+                        response.send(error);
+                    
+                    response.json({advancedStanding: advancedStanding});
+                });                
+            });
         });
-
-
     })
 
     .get(parseUrlencoded, parseJSON, function (request, response) {
