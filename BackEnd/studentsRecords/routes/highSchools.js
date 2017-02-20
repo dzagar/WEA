@@ -67,36 +67,26 @@ router.route('/')
     })
     .put(parseUrlencoded, parseJSON, function (request, response) {
         HighSchool.findById(request.params.highSchool_id, function(error, highSchool) {
-            if (error) {
-                response.send({error: error});
-            } else {
-                highSchool.name = request.body.highSchool.name;
-                highSchool.students = request.body.highSchool.students;
+            if (error)
+                response.send(error);
 
-                highSchool.save(function(error) {
-                    if (error) {
-                        response.send({error: error});
-                    } else {
-                        response.json({highSchool: highSchool});
-                    }
-                });
-            }
+            highSchool.name = request.body.highSchool.name;
+            highSchool.students = request.body.highSchool.students;
+
+            highSchool.save(function(error) {
+                if (error)
+                    response.send({error: error});
+                
+                response.json({highSchool: highSchool});
+            });
         });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
-        Student.update({"highSchool": request.params.highSchool_id}, {"$set": {"highSchool": null}}, false, 
-        function(error, success){
-            if (error){
+        HighSchool.findByIdAndRemove(request.params.highSchool_id, function(error, deleted) {
+            if (error)
                 response.send(error);
-            } else {
-                HighSchool.findByIdAndRemove(request.params.highSchool_id, function(error, deleted) {
-                    if (error)
-                        response.send(error);
-                    response.json({highSchool: deleted});
-                });
-            }
+            response.json({highSchool: deleted});
         });
-        
     });
 
 module.exports = router;
