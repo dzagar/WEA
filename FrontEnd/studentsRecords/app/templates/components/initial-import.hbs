@@ -106,7 +106,7 @@
 			<label>{{{fileFormat}}}</label>
 		</div>
 		<div class="ui segment">
-			<input type="file" id = "newFile">
+			<input type="file" id = "newFile" onchange={{action 'changeFile'}}>
 			<button class="ui primary button" {{action 'import' }}>
   				Import File
 			</button>
@@ -115,7 +115,7 @@
 			</button>
 		</div>
 		<div>
-			<label>{{fileOutput}}</label>
+			<label>{{{fileOutput}}}</label>
 		</div>
 	</div>
 </div>

@@ -573,12 +573,29 @@ export default Ember.Component.extend({
 	importData: false,
 	changingIndex: 1,
 	fileFormat: "The file must have one header with the title <b>'name'</b>",
-	fileOutput: "output",
+	fileOutput: "",
 
-	
+	clearOutput: function() {
+		this.set('fileOutput', "");
+
+	},
+	pushOutput: function(newLine) {
+		var lineToAdd = this.get('fileOutput') + "</br>" + newLine;
+		this.set('fileOutput', lineToAdd);
+	},
+	setOutput: function(newOutput) {
+		this.set('fileOutput', newOutput);
+
+	},
+	changeHeaderRequirements: function(newHeader) {
+		this.set('fileFormat', newHeader);
+	},	
 	actions: {
 		showEraseDataModal: function(){
 			this.set('showDeleteConfirmation', true);
+		},
+		changeFile() {
+			this.setOutput("");
 		},
 
 		import() {
@@ -604,6 +621,7 @@ export default Ember.Component.extend({
 					{
 						case ImportState.GENDER: 
 						if (genderVerification(worksheet)){
+							self.pushOutput("Importing new student genders");
 							var rollBackImport = false;
 							var doneImporting = false;
 							var gendersToImport = [];
@@ -617,7 +635,7 @@ export default Ember.Component.extend({
 										var genderName = gender.v;
 										//if the gender has already been added
 										if (uniqueGenderNames.includes(genderName)){
-											DisplayErrorMessage("Import cancelled. Your excel sheet contains duplicate gender names '" + genderName + "'");
+											self.pushOutput("<font color='red'>Import cancelled. Your excel sheet contains duplicate gender names '" + genderName + "'</font>");
 											rollBackImport = true;
 											doneImporting = true;
 										} else { //create new gender object
@@ -632,7 +650,7 @@ export default Ember.Component.extend({
 										//if no gender was imported
 										if (i == 2) {
 											rollBackImport = true;
-											DisplayErrorMessage("File does not contain any Values...")
+											self.pushOutput("<font color='red'>Import cancelled. File does not contain any Values...</font>")
 										}
 									}
 								}
@@ -642,9 +660,17 @@ export default Ember.Component.extend({
 										gendersToImport[i].deleteRecord();
 									}
 								} else {
+									self.pushOutput("Successful read of file has completed. Beginning import of " + gendersToImport.length + " genders.");
+									var gendersImportedCount = 0;
 									for (var i = 0; i < gendersToImport.length; i++) {
 										console.log("trying to save");
-										gendersToImport[i].save();
+										gendersToImport[i].save().then(function() {
+											gendersImportedCount++;
+											if (gendersImportedCount == gendersToImport.length)
+											{
+												self.pushOutput("Import Successful!");
+											}
+										});
 									}
 								}
 							}
@@ -664,7 +690,7 @@ export default Ember.Component.extend({
 										var residencyName = residency.v;
 										//if the residency has already been added
 										if (uniqueResidencyNames.includes(residencyName)) {
-											DisplayErrorMessage("Import cancelled. Your excel sheet contains duplicate residency names '" + residencyName + "'");
+											this.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate residency names '" + residencyName + "'</span>");
 											rollBackImport = true;
 											doneImporting = true;
 										} else { //create new residency object
@@ -679,7 +705,7 @@ export default Ember.Component.extend({
 										//if no residency was imported
 										if (i == 2) {
 											rollBackImport = true;
-											DisplayErrorMessage("File does not contain any Values...")
+											this.pushOutput("<span style='color:red'>File does not contain any Values...</span>")
 										}
 									}
 								}
