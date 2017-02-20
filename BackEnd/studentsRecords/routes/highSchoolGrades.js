@@ -76,12 +76,9 @@ router.route('/:highSchoolGrade_id')
             if (error)
                 response.send(error);
 
-            highSchoolGrade.level = request.body.highSchoolGrade.level;
+            highSchoolGrade.mark = request.body.highSchoolGrade.mark;
             highSchoolGrade.source = request.body.highSchoolGrade.source;
-            highSchoolGrade.unit = request.body.highSchoolGrade.unit;
-            highSchoolGrade.subject = request.body.highSchoolGrade.subject;
-            highSchoolGrade.school = request.body.highSchoolGrade.school;
-            highSchoolGrade.grades = request.body.highSchoolGrade.grades;
+            highSchoolGrade.student = request.body.highSchoolGrade.student;
 
             highSchoolGrades.save(function(error) {
                 if (error)
