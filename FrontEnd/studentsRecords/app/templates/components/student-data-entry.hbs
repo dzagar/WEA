@@ -115,11 +115,13 @@
   </div>
   <div class="ui bottom attached tab segment" data-tab="program">
     <h2>Program Info</h2>
-    <br>
-    <font face="impact" size="6">Student</font>
     <h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
-    <br>
 
+    <select class="ui dropdown" onchange={{action 'selectTerm' value="target.value"}}>
+      {{#each currentStudent.termCodes as |semester index|}}
+        <option value={{index}}>{{semester.name}}</option>
+      {{/each}}
+    </select>
   </div>
 
   <div class="ui bottom attached tab segment" data-tab="advanced">

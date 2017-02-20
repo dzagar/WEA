@@ -404,6 +404,11 @@ export default Ember.Component.extend({
     switchPage(pageNum)
     {
       this.changeOffset((pageNum - 1) * this.get('pageSize'), false);
+    },
+
+    selectTerm(index)
+    {
+      console.log('select term ' + index);
     }
   }
 });
