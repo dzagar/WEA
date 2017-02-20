@@ -669,6 +669,7 @@ export default Ember.Component.extend({
 											{
 												self.pushOutput("<span style='color:green'>Import Successful!</span>");
 												Ember.$("#btnContinue").removeClass("disabled");
+  												Ember.$("#gender").addClass("completed");
 											}
 										});
 									}
@@ -725,6 +726,7 @@ export default Ember.Component.extend({
 											{
 												self.pushOutput("<span style='color:green'>Import Successful!</span>");
 												Ember.$("#btnContinue").removeClass("disabled");
+  												Ember.$("#residencies").addClass("completed");
 											}
 										});
 									}
@@ -837,6 +839,7 @@ export default Ember.Component.extend({
 											{
 												self.pushOutput("<span style='color:green'>Import Successful!</span>");
 												Ember.$("#btnContinue").removeClass("disabled");
+  												Ember.$("#courseCodes").addClass("completed");
 											}
 										});
 									}
@@ -847,6 +850,7 @@ export default Ember.Component.extend({
 						// 	break;
 						case ImportState.HIGHSCHOOL:	
 						if (secondarySchoolVerification(worksheet)) {
+							self.setOutput("Importing Secondary School Names");
 							var rollBackImport = false;
 							var doneImporting = false;
 							var highSchoolsToImport = [];
@@ -858,10 +862,9 @@ export default Ember.Component.extend({
 									if (highSchool) {
 										//gets the highSchoolNameString
 										var highSchoolName = highSchool.v;
-										console.log(highSchoolName);
 										//if the hs has already been added
 										if (uniqueHighSchoolNames.includes(highSchoolName)) {
-											DisplayErrorMessage("Import cancelled. Your excel sheet contains duplicate course code names '" + highSchoolName + "'");
+											self.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate Secondary Schools '" + highSchoolName + "'</span>");
 											rollBackImport = true;
 											doneImporting = true;
 										} else { //create new hs object
@@ -876,7 +879,7 @@ export default Ember.Component.extend({
 										//if no hs was imported
 										if (i == 2) {
 											rollBackImport = true;
-											DisplayErrorMessage("File does not contain any Values...")
+											self.pushOutput("<span style='color:red'>Import cancelled. File does not contain any values...</span>")
 										}
 									}
 								}
@@ -886,21 +889,29 @@ export default Ember.Component.extend({
 										highSchoolsToImport[i].deleteRecord();
 									}
 								} else {
+									var numberOfHSImported = 0;
+									self.pushOutput("Successful read of file has completed. Beginning import of " + highSchoolsToImport.length + " Secondary Schools.");
 									for (var i = 0; i < highSchoolsToImport.length; i++) {
-										console.log("trying to save");
-										highSchoolsToImport[i].save();
+										highSchoolsToImport[i].save().then(function() {
+											numberOfHSImported++;
+											if (numberOfHSImported === highSchoolsToImport.length)
+											{
+												self.pushOutput("<span style='color:green'>Import Successful!</span>");
+												Ember.$("#btnContinue").removeClass("disabled");
+  												Ember.$("#secondary").addClass("completed");
+											}
+										});
 									}
 								}
 							}
 							break;
 							case ImportState.STUDENT:
-							console.log("In student import");
+							self.setOutput("Importing Students");
 							var mutex = Mutex.create();
 							var savingMutex = Mutex.create();
 							var deleteMutex = Mutex.create();
 							if (studentVerification(worksheet))
 							{
-								console.log("validated student import");
 								var rollBackImport = false;
 								var doneImporting = false;
 								var startedSave = false;
@@ -908,10 +919,10 @@ export default Ember.Component.extend({
 								var inMutexStudentIndex = 0;
 								var studentsToImport = [];
 								var uniqueStudentNumbers = [];
+								var studentsToImportInfo = [];
 								var numberOfStudent = -1;
 								for (var i = 2; !doneImporting; i++)
 								{
-									console.log("in the loop at i = " + i);
 									var studentSheetA = worksheet['A' + i];
 									var studentSheetB = worksheet['B' + i];
 									var studentSheetC = worksheet['C' + i];
@@ -920,27 +931,26 @@ export default Ember.Component.extend({
 									var studentSheetF = worksheet['F' + i];
 									if (studentSheetA && studentSheetA.v != "" && studentSheetB && studentSheetC && studentSheetD && studentSheetE && studentSheetF)
 									{
-										console.log("values exist");
 										if (uniqueStudentNumbers.includes(studentSheetA.v))
 										{
-											console.log("duplicate value");
 											rollBackImport = true;
 											doneImporting = true;
-											DisplayErrorMessage("Imported file contains duplicate records for student number " + studentNumber.v);
+											self.pushOutput("<span style='color:red'>Imported file contains duplicate records for student number " + studentNumber.v + "</span>");
 										}
 										else
 										{
-											console.log("not duplicates");
-											uniqueStudentNumbers[i - 2] = studentSheetA.v;
+											uniqueStudentNumbers.push(studentSheetA.v);
+											studentsToImportInfo.push({"studentNumber": studentSheetA.v, "firstName": studentSheetB.v, "lastName": studentSheetC.v, "gender": studentSheetD.v, "dateOfBirth": studentSheetE.w, "residency": studentSheetF.v});
 											//query res by id then gender then create student
 											mutex.lock(function(){
+												
 												var inMutexStudentCount = inMutexStudentIndex++;
-												var studentNumber = studentSheetA.v;
-												var firstName = studentSheetB.v;
-												var lastName = studentSheetC.v;
-												var gender = studentSheetD.v;
-												var dateOfBirth = studentSheetE.w;
-												var residency = studentSheetF.v;
+												var studentNumber = studentsToImportInfo[inMutexStudentCount].studentNumber;
+												var firstName = studentsToImportInfo[inMutexStudentCount].firstName;
+												var lastName = studentsToImportInfo[inMutexStudentCount].lastName;
+												var gender = studentsToImportInfo[inMutexStudentCount].gender;
+												var dateOfBirth = studentsToImportInfo[inMutexStudentCount].dateOfBirth;
+												var residency = studentsToImportInfo[inMutexStudentCount].residency;
 												self.get('store').queryRecord('gender', {name: gender}).then(function(genderObj) {
 													//console.log("got gender: ");
 													//console.log(genderObj);
@@ -956,27 +966,25 @@ export default Ember.Component.extend({
 														newStudent.set('resInfo',residencyObj);
 														newStudent.set('gender', genderObj);
 														studentsToImport.push(newStudent);
-														deleteMutex.lock(function() {
-															if (doneImporting && rollBackImport && !startedRollback && studentsToImport.length === numberOfStudent)
+														if (studentsToImport.length === numberOfStudent && !startedSave)
+														{
+															startedSave = true;
+															self.pushOutput("Successful read of file has completed. Beginning import of " + studentsToImport.length + " students");
+															var numberOfStudentsImported = 0;
+															for (var j = 0; j < studentsToImport.length; j++)
 															{
-																startedRollback = true;
-																for (var j = 0; j < studentsToImport.length; j++)
-																{
-																	studentsToImport[j].destroyRecord();
-																}
-															}	
-														})
-														savingMutex.lock(function() {
-															if (doneImporting && studentsToImport.length === numberOfStudent && !startedSave)
-															{
-																startedSave = true;
-																console.log("trying to save!")
-																for (var j = 0; j < studentsToImport.length; j++)
-																{
-																	studentsToImport[j].save();
-																}
+																studentsToImport[j].save().then(function() {
+																	numberOfStudentsImported++;
+																	if (numberOfStudentsImported === studentsToImport.length)
+																	{
+																		self.pushOutput("<span style='color:green'>Import Successful!</span>");
+																		Ember.$("#btnContinue").removeClass("disabled");
+																		Ember.$("#students").addClass("completed");
+																	}
+																});
 															}
-														});
+														}
+														
 													});
 												});
 											});
