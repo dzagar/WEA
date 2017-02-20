@@ -106,6 +106,24 @@ function checkUniqueCourse(sourceArray, newLetter, newNumber, newUnit)
 	}
 	return true;
 }
+
+function VerificationFunction(sourceArray,newArray)
+{
+	console.log("Got here baby!");
+	for(var i=0;i<newArray.length;i++)
+	{
+		if(sourceArray[i]!=newArray[i])
+		{
+			console.log("There was an error in the '"+sourceArray[i]+"' header! Your current value is: '"+newArray[i]+"'. Please fix this before re-importing!");
+			return false;
+		}
+	}
+
+	return true;
+}
+
+
+
 function genderVerification(worksheet)
 {
 	var currentString=worksheet['A1'].v;
@@ -619,8 +637,10 @@ export default Ember.Component.extend({
 
 					switch(currentIndex)
 					{
-						case ImportState.GENDER: 
-						if (genderVerification(worksheet)){
+						case ImportState.GENDER:
+						var genderCheckerArray=['NAME'];
+						var genderArray=[worksheet['A1'].v.toUpperCase()];
+						if (VerificationFunction(genderCheckerArray,genderArray)){
 							self.setOutput("Importing new student genders");
 							var rollBackImport = false;
 							var doneImporting = false;
@@ -1637,7 +1657,7 @@ export default Ember.Component.extend({
 							}
 							case ImportState.SCHOLARSHIPS:
 							{
-
+								//Implement error checker if there is no student number but there is a scholarship
 							}
 							break;
 							case ImportState.ADVANCEDSTANDINGS: 
@@ -1683,7 +1703,6 @@ export default Ember.Component.extend({
 								//begin importing
 								if (!rollbackImport)
 								{
-									var registrationCommentsToImport = [];
 									var inRegistrationMutexIndex = 0;
 									var registrationMutex = Mutex.create();
 
