@@ -11,10 +11,30 @@ var parseJSON = bodyParser.json();
 router.route('/')
     .post(parseUrlencoded, parseJSON, function (request, response) {
         var highSchoolCourse = new HighSchoolCourse(request.body.highSchoolCourse);
-        highSchoolCourse.save(function(error) {
-            if (error)
-                response.send(error);
-            response.json({highSchoolCourse: highSchoolCourse});
+
+        HighSchool.findById(highSchoolCourse.school, function (error, highSchool) {
+            highSchool.courses.push(highSchoolCourse._id);
+
+            HighSchoolSubject.findById(highSchoolCourse.subject, function (error, subject) {
+                subject.courses.push(highSchoolCourses._id);
+
+                highSchoolCourse.save(function(error) {
+                    if (error)
+                        response.send(error);
+
+                    highSchool.save(function (error) {
+                        if (error)
+                            response.send(error);
+
+                        subject.save(function (error) {
+                            if (error)
+                                response.send(error);
+                            
+                            response.json({highSchoolCourse: highSchoolCourse});
+                        });
+                    });
+                });
+            });
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {

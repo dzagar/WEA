@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var HighSchoolGrade = require('../models/highSchoolGrade');
+var HighSchoolCourse = require('../models/highSchoolCourse');
 var Student = require('../models/student');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
@@ -9,10 +10,30 @@ var parseJSON = bodyParser.json();
 router.route('/')
     .post(parseUrlencoded, parseJSON, function (request, response) {
         var highSchoolGrade = new HighSchoolGrade(request.body.highSchoolGrade);
-        highSchoolGrade.save(function(error) {
-            if (error)
-                response.send(error);
-            response.json({highSchoolGrade: highSchoolGrade});
+
+        Student.findById(highSchoolGrade.student, function (error, student) {
+            student.highSchoolGrades.push(highSchoolGrade._id);
+
+            HighSchoolCourse.findById(highSchoolGrade.source, function (error, course) { 
+                course.grades.push(highSchoolGrade._id);
+
+                highSchoolGrade.save(function (error) {
+                    if (error)
+                        response.send(error);
+                    
+                    student.save(function (error) {
+                        if (error)
+                            response.send(error);
+
+                        course.save(function (error) {
+                            if (error)
+                                respnose.send(error);
+
+                            response.json({highSchoolGrade: highSchoolGrade});
+                        });
+                    });
+                });
+            });
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
