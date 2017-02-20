@@ -64,17 +64,10 @@ router.route('/:residency_id')
         })
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
-        Student.update({"resInfo": request.params.residency_id}, {"$set": {"resInfo": null}}, false, 
-        function(error, success){
-            if (error){
+        Residency.findByIdAndRemove(request.params.residency_id, function(error, deleted) {
+            if (error)
                 response.send(error);
-            } else {
-                Residency.findByIdAndRemove(request.params.residency_id, function(error, deleted) {
-                    if (error)
-                        response.send(error);
-                    response.json({residency: deleted});
-                });
-            }
+            response.json({residency: deleted});
         });
     });
 
