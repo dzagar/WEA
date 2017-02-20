@@ -620,7 +620,7 @@ export default Ember.Component.extend({
 											{
 												name: genderName
 											});
-											uniqueGenderNames[i] = genderName;
+											uniqueGenderNames[i-2] = genderName;
 										}
 									} else {
 										doneImporting = true;
@@ -667,7 +667,7 @@ export default Ember.Component.extend({
 											{
 												name: residencyName
 											});
-											uniqueResidencyNames[i] = residencyName;
+											uniqueResidencyNames[i-2] = residencyName;
 										}
 									} else {
 										doneImporting = true;
@@ -714,7 +714,7 @@ export default Ember.Component.extend({
 											{
 												name: termCodeName
 											});
-											uniqueTermCodeNames[i] = termCodeName;
+											uniqueTermCodeNames[i-2] = termCodeName;
 										}
 									} else {
 										doneImporting = true;
@@ -856,6 +856,7 @@ export default Ember.Component.extend({
 								var doneImporting = false;
 								var startedSave = false;
 								var startedRollback = false;
+								var inMutexStudentIndex = 0;
 								var studentsToImport = [];
 								var uniqueStudentNumbers = [];
 								var numberOfStudent = -1;
@@ -868,7 +869,7 @@ export default Ember.Component.extend({
 									var studentSheetD = worksheet['D' + i];
 									var studentSheetE = worksheet['E' + i];
 									var studentSheetF = worksheet['F' + i];
-									if (studentSheetA && studentSheetB && studentSheetC && studentSheetD && studentSheetE && studentSheetF)
+									if (studentSheetA && studentSheetA.v != "" && studentSheetB && studentSheetC && studentSheetD && studentSheetE && studentSheetF)
 									{
 										console.log("values exist");
 										if (uniqueStudentNumbers.includes(studentSheetA.v))
@@ -884,7 +885,7 @@ export default Ember.Component.extend({
 											uniqueStudentNumbers[i - 2] = studentSheetA.v;
 											//query res by id then gender then create student
 											mutex.lock(function(){
-												var inMutexIndex = i;
+												var inMutexStudentCount = inMutexStudentIndex++;
 												var studentNumber = studentSheetA.v;
 												var firstName = studentSheetB.v;
 												var lastName = studentSheetC.v;
@@ -905,7 +906,7 @@ export default Ember.Component.extend({
 														});
 														newStudent.set('resInfo',residencyObj);
 														newStudent.set('gender', genderObj);
-														studentsToImport[inMutexIndex - 2] = newStudent;
+														studentsToImport.push(newStudent);
 														deleteMutex.lock(function() {
 															if (doneImporting && rollBackImport && !startedRollback && studentsToImport.length === numberOfStudent)
 															{
