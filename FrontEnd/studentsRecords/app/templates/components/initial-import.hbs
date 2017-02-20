@@ -9,13 +9,13 @@
 <div class="ui grid">
 	<div class="six wide column">
 		<div class="ui violet small vertical steps">
-			<a id="gender" class="active step" {{action "setIndex" 1}}>
+			<a id="gender" class="active step">
 				<i class="minus icon"></i>
 				<div class="content">
 	     			<div class="title" >Genders</div>
 	    		</div>
 			</a>
-			<a id="residencies" class=" step" {{action "setIndex" 2 }}>
+			<a id="residencies" class="disabled step">
 				<i class="minus icon"></i>
 				<div class="content">
 	     			<div class="title" >Residencies</div>
@@ -27,73 +27,73 @@
 	     			<div class="title" >Term Codes</div>
 	    		</div>
 			</a>--}}
-			<a id="courseCodes" class=" step" {{action "setIndex" 4 }}>
+			<a id="courseCodes" class="disabled step">
 				<i class="minus icon"></i>
 				<div class="content">
 	     			<div class="title" >Course Codes</div>
 	    		</div>
 			</a>
-			<a id="students" class=" step" {{action "setIndex" 5 }}>
+			<a id="students" class="disabled step">
 				<i class="minus icon"></i>
 				<div class="content">
 	     			<div class="title" >Students</div>
 	    		</div>
-			</a>
-			<a id="students" class=" step" {{action "setIndex" 12 }}>
-				<i class="minus icon"></i>
-				<div class="content">
-	     			<div class="title" >Registration Comments</div>
-	    		</div>
-			</a>
-			<a id="students" class=" step" {{action "setIndex" 13 }}>
-				<i class="minus icon"></i>
-				<div class="content">
-	     			<div class="title" >Basis of Admission</div>
-	    		</div>
-			</a>
-			<a id="students" class=" step" {{action "setIndex" 14 }}>
-				<i class="minus icon"></i>
-				<div class="content">
-	     			<div class="title" >Admission Average</div>
-	    		</div>
-			</a>
-			<a id="students" class=" step" {{action "setIndex" 15 }}>
-				<i class="minus icon"></i>
-				<div class="content">
-	     			<div class="title" >Admission Comments</div>
-	    		</div>
-			</a>
-			<a id="secondary" class=" step" {{action "setIndex" 6 }}>
-				<i class="minus icon"></i>
-				<div class="content">
-	     			<div class="title" >Secondary Schools</div>
-	    		</div>
-			</a>
-			<a id="highschool" class=" step" {{action "setIndex" 7 }}>
-				<i class="minus icon"></i>
-				<div class="content">
-	     			<div class="title" >Secondary School Information</div>
-	    		</div>
-			</a>
-			<a id="awards" class=" step" {{action "setIndex" 8 }}>
+			</a>			
+			<a id="awards" class="disabled step">
 				<i class="minus icon"></i>
 				<div class="content">
 	     			<div class="title" >Awards and Scholarships</div>
 	    		</div>
 			</a>
-			<a id="advancedStandings" class=" step" {{action "setIndex" 9}}>
+			<a id="advancedStandings" class="disabled step">
 				<i class="minus icon"></i>
 				<div class="content">
 	     			<div class="title" >Advanced Standings</div>
 	    		</div>
 			</a>
-			<a id="recordPlans" class=" step" {{action "setIndex" 10}}>
+			<a id="registrationComments" class="disabled step">
+				<i class="minus icon"></i>
+				<div class="content">
+	     			<div class="title" >Registration Comments</div>
+	    		</div>
+			</a>
+			<a id="basisOfAdmission" class="disabled step">
+				<i class="minus icon"></i>
+				<div class="content">
+	     			<div class="title" >Basis of Admission</div>
+	    		</div>
+			</a>
+			<a id="admissionAverage" class="disabled step">
+				<i class="minus icon"></i>
+				<div class="content">
+	     			<div class="title" >Admission Average</div>
+	    		</div>
+			</a>
+			<a id="admissionComments" class="disabled step">
+				<i class="minus icon"></i>
+				<div class="content">
+	     			<div class="title" >Admission Comments</div>
+	    		</div>
+			</a>
+			<a id="secondary" class="disabled step">
+				<i class="minus icon"></i>
+				<div class="content">
+	     			<div class="title" >Secondary Schools</div>
+	    		</div>
+			</a>
+			<a id="highschoolInfo" class="disabled step">
+				<i class="minus icon"></i>
+				<div class="content">
+	     			<div class="title" >Secondary School Information</div>
+	    		</div>
+			</a>
+			<a id="recordPlans" class="disabled step">
 				<i class="minus icon"></i>
 				<div class="content">
 	     			<div class="title" >Undergraduate Record Plans</div>
 	    		</div>
 			</a>
-			<a id="courseGrades" class=" step" {{action "setIndex" 11}}>
+			<a id="courseGrades" class="disabled step">
 				<i class="minus icon"></i>
 				<div class="content">
 	     			<div class="title" >Undergraduate Course Grades</div>
@@ -103,7 +103,10 @@
 	</div>
 	<div class="ten wide stretchered column ">
 		<div class="ui segment">
-			<input type="file" id = "newFile" onchange = {{action 'import'}}>
+			<input type="file" id = "newFile">
+			<button class="ui primary button" {{action 'import' }}>
+  				Import File
+			</button>
 			<button class="ui primary button" {{action 'continue' }}>
   				Continue
 			</button>

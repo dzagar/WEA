@@ -5,19 +5,18 @@ import Mutex from 'ember-mutex';
 var ImportState = {
 	GENDER : 1,
 	RESIDENCY : 2,
-	TERMCODE : 3,
-	COURSECODE : 4,
-	STUDENT : 5,
-	HIGHSCHOOL : 6,
-	HSCOURSEINFO : 7,
-	SCHOLARSHIPS : 8,
-	ADVANCEDSTANDINGS : 9,
-	RECORDPLANS : 10,
-	RECORDGRADES : 11,
-	REGISTRATIONCOMMENTS : 12,
-	BASISOFADMISSION : 13,
-	ADMISSIONAVERAGE : 14,
-	ADMINSSIONCOMMENTS : 15
+	COURSECODE : 3,
+	STUDENT : 4,
+	SCHOLARSHIPS : 5,
+	ADVANCEDSTANDINGS : 6,
+	REGISTRATIONCOMMENTS : 7,
+	BASISOFADMISSION : 8,
+	ADMISSIONAVERAGE : 9,
+	ADMINSSIONCOMMENTS : 10,
+	HIGHSCHOOL : 11,
+	HSCOURSEINFO : 12,
+	RECORDPLANS : 13,
+	RECORDGRADES : 14,
 };
 
 function DisplayErrorMessage(message)
@@ -1707,63 +1706,88 @@ export default Ember.Component.extend({
 			},	
 			continue(){
 				this.set('changingIndex', this.get('changingIndex')+1);
+				console.log("changed Index to " + this.get('changingIndex'));
 				switch(this.get('changingIndex')){
-					case 2:
-						$("#residencies").addClass("active");
-						$("#gender").removeClass("active");
-						$("#gender").addClass("completed");
-						break;
-					case 3:
-						$("#termCodes").addClass("active");
-						$("#residencies").removeClass("active");
-						$("#residencies").addClass("completed");
-						break;
-					case 4:
-						$("#courseCodes").addClass("active");
-						$("#termCodes").removeClass("active");
-						$("#termCodes").addClass("completed");
-						break;
-					case 5:
-						$("#students").addClass("active");
-						$("#courseCodes").removeClass("active");
-						$("#courseCodes").addClass("completed");
-						break;
-					case 6:
-						$("#secondary").addClass("active");
-						$("#students").removeClass("active");
-						$("#students").addClass("completed");
-						break;
-					case 7:
-						$("#highschool").addClass("active");
-						$("#secondary").removeClass("active");
-						$("#secondary").addClass("completed");
-						break;
-					case 8:
-						$("#awards").addClass("active");
-						$("#highschool").removeClass("active");
-						$("#highschool").addClass("completed");
-						break;
-					case 9:
-						$("#advancedStandings").addClass("active");
-						$("#awards").removeClass("active");
-						$("#awards").addClass("completed");
-						break;
-					case 10:
-						$("#recordPlans").addClass("active");
-						$("#advancedStandings").removeClass("active");
-						$("#advancedStandings").addClass("completed");
-						break;
-					case 11:
-						$("#courseGrades").addClass("active");
-						$("#recordPlans").removeClass("active");
-						$("#recordPlans").addClass("completed");
-						break;
-					case 12:
-						$("#courseGrades").removeClass("active");
-						$("#courseGrades").addClass("completed");
-						break;
-				}
-		}	
+  					case 2:
+  						$("#residencies").addClass("active");
+ 						$("#residencies").removeClass("disabled");
+  						$("#gender").removeClass("active");
+  						$("#gender").addClass("completed");
+  						break;
+  					case 3:
+  						$("#courseCodes").addClass("active");
+ 						$("#courseCodes").removeClass("disabled");
+  						$("#residencies").removeClass("active");
+  						$("#residencies").addClass("completed");
+  						break;
+  					case 4:
+  						$("#students").addClass("active");
+ 						$("#students").removeClass("disabled");
+  						$("#courseCodes").removeClass("active");
+  						$("#courseCodes").addClass("completed");
+  						break;
+  					case 5:
+  						$("#awards").addClass("active");
+ 						$("#awards").removeClass("disabled");
+  						$("#students").removeClass("active");
+  						$("#students").addClass("completed");
+  						break;
+  					case 6:
+  						$("#advancedStandings").addClass("active");
+ 						$("#advancedStandings").removeClass("disabled");
+  						$("#awards").removeClass("active");
+  						$("#awards").addClass("completed");
+  						break;
+  					case 7:
+  						$("#registrationComments").addClass("active");
+ 						$("#registrationComments").removeClass("disabled");
+  						$("#advancedStandings").removeClass("active");
+  						$("#advancedStandings").addClass("completed");
+  						break;
+  					case 8:
+  						$("#basisOfAdmission").addClass("active");
+ 						$("#basisOfAdmission").removeClass("disabled");
+  						$("#registrationComments").removeClass("active");
+  						$("#registrationComments").addClass("completed");
+  						break;
+  					case 9:
+  						$("#admissionAverage").addClass("active");
+ 						$("#admissionAverage").removeClass("disabled");
+  						$("#basisOfAdmission").removeClass("active");
+  						$("#basisOfAdmission").addClass("completed");
+  						break;
+  					case 10:
+  						$("#admissionComments").addClass("active");
+ 						$("#admissionComments").removeClass("disabled");
+  						$("#admissionAverage").removeClass("active");
+  						$("#admissionAverage").addClass("completed");
+  						break;
+  					case 11:
+  						$("#secondary").addClass("active");
+						$("#secondary").removeClass("disabled");
+  						$("#admissionComments").removeClass("active");
+  						$("#admissionComments").addClass("completed");
+  						break;
+  					case 12:
+  						$("#highschoolInfo").addClass("active");
+						$("#highschoolInfo").removeClass("disabled");
+  						$("#secondary").removeClass("active");
+  						$("#secondary").addClass("completed");
+  						break;
+  					case 13:
+  						$("#recordPlans").addClass("active");
+						$("#recordPlans").removeClass("disabled");
+  						$("#highschoolInfo").removeClass("active");
+  						$("#highschoolInfo").addClass("completed");
+  						break;
+  					case 14:
+  						$("#courseGrades").addClass("active");
+						$("#courseGrades").removeClass("disabled");
+  						$("#recordPlans").removeClass("active");
+  						$("#recordPlans").addClass("completed");
+  						break;
+				}	
 
-		}
-	});
+			}
+	}
+});
