@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var HighSchoolCourse = require('../models/highSchoolCourse');
-var HighSchoolCourses = require('../models/highSchoolCourses');
+var HighSchoolSubject = require('../models/highSchoolSubject');
 var HighSchool = require('../models/highSchool');
 var Student = require('../models/student');
 var bodyParser = require('body-parser');
@@ -66,7 +66,7 @@ router.route('/')
                 if (error)
                     response.send(error);   //should only return one record anyway
                 if(school) {
-                    HighSchoolCourses.findOne({name: request.query.subjectName, description: request.query.subjectDescription}, function (error, subject) {
+                    HighSchoolSubject.findOne({name: request.query.subjectName, description: request.query.subjectDescription}, function (error, subject) {
                         if (error)
                             response.send(error);
                         if(subject) {
