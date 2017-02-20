@@ -650,7 +650,7 @@ export default Ember.Component.extend({
 										//if no gender was imported
 										if (i == 2) {
 											rollBackImport = true;
-											self.pushOutput("<span style='color:red'>Import cancelled. File does not contain any Values...</span>")
+											self.pushOutput("<span style='color:red'>Import cancelled. File does not contain any values...</span>")
 										}
 									}
 								}
@@ -663,12 +663,12 @@ export default Ember.Component.extend({
 									self.pushOutput("Successful read of file has completed. Beginning import of " + gendersToImport.length + " genders.");
 									var gendersImportedCount = 0;
 									for (var i = 0; i < gendersToImport.length; i++) {
-										console.log("trying to save");
 										gendersToImport[i].save().then(function() {
 											gendersImportedCount++;
 											if (gendersImportedCount == gendersToImport.length)
 											{
 												self.pushOutput("<span style='color:green'>Import Successful!</span>");
+												Ember.$("#btnContinue").removeClass("disabled");
 											}
 										});
 									}
@@ -706,7 +706,7 @@ export default Ember.Component.extend({
 										//if no residency was imported
 										if (i == 2) {
 											rollBackImport = true;
-											this.pushOutput("<span style='color:red'>File does not contain any Values...</span>")
+											this.pushOutput("<span style='color:red'>File does not contain any values...</span>")
 										}
 									}
 								}
@@ -716,9 +716,17 @@ export default Ember.Component.extend({
 										residenciesToImport[i].deleteRecord();
 									}
 								} else { //save residencies to back-end
+									var numberOfResidenciesImported = 0;
+									self.pushOutput("Successful read of file has completed. Beginning import of " + residenciesToImport.length + " residencies.");
 									for (var i = 0; i < residenciesToImport.length; i++) {
-										console.log("trying to save");
-										residenciesToImport[i].save();
+										residenciesToImport[i].save().then(function() {
+											numberOfResidenciesImported++;
+											if (numberOfResidenciesImported === residenciesToImport.length)
+											{
+												self.pushOutput("<span style='color:green'>Import Successful!</span>");
+												Ember.$("#btnContinue").removeClass("disabled");
+											}
+										});
 									}
 								}
 							}
@@ -772,6 +780,7 @@ export default Ember.Component.extend({
 							break;
 							case ImportState.COURSECODE:
 							if (UndergraduateCoursesVerification(worksheet)) {
+								self.setOutput("Importing Course Codes")
 								var rollBackImport = false;
 								var doneImporting = false;
 								var courseCodesToImport = [];
@@ -791,7 +800,7 @@ export default Ember.Component.extend({
 										var courseCodeUnit = courseCode4.v;
 										//if the course code has already been added
 										if (!checkUniqueCourse(uniqueCourseCodes, courseCodeLetter, courseCodeNum, courseCodeUnit)) {
-											DisplayErrorMessage("Import cancelled. Your excel sheet contains duplicate course codes '" + courseCodeLetter + courseCodeName + "'");
+											self.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate course codes '" + courseCodeLetter + courseCodeName + "'</span>");
 											rollBackImport = true;
 											doneImporting = true;
 										} else { //create new course code object
@@ -809,7 +818,7 @@ export default Ember.Component.extend({
 										//if no course code was imported
 										if (i == 2) {
 											rollBackImport = true;
-											DisplayErrorMessage("File does not contain any Values...")
+											self.pushOutput("<span style='color:red'>Import Cancelled. File does not contain any values...</span>");
 										}
 									}
 								}
@@ -819,9 +828,17 @@ export default Ember.Component.extend({
 										courseCodesToImport[i].deleteRecord();
 									}
 								} else {
+									var numberOfCodesImported = 0;
+									self.pushOutput("Successful read of file has completed. Beginning import of " + courseCodesToImport.length + " residencies.");
 									for (var i = 0; i < courseCodesToImport.length; i++) {
-										console.log("trying to save");
-										courseCodesToImport[i].save();
+										courseCodesToImport[i].save().then(function() {
+											numberOfCodesImported++;
+											if (numberOfCodesImported === courseCodesToImport.length)
+											{
+												self.pushOutput("<span style='color:green'>Import Successful!</span>");
+												Ember.$("#btnContinue").removeClass("disabled");
+											}
+										});
 									}
 								}
 							}
@@ -1734,6 +1751,9 @@ export default Ember.Component.extend({
 				console.log("index is now " + this.get('changingIndex'));
 			},	
 			continue(){
+				Ember.$("#btnContinue").addClass("disabled");
+				this.clearOutput();
+				Ember.$("#newFile").val('');
 				this.set('changingIndex', this.get('changingIndex')+1);
 				console.log("changed Index to " + this.get('changingIndex'));
 				switch(this.get('changingIndex')){
