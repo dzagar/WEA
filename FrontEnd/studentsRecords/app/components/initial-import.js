@@ -1619,6 +1619,59 @@ export default Ember.Component.extend({
 							break;
 							case ImportState.REGISTRATIONCOMMENTS:
 							{
+								//add header checker thing
+								var currentStudentNumber = "";
+								var doneReading = false;
+								var uniqueStudents = [];
+								var rollbackImport = false;
+								var studentIndex = -1;
+								
+								for (var i = 2; !doneReading; i++)
+								{
+									var studentNumber = worksheet['A' + i];
+									var note = worksheet['B' + i];
+
+									//if we're on a new student
+									if (studentNumber && studentNumber.v != "")
+									{
+										studentIndex++;
+										currentStudentNumber = studentNumber.v;
+										uniqueStudents[studentIndex] = {"studentNumber": currentStudentNumber, "note": note.v};
+
+									}
+									//if we're on a new note for the same student
+									else if (note && note.v != "")
+									{
+										var newNote = uniqueStudents.note + note.v;
+										uniqueStudents[studentIndex] = {"studentNmber": currentStudentNumber, "note": newNote};
+
+									}
+									//import is done
+									else
+									{
+										doneReading = true;
+									}
+								}
+								//begin importing
+								if (!rollbackImport)
+								{
+									var registrationCommentsToImport = [];
+									var inRegistrationMutexIndex = 0;
+									var registrationMutex = Mutex.create();
+
+									for(var i = 0; i < uniqueStudents.length; i++)
+									{
+										registrationMutex.lock(function() {
+											var inRegistrationMutexCount = inRegistrationMutexIndex++;
+											var importStudentNumber = uniqueStudents[inRegistrationMutexCount].studentNumber;
+											var importNote = uniqueStudents[inRegistrationMutexCount].note;
+											self.get('store').queryRecord('student', {studentNumber: importStudentNumber}).then(function(studentObj) {
+												studentObj.set('registrationComments', importNote);
+												studentObj.save();
+											});
+										});
+									}
+								}
 
 							}
 							break;
