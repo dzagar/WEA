@@ -138,14 +138,14 @@ router.route('/')
 
 router.route('/:highSchoolCourses_id')
     .get(parseUrlencoded, parseJSON, function (request, response) {
-        HighSchoolCourses.findById(request.params.highSchoolCourses_id, function(error, highSchoolCourse) {
+        HighSchoolCourse.findById(request.params.highSchoolCourses_id, function(error, highSchoolCourse) {
             if (error)
                 response.send(error);
             response.json({highSchoolCourse: highSchoolCourse})
         });
     })
     .put(parseUrlencoded, parseJSON, function (request, response) {
-        HighSchoolCourses.findById(request.params.highSchool_id, function(error, highSchoolCourse) {
+        HighSchoolCourse.findById(request.params.highSchool_id, function(error, highSchoolCourse) {
             if (error)
                 response.send(error);
 
