@@ -996,12 +996,12 @@ export default Ember.Component.extend({
 										if (studentSheetA || studentSheetB || studentSheetC || studentSheetD || studentSheetE || studentSheetF)
 										{
 											rollBackImport = true;
-											DisplayErrorMessage("Imported file contains records with missing information on row" + i);
+											self.pushOutput("<span style='color:red'>Imported file contains records with missing information on row" + i + "</span>");
 										}
 										if (i === 2)
 										{
 											rollBackImport = true;
-											DisplayErrorMessage("Student sheet did not contain any properly formated students students...")
+											self.pushOutput("<span style='color:red'>Student sheet did not contain any properly formated students students...</span>")
 										}
 									}
 								}
