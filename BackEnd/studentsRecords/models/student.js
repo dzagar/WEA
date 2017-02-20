@@ -9,11 +9,12 @@ var studentsSchema = mongoose.Schema(
         studentNumber: String,
         photo: String,
         registrationComments: String,
-        BasisOfAdmission: String,
+        basisOfAdmission: String,
         admissionAverage: Number,
         admissionComments: String,
         resInfo: {type: mongoose.Schema.ObjectId, ref: 'Residency'},
-        scholarships: [{type: mongoose.Schema.ObjectId, ref: 'Scholarship'}]
+        scholarships: [{type: mongoose.Schema.ObjectId, ref: 'Scholarship'}],
+        termCodes: [{type: mongoose.Schema.ObjectId, ref: 'TermCode'}]
     },
     {
         versionKey: false
