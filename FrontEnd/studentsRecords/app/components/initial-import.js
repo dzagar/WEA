@@ -16,6 +16,10 @@ var ImportState = {
 	RECORDGRADES : 11
 };
 
+function DisplayErrorMessage(message)
+{
+	console.log(message);
+}
 function checkUniqueSubject(sourceArray, newName, newDescription)
 {
 	for (var i = 0; i < sourceArray.length; i++)
@@ -38,6 +42,21 @@ function checkUniqueCourse(sourceArray, newSchool, newLevel, newSource, newUnit,
 			return false;
 		}
 	}
+	return true;
+}
+
+function checkUniqueTerm(sourceArray, newStudentNumber, newTermCode)
+{
+
+	return true;
+}
+
+function checkUniqueProgram(sourceArray, newStudentNumber, newTermCode, newName, newLevel, newLoad)
+{
+	return true;
+}
+function checkUniquePlan(sourceArray, newStudentNumber, newTermCode, newProgramName, newLevel, newLoad, newPlanName)
+{
 	return true;
 }
 
@@ -500,10 +519,6 @@ function UndergraduateCGVerification(worksheet)
 	return true;
 }
 
-function DisplayErrorMessage(message)
-{
-	console.log(message);
-}
 
 export default Ember.Component.extend({
 	
@@ -681,7 +696,7 @@ export default Ember.Component.extend({
 							}
 							break;
 							case ImportState.COURSECODE:
-							if (courseCodeVerification(worksheet)) {
+							if (UndergraduateCoursesVerification(worksheet)) {
 								var rollBackImport = false;
 								var doneImporting = false;
 								var courseCodesToImport = [];
@@ -1116,8 +1131,294 @@ export default Ember.Component.extend({
 										}
 										numberOfSubjects = uniqueSubjects.length;
 									}
+								}
+								break;
+								}
+							case ImportState.RECORDPLANS:
+							{
+								console.log("in records plans");
+								//Unique terms 
+								//Unique Program REcords 
+								//Unique Plan codes
+								if (UndergraduateRPVerification(worksheet))
+								{
+									console.log("successful verification");
+									var termValues = [];
+									var programValues = [];
+									var planValues = [];
+									var doneReading = false;
+									var rollbackImport = false;
+
+									var currentStudentNumber = "";
+									var currentTerm = "";
+									var currentProgram = "";
+									var currentLevel = "";
+									var currentLoad = "";
+
+									for (var i = 2; !doneReading; i++)
+									{
+										var studentNumber = worksheet['A' + i];
+										var term = worksheet['B' + i];
+										var program = worksheet['C' + i];
+										var level = worksheet['D' + i];
+										var load = worksheet['E' + i];
+										var plan = worksheet['F' + i];
+
+										//this means the reading is done
+										if (!plan)
+										{
+											console.log("there was no plan");
+											if (i === 2)
+											{
+												DisplayErrorMessage("Sheet does not contain any properly formated data");
+												rollbackImport = true;
+											}
+											doneReading = true;
+										}
+										//new student number
+										else if (studentNumber && studentNumber.v !== "")
+										{
+											//if there is a missing field then the data is invalid
+											if (!term || !program || !level || !load || !plan || term.v == "" || program.v == "" || level.v === "" || load.v == "" || plan.v == "")
+											{
+												rollbackImport = true;
+												doneReading = true;
+												DisplayErrorMessage("Imporperly formated data on row " + i);
+											}
+											//populate new value fields for proper data
+											else
+											{
+												//set the current values
+												currentStudentNumber = studentNumber.v;
+												currentTerm = term.v;
+												currentProgram = program.v;
+												currentLevel = level.v;
+												currentLoad = load.v;
+												//if all fields are unique then there is a new plan
+												if (checkUniquePlan(planValues, studentNumber.v, term.v, program.v, level.v, load.v, plan.v))
+												{
+													planValues[planValues.length] = {"studentNumber": studentNumber.v, "term": term.v, "program": program.v, "level": level.v, "load": load.v, "plan": plan.v};
+													
+													//if all fields but the plan is unique then there is a new program
+													if (checkUniqueProgram(programValues, studentNumber.v, term.v, program.v, level.v, load.v))
+													{
+														programValues[programValues.length] = {"studentNumber": studentNumber.v, "term": term.v, "program": program.v, "level": level.v, "load": load.v};
+														
+														//if the term and student number is unique then there is a new term to import
+														if (checkUniqueTerm(termValues, studentNumber.v, term.v))
+														{
+															termValues[termValues.length] = {"studentNumber" : studentNumber.v, "termCode": term.v};
+														}
+													}
+												}
+
+											}
+										}
+										//if the student number is the same but term is different
+										else if (term && term.v != "")
+										{
+											//if there is a missing field then the data is invalid
+											if (!program || !level || !load || !plan || program.v == "" || level.v === "" || load.v == "" || plan.v == "")
+											{
+												DisplayErrorMessage("Imporperly formated data on row " + i);
+												rollbackImport = true;
+												doneReading = true;
+											}
+											else
+											{
+												//set the current values
+												currentTerm = term.v;
+												currentProgram = program.v;
+												currentLevel = level.v;
+												currentLoad = load.v;
+												//if all fields are unique then there is a new plan
+												if (checkUniquePlan(planValues, currentStudentNumber, term.v, program.v, level.v, load.v, plan.v))
+												{
+													planValues[planValues.length] = {"studentNumber": currentStudentNumber, "term": term.v, "program": program.v, "level": level.v, "load": load.v, "plan": plan.v};
+													
+													//if all fields but the plan is unique then there is a new program
+													if (checkUniqueProgram(programValues, currentStudentNumber, term.v, program.v, level.v, load.v))
+													{
+														programValues[programValues.length] = {"studentNumber": currentStudentNumber, "term": term.v, "program": program.v, "level": level.v, "load": load.v};
+														
+														//if the term and student number is unique then there is a new term to import
+														if (checkUniqueTerm(termValues, currentStudentNumber, term.v))
+														{
+															termValues[termValues.length] = {"studentNumber" : currentStudentNumber, "termCode": term.v};
+														}
+													}
+												}
+											}
+										}
+										//if there is a new program
+										else if (program && program.v != "")
+										{
+											//if there is a missing field then the data is invalid
+											if (!level || !load || !plan || level.v === "" || load.v == "" || plan.v == "")
+											{
+												DisplayErrorMessage("Imporperly formated data on row " + i);
+												rollbackImport = true;
+												doneReading = true;
+											}
+											else
+											{
+												//set the current values
+												currentProgram = program.v;
+												currentLevel = level.v;
+												currentLoad = load.v;
+												//if all fields are unique then there is a new plan
+												if (checkUniquePlan(planValues, currentStudentNumber, currentTerm, program.v, level.v, load.v, plan.v))
+												{
+													planValues[planValues.length] = {"studentNumber": currentStudentNumber, "term": currentTerm, "program": program.v, "level": level.v, "load": load.v, "plan": plan.v};
+													
+													//if all fields but the plan is unique then there is a new program
+													if (checkUniqueProgram(programValues, currentStudentNumber, currentTerm, program.v, level.v, load.v))
+													{
+														programValues[programValues.length] = {"studentNumber": currentStudentNumber, "term": currentTerm, "program": program.v, "level": level.v, "load": load.v};
+														
+													}
+												}
+											}
+										}
+										//plan must be the only field
+										else
+										{
+											//if there is a field in load or level then the data is invalid
+											if (level && level.v !== "" || load && load.v != "")
+											{
+												DisplayErrorMessage("Imporperly formated data on row " + i);
+												rollbackImport = true;
+												doneReading = true;
+											}
+											else
+											{
+												//if all fields are unique then there is a new plan
+												if (checkUniquePlan(planValues, currentStudentNumber, currentTerm, currentProgram, currentLevel, currentLoad, plan.v))
+												{
+													planValues[planValues.length] = {"studentNumber": currentStudentNumber, "term": currentTerm, "program": currentProgram, "level": currentLevel, "load": currentLoad, "plan": plan.v};
+													
+												}
+											}
+										}
+									}
+									//done reading the files
+									//if the import was successful
+									if (!rollbackImport)
+									{
+										//start importing
+
+										var inMutexIndex = 0;
+										var termMutex = Mutex.create();
+										var startedSavingTerms = false;
+										var termsToimport = [];
+										console.log(termValues);
+										for (var i = 0; i < termValues.length; i++)
+										{
+											termMutex.lock(function() {
+												var inMutexCountIndex = inMutexIndex++	
+												var termStudentNumber = termValues[inMutexCountIndex].studentNumber;								
+												self.get('store').queryRecord('student', {
+													number: termStudentNumber
+												}).then(function(studentObj) {	
+													var termName = termValues[inMutexCountIndex].termCode;										
+													var newTermToImport = self.get('store').createRecord('term-code', {
+														name: termName
+													});
+													newTermToImport.set('student', studentObj);
+													termsToimport[termsToimport.length] = newTermToImport;
+													newTermToImport.save().then(function() {
+														//wait until all terms have been uploaded
+														if (termValues.length === termsToimport.length && !startedSavingTerms)
+														{
+															startedSavingTerms = true;
+															console.log("done saving new term codes");
+															//now we start saving programs
+
+															var inProgramMutexIndex = 0;
+															var programMutex = Mutex.create();
+															var startedSavingPrograms = false;
+															var programsToImport = [];
+															
+															for (var j = 0; j < programValues.length; j++)
+															{
+																programMutex.lock(function() {
+																	var inProgramMutexCountIndex = inProgramMutexIndex++;
+																	var programStudentNumber = programValues[inProgramMutexCountIndex].studentNumber;
+																	var programTerm = programValues[inProgramMutexCountIndex].term;
+																	var programName = programValues[inProgramMutexCountIndex].program;
+																	var programLevel = programValues[inProgramMutexCountIndex].level;
+																	var programLoad = programValues[inProgramMutexCountIndex].load;
+																	self.get('store').queryRecord('term-code', {
+																		studentNumber: programStudentNumber,
+																		name: programTerm
+																	}).then(function(termNameObj) {
+																		var newProgramToImport = self.get('store').createRecord('program-record', {
+																			name: programName,
+																			level: programLevel,
+																			load: programLoad
+																		});
+																		newProgramToImport.set('termCode', termNameObj);
+																		programsToImport[programsToImport.length] = newProgramToImport;
+																		programsToImport[programsToImport.length - 1].save().then(function() {
+
+																			if (programsToImport.length === programValues.length && ! startedSavingPrograms)
+																			{
+																				startedSavingPrograms = false;
+																				console.log("done saving programs");
+
+																				//now we save plans...
+																				var inPlanMutexIndex = 0;
+																				var planMutex = Mutex.create();
+																				for (var k = 0; k < planValues.length; k++)
+																				{
+																					planMutex.lock(function() {																											
+																						var inPlanMutexCountIndex = inPlanMutexIndex++;
+																						var planStudentNumber = planValues[inPlanMutexCountIndex].studentNumber;
+																						var planTerm = planValues[inPlanMutexCountIndex].term;
+																						var planProgramName = planValues[inPlanMutexCountIndex].program;
+																						var planLevel = planValues[inPlanMutexCountIndex].level;
+																						var planLoad = planValues[inPlanMutexCountIndex].load;
+																						var planName = planValues[inPlanMutexCountIndex].plan;
+																						self.get('store').queryRecord('program-record', {
+																							studentNumber: planStudentNumber,
+																							termName: planTerm,
+																							programName: planProgramName,
+																							level: planLevel,
+																							load: planLoad
+																						}).then(function(programRecordObj) {
+																							var newPlanToImport = self.get('store').createRecord('plan-code', {
+																								name: planName
+																							});
+																							newPlanToImport.set('programRecord', programRecordObj);
+																							newPlanToImport.save();
+																						});
+
+																					});
+																				}
+
+																			}
+																		});
+																	});
+
+																});
+															}
+														}
+													});
+												});
+											});
+										
+										//import terms, then programs, then plans
+										}
 									}
 								}
+								break;
+							}
+							case ImportState.RECORDGRADES:
+							{
+
+								break;
+
+							}
 							default:
 							break;
 						}

@@ -2,11 +2,11 @@ var mongoose = require('mongoose');
 
 var courseCodeSchema = mongoose.Schema(
     {
-        //Program Record,
         courseLetter: String,
         courseNumber: String,
         name: String,
-        unit: Number
+        unit: Number,
+        grades: [{type: mongoose.Schema.ObjectId, ref: 'Grade'}]
     },
     {
         versionKey: false
