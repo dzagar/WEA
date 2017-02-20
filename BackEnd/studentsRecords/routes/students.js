@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var Student = require('../models/student');
+var Gender = require('../models/gender');
+var Residency = require('../models/residency');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
 var parseJSON = bodyParser.json();
@@ -8,9 +10,36 @@ var parseJSON = bodyParser.json();
 router.route('/')
     .post(parseUrlencoded, parseJSON, function (request, response) {
         var student = new Student(request.body.student);
-        student.save(function (error) {
-            if (error) response.send(error);
-            response.json({student: student});
+
+        Gender.findById(student.gender, function(error, gender) {
+            if (error)
+                response.send(error);
+            
+            gender.students.push(student._id);
+
+            Residency.findById(student.resInfo, function (error, residency) {
+                if (error)
+                    response.send(error);
+
+                residency.students.push(student._id);
+
+                student.save(function (error) {
+                    if (error) 
+                        response.send(error);
+                    
+                    gender.save(function (error) {
+                        if (error)
+                            response.send(error);
+
+                        residency.save(function (error) {
+                            if (error)
+                                response.send(error);
+
+                            response.json({student: student});
+                        });
+                    });
+                });
+            });
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
