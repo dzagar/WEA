@@ -10,8 +10,13 @@ router.route('/')
         var courseCode = new CourseCode(request.body.courseCode);
         courseCode.save(function(error) {
             if (error)
+            {
                 response.send(error);
-            response.json({courseCode: courseCode});
+                console.log(error);
+            }
+            else{
+                response.json({courseCode: courseCode});
+            }
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
@@ -26,6 +31,21 @@ router.route('/')
                     });
                 } console.log('removed courseCodes');
             });
+        }
+        else if (request.query.courseLetter && request.query.courseNumber)
+        {
+            CourseCode.findOne({courseLetter: request.query.courseLetter, courseNumber: request.query.courseNumber}, function(error, courseCode) {
+                if (error)
+                {
+                    response.send({error: error});
+                    console.log("error trying to find a course by number and letter")
+
+                }
+                else{
+                    response.send({courseCode: courseCode});
+                }
+            });
+
         }
         else{
         CourseCode.find(function(error, courseCodes) {

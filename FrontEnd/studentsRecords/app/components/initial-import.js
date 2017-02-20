@@ -32,7 +32,7 @@ function checkUniqueSubject(sourceArray, newName, newDescription)
 	}
 	return true;
 }
-function checkUniqueCourse(sourceArray, newSchool, newLevel, newSource, newUnit, newSubjectName, newSubjectDescription)
+function checkUniqueHSCourse(sourceArray, newSchool, newLevel, newSource, newUnit, newSubjectName, newSubjectDescription)
 {
 	for (var i = 0; i < sourceArray.length; i++)
 	{
@@ -47,19 +47,62 @@ function checkUniqueCourse(sourceArray, newSchool, newLevel, newSource, newUnit,
 
 function checkUniqueTerm(sourceArray, newStudentNumber, newTermCode)
 {
-
+	for (var i = 0; i < sourceArray.length; i++)
+	{
+		if (sourceArray[i] && sourceArray[i].studentNumber == newStudentNumber && sourceArray[i].termCode == newTermCode)
+		{
+			console.log("found duplicate field in Term Code");
+			console.log(newStudentNumber);
+			return false;
+		}
+	}
 	return true;
 }
 
 function checkUniqueProgram(sourceArray, newStudentNumber, newTermCode, newName, newLevel, newLoad)
 {
+	for (var i = 0; i < sourceArray.length; i++)
+	{
+		if (sourceArray[i] && sourceArray[i].studentNumber == newStudentNumber && sourceArray[i].term == newTermCode && sourceArray[i].program == newName && sourceArray[i].level == newLevel && sourceArray[i].load == newLoad)
+		{
+			console.log("found duplicate field in Program Record");
+			console.log(newStudentNumber);
+			return false;
+		}
+	}
 	return true;
 }
 function checkUniquePlan(sourceArray, newStudentNumber, newTermCode, newProgramName, newLevel, newLoad, newPlanName)
 {
+	for (var i = 0; i < sourceArray.length; i++)
+	{
+		if (sourceArray[i] && sourceArray[i].studentNumber == newStudentNumber && sourceArray[i].term == newTermCode && sourceArray[i].program == newProgramName && sourceArray[i].level == newLevel && sourceArray[i].load == newLoad && sourceArray[i].plan == newPlanName)
+		{
+			console.log("found duplicate field in Plan Code");
+			console.log(newStudentNumber);
+			return false;
+		}
+	}
 	return true;
 }
-
+function checkUniqueCourse(sourceArray, newLetter, newNumber, newUnit)
+{
+	for (var i = 0; i < sourceArray.length; i++)
+	{
+		if (sourceArray[i] && sourceArray[i].letter == newLetter && sourceArray[i] == newNumber)
+		{
+			console.log("found duplicate course" + newLetter + newNumber);
+			
+			return false;
+		}
+		if (isNaN(newUnit))
+		{
+			console.log("ERROR: RECORD " + newLetter + newNumber + "cannot convert unit " + newUnit + " to a number");
+			return false;
+		}
+	}
+	return true;
+}
 function genderVerification(worksheet)
 {
 	var currentString=worksheet['A1'].v;
@@ -700,7 +743,7 @@ export default Ember.Component.extend({
 								var rollBackImport = false;
 								var doneImporting = false;
 								var courseCodesToImport = [];
-								var uniqueCourseCodeNames = [];
+								var uniqueCourseCodes = [];
 								for (var i = 2; !doneImporting; i++) {
 									//get the next course code name
 									var courseCode1 = worksheet['A' + i];
@@ -715,19 +758,19 @@ export default Ember.Component.extend({
 										var courseCodeName = courseCode3.v;
 										var courseCodeUnit = courseCode4.v;
 										//if the course code has already been added
-										if (uniqueCourseCodeNames.includes(courseCodeName)) {
-											DisplayErrorMessage("Import cancelled. Your excel sheet contains duplicate course code names '" + courseCodeName + "'");
+										if (!checkUniqueCourse(uniqueCourseCodes, courseCodeLetter, courseCodeNum, courseCodeUnit)) {
+											DisplayErrorMessage("Import cancelled. Your excel sheet contains duplicate course codes '" + courseCodeLetter + courseCodeName + "'");
 											rollBackImport = true;
 											doneImporting = true;
 										} else { //create new course code object
-											courseCodesToImport[i - 2] = self.get('store').createRecord('course-code', 
+											courseCodesToImport[courseCodesToImport.length] = self.get('store').createRecord('course-code', 
 											{
 												courseLetter: courseCodeLetter,
 												courseNumber: courseCodeNum,
 												name: courseCodeName,
 												unit: courseCodeUnit
 											});
-											uniqueCourseCodeNames[i] = courseCodeName;
+											uniqueCourseCodes[uniqueCourseCodes.length] = {"letter": courseCodeLetter, "number": courseCodeNum};
 										}
 									} else {
 										doneImporting = true;
@@ -956,7 +999,7 @@ export default Ember.Component.extend({
 													{
 														highschoolSubjectValues[i - 2] = {"name" : subject.v, "description": description.v};
 													}
-													if (checkUniqueCourse(highschoolCourseValues, schoolName.v, level.v, source.v, units.v, subject.v, description.v))
+													if (checkUniqueHSCourse(highschoolCourseValues, schoolName.v, level.v, source.v, units.v, subject.v, description.v))
 													{
 														highschoolCourseValues[i - 2] = {"studentNumber": currentStudentNumber, "schoolName" : schoolName.v, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v};
 													}
@@ -980,7 +1023,7 @@ export default Ember.Component.extend({
 												{
 													highschoolSubjectValues[i - 2] = {"name" : subject.v, "description": description.v};
 												}
-												if (checkUniqueCourse(highschoolCourseValues, schoolName.v, level.v, source.v, units.v, subject.v, description.v))
+												if (checkUniqueHSCourse(highschoolCourseValues, schoolName.v, level.v, source.v, units.v, subject.v, description.v))
 												{
 													highschoolCourseValues[i - 2] = {"studentNumber": currentStudentNumber, "schoolName" : schoolName.v, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v};
 												}
@@ -993,7 +1036,7 @@ export default Ember.Component.extend({
 												{
 													highschoolSubjectValues[i - 2] = {"name" : subject.v, "description": description.v};
 												}
-												if (checkUniqueCourse(highschoolCourseValues, currentSchoolName, level.v, source.v, units.v, subject.v, description.v))
+												if (checkUniqueHSCourse(highschoolCourseValues, currentSchoolName, level.v, source.v, units.v, subject.v, description.v))
 												{
 													highschoolCourseValues[i - 2] = {"studentNumber": currentStudentNumber, "schoolName" : currentSchoolName, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v};
 												}
@@ -1309,6 +1352,7 @@ export default Ember.Component.extend({
 
 										var inMutexIndex = 0;
 										var termMutex = Mutex.create();
+										var savingTermMutex = Mutex.create();
 										var startedSavingTerms = false;
 										var termsToimport = [];
 										console.log(termValues);
@@ -1328,81 +1372,85 @@ export default Ember.Component.extend({
 													termsToimport[termsToimport.length] = newTermToImport;
 													newTermToImport.save().then(function() {
 														//wait until all terms have been uploaded
-														if (termValues.length === termsToimport.length && !startedSavingTerms)
-														{
-															startedSavingTerms = true;
-															console.log("done saving new term codes");
-															//now we start saving programs
-
-															var inProgramMutexIndex = 0;
-															var programMutex = Mutex.create();
-															var startedSavingPrograms = false;
-															var programsToImport = [];
-															
-															for (var j = 0; j < programValues.length; j++)
+														savingTermMutex.lock(function() {															
+															if (termValues.length === termsToimport.length && !startedSavingTerms)
 															{
-																programMutex.lock(function() {
-																	var inProgramMutexCountIndex = inProgramMutexIndex++;
-																	var programStudentNumber = programValues[inProgramMutexCountIndex].studentNumber;
-																	var programTerm = programValues[inProgramMutexCountIndex].term;
-																	var programName = programValues[inProgramMutexCountIndex].program;
-																	var programLevel = programValues[inProgramMutexCountIndex].level;
-																	var programLoad = programValues[inProgramMutexCountIndex].load;
-																	self.get('store').queryRecord('term-code', {
-																		studentNumber: programStudentNumber,
-																		name: programTerm
-																	}).then(function(termNameObj) {
-																		var newProgramToImport = self.get('store').createRecord('program-record', {
-																			name: programName,
-																			level: programLevel,
-																			load: programLoad
-																		});
-																		newProgramToImport.set('termCode', termNameObj);
-																		programsToImport[programsToImport.length] = newProgramToImport;
-																		programsToImport[programsToImport.length - 1].save().then(function() {
+																startedSavingTerms = true;
+																console.log("done saving new term codes");
+																//now we start saving programs
 
-																			if (programsToImport.length === programValues.length && ! startedSavingPrograms)
-																			{
-																				startedSavingPrograms = false;
-																				console.log("done saving programs");
+																var inProgramMutexIndex = 0;
+																var programMutex = Mutex.create();
+																var savingProgramMutex = Mutex.create();
+																var startedSavingPrograms = false;
+																var programsToImport = [];
+																
+																for (var j = 0; j < programValues.length; j++)
+																{
+																	programMutex.lock(function() {
+																		var inProgramMutexCountIndex = inProgramMutexIndex++;
+																		var programStudentNumber = programValues[inProgramMutexCountIndex].studentNumber;
+																		var programTerm = programValues[inProgramMutexCountIndex].term;
+																		var programName = programValues[inProgramMutexCountIndex].program;
+																		var programLevel = programValues[inProgramMutexCountIndex].level;
+																		var programLoad = programValues[inProgramMutexCountIndex].load;
+																		self.get('store').queryRecord('term-code', {
+																			studentNumber: programStudentNumber,
+																			name: programTerm
+																		}).then(function(termNameObj) {
+																			var newProgramToImport = self.get('store').createRecord('program-record', {
+																				name: programName,
+																				level: programLevel,
+																				load: programLoad
+																			});
+																			newProgramToImport.set('termCode', termNameObj);
+																			programsToImport[programsToImport.length] = newProgramToImport;
+																			programsToImport[programsToImport.length - 1].save().then(function() {
+																				savingProgramMutex.lock(function() {
+																					if (programsToImport.length === programValues.length && !startedSavingPrograms)
+																					{
+																						startedSavingPrograms = true;
+																						console.log("done saving programs");
 
-																				//now we save plans...
-																				var inPlanMutexIndex = 0;
-																				var planMutex = Mutex.create();
-																				for (var k = 0; k < planValues.length; k++)
-																				{
-																					planMutex.lock(function() {																											
-																						var inPlanMutexCountIndex = inPlanMutexIndex++;
-																						var planStudentNumber = planValues[inPlanMutexCountIndex].studentNumber;
-																						var planTerm = planValues[inPlanMutexCountIndex].term;
-																						var planProgramName = planValues[inPlanMutexCountIndex].program;
-																						var planLevel = planValues[inPlanMutexCountIndex].level;
-																						var planLoad = planValues[inPlanMutexCountIndex].load;
-																						var planName = planValues[inPlanMutexCountIndex].plan;
-																						self.get('store').queryRecord('program-record', {
-																							studentNumber: planStudentNumber,
-																							termName: planTerm,
-																							programName: planProgramName,
-																							level: planLevel,
-																							load: planLoad
-																						}).then(function(programRecordObj) {
-																							var newPlanToImport = self.get('store').createRecord('plan-code', {
-																								name: planName
+																						//now we save plans...
+																						var inPlanMutexIndex = 0;
+																						var planMutex = Mutex.create();
+																						for (var k = 0; k < planValues.length; k++)
+																						{
+																							planMutex.lock(function() {																											
+																								var inPlanMutexCountIndex = inPlanMutexIndex++;
+																								var planStudentNumber = planValues[inPlanMutexCountIndex].studentNumber;
+																								var planTerm = planValues[inPlanMutexCountIndex].term;
+																								var planProgramName = planValues[inPlanMutexCountIndex].program;
+																								var planLevel = planValues[inPlanMutexCountIndex].level;
+																								var planLoad = planValues[inPlanMutexCountIndex].load;
+																								var planName = planValues[inPlanMutexCountIndex].plan;
+																								self.get('store').queryRecord('program-record', {
+																									studentNumber: planStudentNumber,
+																									termName: planTerm,
+																									programName: planProgramName,
+																									level: planLevel,
+																									load: planLoad
+																								}).then(function(programRecordObj) {
+																									var newPlanToImport = self.get('store').createRecord('plan-code', {
+																										name: planName
+																									});
+																									newPlanToImport.set('programRecord', programRecordObj);
+																									newPlanToImport.save();
+																								});
+
 																							});
-																							newPlanToImport.set('programRecord', programRecordObj);
-																							newPlanToImport.save();
-																						});
-
-																					});
-																				}
-
-																			}
+																						}
+																					}
+																				});
+																			});
 																		});
-																	});
 
-																});
+																	});
+																}
 															}
-														}
+
+														});
 													});
 												});
 											});
@@ -1415,9 +1463,150 @@ export default Ember.Component.extend({
 							}
 							case ImportState.RECORDGRADES:
 							{
+								console.log("in recordGrades");
+
+								var currentStudentNumber = "";
+								var currentTerm = "";
+								var gradesToImport = [];
+								var doneReading = false;
+								var rollBackImport = false;
+
+								for (var i = 2; !doneReading; i++)
+								{									
+									var studentNumber = worksheet['A' + i];
+									var term = worksheet['B' + i];
+									var courseLetter = worksheet['C' + i];
+									var courseNumber = worksheet['D' + i];
+									var courseGrade = worksheet['F' + i];
+									var courseNote = worksheet['G' + i];
+
+									//if there is a new student
+									if (studentNumber && studentNumber.v != "")
+									{
+										console.log("changin current students");
+										if (term && courseLetter && courseNumber && courseGrade)
+										{
+											currentStudentNumber = studentNumber.v;
+											currentTerm = term.v;
+											console.log(currentStudentNumber);
+											console.log(currentTerm);
+											if (courseNote)
+											{
+												gradesToImport[i - 2] = {"studentNumber": currentStudentNumber, "term": term.v, "courseLetter": courseLetter.v, "courseNumber": courseNumber.v, "courseGrade": courseGrade.v, "courseNote": courseNote.v};
+											}
+											else
+											{
+												gradesToImport[i - 2] = {"studentNumber": currentStudentNumber, "term": term.v, "courseLetter": courseLetter.v, "courseNumber": courseNumber.v, "courseGrade": courseGrade.v};
+
+											}
+										}
+										//improper data
+										else
+										{
+											DisplayErrorMessage("Improperly formatted data on row " + (i));
+											rollBackImport = true;
+											doneReading = true;
+										}
+									}
+									//if it is the same student in a different term
+									else if (term && term.v != "")
+									{
+										console.log("changing term");
+										if (courseLetter && courseNumber && courseGrade && currentStudentNumber != "")
+										{
+											currentTerm = term.v;
+											console.log(currentTerm);
+											if (courseNote)
+											{
+												gradesToImport[i - 2] = {"studentNumber": currentStudentNumber, "term": currentTerm, "courseLetter": courseLetter.v, "courseNumber": courseNumber.v, "courseGrade": courseGrade.v, "courseNote": courseNote.v};
+											}
+											else
+											{
+												gradesToImport[i - 2] = {"studentNumber": currentStudentNumber, "term": currentTerm, "courseLetter": courseLetter.v, "courseNumber": courseNumber.v, "courseGrade": courseGrade.v};
+
+											}
+										}
+										//improper data
+										else
+										{
+											DisplayErrorMessage("Improperly formatted data on row " + (i));
+											rollBackImport = true;
+											doneReading = true;
+										}
+
+
+									}
+									//if it is the same student and term
+									else
+									{
+										if (courseLetter && courseNumber && courseGrade && currentTerm != "" && currentStudentNumber != "")
+										{
+											if (courseNote)
+											{
+												gradesToImport[i - 2] = {"studentNumber": currentStudentNumber, "term": currentTerm, "courseLetter": courseLetter.v, "courseNumber": courseNumber.v, "courseGrade": courseGrade.v, "courseNote": courseNote.v};
+											}
+											else
+											{
+												gradesToImport[i - 2] = {"studentNumber": currentStudentNumber, "term": currentTerm, "courseLetter": courseLetter.v, "courseNumber": courseNumber.v, "courseGrade": courseGrade.v};
+
+											}
+										}
+										//this is the end of the sheet
+										else
+										{
+											
+											doneReading = true;
+										}
+									}
+								}
+								if (!rollBackImport)
+								{
+									console.log("done reading");
+									console.log(gradesToImport);
+									var inGradeMutexIndex = 0;
+									var gradeMutex = Mutex.create();
+									for (var i = 0; i < gradesToImport.length; i++)
+									{										
+										gradeMutex.lock(function() {
+											var inGradeMutexCount = inGradeMutexIndex++;
+											var termCode = gradesToImport[inGradeMutexCount].term;
+											var studentNumber = gradesToImport[inGradeMutexCount].studentNumber;
+											var courseLetter = gradesToImport[inGradeMutexCount].courseLetter;
+											var courseNumber = gradesToImport[inGradeMutexCount].courseNumber;
+											var courseGrade = gradesToImport[inGradeMutexCount].courseGrade;
+											var courseNote = gradesToImport[inGradeMutexCount].courseNote;
+											self.get('store').queryRecord('term-code', {
+												studentNumber: studentNumber,
+												name: termCode
+											}).then(function(termCodeObj) {
+												self.get('store').queryRecord('course-code', {
+													courseLetter: courseLetter,
+													courseNumber: courseNumber
+												}).then(function(courseCodeObj) {
+													var newGrade = self.get('store').createRecord('grade', {
+														mark: courseGrade
+													});
+													console.log(termCodeObj);
+													console.log(courseCodeObj);
+													newGrade.set('termCode', termCodeObj);
+													newGrade.set('courseCode', courseCodeObj);
+													if (courseNote)
+													{
+														newGrade.set('note', courseNote);
+													}
+													newGrade.save();
+												});
+											});
+										});									
+									}
+								}
+
+								//iterate through each row
+								//qeury term code with SN and Term Name for TC 
+								//query courseCode with courseLetter and CourseName for CC 
+
 
 								break;
-
 							}
 							default:
 							break;
