@@ -102,6 +102,9 @@
 		</div>
 	</div>
 	<div class="ten wide stretchered column ">
+		<div>
+			<label>{{{fileFormat}}}</label>
+		</div>
 		<div class="ui segment">
 			<input type="file" id = "newFile">
 			<button class="ui primary button" {{action 'import' }}>
@@ -110,6 +113,9 @@
 			<button class="ui primary button" {{action 'continue' }}>
   				Continue
 			</button>
+		</div>
+		<div>
+			<label>{{fileOutput}}</label>
 		</div>
 	</div>
 </div>

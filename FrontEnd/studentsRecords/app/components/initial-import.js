@@ -572,6 +572,8 @@ export default Ember.Component.extend({
 	showDeleteConfirmation: false,
 	importData: false,
 	changingIndex: 1,
+	fileFormat: "The file must have one header with the title <b>'name'</b>",
+	fileOutput: "output",
 
 	
 	actions: {
