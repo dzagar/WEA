@@ -113,7 +113,6 @@ export default Ember.Component.extend({
   },
 
   showStudentData: function (student) {
-    if (!this.get('showAllStudents')) { //Disables showStudentData while the all students window is showing to speed things up
       this.set("showHelp", false);
       this.set("showFindStudent",false);
       if (student != null) {
@@ -147,7 +146,6 @@ export default Ember.Component.extend({
           self.set('studentAdvancedStandings', advancedStandings);
         });
       }
-    } //end if(!showAllStudents)
   },
 
   //Changes the offset based on offsetDelta and relative.
@@ -406,6 +404,11 @@ export default Ember.Component.extend({
     switchPage(pageNum)
     {
       this.changeOffset((pageNum - 1) * this.get('pageSize'), false);
+    },
+
+    selectTerm(index)
+    {
+      console.log('select term ' + index);
     }
   }
 });
