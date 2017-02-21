@@ -12,7 +12,7 @@ var ImportState = {
 	REGISTRATIONCOMMENTS : 7,
 	BASISOFADMISSION : 8,
 	ADMISSIONAVERAGE : 9,
-	ADMINSSIONCOMMENTS : 10,
+	ADMISSIONCOMMENTS : 10,
 	HIGHSCHOOL : 11,
 	HSCOURSEINFO : 12,
 	RECORDPLANS : 13,
@@ -1262,7 +1262,7 @@ export default Ember.Component.extend({
 									else if (note && note.v != "")
 									{
 										var newNote = uniqueStudents.note + note.v;
-										uniqueStudents[studentIndex] = {"studentNmber": currentStudentNumber, "note": newNote};
+										uniqueStudents[studentIndex] = {"studentNumber": currentStudentNumber, "note": newNote};
 
 									}
 									//import is done
@@ -1300,6 +1300,54 @@ export default Ember.Component.extend({
 								var basisofadmissionArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
 								if(VerificationFunction(basisofadmissionCheckerArray,basisofadmissionArray))
 								{
+									var currentStudentNumber= "";
+									var doneReading = false;
+									var uniqueStudents = [];
+									var rollbackImport = false;
+									var studentIndex = -1;
+
+									for(var i = 2; !doneReading; i++)
+									{
+										var studentNumber = worksheet['A'+ i];
+										var note = worksheet['B'+ i];
+
+										if(studentNumber && studentNumber.v!="")
+										{
+											studentIndex++;
+											currentStudentNumber=studentNumber.v;
+											uniqueStudents[studentIndex]={"studentnumber":currentStudentNumber, "note":note.v};
+										}
+
+										else if(note && note.v !="")
+										{
+											var newNote = uniqueStudents.note + note.v;
+											uniqueStudents[studentIndex]={"studentnumber":currentStudentNumber, "note":newNote};
+										}
+
+										else
+										{
+											doneReading = true;
+										}
+									}
+
+									if(!rollBackImport)
+									{
+										var inAdmissionMutexIndex = 0;
+										var admissionMutex = Mutex.create();
+
+									for(var i = 0; i < uniqueStudents.length; i++)
+									{
+										admissionMutex.lock(function() {
+											var inAdmissionMutexCount = inAdmissionMutexIndex++;
+											var importStudentNumber = uniqueStudents[inAdmissionMutexCount].studentNumber;
+											var importNote = uniqueStudents[inAdmissionMutexCount].note;
+											self.get('store').queryRecord('student', {studentNumber: importStudentNumber}).then(function(studentObj) {
+												studentObj.set('basisofadmissionComments', importNote);
+												studentObj.save();
+											});
+										});
+									}
+									}
 
 								}
 							}
@@ -1310,16 +1358,112 @@ export default Ember.Component.extend({
 								var admissionaverageArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
 								if(VerificationFunction(admissionaverageCheckerArray,admissionaverageArray))
 								{
+									var currentStudentNumber= "";
+									var doneReading = false;
+									var uniqueStudents = [];
+									var rollbackImport = false;
+									var studentIndex = -1;
+
+									for(var i = 2; !doneReading; i++)
+									{
+										var studentNumber = worksheet['A'+ i];
+										var note = worksheet['B'+ i];
+
+										if(studentNumber && studentNumber.v!="")
+										{
+											studentIndex++;
+											currentStudentNumber=studentNumber.v;
+											uniqueStudents[studentIndex]={"studentnumber":currentStudentNumber, "note":note.v};
+										}
+
+										else if(note && note.v !="")
+										{
+											var newNote = uniqueStudents.note + note.v;
+											uniqueStudents[studentIndex]={"studentnumber":currentStudentNumber, "note":newNote};
+										}
+
+										else
+										{
+											doneReading = true;
+										}
+									}
+
+									if(!rollBackImport)
+									{
+										var inAdmissionMutexIndex = 0;
+										var admissionMutex = Mutex.create();
+
+									for(var i = 0; i < uniqueStudents.length; i++)
+									{
+										admissionMutex.lock(function() {
+											var inAdmissionMutexCount = inAdmissionMutexIndex++;
+											var importStudentNumber = uniqueStudents[inAdmissionMutexCount].studentNumber;
+											var importNote = uniqueStudents[inAdmissionMutexCount].note;
+											self.get('store').queryRecord('student', {studentNumber: importStudentNumber}).then(function(studentObj) {
+												studentObj.set('admissionaverageComments', importNote);
+												studentObj.save();
+											});
+										});
+									}
+									}
 
 								}
 							}
 							break;
-							case ImportState.ADMINSSIONCOMMENTS:
+							case ImportState.ADMISSIONCOMMENTS:
 							{
 								var admissioncommentsCheckerArray = ['STUDENTNUMBER','NOTE'];
 								var admissioncommentsArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
 								if(VerificationFunction(admissioncommentsCheckerArray,admissioncommentsArray))
 								{
+									var currentStudentNumber= "";
+									var doneReading = false;
+									var uniqueStudents = [];
+									var rollbackImport = false;
+									var studentIndex = -1;
+
+									for(var i = 2; !doneReading; i++)
+									{
+										var studentNumber = worksheet['A'+ i];
+										var note = worksheet['B'+ i];
+
+										if(studentNumber && studentNumber.v!="")
+										{
+											studentIndex++;
+											currentStudentNumber=studentNumber.v;
+											uniqueStudents[studentIndex]={"studentnumber":currentStudentNumber, "note":note.v};
+										}
+
+										else if(note && note.v !="")
+										{
+											var newNote = uniqueStudents.note + note.v;
+											uniqueStudents[studentIndex]={"studentnumber":currentStudentNumber, "note":newNote};
+										}
+
+										else
+										{
+											doneReading = true;
+										}
+									}
+
+									if(!rollBackImport)
+									{
+										var inAdmissionMutexIndex = 0;
+										var admissionMutex = Mutex.create();
+
+									for(var i = 0; i < uniqueStudents.length; i++)
+									{
+										admissionMutex.lock(function() {
+											var inAdmissionMutexCount = inAdmissionMutexIndex++;
+											var importStudentNumber = uniqueStudents[inAdmissionMutexCount].studentNumber;
+											var importNote = uniqueStudents[inAdmissionMutexCount].note;
+											self.get('store').queryRecord('student', {studentNumber: importStudentNumber}).then(function(studentObj) {
+												studentObj.set('admissionComments', importNote);
+												studentObj.save();
+											});
+										});
+									}
+									}
 
 								}
 							}
