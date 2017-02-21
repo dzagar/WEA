@@ -112,10 +112,27 @@ router.route('/:advancedStanding_id')
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
         AdvancedStanding.findByIdAndRemove(request.params.advancedStanding_id, function(error, advancedStanding) {
-            if(error) {
+            if (error) {
                 response.send(error);
             } else {
-                response.json({deleted: advancedStanding});
+
+                Student.findById(advancedStanding._id, function (error, student) {
+                    if (error) {
+                        response.send(error);
+                    } else {
+                        let index = student.advancedStandings.indexOf(advancedStanding._id);
+                        if (index > -1) {
+                            student.advancedStandings.splice(index, 1); //removes the item located at index
+                        }
+                        student.save(function (error) {
+                            if (error) {
+                                response.send(error);
+                            } else {
+                                response.json({deleted: advancedStanding});
+                            }
+                        });
+                    }
+                });
             }
         });
     });
