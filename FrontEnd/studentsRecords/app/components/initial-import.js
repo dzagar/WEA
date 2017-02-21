@@ -343,8 +343,8 @@ export default Ember.Component.extend({
 							break;
 							case ImportState.COURSECODE:
 
-							var coursecodeCheckerArray = ['STUDENTNUMBER','TERM','COURSELETTER','COURSENUMBER','SECTION','GRADE','NOTE'];
-							var coursecodeArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase(),worksheet['G1'].v.toUpperCase()];
+							var coursecodeCheckerArray = ['COURSELETTER','COURSENUMBER','NAME','UNIT'];
+							var coursecodeArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),];
 							if (VerificationFunction(coursecodeCheckerArray,coursecodeArray)) {
 								self.setOutput("Importing Course Codes")
 								var rollBackImport = false;
