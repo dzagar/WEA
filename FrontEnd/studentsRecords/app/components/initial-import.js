@@ -127,7 +127,7 @@ export default Ember.Component.extend({
 	showDeleteConfirmation: false,
 	importData: false,
 	changingIndex: 1,
-	fileFormat: "The file must have one header with the title <b>'name'</b>",
+	fileFormat: "The file must have one header with the title <b>'name'</b>.",
 	fileOutput: "",
 
 	clearOutput: function() {
@@ -366,7 +366,7 @@ export default Ember.Component.extend({
 										var courseCodeUnit = courseCode4.v;
 										//if the course code has already been added
 										if (!checkUniqueCourse(uniqueCourseCodes, courseCodeLetter, courseCodeNum, courseCodeUnit)) {
-											self.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate course codes '" + courseCodeLetter + courseCodeName + "'</span>");
+											self.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate course codes '" + courseCodeLetter +" "+ courseCodeName + "'</span>");
 											rollBackImport = true;
 											doneImporting = true;
 										} else { //create new course code object
@@ -1519,78 +1519,91 @@ export default Ember.Component.extend({
  						$("#residencies").removeClass("disabled");
   						$("#gender").removeClass("active");
   						$("#gender").addClass("completed");
+  						this.changeHeaderRequirements("The file must have <b>1</b> header with the title <b>'name'</b>.");
   						break;
   					case 3:
   						$("#courseCodes").addClass("active");
  						$("#courseCodes").removeClass("disabled");
   						$("#residencies").removeClass("active");
   						$("#residencies").addClass("completed");
+  						this.changeHeaderRequirements("The file must have <b>4</b> headers with the titles <b>'courseLetter'</b>, <b>'courseNumber'</b>, <b>'name'</b>, <b>'unit'</b>.");
   						break;
   					case 4:
   						$("#students").addClass("active");
  						$("#students").removeClass("disabled");
   						$("#courseCodes").removeClass("active");
   						$("#courseCodes").addClass("completed");
+  						this.changeHeaderRequirements("The file must have <b>6</b> headers with the titles <b>'studentNumber'</b>, <b>'firstName'</b>, <b>'lastName'</b>, <b>'gender'</b>, <b>'DOB'</b>, <b>'residency'</b>.");
   						break;
   					case 5:
   						$("#awards").addClass("active");
  						$("#awards").removeClass("disabled");
   						$("#students").removeClass("active");
   						$("#students").addClass("completed");
+  						this.changeHeaderRequirements("The file must have <b>2</b> headers with the titles <b>'studentNumber'</b>, <b>'note'</b>.");
   						break;
   					case 6:
   						$("#advancedStandings").addClass("active");
  						$("#advancedStandings").removeClass("disabled");
   						$("#awards").removeClass("active");
   						$("#awards").addClass("completed");
+  						this.changeHeaderRequirements("The file must have <b>6</b> headers with the titles <b>'studentNumber'</b>, <b>'Course'</b>, <b>'Description'</b>, <b>'Units'</b>, <b>'Grade'</b>, <b>'From'</b>.");
   						break;
   					case 7:
   						$("#registrationComments").addClass("active");
  						$("#registrationComments").removeClass("disabled");
   						$("#advancedStandings").removeClass("active");
   						$("#advancedStandings").addClass("completed");
+  						this.changeHeaderRequirements("The file must have <b>2</b> headers with the titles <b>'studentNumber'</b>, <b>'note'</b>.");
   						break;
   					case 8:
   						$("#basisOfAdmission").addClass("active");
  						$("#basisOfAdmission").removeClass("disabled");
   						$("#registrationComments").removeClass("active");
   						$("#registrationComments").addClass("completed");
+  						this.changeHeaderRequirements("The file must have <b>2</b> headers with the titles <b>'studentNumber'</b>, <b>'note'</b>.");
   						break;
   					case 9:
   						$("#admissionAverage").addClass("active");
  						$("#admissionAverage").removeClass("disabled");
   						$("#basisOfAdmission").removeClass("active");
   						$("#basisOfAdmission").addClass("completed");
+  						this.changeHeaderRequirements("The file must have <b>2</b> headers with the titles <b>'studentNumber'</b>, <b>'note'</b>.");
   						break;
   					case 10:
   						$("#admissionComments").addClass("active");
  						$("#admissionComments").removeClass("disabled");
   						$("#admissionAverage").removeClass("active");
   						$("#admissionAverage").addClass("completed");
+  						this.changeHeaderRequirements("The file must have <b>2</b> headers with the titles <b>'studentNumber'</b>, <b>'note'</b>.");
   						break;
   					case 11:
   						$("#secondary").addClass("active");
 						$("#secondary").removeClass("disabled");
   						$("#admissionComments").removeClass("active");
   						$("#admissionComments").addClass("completed");
+  						this.changeHeaderRequirements("The file must have <b>1</b> header with the title <b>'School Name'</b>.");
   						break;
   					case 12:
   						$("#highschoolInfo").addClass("active");
 						$("#highschoolInfo").removeClass("disabled");
   						$("#secondary").removeClass("active");
   						$("#secondary").addClass("completed");
+  						this.changeHeaderRequirements("The file must have <b>8</b> headers with the titles <b>'studentNumber'</b>, <b>'schoolName'</b>, <b>'level'</b>, <b>'subject'</b>, <b>'description'</b>, <b>'source'</b>, <b>'units'</b>, <b>'grade'</b>.");
   						break;
   					case 13:
   						$("#recordPlans").addClass("active");
 						$("#recordPlans").removeClass("disabled");
   						$("#highschoolInfo").removeClass("active");
   						$("#highschoolInfo").addClass("completed");
+  						this.changeHeaderRequirements("The file must have <b>6</b> headers with the titles <b>'studentNumber'</b>, <b>'term'</b>, <b>'program'</b>, <b>'level'</b>, <b>'load'</b>, <b>'plan'</b>.");
   						break;
   					case 14:
   						$("#courseGrades").addClass("active");
 						$("#courseGrades").removeClass("disabled");
   						$("#recordPlans").removeClass("active");
   						$("#recordPlans").addClass("completed");
+  						this.changeHeaderRequirements("The file must have <b>7</b> headers with the titles <b>'studentNumber'</b>, <b>'term'</b>, <b>'courseLetter'</b>, <b>'courseNumber'</b>, <b>'section'</b>, <b>'grade'</b>, <b>'note'</b>.");
   						break;
 				}	
 
