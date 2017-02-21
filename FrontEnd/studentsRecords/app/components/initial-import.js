@@ -12,7 +12,7 @@ var ImportState = {
 	REGISTRATIONCOMMENTS : 7,
 	BASISOFADMISSION : 8,
 	ADMISSIONAVERAGE : 9,
-	ADMINSSIONCOMMENTS : 10,
+	ADMISSIONCOMMENTS : 10,
 	HIGHSCHOOL : 11,
 	HSCOURSEINFO : 12,
 	RECORDPLANS : 13,
@@ -106,465 +106,20 @@ function checkUniqueCourse(sourceArray, newLetter, newNumber, newUnit)
 	}
 	return true;
 }
-function genderVerification(worksheet)
+
+function VerificationFunction(sourceArray,newArray)
 {
-	var currentString=worksheet['A1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='NAME')
+	for(var i=0;i<newArray.length;i++) //go through the arrays and compare values, any non-matching values create an error 
 	{
-		DisplayErrorMessage("Please fix the 'name' header in the imported file!");
-		return false;
+		if(sourceArray[i]!=newArray[i])
+		{
+			console.log("There was an error in the '"+sourceArray[i]+"' header! Your current value is: '"+newArray[i]+"'. Please fix this before re-importing!");
+			return false;
+		}
 	}
 
 	return true;
 }
-
-function residencyVerification(worksheet)
-{
-	var currentString=worksheet['A1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='NAME')
-	{
-		DisplayErrorMessage("Please fix the 'name' header in the imported file!");
-		return false;
-	}
-
-	return true;
-}
-
-function termCodeVerification(worksheet)
-{
-	var currentString=worksheet['A1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='NAME')
-	{
-		DisplayErrorMessage("Please fix the 'name' header in the imported file!");
-		return false;
-	}
-
-	return true;
-}
-
-function courseCodeVerification(worksheet)
-{
-	var currentString=worksheet['A1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='STUDENTNUMBER')
-	{
-		DisplayErrorMessage("Please fix the 'studentnumber' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['B1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='TERM')
-	{
-		DisplayErrorMessage("Please fix the 'term' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['C1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='COURSELETTER')
-	{
-		DisplayErrorMessage("Please fix the 'courseletter' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['D1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='COURSENUMBER')
-	{
-		DisplayErrorMessage("Please fix the 'coursenumber' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['E1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='SECTION')
-	{
-		DisplayErrorMessage("Please fix the 'section' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['F1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='GRADE')
-	{
-		DisplayErrorMessage("Please fix the 'grade' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['G1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='NOTE')
-	{
-		DisplayErrorMessage("Please fix the 'note' header in the imported file!");
-		return false;
-	}
-
-	return true;
-}
-
-function studentVerification(worksheet)
-{
-	var currentString=worksheet['A1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='STUDENTNUMBER')
-	{
-		DisplayErrorMessage("Please fix the 'studentnumber' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['B1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='FIRSTNAME')
-	{
-		DisplayErrorMessage("Please fix the 'firstname' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['C1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='LASTNAME')
-	{
-		DisplayErrorMessage("Please fix the 'lastname' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['D1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='GENDER')
-	{
-		DisplayErrorMessage("Please fix the 'gender' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['E1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='DOB')
-	{
-		DisplayErrorMessage("Please fix the 'DOB' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['F1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='RESIDENCY')
-	{
-		DisplayErrorMessage("Please fix the 'residency' header in the imported file!");
-		return false;
-	}
-
-	return true;
-}
-function UndergraduateCoursesVerification(workbook)
-{
-	var currentString=workbook['A1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='COURSELETTER')
-	{
-		DisplayErrorMessage("Please fix the 'courseletter' header in the imported file!");
-		return false;
-	}
-
-	currentString=workbook['B1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='COURSENUMBER')
-	{
-		DisplayErrorMessage("Please fix the 'coursenumber' header in the imported file!");
-		return false;
-	}
-
-	currentString=workbook['C1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='NAME')
-	{
-		DisplayErrorMessage("Please fix the 'name' header in the imported file!");
-		return false;
-	}
-
-	currentString=workbook['D1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='UNIT')
-	{
-		DisplayErrorMessage("Please fix the 'unit' header in the imported file!");
-		return false;
-	}
-
-
-	return true;
-
-}
-function secondarySchoolVerification(worksheet)
-{
-	var currentString=worksheet['A1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='SCHOOL NAME')
-	{
-		DisplayErrorMessage("Please fix the 'school name' header in the imported file!");
-	}
-
-	return true;
-}
-
-function studentHighSchoolVerification(worksheet)
-{
-	var currentString=worksheet['A1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='STUDENTNUMBER')
-	{
-		DisplayErrorMessage("Please fix the 'studentnumber' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['B1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='SCHOOLNAME')
-	{
-		DisplayErrorMessage("Please fix the 'schoolname' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['C1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='LEVEL')
-	{
-		DisplayErrorMessage("Please fix the 'level' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['D1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='SUBJECT')
-	{
-		DisplayErrorMessage("Please fix the 'subject' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['E1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='DESCRIPTION')
-	{
-		DisplayErrorMessage("Please fix the 'description' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['F1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='SOURCE')
-	{
-		DisplayErrorMessage("Please fix the 'source' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['G1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='UNITS')
-	{
-		DisplayErrorMessage("Please fix the 'units' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['H1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='GRADE')
-	{
-		DisplayErrorMessage("Please fix the 'grade' header in the imported file!");
-		return false;
-	}
-
-	return true;
-}
-
-function ScholarshipVerification(worksheet)
-{
-	var currentString=worksheet['A1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='STUDENTNUMBER')
-	{
-		DisplayErrorMessage("Please fix the 'studentnumber' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['B1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='NOTE')
-	{
-		DisplayErrorMessage("Please fix the 'note' header in the imported file!");
-		return false;
-	}
-
-	return true;
-}
-
-function AdvancedStandingVerification(worksheet)
-{
-	var currentString=worksheet['A1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='STUDENTNUMBER')
-	{
-		DisplayErrorMessage("Please fix the 'studentnumber' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['B1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='COURSE')
-	{
-		DisplayErrorMessage("Please fix the 'course' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['C1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='DESCRIPTION')
-	{
-		DisplayErrorMessage("Please fix the 'description' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['D1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='UNITS')
-	{
-		DisplayErrorMessage("Please fix the 'units' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['E1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='GRADE')
-	{
-		DisplayErrorMessage("Please fix the 'grade' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['F1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='FROM')
-	{
-		DisplayErrorMessage("Please fix the 'from' header in the imported file!");
-		return false;
-	}
-
-	return true;
-}
-
-function UndergraduateRPVerification(worksheet)
-{
-	var currentString=worksheet['A1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='STUDENTNUMBER')
-	{
-		DisplayErrorMessage("Please fix the 'studentnumber' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['B1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='TERM')
-	{
-		DisplayErrorMessage("Please fix the 'term' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['C1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='PROGRAM')
-	{
-		DisplayErrorMessage("Please fix the 'program' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['D1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='LEVEL')
-	{
-		DisplayErrorMessage("Please fix the 'level' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['E1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='LOAD')
-	{
-		DisplayErrorMessage("Please fix the 'load' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['F1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='PLAN')
-	{
-		DisplayErrorMessage("Please fix the 'plan' header in the imported file!");
-		return false;
-	}
-
-	return true;
-}
-
-function UndergraduateCGVerification(worksheet)
-{
-	var currentString=worksheet['A1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='STUDENTNUMBER')
-	{
-		DisplayErrorMessage("Please fix the 'studentnumber' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['B1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='TERM')
-	{
-		DisplayErrorMessage("Please fix the 'term' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['C1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='COURSELETTER')
-	{
-		DisplayErrorMessage("Please fix the 'courseletter' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['D1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='COURSENUMBER')
-	{
-		DisplayErrorMessage("Please fix the 'coursenumber' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['E1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='SECTION')
-	{
-		DisplayErrorMessage("Please fix the 'section' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['F1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='GRADE')
-	{
-		DisplayErrorMessage("Please fix the 'grade' header in the imported file!");
-		return false;
-	}
-
-	var currentString=worksheet['G1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='NOTE')
-	{
-		DisplayErrorMessage("Please fix the 'note' header in the imported file!");
-		return false;
-	}
-
-	return true;
-}
-
 
 export default Ember.Component.extend({
 	
@@ -619,8 +174,10 @@ export default Ember.Component.extend({
 
 					switch(currentIndex)
 					{
-						case ImportState.GENDER: 
-						if (genderVerification(worksheet)){
+						case ImportState.GENDER:
+						var genderCheckerArray=['NAME'];
+						var genderArray=[worksheet['A1'].v.toUpperCase()];
+						if (VerificationFunction(genderCheckerArray,genderArray)){
 							self.setOutput("Importing new student genders");
 							var rollBackImport = false;
 							var doneImporting = false;
@@ -677,7 +234,9 @@ export default Ember.Component.extend({
 							}
 							break;
 							case ImportState.RESIDENCY:
-							if (residencyVerification(worksheet)) {
+							var residencyCheckerArray = ['NAME'];
+							var residencyArray = [worksheet['A1'].v.toUpperCase()];
+							if (VerificationFunction(residencyCheckerArray,residencyArray)) {
 								self.setOutput("Importing residencies");
 								var rollBackImport = false;
 								var doneImporting = false;
@@ -734,7 +293,9 @@ export default Ember.Component.extend({
 							}
 							break;
 							case ImportState.TERMCODE:
-							if (termCodeVerification(worksheet)) {
+							var termcodeCheckerArray = ['NAME'];
+							var termcodeArray = [worksheet['A1'].v.toUpperCase()];
+							if (VerificationFunction(termcodeCheckerArray,termcodeArray)) {
 								var rollBackImport = false;
 								var doneImporting = false;
 								var termCodesToImport = [];
@@ -781,7 +342,10 @@ export default Ember.Component.extend({
 							}
 							break;
 							case ImportState.COURSECODE:
-							if (UndergraduateCoursesVerification(worksheet)) {
+
+							var coursecodeCheckerArray = ['STUDENTNUMBER','TERM','COURSELETTER','COURSENUMBER','SECTION','GRADE','NOTE'];
+							var coursecodeArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase(),worksheet['G1'].v.toUpperCase()];
+							if (VerificationFunction(coursecodeCheckerArray,coursecodeArray)) {
 								self.setOutput("Importing Course Codes")
 								var rollBackImport = false;
 								var doneImporting = false;
@@ -848,8 +412,11 @@ export default Ember.Component.extend({
 							break;
 						// case ImportState.STUDENT:
 						// 	break;
-						case ImportState.HIGHSCHOOL:	
-						if (secondarySchoolVerification(worksheet)) {
+
+						case ImportState.HIGHSCHOOL:
+						var highschoolCheckerArray = ['SCHOOL NAME'];
+						var highschoolArray = [worksheet['A1'].v.toUpperCase()];	
+						if (VerificationFunction(highschoolCheckerArray,highschoolArray)) {
 							self.setOutput("Importing Secondary School Names");
 							var rollBackImport = false;
 							var doneImporting = false;
@@ -906,12 +473,15 @@ export default Ember.Component.extend({
 							}
 							break;
 							case ImportState.STUDENT:
-							self.setOutput("Importing Students");
-							var mutex = Mutex.create();
-							var savingMutex = Mutex.create();
-							var deleteMutex = Mutex.create();
-							if (studentVerification(worksheet))
+							var studentCheckerArray = ['STUDENTNUMBER','FIRSTNAME','LASTNAME','GENDER','DOB','RESIDENCY'];
+							var studentArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase()];
+							
+							if (VerificationFunction(studentCheckerArray,studentArray))
 							{
+								self.setOutput("Importing Students");
+								var mutex = Mutex.create();
+								var savingMutex = Mutex.create();
+								var deleteMutex = Mutex.create();
 								var rollBackImport = false;
 								var doneImporting = false;
 								var startedSave = false;
@@ -1010,7 +580,9 @@ export default Ember.Component.extend({
 							break;
 							case ImportState.HSCOURSEINFO:
 							{
-								if (studentHighSchoolVerification(worksheet))
+								var hscourseinfoCheckerArray = ['STUDENTNUMBER','SCHOOLNAME','LEVEL','SUBJECT','DESCRIPTION','SOURCE','UNITS','GRADE'];
+								var hscourseinfoArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase(),worksheet['G1'].v.toUpperCase(),worksheet['H1'].v.toUpperCase()];
+								if (VerificationFunction(hscourseinfoCheckerArray,hscourseinfoArray))
 								{
 									var gradeValues = [];
 									var highschoolSubjectValues = [];
@@ -1237,11 +809,13 @@ export default Ember.Component.extend({
 								}
 							case ImportState.RECORDPLANS:
 							{
+								var recordplansCheckerArray = ['STUDENTNUMBER','TERM','PROGRAM','LEVEL','LOAD','PLAN'];
+								var recordplansArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase()];
 								console.log("in records plans");
 								//Unique terms 
 								//Unique Program REcords 
 								//Unique Plan codes
-								if (UndergraduateRPVerification(worksheet))
+								if (VerificationFunction(recordplansCheckerArray,recordplansArray))
 								{
 									console.log("successful verification");
 									var termValues = [];
@@ -1519,10 +1093,13 @@ export default Ember.Component.extend({
 								}
 								break;
 							}
-							case ImportState.RECORDGRADES:
+							case ImportState.RECORDGRADES: 
 							{
+								var recordgradesCheckerArray = ['STUDENTNUMBER','TERM','COURSELETTER','COURSENUMBER','SECTION','GRADE','NOTE'];
+								var recordgradesArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase(),worksheet['G1'].v.toUpperCase()];
 								console.log("in recordGrades");
-
+								if(VerificationFunction(recordgradesCheckerArray,recordgradesArray))
+								{
 								var currentStudentNumber = "";
 								var currentTerm = "";
 								var gradesToImport = [];
@@ -1657,22 +1234,38 @@ export default Ember.Component.extend({
 											});
 										});									
 									}
+									}
 								}
 								break;
 							}
 							case ImportState.SCHOLARSHIPS:
 							{
+								var scholarshipsCheckerArray = ['STUDENTNUMBER','NOTE'];
+								var scholarshipsArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
+								if(VerificationFunction(scholarshipsCheckerArray,scholarshipsArray))
+								{
 
+								}
+								//Implement error checker if there is no student number but there is a scholarship
 							}
 							break;
 							case ImportState.ADVANCEDSTANDINGS: 
 							{
+								var advancedstandingsCheckerArray = ['STUDENTNUMBER','COURSE','DESCRIPTION','UNITS','GRADE','FROM'];
+								var advancedstandingsArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase()];
+								if(VerificationFunction(advancedstandingsCheckerArray,advancedstandingsArray))
+								{
+
+								}
 
 							}
 							break;
 							case ImportState.REGISTRATIONCOMMENTS:
 							{
-								//add header checker thing
+								var registrationcommentsCheckerArray = ['STUDENTNUMBER','NOTE'];
+								var registrationcommentsArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
+								if(VerificationFunction(registrationcommentsCheckerArray,registrationcommentsArray))
+								{
 								var currentStudentNumber = "";
 								var doneReading = false;
 								var uniqueStudents = [];
@@ -1697,7 +1290,6 @@ export default Ember.Component.extend({
 									{
 										var newNote = uniqueStudents[studentIndex].note + note.v;
 										uniqueStudents[studentIndex] = {"studentNmber": currentStudentNumber, "note": newNote};
-
 									}
 									//import is done
 									else
@@ -1708,7 +1300,6 @@ export default Ember.Component.extend({
 								//begin importing
 								if (!rollbackImport)
 								{
-									var registrationCommentsToImport = [];
 									var inRegistrationMutexIndex = 0;
 									var registrationMutex = Mutex.create();
 									for(var i = 0; i < uniqueStudents.length; i++)
@@ -1728,21 +1319,181 @@ export default Ember.Component.extend({
 									}
 								}
 
+								}
 							}
 							break;
 							case ImportState.BASISOFADMISSION:
 							{
+								var basisofadmissionCheckerArray = ['STUDENTNUMBER','NOTE'];
+								var basisofadmissionArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
+								if(VerificationFunction(basisofadmissionCheckerArray,basisofadmissionArray))
+								{
+									var currentStudentNumber= "";
+									var doneReading = false;
+									var uniqueStudents = [];
+									var rollbackImport = false;
+									var studentIndex = -1;
 
+									for(var i = 2; !doneReading; i++)
+									{
+										var studentNumber = worksheet['A'+ i];
+										var note = worksheet['B'+ i];
+
+										if(studentNumber && studentNumber.v!="")
+										{
+											studentIndex++;
+											currentStudentNumber=studentNumber.v;
+											uniqueStudents[studentIndex]={"studentnumber":currentStudentNumber, "note":note.v};
+										}
+
+										else if(note && note.v !="")
+										{
+											var newNote = uniqueStudents.note + note.v;
+											uniqueStudents[studentIndex]={"studentnumber":currentStudentNumber, "note":newNote};
+										}
+
+										else
+										{
+											doneReading = true;
+										}
+									}
+
+									if(!rollBackImport)
+									{
+										var inAdmissionMutexIndex = 0;
+										var admissionMutex = Mutex.create();
+
+									for(var i = 0; i < uniqueStudents.length; i++)
+									{
+										admissionMutex.lock(function() {
+											var inAdmissionMutexCount = inAdmissionMutexIndex++;
+											var importStudentNumber = uniqueStudents[inAdmissionMutexCount].studentNumber;
+											var importNote = uniqueStudents[inAdmissionMutexCount].note;
+											self.get('store').queryRecord('student', {studentNumber: importStudentNumber}).then(function(studentObj) {
+												studentObj.set('basisofadmissionComments', importNote);
+												studentObj.save();
+											});
+										});
+									}
+									}
+
+								}
 							}
 							break;
 							case ImportState.ADMISSIONAVERAGE:
-							{
+							{	
+								var admissionaverageCheckerArray = ['STUDENTNUMBER','NOTE'];
+								var admissionaverageArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
+								if(VerificationFunction(admissionaverageCheckerArray,admissionaverageArray))
+								{
+									var currentStudentNumber= "";
+									var doneReading = false;
+									var uniqueStudents = [];
+									var rollbackImport = false;
+									var studentIndex = -1;
 
+									for(var i = 2; !doneReading; i++)
+									{
+										var studentNumber = worksheet['A'+ i];
+										var note = worksheet['B'+ i];
+
+										if(studentNumber && studentNumber.v!="")
+										{
+											studentIndex++;
+											currentStudentNumber=studentNumber.v;
+											uniqueStudents[studentIndex]={"studentnumber":currentStudentNumber, "note":note.v};
+										}
+
+										else if(note && note.v !="")
+										{
+											var newNote = uniqueStudents.note + note.v;
+											uniqueStudents[studentIndex]={"studentnumber":currentStudentNumber, "note":newNote};
+										}
+
+										else
+										{
+											doneReading = true;
+										}
+									}
+
+									if(!rollBackImport)
+									{
+										var inAdmissionMutexIndex = 0;
+										var admissionMutex = Mutex.create();
+
+									for(var i = 0; i < uniqueStudents.length; i++)
+									{
+										admissionMutex.lock(function() {
+											var inAdmissionMutexCount = inAdmissionMutexIndex++;
+											var importStudentNumber = uniqueStudents[inAdmissionMutexCount].studentNumber;
+											var importNote = uniqueStudents[inAdmissionMutexCount].note;
+											self.get('store').queryRecord('student', {studentNumber: importStudentNumber}).then(function(studentObj) {
+												studentObj.set('admissionaverageComments', importNote);
+												studentObj.save();
+											});
+										});
+									}
+									}
+
+								}
 							}
 							break;
-							case ImportState.ADMINSSIONCOMMENTS:
+							case ImportState.ADMISSIONCOMMENTS:
 							{
+								var admissioncommentsCheckerArray = ['STUDENTNUMBER','NOTE'];
+								var admissioncommentsArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
+								if(VerificationFunction(admissioncommentsCheckerArray,admissioncommentsArray))
+								{
+									var currentStudentNumber= "";
+									var doneReading = false;
+									var uniqueStudents = [];
+									var rollbackImport = false;
+									var studentIndex = -1;
 
+									for(var i = 2; !doneReading; i++)
+									{
+										var studentNumber = worksheet['A'+ i];
+										var note = worksheet['B'+ i];
+
+										if(studentNumber && studentNumber.v!="")
+										{
+											studentIndex++;
+											currentStudentNumber=studentNumber.v;
+											uniqueStudents[studentIndex]={"studentnumber":currentStudentNumber, "note":note.v};
+										}
+
+										else if(note && note.v !="")
+										{
+											var newNote = uniqueStudents.note + note.v;
+											uniqueStudents[studentIndex]={"studentnumber":currentStudentNumber, "note":newNote};
+										}
+
+										else
+										{
+											doneReading = true;
+										}
+									}
+
+									if(!rollBackImport)
+									{
+										var inAdmissionMutexIndex = 0;
+										var admissionMutex = Mutex.create();
+
+									for(var i = 0; i < uniqueStudents.length; i++)
+									{
+										admissionMutex.lock(function() {
+											var inAdmissionMutexCount = inAdmissionMutexIndex++;
+											var importStudentNumber = uniqueStudents[inAdmissionMutexCount].studentNumber;
+											var importNote = uniqueStudents[inAdmissionMutexCount].note;
+											self.get('store').queryRecord('student', {studentNumber: importStudentNumber}).then(function(studentObj) {
+												studentObj.set('admissionComments', importNote);
+												studentObj.save();
+											});
+										});
+									}
+									}
+
+								}
 							}
 							break;
 							default:
