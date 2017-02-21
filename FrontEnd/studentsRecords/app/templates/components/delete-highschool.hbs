@@ -1,8 +1,12 @@
-<div class="ui modal">
-  <div class="header">Are you sure you want to delete this high school?
+<div class="ui small modal">
+  <div class="header">Are you sure you want to delete this high school?</div>
+  <div class="content">
+  <p>
+    This action is irreversible.
+  </p>
   </div>
   <div class="actions">
-    <div class="ui button" {{action "deleteHighSchool"}}>
+    <div class="ui inverted red button" {{action "deleteHighSchool"}}>
     	Delete
     </div>
     <div class="ui button" {{action "cancel"}}>

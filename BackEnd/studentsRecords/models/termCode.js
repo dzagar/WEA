@@ -2,8 +2,10 @@ var mongoose = require('mongoose');
 
 var termCodeSchema = mongoose.Schema(
     {
-        name: String
-        // Program Record
+        name: String,
+        programRecords: [{type: mongoose.Schema.ObjectId, ref: 'ProgramRecord'}],
+        grades: [{type: mongoose.Schema.ObjectId, ref: 'Grade'}],
+        student: {type: mongoose.Schema.ObjectId, ref: 'Student'}
         // Adjudication
     },
     {

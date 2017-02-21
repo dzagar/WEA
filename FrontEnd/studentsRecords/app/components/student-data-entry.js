@@ -30,14 +30,14 @@ export default Ember.Component.extend({
   selectedDate: null,
   selectedGender: null,
   selectedResidency: null,
+  showMenuBar: false,
   showAddStudent: false,
-  showAllStudents: false,
+  showAllStudents: true,
   showAdvancedStandingDeleteConfirmation: false,
   showDeleteConfirmation: false,
   showHighSchoolDeleteConfirmation: false,
   showScholarshipDeleteConfirmation: false,
   showFindStudent: false,
-  showHelp: false,
   store: Ember.inject.service(),
   studentAdvancedStandings: null,
   studentPhoto: null,
@@ -118,7 +118,6 @@ export default Ember.Component.extend({
   },
 
   showStudentData: function (student) {
-    if (!this.get('showAllStudents')) { //Disables showStudentData while the all students window is showing to speed things up
       this.set("showHelp", false);
       this.set("showFindStudent",false);
       if (student != null) {
@@ -152,7 +151,6 @@ export default Ember.Component.extend({
           self.set('studentAdvancedStandings', advancedStandings);
         });
       }
-    } //end if(!showAllStudents)
   },
 
   //Changes the offset based on offsetDelta and relative.
@@ -160,7 +158,6 @@ export default Ember.Component.extend({
   //If relative is false, the offsetDelta becomes the new offset
   //Checks and deals with the edge of the set
   changeOffset: function (offsetDelta, relative) {
-    console.log('changeOffset called');
     if (relative) {
       if (this.get('offset') + offsetDelta >= this.get('totalStudents'))
         this.set('offset', (this.get('totalPages') - 1) * this.get('pageSize'));
@@ -228,6 +225,7 @@ export default Ember.Component.extend({
 
     allStudents() {
       this.set('showAllStudents', true);
+      this.set('showMenuBar', false);
       this.set('showDeleteConfirmation', false);
     },
 
@@ -348,12 +346,6 @@ export default Ember.Component.extend({
       this.set("showAddStudent", true);
       this.set("showAllStudents", false);
     },
-    helpInfo(){
-      this.set("showAllStudents", false);
-      this.set("showHelp", true);
-      this.set("showFindStudent",false);
-      this.set("showDeleteConfirmation", false);
-    },
     toggleProgramInfo() {
       if ($("#programInfoTab").is(":visible"))
       {
@@ -466,6 +458,16 @@ export default Ember.Component.extend({
     saveHighSchool(highSchool)
     {
       highSchool.save();
+    },
+
+    switchPage(pageNum)
+    {
+      this.changeOffset((pageNum - 1) * this.get('pageSize'), false);
+    },
+
+    selectTerm(index)
+    {
+      console.log('select term ' + index);
     }
   }
 });

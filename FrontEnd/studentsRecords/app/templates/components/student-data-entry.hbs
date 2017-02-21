@@ -1,69 +1,59 @@
 <div class="ui center aligned header">
-  <h2>Students Records Data Entry</h2>
+  <h2>Students Records</h2>
 </div>
 
-<!-- Show the menu bar-->
-<div class="ui stackable container inverted ten item menu">
-  <a class="item" {{action 'saveStudent'}}>
-    <i class="save icon"></i>
-    Save
-  </a>
-  <a class="item" {{action 'undoSave'}}>
-    <i class="undo icon"></i>
-    Undo
-  </a>
-  <a class="item" {{action 'firstStudent'}}>
-    <i class="step backward icon"></i>
-    First
-  </a>
-  <a class="item" {{action 'previousStudent'}}>
-    <i class="arrow left icon"></i>
-    Previous
-  </a>
-  <a class="item" {{action 'nextStudent'}}>
-    <i class="arrow right icon"></i>
-    Next
-  </a>
-  <a class="item" {{action 'lastStudent'}}>
-    <i class="step forward icon"></i>
-    Last
-  </a>
-  <a class="item" {{action 'allStudents'}}>
-    <i class="content icon"></i>
-    All Records
-  </a>
-  <a class="item" {{action 'findStudent'}}>
-    <i class="search icon"></i>
-    Find Record
-  </a>
-  <a class = "item" {{action 'helpInfo'}}>
-    <i class="help icon"></i>
-    Help
-  </a>
-  <a class = "item" {{action 'createStudent'}}>
-    <i class="add user icon"></i>
-    Add Student
-  </a>
-</div> 
-
-{{#if showDeleteConfirmation}}
-  {{delete-student INDEX = currentIndex student = currentStudent showWindow = showDeleteConfirmation total=totalStudents}}
-  {{else if showHighSchoolDeleteConfirmation}}
-  {{delete-highschool highschool=currentHighSchool showWindow = showHighSchoolDeleteConfirmation}}
-  {{else if showAdvancedStandingDeleteConfirmation}}
-  {{delete-advanced-standing AdvancedStanding=currentAdvancedStanding showWindow=showAdvancedStandingDeleteConfirmation}}
-  {{else if showScholarshipDeleteConfirmation}}
-  {{delete-scholarship Scholarship=currentScholarship showWindow=showScholarshipDeleteConfirmation}}
+{{#if showMenuBar}}
+  <!-- Show the menu bar-->
+  <div class="ui stackable container inverted nine item menu">
+    <a class="item" {{action 'saveStudent'}}>
+      <i class="save icon"></i> Save
+    </a>
+    <a class="item" {{action 'undoSave'}}>
+      <i class="undo icon"></i> Undo
+    </a>
+    <a class="item" {{action 'firstStudent'}}>
+      <i class="step backward icon"></i> First
+    </a>
+    <a class="item" {{action 'previousStudent'}}>
+      <i class="arrow left icon"></i> Previous
+    </a>
+    <a class="item" {{action 'nextStudent'}}>
+      <i class="arrow right icon"></i> Next
+    </a>
+    <a class="item" {{action 'lastStudent'}}>
+      <i class="step forward icon"></i> Last
+    </a>
+    <a class="item" {{action 'allStudents'}}>
+      <i class="content icon"></i> All Records
+    </a>
+    <a class="item" {{action 'findStudent'}}>
+      <i class="search icon"></i> Find Record
+    </a>
+    <a class="item" {{action 'createStudent'}}>
+      <i class="add user icon"></i> Add Student
+    </a>
+  </div>
 {{/if}}
+
+<!-- Delete confirmation popups -->
+{{#if showDeleteConfirmation}} 
+  {{delete-student INDEX = currentIndex student = currentStudent showWindow = showDeleteConfirmation total = totalStudents}}
+{{else if showHighSchoolDeleteConfirmation}}
+  {{delete-highschool highschool = currentHighSchool showWindow = showHighSchoolDeleteConfirmation}}
+{{else if showAdvancedStandingDeleteConfirmation}}
+  {{delete-advanced-standing AdvancedStanding = currentAdvancedStanding showWindow = showAdvancedStandingDeleteConfirmation}}
+{{else if showScholarshipDeleteConfirmation}}
+  {{delete-scholarship Scholarship = currentScholarship showWindow = showScholarshipDeleteConfirmation}}
+{{/if}}
+
+<!-- Other non-popup screens -->
 {{#if showAllStudents}}
-  <!-- Note that offset is an "in" and "out" parameter !-->
- {{all-students INDEX = currentIndex notDONE = showAllStudents offset = offset studentsModel = studentsRecords totalPages = totalPages pageNumber = pageNumber changeOffset = (action 'changeOffset')}} 
+<!-- Note that offset is an "in" and "out" parameter !-->
+  {{all-students currentIndex = currentIndex currentStudent = currentStudent showAllStudents = showAllStudents showMenuBar = showMenuBar offset = offset studentsRecords = studentsRecords totalPages = totalPages pageNumber = pageNumber changeOffset = (action 'changeOffset')}}
 {{else if showAddStudent}}
-  {{add-student INDEX = currentIndex student = currentStudent notDONE = showAddStudent total=totalStudents}} 
+  {{add-student INDEX = currentIndex student = currentStudent notDONE = showAddStudent total = totalStudents}}
 {{else if showFindStudent}}
- {{find-student notDONE = showFindStudent gender = genderModel residency=residencyModel studentsRecords=studentsRecords}}
-{{else if showHelp}}
-  {{show-help}}
+  {{find-student notDONE = showFindStudent gender = genderModel residency = residencyModel studentsRecords = studentsRecords}}
 {{else}}
   <!-- Show data entry form -->
 
@@ -73,14 +63,14 @@
     <div style="cursor: pointer;" class="item" data-tab="awards">Scholarships and Awards</div>
     <div style="cursor: pointer;" class="item" data-tab="advanced">Advanced Standings</div>
     <div style="cursor: pointer;" class="item" data-tab="hsinfo">HighSchool Info</div>
-
   </div>
-  <div class="ui bottom attached active tab segment"data-tab="basics">
+  <div class="ui bottom attached active tab segment" data-tab="basics">
     <!-- student basic information !-->
 
     <div class="ui grid studentInfo">
       <div class="ui right aligned  seven wide column">
         <div class="ui relaxed items form">
+<<<<<<< HEAD
           <div class="item inline field">
             <label>Student Number</label>
             {{input size="10" type="number"  value = currentStudent.studentNumber readonly=true}}
@@ -107,16 +97,16 @@
           </div>
           <div class="item inline field">
             <label>Residency</label>
-            <select id="ddlResidency" onchange={{action 'selectResidency' value="target.value"}}>
-              {{#each residencyModel as |residencyChoice|}}
-                <option value={{residencyChoice.id}} selected={{eq currentStudent.resInfo.id residencyChoice.id}}>{{residencyChoice.name}} </option>
-              {{/each}}
-            </select>
+            <select id="ddlResidency" onchange={{action 'selectResidency' value="target.value" }}>
+                  {{#each residencyModel as |residencyChoice|}}
+                    <option value={{residencyChoice.id}} selected={{eq currentStudent.resInfo.id residencyChoice.id}}>{{residencyChoice.name}} </option>
+                  {{/each}}
+                </select>
           </div>
-          <div class = "inline field">
+          <div class="inline field">
             <button class="ui inverted red icon button" {{action 'deleteCurrentStudent'}}>
-              Delete <i class="trash icon"></i>
-            </button>
+                  Delete <i class="trash icon"></i>
+                </button>
           </div>
         </div>
       </div>
@@ -126,27 +116,52 @@
       </div>
 
     </div>
-</div>
+  </div>
+
   <div class="ui bottom attached tab segment" data-tab="program">
     <h2>Program Info</h2>
-    <br>
-   <font face="impact" size="6">Student</font>
-      <h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
-    <br>
-    
-</div>
+    <h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
 
-    <div class="ui bottom attached tab segment" data-tab="advanced">
-      <h2>Advanced Standings</h2>
-               
+    <select class="ui dropdown" onchange={{action 'selectTerm' value="target.value"}}>
+      {{#each currentStudent.termCodes as |semester index|}}
+        <option value={{index}}>{{semester.name}}</option>
+      {{/each}}
+    </select>
+
     <table class="ui fixed table">
-        <thead>
+      <thead>
         <tr>
-            <th>Advanced Standings</th>
-            <th><!--spacer--></th>
-            <th><!--spacer--></th>  
+          <th>Course</th>
+          <th><!--spacer--></th>
+          <th><!--spacer--></th>
+          <th>Grade</th>
+          <th>Note</th>
         </tr>
-        </thead>
+      </thead>
+      {{#each semseter.courses as grade}}
+        <tr>
+          <td>Mark</td>
+          <td>name</td>
+        </tr>
+      {{/each}}
+    </table>
+  </div>
+
+  <div class="ui bottom attached tab segment" data-tab="advanced">
+    <h2>Advanced Standings</h2>
+
+    <table class="ui fixed table">
+      <thead>
+        <tr>
+          <th>Advanced Standings</th>
+          <th>
+            <!--spacer-->
+          </th>
+          <th>
+            <!--spacer-->
+          </th>
+        </tr>
+      </thead>
 
       {{#each studentAdvancedStandings as |oneAdvancedStandings|}}
          <tr>
@@ -200,73 +215,83 @@
         </tr>
       {{/each}}
       <tr>
-            <td><!--spacer--></td>
-            <td>
-                <div class="ui fluid input">
-                    {{input type="text" value = AdvancedStandingsName}}
-                </div>
-            </td>
-            <td>
-                <button class="ui inverted green button" {{action "addAS"}}> 
-                Add &nbsp; <i class="add square icon"></i>
-                </button>
-            </td>
-        </tr>
+        <td>
+          <!--spacer-->
+        </td>
+        <td>
+          <div class="ui fluid input">
+            {{input type="text" value = AdvancedStandingsName}}
+          </div>
+        </td>
+        <td>
+          <button class="ui inverted green button" {{action "addAS"}}> 
+                    Add &nbsp; <i class="add square icon"></i>
+                    </button>
+        </td>
+      </tr>
     </table>
-    </div>
+  </div>
 
 
-   
-    <div class="ui bottom attached tab segment" data-tab="hsinfo">
-      <h2>Highschool Info</h2>
-          
+
+  <div class="ui bottom attached tab segment" data-tab="hsinfo">
+    <h2>Highschool Info</h2>
+
     <table class="ui fixed table">
-        <thead>
+      <thead>
         <tr>
-            <th>HighSchools</th>
-            <th><!--spacer--></th>
-            <th><!--spacer--></th>  
+          <th>HighSchools</th>
+          <th>
+            <!--spacer-->
+          </th>
+          <th>
+            <!--spacer-->
+          </th>
         </tr>
-        </thead>
-        {{#each highSchoolModel  as |highSchool|}}
-        <tr>
-            <td>
-                <div class="ui fluid input">
-                    {{input type="text" value = highSchool.name}}
-                </div>
-            </td>
-            <td>
-                <div class="ui inverted buttons">
-                    <button class="ui blue inverted button" {{action "saveHighSchool" highschool}}>Save</button>
-                    <div class="divider"/>
-                    <button class="ui red inverted button" {{action "deleteHighSchool" highschool}}>Delete</button>
-                </div> 
-            </td>
-            <td><!--spacer--></td>
-        </tr>
-    {{/each}}
-    <tr>
-            <td><!--spacer--></td>
-            <td>
-                <div class="ui fluid input">
-                    {{input type="text" value = newHighSchool}}
-                </div>
-            </td>
-            <td>
-                <button class="ui inverted green button" {{action "addHighSchool"}}> 
-                Add &nbsp; <i class="add square icon"></i>
-                </button>
-            </td>
-        </tr>
+      </thead>
+      {{#each highSchoolModel as |highSchool|}}
+      <tr>
+        <td>
+          <div class="ui fluid input">
+            {{input type="text" value = highSchool.name}}
+          </div>
+        </td>
+        <td>
+          <div class="ui inverted buttons">
+            <button class="ui blue inverted button" {{action "saveHighSchool" highschool}}>Save</button>
+            <div class="divider" />
+            <button class="ui red inverted button" {{action "deleteHighSchool" highschool}}>Delete</button>
+          </div>
+        </td>
+        <td>
+          <!--spacer-->
+        </td>
+      </tr>
+      {{/each}}
+      <tr>
+        <td>
+          <!--spacer-->
+        </td>
+        <td>
+          <div class="ui fluid input">
+            {{input type="text" value = newHighSchool}}
+          </div>
+        </td>
+        <td>
+          <button class="ui inverted green button" {{action "addHighSchool"}}> 
+                    Add &nbsp; <i class="add square icon"></i>
+                    </button>
+        </td>
+      </tr>
     </table>
-</div>
+  </div>
 
 
   <div class="ui bottom attached tab segment" data-tab="awards">
     <h2>Scholarship and Awards</h2>
-    
+
     <table class="ui fixed table">
-        <thead>
+      <thead>
         <tr>
             <th>Scholarships</th>
             <th><!--spacer--></th>
@@ -302,25 +327,87 @@
                 Add &nbsp; <i class="add square icon"></i>
                 </button>
             </td>
-        </tr>
+      </tr>
     </table>
   </div>
-  <div style="text-align: center">
-      Page {{pageNumber}} of {{totalPages}}
-  </div>
-
-
 {{/if}}
 
+<div style="margin: auto; width: 50%;">
+  <div class="ui fluid pagination nine item menu">
+    {{#if (inline-compare pageNumber '<' 5)}}
+      <div class="disabled item"></div>
+    {{/if}}
+    {{#if (inline-compare pageNumber '>' 3)}}
+      <a class="item" {{action "switchPage" 1}}>
+        1
+      </a> 
+    {{else}}
+      <div class="disabled item"></div>
+    {{/if}} 
+    {{#if (inline-compare pageNumber '>' 5)}}
+      <div class="disabled item">
+        ...
+      </div>
+    {{else}} 
+      {{#if (inline-compare pageNumber '===' 5)}}
+      <a class="item" {{action "switchPage" 2}}>
+        2
+      </a> 
+      {{/if}} 
+    {{/if}}
+    {{#if (inline-compare pageNumber '>' 2)}}
+      <a class="item" {{action "switchPage" (inline-math pageNumber '-' 2)}}>
+        {{inline-math pageNumber '-' 2}}
+      </a> 
+    {{else}}
+      <div class="disabled item"></div>
+    {{/if}}
+    {{#if (inline-compare pageNumber '>' 1)}}
+      <a class="item" {{action "switchPage" (inline-math pageNumber '-' 1)}}>
+        {{inline-math pageNumber '-' 1}}
+      </a>
+    {{else}}
+      <div class="disabled item"></div>
+    {{/if}}
 
+    <a class="active item">
+      {{pageNumber}}
+    </a> 
 
-
-
-
-
-
-
-
-
-
-
+    {{#if (inline-compare pageNumber '<' totalPages)}}
+      <a class="item" {{action "switchPage" (inline-math pageNumber '+ ' 1)}}>
+        {{inline-math pageNumber '+ ' 1}}
+      </a>
+    {{else}}
+      <div class="disabled item"></div>
+    {{/if}}
+    {{#if (inline-compare pageNumber '<' (inline-math totalPages '- ' 1))}}
+      <a class="item" {{action "switchPage" (inline-math pageNumber '+ ' 2)}}>
+        {{inline-math pageNumber '+ ' 2}}
+      </a>
+    {{else}}
+      <div class="disabled item"></div>
+    {{/if}}
+    {{#if (inline-compare pageNumber '<' (inline-math totalPages '- ' 4))}}
+      <div class="disabled item">
+        ...
+      </div>
+    {{else}}
+      {{#if (inline-compare pageNumber '===' (inline-math totalPages ' - ' 4))}}
+        <a class="item" {{action "switchPage" (inline-math totalPages '- ' 1 )}}>
+          {{inline-math totalPages '- ' 1 }}
+        </a>
+      {{/if}}
+    {{/if}}
+    {{#if (inline-compare pageNumber '<' (inline-math totalPages '- ' 2))}}
+      <a class="item" {{action "switchPage" totalPages}}>
+        {{totalPages}}
+      </a>
+    {{else}}
+      <div class="disabled item"></div>
+    {{/if}}
+    {{#if (inline-compare pageNumber '>' (inline-math totalPages '-' 4))}}
+        <div class="disabled item"></div>
+    {{/if}}
+  </div>
+</div>

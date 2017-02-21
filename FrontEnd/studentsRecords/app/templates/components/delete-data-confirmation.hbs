@@ -1,8 +1,12 @@
 <div class="ui modal">
-  <div class="header">Are you sure you want to delete ALL CURRENT DATA to reimport?
+  <div class="header">Are you sure you want to delete ALL CURRENT DATA to reimport?</div>
+  <div class="content">
+    <p>
+      All existing data must be removed before new data is imported. Removing old data is irreversible, so be sure you are ready before proceeding.
+    </p>
   </div>
   <div class="actions">
-    <div class="ui button" {{action "deleteAllData"}}>
+    <div class="ui red inverted button" {{action "deleteAllData"}}>
     	Delete All Data
     </div>
     <div class="ui button" {{action "cancel"}}>
