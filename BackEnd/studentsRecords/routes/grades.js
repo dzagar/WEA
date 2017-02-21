@@ -93,7 +93,10 @@ router.route('/:grade_id')
                     if (error) {
                         response.send(error);
                     } else {
-                        termCode.grades.splice(termCodes.grades.indexOf(grade.termCode), 1);
+                        let index = termCodes.grades.indexOf(grade.termCode);
+                        if (index > -1) {
+                            termCode.grades.splice(index, 1);
+                        }
 
                         CourseCode.findById(grade.courseCode, function(error, courseCode) {
                             if (error) {

@@ -3,6 +3,7 @@ var router = express.Router();
 var HighSchoolCourse = require('../models/highSchoolCourse');
 var HighSchoolSubject = require('../models/highSchoolSubject');
 var HighSchool = require('../models/highSchool');
+var HighSchoolGrade = require('../models/highSchoolGrade');
 var Student = require('../models/student');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
@@ -185,7 +186,60 @@ router.route('/:highSchoolCourses_id')
             if (error) {
                 response.send(error);
             } else {
-                response.json({deleted: highSchoolCourse});
+                HighSchool.findById(highSchoolCourse.school, function (error, school) {
+                    if (error) {
+                        response.send(error);
+                    } else {
+                        let index = school.courses.indexOf(highSchoolCourse.school);
+                        if (index > -1) {
+                            school.courses.splice(index, 1);
+                        }
+
+                        HighSchoolSubject.findById(highSchoolCourse.subject, function (error, subject) {
+                            if (error) {
+                                response.send(error);
+                            } else {
+                                let index = subject.courses.indexOf(highSchoolCourse.subject);
+                                if (index > -1) {
+                                    subject.courses.splice(index, 1);
+                                }
+
+                                let completed = 0;
+                                for (let i = 0; i < highSchoolCourse.grades.length; i++) {
+                                    HighSchoolGrade.findById(highSchoolCourse.grades[i], function (error, grade) {
+                                        if (error) {
+                                            response.send(error);
+                                        } else {
+                                            grade.source = null;
+                                            grade.save(function (error) {
+                                                if (error) {
+                                                    response.send(error);
+                                                } else {
+                                                    completed++;
+                                                    if (completed === highSchoolCourse.grades.length) {
+                                                        subject.save(function (error) {
+                                                            if (error) {
+                                                                response.send(error);
+                                                            } else {
+                                                                school.save(function (error) {
+                                                                    if (error) {
+                                                                        response.send(error);
+                                                                    } else {
+                                                                        response.json({deleted: highSchoolCourse});
+                                                                    }
+                                                                });
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
             }
         });
     });
