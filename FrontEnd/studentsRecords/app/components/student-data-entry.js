@@ -71,6 +71,7 @@ export default Ember.Component.extend({
   }),
 
   currentIndexChange: Ember.observer('currentIndex', function () {
+    this.get('undoManager').clear();
     this.setCurrentStudent(this.get('currentIndex'));
   }),
 
@@ -183,15 +184,30 @@ export default Ember.Component.extend({
     },
 
     saveStudent () {
-      var updatedStudent = this.get('currentStudent');
-      var res = this.get('store').peekRecord('residency', this.get('selectedResidency')); 
-      var gen = this.get('store').peekRecord('gender', this.get('selectedGender'));
-      //updatedStudent.set('gender', this.get('selectedGender'));
-      updatedStudent.set('DOB', this.get('selectedDate'));
-      updatedStudent.set('gender', gen);
-      updatedStudent.set('resInfo', res);
-      updatedStudent.save().then(() => {
-        //     this.set('isStudentFormEditing', false);
+      //this doesnt work
+      this.get('store').query('student', {
+        _id: this.get('currentStudent.id')
+      }).then((student)=>{
+        console.log(student);
+        var self = this;
+        this.get('undoManager').add({
+          undo: function(){
+            // THIS DOES NOT WORK I DONT THINK
+            console.log("undo save"); 
+            student.save();
+          }
+        });
+        var updatedStudent = this.get('currentStudent');
+        var res = this.get('store').peekRecord('residency', this.get('selectedResidency')); 
+        console.log(res);
+        var gen = this.get('store').peekRecord('gender', this.get('selectedGender'));
+        //updatedStudent.set('gender', this.get('selectedGender'));
+        updatedStudent.set('DOB', this.get('selectedDate'));
+        updatedStudent.set('gender', gen);
+        updatedStudent.set('resInfo', res);
+        updatedStudent.save().then(() => {
+          //     this.set('isStudentFormEditing', false);
+        });
       });
     },
 
@@ -240,14 +256,22 @@ export default Ember.Component.extend({
     },
 
     onFieldChange(){
+      console.log("on field change");
       this.set('noFieldChange', false);
     },
 
     onFocusOut(){
-        if (this.get('noFieldChange')){
+        console.log("focus out called");
+        if (this.get('noFieldChange')){   //if a field hasnt been changed
+          console.log("undid field");
           this.get('undoManager').undo();
+        } else {
+          this.set("noFieldChange", true);
         }
-        this.set('noFieldChange', false);
+        if (!this.get('undoManager').hasUndo()){   //if there are no undos left on stack
+          console.log("no undos left");
+          this.set('noFieldChange', true);
+        }
     },
 
     lastNameFocusIn(){
@@ -272,8 +296,7 @@ export default Ember.Component.extend({
     },
 
     genderFocusIn(){
-      console.log("entered gender fcn");
-      var gender = this.get('selectedGender');
+      var gender = this.get('currentStudent.gender.id');
       var self = this;
       this.get('undoManager').add({
         undo: function(){
@@ -284,11 +307,13 @@ export default Ember.Component.extend({
     },
 
     selectGender (gender){
+      this.send('onFieldChange');
       this.set('selectedGender', gender);
     },
 
     selectResidency (residency){
       //console.log(residency);
+      this.send('onFieldChange');
       this.set('selectedResidency', residency);
     },
 
