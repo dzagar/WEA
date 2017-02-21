@@ -78,24 +78,24 @@
   <div class="ui bottom attached active tab segment"data-tab="basics">
     <!-- student basic information !-->
 
-    <div class="ui grid">
+    <div class="ui grid studentInfo">
       <div class="ui right aligned  seven wide column">
         <div class="ui relaxed items form">
-          <div class=" item inline field">
+          <div class="item inline field">
             <label>Student Number</label>
-            {{input size="10" type="number"  value = currentStudent.studentNumber}}
+            {{input size="10" type="number"  value = currentStudent.studentNumber readonly=true}}
           </div>
           <div class="item inline field">
             <label>First Name</label>
-            {{input type="text"  value = currentStudent.firstName}}
+            {{input type="text"  value = currentStudent.firstName focus-in = (action "firstNameFocusIn") focus-out = (action "onFocusOut" value)}}
           </div>
           <div class="item inline field">
             <label>Last Name</label>
-            {{input type="text" value = currentStudent.lastName }}
+            {{input type="text" value = currentStudent.lastName focus-in = (action "lastNameFocusIn") focus-out = (action "onFocusOut" value)}}
           </div>
           <div class="item inline field">
             <label>Gender</label>
-            <select id="ddlGender" onchange={{action 'selectGender' value="target.value"}}>
+            <select id="ddlGender" onchange={{action 'selectGender' value="target.value"}} onclick = {{action 'genderFocusIn'}}>
               {{#each genderModel as |genderChoice|}}
               <option value={{genderChoice.id}} selected={{eq currentStudent.genInfo.id genderChoice.id}}>{{genderChoice.name}}</option>
               {{/each}}
@@ -103,7 +103,7 @@
           </div>
           <div class="item inline field">
             <label>Date of Birth</label>
-            <input value={{selectedDate}} type="date" onchange={{action 'assignDate' value="target.value"}}>
+            <input value={{selectedDate}} type="date" onchange={{action 'assignDate' value="target.value"}} onFocus = {{action 'dobFocusIn'}}>
           </div>
           <div class="item inline field">
             <label>Residency</label>

@@ -1,7 +1,8 @@
 import Ember from 'ember';
+import UndoManager from 'npm:undo-manager';
 
 export default Ember.Component.extend({
-
+  undoManager: null,
   currentAdvancedStanding: null,
   currentHighSchool: null,
   currentScholarship: null,
@@ -18,6 +19,7 @@ export default Ember.Component.extend({
   newHighSchoolObj: null,
   newScholarshipName:"",
   newScholarshipObj: null,
+  noFieldChange: true,
   offset: null,
   pageNumber: Ember.computed('offset', 'pageSize', function() {
       let num = this.get('offset')/this.get('pageSize')+1;
@@ -105,6 +107,9 @@ export default Ember.Component.extend({
       // Show first student data
       self.set('currentIndex', self.get('firstIndex'));
     });
+
+    //Set up UNDO
+    this.set('undoManager', new UndoManager());
   },
   setCurrentStudent: function (index) {
     var student = this.get('studentsRecords').objectAt(index);
@@ -172,7 +177,6 @@ export default Ember.Component.extend({
     Ember.$('.menu .item').tab();
   },
 
-
   actions: {
 
     //Calls the change offset function
@@ -227,6 +231,60 @@ export default Ember.Component.extend({
       this.set('showDeleteConfirmation', false);
     },
 
+    firstNameFocusIn() {
+        var fName = this.get('currentStudent.firstName');
+        var self = this;
+        this.get('undoManager').add({
+          undo: function(){
+            self.set('currentStudent.firstName', fName);
+          }
+        });
+    },
+
+    onFieldChange(){
+      this.set('noFieldChange', false);
+    },
+
+    onFocusOut(){
+        if (this.get('noFieldChange')){
+          this.get('undoManager').undo();
+        }
+        this.set('noFieldChange', false);
+    },
+
+    lastNameFocusIn(){
+        var lName = this.get('currentStudent.lastName');
+        var self = this;
+        this.get('undoManager').add({
+          undo: function(){
+            self.set('currentStudent.lastName', lName);
+          }
+        });
+    },
+
+    dobFocusIn(){
+        var dob = this.get('currentStudent.DOB');
+        var self = this;
+        this.get('undoManager').add({
+          undo: function(){
+            self.set('currentStudent.DOB', dob);
+            self.send('assignDate', dob);
+          }
+        });
+    },
+
+    genderFocusIn(){
+      console.log("entered gender fcn");
+      var gender = this.get('selectedGender');
+      var self = this;
+      this.get('undoManager').add({
+        undo: function(){
+          self.set('selectedGender', gender);
+          Ember.$("#ddlGender").val(gender);
+        }
+      });
+    },
+
     selectGender (gender){
       this.set('selectedGender', gender);
     },
@@ -240,22 +298,23 @@ export default Ember.Component.extend({
       this.set('selectedDate', date);
     },
     undoSave(){
-      //Reset all text fields (number, first name, last name)
-      this.get('currentStudent').rollbackAttributes();
-      //Reset date
-      var date = this.get('currentStudent').get('DOB');
-      var datestring = date.toISOString().substring(0, 10);
-      this.set('selectedDate', datestring);
+      this.get('undoManager').undo();
+      // //Reset all text fields (number, first name, last name)
+      // this.get('currentStudent').rollbackAttributes();
+      // //Reset date
+      // var date = this.get('currentStudent').get('DOB');
+      // var datestring = date.toISOString().substring(0, 10);
+      // this.set('selectedDate', datestring);
       
-      //Reset gender
-      var gender = this.get('currentStudent').get('gender.id');
-      Ember.$("#ddlGender").val(gender);
-      this.set('selectedGender', this.get('currentStudent').get('gender'));
+      // //Reset gender
+      // var gender = this.get('currentStudent').get('gender.id');
+      // Ember.$("#ddlGender").val(gender);
+      // this.set('selectedGender', this.get('currentStudent').get('gender'));
 
-      //Reset residency
-      var resInfo = this.get('currentStudent').get('resInfo').get('id');
-      Ember.$("#ddlResidency").val(resInfo);
-      this.set('selectedResidency', this.get('currentStudent').get('resInfo'));
+      // //Reset residency
+      // var resInfo = this.get('currentStudent').get('resInfo').get('id');
+      // Ember.$("#ddlResidency").val(resInfo);
+      // this.set('selectedResidency', this.get('currentStudent').get('resInfo'));
 
     },
     findStudent(){
