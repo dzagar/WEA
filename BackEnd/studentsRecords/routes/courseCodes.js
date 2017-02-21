@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var CourseCode = require('../models/courseCode');
+var Grade = require('../models/grade');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
 var parseJSON = bodyParser.json();
@@ -70,7 +71,23 @@ router.route('/:courseCode_id')
             if(error) {
                 response.send(error);
             } else {
-                response.send({deleted: courseCode});
+                for (let i = 0; i < courseCode.grades.length; i++) {
+                    Grade.findById(courseCode.grades[i], function (error, grade) {
+                        if (error) {
+                            response.send(error);
+                        } else {
+                            grade.courseCode = null;
+
+                            grade.save(function (error) {
+                                if (error) {
+                                    response.send(error);
+                                } else {
+                                     response.json({deleted: courseCode});
+                                }
+                            });
+                        }
+                    });
+                }
             }
         });
     });
