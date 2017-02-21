@@ -77,11 +77,33 @@ router.route('/:gender_id')
         });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
-        Gender.findByIdAndRemove(request.params.gender_id, function(error, deleted) {
+        Gender.findByIdAndRemove(request.params.gender_id, function(error, gender) {
             if (error) {
                 response.send(error);
             } else {
-                response.json({gender: deleted});
+
+                let completed = 0;
+                for (let i = 0; i < gender.students.length; i++)
+                {
+                    Student.findById(gender.students[i], function (error, student) {
+                        if(error) {
+                            response.send(error);
+                        } else {
+                            student.gender = null;
+
+                            student.save(function (error) {
+                                if (error) {
+                                    response.send(error);
+                                } else {
+                                    completed++;
+                                    if (completed === gender.students.length) {
+                                        response.json({deleted: gender});
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
             }
         });
     });

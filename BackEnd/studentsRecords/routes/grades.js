@@ -88,7 +88,7 @@ router.route('/:grade_id')
             if(error) {
                 response.send(error);
             } else {
-                response.send({deleted: grade});
+                response.json({deleted: grade});
             }
         });
     });

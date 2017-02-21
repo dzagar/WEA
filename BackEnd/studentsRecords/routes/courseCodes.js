@@ -71,6 +71,7 @@ router.route('/:courseCode_id')
             if(error) {
                 response.send(error);
             } else {
+                let completed = 0;
                 for (let i = 0; i < courseCode.grades.length; i++) {
                     Grade.findById(courseCode.grades[i], function (error, grade) {
                         if (error) {
@@ -82,7 +83,10 @@ router.route('/:courseCode_id')
                                 if (error) {
                                     response.send(error);
                                 } else {
-                                     response.json({deleted: courseCode});
+                                    completed++;
+                                    if (completed === courseCode.grades.length) {
+                                        response.json({deleted: courseCode});
+                                    }
                                 }
                             });
                         }
