@@ -584,6 +584,7 @@ export default Ember.Component.extend({
 								var hscourseinfoArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase(),worksheet['G1'].v.toUpperCase(),worksheet['H1'].v.toUpperCase()];
 								if (VerificationFunction(hscourseinfoCheckerArray,hscourseinfoArray))
 								{
+									self.pushOutput("Importing Student Secondary School Information");
 									var gradeValues = [];
 									var highschoolSubjectValues = [];
 									var highschoolCourseValues = [];
@@ -613,7 +614,7 @@ export default Ember.Component.extend({
 											{
 												rollBackImport = true;
 												doneReading = true;
-												DisplayErrorMessage("Improperly formated data in  row " (i - 2));
+												self.pushOutput("<span style='color:red'>Improperly formated data in  row " (i) + "</span>");
 											}
 											//otherwise get data
 											else
@@ -622,191 +623,186 @@ export default Ember.Component.extend({
 												currentStudentNumber = studentNumber.v;
 
 												//if there is information to include...
-												if (!(schoolName.v == "NONE FOUND"))
+												if (!(schoolName.v == "NONE FOUND") && level && source && units && subject && description && grade)
 												{
-													gradeValues[i - 2] = {"studentNumber": currentStudentNumber, "schoolName" : schoolName.v, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v, "grade": grade.v};
+													gradeValues.push({"studentNumber": currentStudentNumber, "schoolName" : schoolName.v, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v, "grade": grade.v});
 													if (checkUniqueSubject(highschoolSubjectValues, subject.v, description.v))
 													{
-														highschoolSubjectValues[i - 2] = {"name" : subject.v, "description": description.v};
+														highschoolSubjectValues.push({"name" : subject.v, "description": description.v});
 													}
 													if (checkUniqueHSCourse(highschoolCourseValues, schoolName.v, level.v, source.v, units.v, subject.v, description.v))
 													{
-														highschoolCourseValues[i - 2] = {"studentNumber": currentStudentNumber, "schoolName" : schoolName.v, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v};
+														highschoolCourseValues.push({"studentNumber": currentStudentNumber, "schoolName" : schoolName.v, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v});
 													}
+												}
+												else
+												{
+													rollBackImport = true;
+													doneReading = true;
+													self.pushOutput("<span style='color:red'>Improperly formated data in  row " (i) + "</span>");
 												}
 											}
 
 										}
 										else if (!studentNumber && !schoolName && !level && !subject && !description && !source && !units && !grade)
 										{
-											console.log("all fields are empty");
+
 											doneReading = true;
 										}
 										else
 										{
-											//switching school but not student
-											if (schoolName)
-											{
-												currentSchoolName = schoolName.v;
-												gradeValues[i - 2] = {"studentNumber": currentStudentNumber, "schoolName" : schoolName.v, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v, "grade": grade.v};
-												if (checkUniqueSubject(highschoolSubjectValues, subject.v, description.v))
+											if (level && source && units && subject && description && grade)
+											{												
+												//switching school but not student
+												if (schoolName)
 												{
-													highschoolSubjectValues[i - 2] = {"name" : subject.v, "description": description.v};
+													currentSchoolName = schoolName.v;
+													gradeValues.push({"studentNumber": currentStudentNumber, "schoolName" : schoolName.v, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v, "grade": grade.v});
+													if (checkUniqueSubject(highschoolSubjectValues, subject.v, description.v))
+													{
+														highschoolSubjectValues.push({"name" : subject.v, "description": description.v});
+													}
+													if (checkUniqueHSCourse(highschoolCourseValues, schoolName.v, level.v, source.v, units.v, subject.v, description.v))
+													{
+														highschoolCourseValues.push({"studentNumber": currentStudentNumber, "schoolName" : schoolName.v, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v});
+													}
 												}
-												if (checkUniqueHSCourse(highschoolCourseValues, schoolName.v, level.v, source.v, units.v, subject.v, description.v))
+												//switching neither school not student
+												else
 												{
-													highschoolCourseValues[i - 2] = {"studentNumber": currentStudentNumber, "schoolName" : schoolName.v, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v};
+													gradeValues.push({"studentNumber": currentStudentNumber, "schoolName" : currentSchoolName, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v, "grade": grade.v});
+													if (checkUniqueSubject(highschoolSubjectValues, subject.v, description.v))
+													{
+														highschoolSubjectValues.push({"name" : subject.v, "description": description.v});
+													}
+													if (checkUniqueHSCourse(highschoolCourseValues, currentSchoolName, level.v, source.v, units.v, subject.v, description.v))
+													{
+														highschoolCourseValues.push({"studentNumber": currentStudentNumber, "schoolName" : currentSchoolName, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v});
+													}
 												}
 											}
-											//switching neither school not student
 											else
 											{
-												gradeValues[i - 2] = {"studentNumber": currentStudentNumber, "schoolName" : currentSchoolName, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v, "grade": grade.v};
-												if (checkUniqueSubject(highschoolSubjectValues, subject.v, description.v))
-												{
-													highschoolSubjectValues[i - 2] = {"name" : subject.v, "description": description.v};
-												}
-												if (checkUniqueHSCourse(highschoolCourseValues, currentSchoolName, level.v, source.v, units.v, subject.v, description.v))
-												{
-													highschoolCourseValues[i - 2] = {"studentNumber": currentStudentNumber, "schoolName" : currentSchoolName, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v};
-												}
+												rollBackImport = true;
+												doneReading = true;
+												self.pushOutput("<span style='color:red'>Improperly formated data in  row " (i) + "</span>");												
 											}
 										}
 									}
-									console.log(gradeValues);
 									if (!rollBackImport)
 									{
-										var subjectsToImport = [];
-										var uniqueSubjects = [];
-										var numberOfSubjects = -1;
+										self.pushOutput("Successful read of file has completed. Beginning import of");
+										self.pushOutput(highschoolSubjectValues.length + " Subjects");
+										self.pushOutput(highschoolCourseValues.length + " Courses");
+										self.pushOutput(gradeValues.length + " Grades");
 										var numberOfSubjectsSaved = 0;
 										var startedSavingSubjects = false;
 										var subjectSavingMutex = Mutex.create();
 										for (var i = 0; i < highschoolSubjectValues.length; i++)
 										{
-											//if the subject has not yet been added create it and then course then grade
-											if (!uniqueSubjects.includes(highschoolSubjectValues[i]) && highschoolSubjectValues[i])
-											{
-												uniqueSubjects[uniqueSubjects.length] = highschoolSubjectValues[i];
-												var subjectName = highschoolSubjectValues[i].name;
-												var subjectDescription = highschoolSubjectValues[i].description;
-												subjectsToImport[subjectsToImport.length] = self.get('store').createRecord('high-school-subject', {
-													name: subjectName,
-													description: subjectDescription
-												});
-												subjectsToImport[subjectsToImport.length - 1].save().then(function() {
-													numberOfSubjectsSaved++;
-													//if the last unique subject has been uploaded
-														if (subjectsToImport.length === numberOfSubjects && numberOfSubjectsSaved === numberOfSubjects && !startedSavingSubjects)
+											var subjectName = highschoolSubjectValues[i].name;
+											var subjectDescription = highschoolSubjectValues[i].description;
+											var newSubjectToSave = self.get('store').createRecord('high-school-subject', {
+												name: subjectName,
+												description: subjectDescription
+											});
+											newSubjectToSave.save().then(function() {
+												numberOfSubjectsSaved++;
+												subjectSavingMutex.lock(function() {
+													if (numberOfSubjectsSaved === highschoolSubjectValues.length && !startedSavingSubjects)
+													{
+														startedSavingSubjects = true;
+														self.pushOutput("<span style='color:green'>Import of subjects successful!</span>");
+														//begin importing the courses
+														var courseMutex = Mutex.create();
+														var numberOfCourses = highschoolCourseValues.length;
+														var inMutexCount = 0;
+														var doneCourseSave = false;
+														//loop through each course record
+														for (var k = 0; k < highschoolCourseValues.length; k++)
 														{
-															console.log("done saving Subject");
-															startedSavingSubjects = true;
-															//begin importing the courses
-															var coursesToImport = [];
-															var uniqueCourses = [];
-															var courseMutex = Mutex.create();
-															var numberOfCourses = -1;
-															var inMutexCount = 0;
-															var doneCourseSave = false;
-															//loop through each course record
-															for (var k = 0; k < highschoolCourseValues.length; k++)
-															{
-
-																if (!uniqueCourses.includes(highschoolCourseValues[k]) && highschoolCourseValues[k])
-																{
-																	//add course to array of unique courses
-																	uniqueCourses[uniqueCourses.length] = highschoolCourseValues[k];
-																	courseMutex.lock(function() {
-																		var inMutexIndex = inMutexCount++;
-																		while (!highschoolCourseValues[inMutexIndex])
-																		{
-																			inMutexIndex = inMutexCount++;
-																		}
-																		if (highschoolCourseValues[inMutexIndex])
-																		{
-																			var courseSchoolName = highschoolCourseValues[inMutexIndex].schoolName;
-																			var courseLevel = highschoolCourseValues[inMutexIndex].level;
-																			var courseUnit = highschoolCourseValues[inMutexIndex].unit;
-																			var courseSource = highschoolCourseValues[inMutexIndex].source;
-																			var subjectNameParam = highschoolCourseValues[inMutexIndex].name;
-																			var subjectDescParam = highschoolCourseValues[inMutexIndex].description;
-																			self.get('store').queryRecord('high-school-subject', {name: subjectNameParam, description: subjectDescParam}).then(function(subjectObj) {
-																				self.get('store').queryRecord('high-school', {schoolName: courseSchoolName}).then(function(highSchoolObj) {
-																					coursesToImport[coursesToImport.length] = self.get('store').createRecord('high-school-course', {
-																						level: courseLevel,
-																						unit: courseUnit,
-																						source: courseSource
-																						//Once the course is created
-																					});
-																					coursesToImport[coursesToImport.length - 1].set('school', highSchoolObj);
-																					coursesToImport[coursesToImport.length - 1].set('subject', subjectObj);
-																					coursesToImport[coursesToImport.length - 1].save().then(function() {
-																							if (coursesToImport.length === numberOfCourses && !doneCourseSave)
-																							{
-																								console.log("done saving courses");
-																								doneCourseSave = true;
-																								var courseGradesToImport = [];
-																								var uniqueCourseGrades = [];
-																								var gradeMutex = Mutex.create();
-																								var numberOfGrades = -1;
-																								var inGradeMutexCount = 0;
-																								var doneGradeImport = false;
-																								//import grades here
-																								for (var n = 0; n < gradeValues.length; n++)
-																								{
-																									if (!uniqueCourseGrades.includes(gradeValues[n]) && gradeValues[n])
-																									{
-																										uniqueCourseGrades[uniqueCourseGrades.length] = gradeValues[n];
-																										gradeMutex.lock(function() {
-																											var inGradeMutexIndex = inGradeMutexCount++;
-																											while (!gradeValues[inGradeMutexIndex])
-																											{
-																												inGradeMutexIndex = inGradeMutexCount++;
-																											}
-																											
-																											var gradeCourseSchoolName = gradeValues[inGradeMutexIndex].schoolName;
-																											var gradeCourseLevel = gradeValues[inGradeMutexIndex].level;
-																											var gradeCourseUnit = gradeValues[inGradeMutexIndex].unit;
-																											var gradeCourseSource = gradeValues[inGradeMutexIndex].source;
-																											var gradeSubjectNameParam = gradeValues[inGradeMutexIndex].name;
-																											var gradeSubjectDescParam = gradeValues[inGradeMutexIndex].description;
-																											var gradeStudentNumber = gradeValues[inGradeMutexIndex].studentNumber;
-																											var recordGrade = gradeValues[inGradeMutexIndex].grade;
-																											console.log(recordGrade);
-																											self.get('store').queryRecord('student', {number: gradeStudentNumber}).then(function(studentObj) {
-																												var studentNumberID = studentObj.id;
-																												self.get('store').queryRecord('high-school-course', {schoolName: gradeCourseSchoolName, subjectName: gradeSubjectNameParam, subjectDescription: gradeSubjectDescParam,  level: gradeCourseLevel, source: gradeCourseSource, unit: gradeCourseUnit}).then(function(highSchoolCourseObj) {
-																													var courseID = highSchoolCourseObj.id;
-																													courseGradesToImport[courseGradesToImport.length] = self.get('store').createRecord('high-school-grade', {
-																														mark: recordGrade
-																													});
-																													courseGradesToImport[courseGradesToImport.length - 1].set('student', studentObj);
-																													courseGradesToImport[courseGradesToImport.length - 1].set('source', highSchoolCourseObj);
-																													courseGradesToImport[courseGradesToImport.length - 1].save();
-																												});
-																											});
-
-																										});
-																									}
-																								}
-																							}
-																					});
-																				});
+															courseMutex.lock(function() {
+																var inMutexIndex = inMutexCount++;
+																	var courseSchoolName = highschoolCourseValues[inMutexIndex].schoolName;
+																	var courseLevel = highschoolCourseValues[inMutexIndex].level;
+																	var courseUnit = highschoolCourseValues[inMutexIndex].unit;
+																	var courseSource = highschoolCourseValues[inMutexIndex].source;
+																	var subjectNameParam = highschoolCourseValues[inMutexIndex].name;
+																	var subjectDescParam = highschoolCourseValues[inMutexIndex].description;
+																	self.get('store').queryRecord('high-school-subject', {name: subjectNameParam, description: subjectDescParam}).then(function(subjectObj) {
+																		self.get('store').queryRecord('high-school', {schoolName: courseSchoolName}).then(function(highSchoolObj) {
+																			var newCourseToSave = self.get('store').createRecord('high-school-course', {
+																				level: courseLevel,
+																				unit: courseUnit,
+																				source: courseSource
+																				//Once the course is created
 																			});
-																		}
+																			newCourseToSave.set('school', highSchoolObj);
+																			newCourseToSave.set('subject', subjectObj);
+																			newCourseToSave.save().then(function() {
+																				if (inMutexIndex === numberOfCourses && !doneCourseSave)
+																				{
+																					doneCourseSave = true;
+																					self.pushOutput("<span style='color:green'>Import of courses successful!</span>");
+																					
+																					var gradeMutex = Mutex.create();
+																					var inGradeMutexCount = 0;
+																					var numberOfGradesImported = 0;
+																					var doneGradeImport = false;
+																					//import grades here
+																					for (var n = 0; n < gradeValues.length; n++)
+																					{
+																						uniqueCourseGrades[uniqueCourseGrades.length] = gradeValues[n];
+																						gradeMutex.lock(function() {
+																							var inGradeMutexIndex = inGradeMutexCount++;
+																																															
+																							var gradeCourseSchoolName = gradeValues[inGradeMutexIndex].schoolName;
+																							var gradeCourseLevel = gradeValues[inGradeMutexIndex].level;
+																							var gradeCourseUnit = gradeValues[inGradeMutexIndex].unit;
+																							var gradeCourseSource = gradeValues[inGradeMutexIndex].source;
+																							var gradeSubjectNameParam = gradeValues[inGradeMutexIndex].name;
+																							var gradeSubjectDescParam = gradeValues[inGradeMutexIndex].description;
+																							var gradeStudentNumber = gradeValues[inGradeMutexIndex].studentNumber;
+																							var recordGrade = gradeValues[inGradeMutexIndex].grade;
+																							console.log(recordGrade);
+																							self.get('store').queryRecord('student', {number: gradeStudentNumber}).then(function(studentObj) {
+																								var studentNumberID = studentObj.id;
+																								self.get('store').queryRecord('high-school-course', {schoolName: gradeCourseSchoolName, subjectName: gradeSubjectNameParam, subjectDescription: gradeSubjectDescParam,  level: gradeCourseLevel, source: gradeCourseSource, unit: gradeCourseUnit}).then(function(highSchoolCourseObj) {
+																									var courseID = highSchoolCourseObj.id;
+																									var newGradeToSave = self.get('store').createRecord('high-school-grade', {
+																										mark: recordGrade
+																									});
+																									newGradeToSave.set('student', studentObj);
+																									newGradeToSave.set('source', highSchoolCourseObj);
+																									newGradeToSave.save().then(function() {
+																										numberOfGradesImported++;
+																										if (numberOfGradesImported == gradeValues.length && !doneGradeImport)
+																										{
+																											doneGradeImport = true;
+																											self.pushOutput("<span style='color:green'>Import of grades successful!</span>");
+																											self.pushOutput("<span style='color:green'>All Imports successful!</span>");
+																											Ember.$("#btnContinue").removeClass("disabled");
+																											Ember.$("#recordPlans").addClass("completed");
+																										}
+																									});
+																								});
+																							});
+																						});																						
+																					}
+																				}
+																		});
 																	});
-																}
-															}
-															numberOfCourses = uniqueCourses.length
+																});
+															});															
 														}
+													}
 												});
-											}
+											});											
 										}
-										numberOfSubjects = uniqueSubjects.length;
 									}
 								}
-								break;
-								}
+							}
+							break;
 							case ImportState.RECORDPLANS:
 							{
 								var recordplansCheckerArray = ['STUDENTNUMBER','TERM','PROGRAM','LEVEL','LOAD','PLAN'];
