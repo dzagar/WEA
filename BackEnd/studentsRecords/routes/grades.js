@@ -88,7 +88,37 @@ router.route('/:grade_id')
             if(error) {
                 response.send(error);
             } else {
-                response.json({deleted: grade});
+
+                TermCode.findById(grade.termCode, function(error, termCode) {
+                    if (error) {
+                        response.send(error);
+                    } else {
+                        termCode.grades.splice(termCodes.grades.indexOf(grade.termCode), 1);
+
+                        CourseCode.findById(grade.courseCode, function(error, courseCode) {
+                            if (error) {
+                                response.send(error);
+                            } else {
+                                courseCode.grades.splice(courseCodes.grades.indexOf(grade.termCode), 1);
+
+                                termCode.save(function (error) {
+                                    if (error) {
+                                        response.send(error);
+                                    } else {
+
+                                        courseCode.save(function (error) {
+                                            if (error) {
+                                                response.send(error);
+                                            } else {
+                                                response.json({deleted: grade});
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
             }
         });
     });
