@@ -109,8 +109,7 @@ function checkUniqueCourse(sourceArray, newLetter, newNumber, newUnit)
 
 function VerificationFunction(sourceArray,newArray)
 {
-	console.log("Got here baby!");
-	for(var i=0;i<newArray.length;i++)
+	for(var i=0;i<newArray.length;i++) //go through the arrays and compare values, any non-matching values create an error 
 	{
 		if(sourceArray[i]!=newArray[i])
 		{
@@ -121,468 +120,6 @@ function VerificationFunction(sourceArray,newArray)
 
 	return true;
 }
-
-
-
-function genderVerification(worksheet)
-{
-	var currentString=worksheet['A1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='NAME')
-	{
-		DisplayErrorMessage("Please fix the 'name' header in the imported file!");
-		return false;
-	}
-
-	return true;
-}
-
-function residencyVerification(worksheet)
-{
-	var currentString=worksheet['A1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='NAME')
-	{
-		DisplayErrorMessage("Please fix the 'name' header in the imported file!");
-		return false;
-	}
-
-	return true;
-}
-
-function termCodeVerification(worksheet)
-{
-	var currentString=worksheet['A1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='NAME')
-	{
-		DisplayErrorMessage("Please fix the 'name' header in the imported file!");
-		return false;
-	}
-
-	return true;
-}
-
-function courseCodeVerification(worksheet)
-{
-	var currentString=worksheet['A1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='STUDENTNUMBER')
-	{
-		DisplayErrorMessage("Please fix the 'studentnumber' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['B1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='TERM')
-	{
-		DisplayErrorMessage("Please fix the 'term' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['C1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='COURSELETTER')
-	{
-		DisplayErrorMessage("Please fix the 'courseletter' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['D1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='COURSENUMBER')
-	{
-		DisplayErrorMessage("Please fix the 'coursenumber' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['E1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='SECTION')
-	{
-		DisplayErrorMessage("Please fix the 'section' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['F1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='GRADE')
-	{
-		DisplayErrorMessage("Please fix the 'grade' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['G1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='NOTE')
-	{
-		DisplayErrorMessage("Please fix the 'note' header in the imported file!");
-		return false;
-	}
-
-	return true;
-}
-
-function studentVerification(worksheet)
-{
-	var currentString=worksheet['A1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='STUDENTNUMBER')
-	{
-		DisplayErrorMessage("Please fix the 'studentnumber' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['B1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='FIRSTNAME')
-	{
-		DisplayErrorMessage("Please fix the 'firstname' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['C1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='LASTNAME')
-	{
-		DisplayErrorMessage("Please fix the 'lastname' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['D1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='GENDER')
-	{
-		DisplayErrorMessage("Please fix the 'gender' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['E1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='DOB')
-	{
-		DisplayErrorMessage("Please fix the 'DOB' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['F1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='RESIDENCY')
-	{
-		DisplayErrorMessage("Please fix the 'residency' header in the imported file!");
-		return false;
-	}
-
-	return true;
-}
-function UndergraduateCoursesVerification(workbook)
-{
-	var currentString=workbook['A1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='COURSELETTER')
-	{
-		DisplayErrorMessage("Please fix the 'courseletter' header in the imported file!");
-		return false;
-	}
-
-	currentString=workbook['B1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='COURSENUMBER')
-	{
-		DisplayErrorMessage("Please fix the 'coursenumber' header in the imported file!");
-		return false;
-	}
-
-	currentString=workbook['C1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='NAME')
-	{
-		DisplayErrorMessage("Please fix the 'name' header in the imported file!");
-		return false;
-	}
-
-	currentString=workbook['D1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='UNIT')
-	{
-		DisplayErrorMessage("Please fix the 'unit' header in the imported file!");
-		return false;
-	}
-
-
-	return true;
-
-}
-function secondarySchoolVerification(worksheet)
-{
-	var currentString=worksheet['A1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='SCHOOL NAME')
-	{
-		DisplayErrorMessage("Please fix the 'school name' header in the imported file!");
-	}
-
-	return true;
-}
-
-function studentHighSchoolVerification(worksheet)
-{
-	var currentString=worksheet['A1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='STUDENTNUMBER')
-	{
-		DisplayErrorMessage("Please fix the 'studentnumber' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['B1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='SCHOOLNAME')
-	{
-		DisplayErrorMessage("Please fix the 'schoolname' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['C1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='LEVEL')
-	{
-		DisplayErrorMessage("Please fix the 'level' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['D1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='SUBJECT')
-	{
-		DisplayErrorMessage("Please fix the 'subject' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['E1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='DESCRIPTION')
-	{
-		DisplayErrorMessage("Please fix the 'description' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['F1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='SOURCE')
-	{
-		DisplayErrorMessage("Please fix the 'source' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['G1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='UNITS')
-	{
-		DisplayErrorMessage("Please fix the 'units' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['H1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='GRADE')
-	{
-		DisplayErrorMessage("Please fix the 'grade' header in the imported file!");
-		return false;
-	}
-
-	return true;
-}
-
-function ScholarshipVerification(worksheet)
-{
-	var currentString=worksheet['A1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='STUDENTNUMBER')
-	{
-		DisplayErrorMessage("Please fix the 'studentnumber' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['B1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='NOTE')
-	{
-		DisplayErrorMessage("Please fix the 'note' header in the imported file!");
-		return false;
-	}
-
-	return true;
-}
-
-function AdvancedStandingVerification(worksheet)
-{
-	var currentString=worksheet['A1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='STUDENTNUMBER')
-	{
-		DisplayErrorMessage("Please fix the 'studentnumber' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['B1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='COURSE')
-	{
-		DisplayErrorMessage("Please fix the 'course' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['C1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='DESCRIPTION')
-	{
-		DisplayErrorMessage("Please fix the 'description' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['D1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='UNITS')
-	{
-		DisplayErrorMessage("Please fix the 'units' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['E1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='GRADE')
-	{
-		DisplayErrorMessage("Please fix the 'grade' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['F1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='FROM')
-	{
-		DisplayErrorMessage("Please fix the 'from' header in the imported file!");
-		return false;
-	}
-
-	return true;
-}
-
-function UndergraduateRPVerification(worksheet)
-{
-	var currentString=worksheet['A1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='STUDENTNUMBER')
-	{
-		DisplayErrorMessage("Please fix the 'studentnumber' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['B1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='TERM')
-	{
-		DisplayErrorMessage("Please fix the 'term' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['C1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='PROGRAM')
-	{
-		DisplayErrorMessage("Please fix the 'program' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['D1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='LEVEL')
-	{
-		DisplayErrorMessage("Please fix the 'level' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['E1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='LOAD')
-	{
-		DisplayErrorMessage("Please fix the 'load' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['F1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='PLAN')
-	{
-		DisplayErrorMessage("Please fix the 'plan' header in the imported file!");
-		return false;
-	}
-
-	return true;
-}
-
-function UndergraduateCGVerification(worksheet)
-{
-	var currentString=worksheet['A1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='STUDENTNUMBER')
-	{
-		DisplayErrorMessage("Please fix the 'studentnumber' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['B1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='TERM')
-	{
-		DisplayErrorMessage("Please fix the 'term' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['C1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='COURSELETTER')
-	{
-		DisplayErrorMessage("Please fix the 'courseletter' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['D1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='COURSENUMBER')
-	{
-		DisplayErrorMessage("Please fix the 'coursenumber' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['E1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='SECTION')
-	{
-		DisplayErrorMessage("Please fix the 'section' header in the imported file!");
-		return false;
-	}
-
-	currentString=worksheet['F1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='GRADE')
-	{
-		DisplayErrorMessage("Please fix the 'grade' header in the imported file!");
-		return false;
-	}
-
-	var currentString=worksheet['G1'].v;
-	currentString=currentString.toUpperCase();
-	if(currentString!='NOTE')
-	{
-		DisplayErrorMessage("Please fix the 'note' header in the imported file!");
-		return false;
-	}
-
-	return true;
-}
-
 
 export default Ember.Component.extend({
 	
@@ -696,7 +233,9 @@ export default Ember.Component.extend({
 							}
 							break;
 							case ImportState.RESIDENCY:
-							if (residencyVerification(worksheet)) {
+							var residencyCheckerArray = ['NAME'];
+							var residencyArray = [worksheet['A1'].v.toUpperCase()];
+							if (VerificationFunction(residencyCheckerArray,residencyArray)) {
 								self.setOutput("Importing residencies");
 								var rollBackImport = false;
 								var doneImporting = false;
@@ -744,7 +283,9 @@ export default Ember.Component.extend({
 							}
 							break;
 							case ImportState.TERMCODE:
-							if (termCodeVerification(worksheet)) {
+							var termcodeCheckerArray = ['NAME'];
+							var termcodeArray = [worksheet['A1'].v.toUpperCase()];
+							if (VerificationFunction(termcodeCheckerArray,termcodeArray)) {
 								var rollBackImport = false;
 								var doneImporting = false;
 								var termCodesToImport = [];
@@ -791,7 +332,9 @@ export default Ember.Component.extend({
 							}
 							break;
 							case ImportState.COURSECODE:
-							if (UndergraduateCoursesVerification(worksheet)) {
+							var coursecodeCheckerArray = ['STUDENTNUMBER','TERM','COURSELETTER','COURSENUMBER','SECTION','GRADE','NOTE'];
+							var coursecodeArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase(),worksheet['G1'].v.toUpperCase()];
+							if (VerificationFunction(coursecodeCheckerArray,coursecodeArray)) {
 								var rollBackImport = false;
 								var doneImporting = false;
 								var courseCodesToImport = [];
@@ -848,8 +391,10 @@ export default Ember.Component.extend({
 							break;
 						// case ImportState.STUDENT:
 						// 	break;
-						case ImportState.HIGHSCHOOL:	
-						if (secondarySchoolVerification(worksheet)) {
+						case ImportState.HIGHSCHOOL:
+						var highschoolCheckerArray = ['SCHOOL NAME'];
+						var highschoolArray = [worksheet['A1'].v.toUpperCase()];	
+						if (VerificationFunction(highschoolCheckerArray,highschoolArray)) {
 							var rollBackImport = false;
 							var doneImporting = false;
 							var highSchoolsToImport = [];
@@ -897,12 +442,15 @@ export default Ember.Component.extend({
 							}
 							break;
 							case ImportState.STUDENT:
+							var studentCheckerArray = ['STUDENTNUMBER','FIRSTNAME','LASTNAME','GENDER','DOB','RESIDENCY'];
+							var studentArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase()];
 							console.log("In student import");
-							var mutex = Mutex.create();
-							var savingMutex = Mutex.create();
-							var deleteMutex = Mutex.create();
-							if (studentVerification(worksheet))
+							
+							if (VerificationFunction(studentCheckerArray,studentArray))
 							{
+								var mutex = Mutex.create();
+								var savingMutex = Mutex.create();
+								var deleteMutex = Mutex.create();
 								console.log("validated student import");
 								var rollBackImport = false;
 								var doneImporting = false;
@@ -1005,7 +553,9 @@ export default Ember.Component.extend({
 							break;
 							case ImportState.HSCOURSEINFO:
 							{
-								if (studentHighSchoolVerification(worksheet))
+								var hscourseinfoCheckerArray = ['STUDENTNUMBER','SCHOOLNAME','LEVEL','SUBJECT','DESCRIPTION','SOURCE','UNITS','GRADE'];
+								var hscourseinfoArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase(),worksheet['G1'].v.toUpperCase(),worksheet['H1'].v.toUpperCase()];
+								if (VerificationFunction(hscourseinfoCheckerArray,hscourseinfoArray))
 								{
 									var gradeValues = [];
 									var highschoolSubjectValues = [];
@@ -1232,11 +782,13 @@ export default Ember.Component.extend({
 								}
 							case ImportState.RECORDPLANS:
 							{
+								var recordplansCheckerArray = ['STUDENTNUMBER','TERM','PROGRAM','LEVEL','LOAD','PLAN'];
+								var recordplansArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase()];
 								console.log("in records plans");
 								//Unique terms 
 								//Unique Program REcords 
 								//Unique Plan codes
-								if (UndergraduateRPVerification(worksheet))
+								if (VerificationFunction(recordplansCheckerArray,recordplansArray))
 								{
 									console.log("successful verification");
 									var termValues = [];
@@ -1514,10 +1066,13 @@ export default Ember.Component.extend({
 								}
 								break;
 							}
-							case ImportState.RECORDGRADES:
+							case ImportState.RECORDGRADES: 
 							{
+								var recordgradesCheckerArray = ['STUDENTNUMBER','TERM','COURSELETTER','COURSENUMBER','SECTION','GRADE','NOTE'];
+								var recordgradesArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase(),worksheet['G1'].v.toUpperCase()];
 								console.log("in recordGrades");
-
+								if(VerificationFunction(recordgradesCheckerArray,recordgradesArray))
+								{
 								var currentStudentNumber = "";
 								var currentTerm = "";
 								var gradesToImport = [];
@@ -1652,22 +1207,38 @@ export default Ember.Component.extend({
 											});
 										});									
 									}
+									}
 								}
 								break;
 							}
 							case ImportState.SCHOLARSHIPS:
 							{
+								var scholarshipsCheckerArray = ['STUDENTNUMBER','NOTE'];
+								var scholarshipsArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
+								if(VerificationFunction(scholarshipsCheckerArray,scholarshipsArray))
+								{
+
+								}
 								//Implement error checker if there is no student number but there is a scholarship
 							}
 							break;
 							case ImportState.ADVANCEDSTANDINGS: 
 							{
+								var advancedstandingsCheckerArray = ['STUDENTNUMBER','COURSE','DESCRIPTION','UNITS','GRADE','FROM'];
+								var advancedstandingsArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase()];
+								if(VerificationFunction(advancedstandingsCheckerArray,advancedstandingsArray))
+								{
+
+								}
 
 							}
 							break;
 							case ImportState.REGISTRATIONCOMMENTS:
 							{
-								//add header checker thing
+								var registrationcommentsCheckerArray = ['STUDENTNUMBER','NOTE'];
+								var registrationcommentsArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
+								if(VerificationFunction(registrationcommentsCheckerArray,registrationcommentsArray))
+								{
 								var currentStudentNumber = "";
 								var doneReading = false;
 								var uniqueStudents = [];
@@ -1720,21 +1291,37 @@ export default Ember.Component.extend({
 									}
 								}
 
+								}
 							}
 							break;
 							case ImportState.BASISOFADMISSION:
 							{
+								var basisofadmissionCheckerArray = ['STUDENTNUMBER','NOTE'];
+								var basisofadmissionArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
+								if(VerificationFunction(basisofadmissionCheckerArray,basisofadmissionArray))
+								{
 
+								}
 							}
 							break;
 							case ImportState.ADMISSIONAVERAGE:
-							{
+							{	
+								var admissionaverageCheckerArray = ['STUDENTNUMBER','NOTE'];
+								var admissionaverageArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
+								if(VerificationFunction(admissionaverageCheckerArray,admissionaverageArray))
+								{
 
+								}
 							}
 							break;
 							case ImportState.ADMINSSIONCOMMENTS:
 							{
+								var admissioncommentsCheckerArray = ['STUDENTNUMBER','NOTE'];
+								var admissioncommentsArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
+								if(VerificationFunction(admissioncommentsCheckerArray,admissioncommentsArray))
+								{
 
+								}
 							}
 							break;
 							default:
