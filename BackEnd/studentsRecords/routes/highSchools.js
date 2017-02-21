@@ -10,11 +10,10 @@ router.route('/')
     .post(parseUrlencoded, parseJSON, function (request, response) {
         var highSchool = new HighSchool(request.body.highSchool);
         highSchool.save(function(error) {
-            if (error)
+            if (error) {
                 response.send(error);
-            else{
+            } else {
                 response.json({highSchool: highSchool});
-
             }
         });
     })
@@ -23,35 +22,37 @@ router.route('/')
         {
             console.log("delete All was true");
             HighSchool.remove({}, function(error) {
-                    if (error)
-                        response.send(error);
-                    else{
-                        HighSchool.find({}, function(error, highSchools) {
-                            if (error)
-                                response.send(error);
-                                else{
-                                    response.json({highSchool: highSchools});
-                                }
-                        });
-                    } console.log("removed highschools");
-                });
-         }
-        else{
-             var Student = request.query.filter;
+                if (error) {
+                    response.send(error);
+                } else {
+                    HighSchool.find({}, function(error, highSchools) {
+                        if (error) {
+                            response.send(error);
+                        } else {
+                            response.json({highSchool: highSchools});
+                        }
+                    });
+                }
+                console.log("removed highschools");
+            });
+         } else {
+            var Student = request.query.filter;
             if (!Student) {
                 console.log("no Student passed into hs get");
                 HighSchool.find({schoolName: request.query.schoolName}, function(error, highSchools) {
-                    if (error)
+                    if (error) {
                         response.send(error);
-                        else{
-                            response.json({highSchool: highSchools});
-                        }
+                    } else {
+                        response.json({highSchool: highSchools});
+                    }
                 });
             } else {
                 HighSchool.find({"student": Student.student}, function (error, students) {
-                    if (error)
+                    if (error) {
                         response.send(error);
-                    response.json({highSchool: students});
+                    } else {
+                        response.json({highSchool: students});
+                    }
                 });
             } 
         }
@@ -60,32 +61,38 @@ router.route('/')
     router.route('/:highSchool_id')
     .get(parseUrlencoded, parseJSON, function (request, response) {
         HighSchool.findById(request.params.highSchool_id, function(error, highSchool) {
-            if (error)
+            if (error) {
                 response.send(error);
-            response.json({highSchool: highSchool})
+            } else {
+                response.json({highSchool: highSchool})
+            }
         });
     })
     .put(parseUrlencoded, parseJSON, function (request, response) {
         HighSchool.findById(request.params.highSchool_id, function(error, highSchool) {
-            if (error)
+            if (error) {
                 response.send(error);
+            } else {
+                highSchool.name = request.body.highSchool.name;
+                highSchool.students = request.body.highSchool.students;
 
-            highSchool.name = request.body.highSchool.name;
-            highSchool.students = request.body.highSchool.students;
-
-            highSchool.save(function(error) {
-                if (error)
-                    response.send({error: error});
-                
-                response.json({highSchool: highSchool});
-            });
+                highSchool.save(function(error) {
+                    if (error) {
+                        response.send(error);
+                    } else {
+                        response.json({highSchool: highSchool});
+                    }
+                });
+            }
         });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
         HighSchool.findByIdAndRemove(request.params.highSchool_id, function(error, deleted) {
-            if (error)
+            if (error) {
                 response.send(error);
-            response.json({highSchool: deleted});
+            } else {
+                response.json({highSchool: deleted});
+            }
         });
     });
 

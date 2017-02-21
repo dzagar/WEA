@@ -10,31 +10,40 @@ router.route('/')
     .post(parseUrlencoded, parseJSON, function (request, response) {
         var gender = new Gender(request.body.gender);
         gender.save(function(error) {
-            if (error)
+            if (error) {
                 response.send(error);
-            response.json({gender: gender});
+            } else {
+                response.json({gender: gender});
+            }
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
         var Student = request.query.filter;
         var deleteAll = request.query.deleteAll;
-        if (deleteAll){
-            Gender.remove({}, function(err){
-                if (err) response.send(err);
-                else console.log('all genders removed');
-            })
+        if (deleteAll) {
+            Gender.remove({}, function(error){
+                if (error) {
+                    response.send(error);
+                }  else {
+                    console.log('all genders removed');
+                }
+            });
         }
         if (!Student) {
             Gender.find(function(error, genders) {
-                if (error)
+                if (error) {
                     response.send(error);
-                response.json({gender: genders});
+                } else {
+                    response.json({gender: genders});
+                }
             });
         } else {
             Gender.find({"student": Student.student}, function (error, students) {
-                if (error)
+                if (error) {
                     response.send(error);
-                response.json({gender: students});
+                } else {
+                    response.json({gender: students});
+                }
             });
         }
     });
@@ -42,22 +51,24 @@ router.route('/')
 router.route('/:gender_id')
     .get(parseUrlencoded, parseJSON, function (request, response) {
         Gender.findById(request.params.gender_id, function(error, gender) {
-            if (error)
+            if (error) {
                 response.send(error);
-            response.json({gender: gender})
+            } else {
+                response.json({gender: gender});
+            }
         });
     })
     .put(parseUrlencoded, parseJSON, function (request, response) {
         Gender.findById(request.params.gender_id, function(error, gender) {
             if (error) {
-                response.send({error: error});
+                response.send(error);
             } else {
                 gender.name = request.body.gender.name;
                 gender.students = request.body.gender.students;
 
                 gender.save(function(error) {
                     if (error) {
-                        response.send({error: error});
+                        response.send(error);
                     } else {
                         response.json({gender: gender});
                     }
@@ -66,19 +77,13 @@ router.route('/:gender_id')
         });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
-        Student.update({"gender": request.params.gender_id}, {"$set": {"gender": null}}, false, 
-        function(error, success){
-            if (error){
+        Gender.findByIdAndRemove(request.params.gender_id, function(error, deleted) {
+            if (error) {
                 response.send(error);
             } else {
-                Gender.findByIdAndRemove(request.params.gender_id, function(error, deleted) {
-                    if (error)
-                        response.send(error);
-                    response.json({gender: deleted});
-                });
+                response.json({gender: deleted});
             }
         });
-        
     });
 
 module.exports = router;

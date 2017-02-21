@@ -12,34 +12,39 @@ router.route('/')
         var highSchoolGrade = new HighSchoolGrade(request.body.highSchoolGrade);
 
         Student.findById(highSchoolGrade.student, function (error, student) {
-            if (error)
+            if (error) {
                 response.send(error);
+            } else {
+                student.highSchoolGrades.push(highSchoolGrade._id);
 
-            student.highSchoolGrades.push(highSchoolGrade._id);
-
-            HighSchoolCourse.findById(highSchoolGrade.source, function (error, course) { 
-                if (error)
-                    response.send(error);
-                    
-                course.grades.push(highSchoolGrade._id);
-
-                highSchoolGrade.save(function (error) {
-                    if (error)
+                HighSchoolCourse.findById(highSchoolGrade.source, function (error, course) { 
+                    if (error) {
                         response.send(error);
-                    
-                    student.save(function (error) {
-                        if (error)
-                            response.send(error);
+                    } else {
+                        course.grades.push(highSchoolGrade._id);
 
-                        course.save(function (error) {
-                            if (error)
-                                respnose.send(error);
-
-                            response.json({highSchoolGrade: highSchoolGrade});
+                        highSchoolGrade.save(function (error) {
+                            if (error) {
+                                response.send(error);
+                            } else {
+                                student.save(function (error) {
+                                    if (error) {
+                                        response.send(error);
+                                    } else {
+                                        course.save(function (error) {
+                                            if (error) {
+                                                respnose.send(error);
+                                            } else {
+                                                response.json({highSchoolGrade: highSchoolGrade});
+                                            }
+                                        });
+                                    }
+                                });
+                            }
                         });
-                    });
+                    }
                 });
-            });
+            }
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
@@ -47,16 +52,16 @@ router.route('/')
         if (deleteAll)
         {
             HighSchoolGrade.remove({}, function(error) {
-                if (error)
-                {
+                if (error) {
                     response.send(error);
-                }
-                else{
-                     HighSchoolGrade.find(function (err, highSchoolGrade){
-                        if (err) response.send(err);
-                        else{
+                } else {
+                     HighSchoolGrade.find(function (error, highSchoolGrade){
+                        if (error) {
+                            response.send(error);
+                        } else {
                             response.json({highSchoolGrade: highSchoolGrade});
-                        }console.log('removed high school grades');
+                        }
+                        console.log('removed high school grades');
                     });
                 }
             });
@@ -66,33 +71,39 @@ router.route('/')
 router.route('/:highSchoolGrade_id')
     .get(parseUrlencoded, parseJSON, function (request, response) {
         HighSchoolGrade.findById(request.params.highSchoolGrade_id, function(error, highSchoolGrade) {
-            if (error)
+            if (error) {
                 response.send(error);
-            response.json({highSchoolGrade: highSchoolGrade})
+            } else {
+                response.json({highSchoolGrade: highSchoolGrade})
+            }
         });
     })
     .put(parseUrlencoded, parseJSON, function (request, response) {
         HighSchoolGrade.findById(request.params.highSchool_id, function(error, highSchoolGrade) {
-            if (error)
+            if (error) {
                 response.send(error);
+            } else {
+                highSchoolGrade.mark = request.body.highSchoolGrade.mark;
+                highSchoolGrade.source = request.body.highSchoolGrade.source;
+                highSchoolGrade.student = request.body.highSchoolGrade.student;
 
-            highSchoolGrade.mark = request.body.highSchoolGrade.mark;
-            highSchoolGrade.source = request.body.highSchoolGrade.source;
-            highSchoolGrade.student = request.body.highSchoolGrade.student;
-
-            highSchoolGrades.save(function(error) {
-                if (error)
-                    response.send(error);
-
-                response.json({highSchoolGrade: highSchoolGrade});
-            });
+                highSchoolGrades.save(function(error) {
+                    if (error) {
+                        response.send(error);
+                    } else {
+                        response.json({highSchoolGrade: highSchoolGrade});
+                    }
+                });
+            }
         });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
         HighSchoolGrade.findByIdAndRemove(request.params.highSchoolGrade_id, function(error, highSchoolGrade) {
-            if (error)
+            if (error) {
                 response.send(error);
-            response.json({deleted: highSchoolGrade});
+            } else {
+                response.json({deleted: highSchoolGrade});
+            }
         });
     });
 

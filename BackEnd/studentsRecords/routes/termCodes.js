@@ -10,34 +10,37 @@ router.route('/')
 	.post(parseUrlencoded, parseJSON, function (request, response) {
         var termCode = new TermCode(request.body.termCode);
         Student.findById(termCode.student, function (error, student) {
-            if (error)
+            if (error) {
                 response.send(error);
-
-            student.termCodes.push(termCode._id);
-            termCode.save(function (error) {
-                if (error)
-                    response.send(error);
-
-                student.save(function(error) {
-                    if (error)
+            } else {
+                student.termCodes.push(termCode._id);
+                termCode.save(function (error) {
+                    if (error) {
                         response.send(error);
-                    response.json({termCode: termCode});
+                    } else {
+                        student.save(function(error) {
+                            if (error) {
+                                response.send(error);
+                            } else {
+                                response.json({termCode: termCode});
+                            }
+                        });
+                    }
                 });
-            });
+            }
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
         if (request.query.deleteAll)
         {
             TermCode.remove({}, function(error) {
-                if (error)
+                if (error) {
                     response.send(error);
-                else
-                {
+                } else {
                     TermCode.find(function(error, termCodes) {
-                        if (error)
+                        if (error) {
                             response.send(error);
-                        else{
+                        } else {
                             response.json({termCodes: termCodes});
                             console.log("removed term codes");
                         }
@@ -47,27 +50,31 @@ router.route('/')
         }
         else if (request.query.studentNumber && request.query.name) {
             Student.find({studentNumber: request.query.studentNumber}, function(error, students) {
-                if (error)
+                if (error) {
                     response.send(error);
-                else{                    
+                } else {                    
                     let student = students[0];    //should only return one record anyway
                     if(student) {
                         TermCode.find({name: request.query.name, student: student.id}, function (error, termCode) {
-                            if (error)
+                            if (error) {
                                 response.send(error);
-                            else 
+                            } else {
                                 response.json({termCode: termCode});
+                            }
                         });
-                    } else
+                    } else {
                         response.json({error: "No student was found"});
+                    }
                 }
             });
         }
         else { 
             TermCode.find(function(error, termCodes) {
-                    if (error)
-                        response.send(error);
+                if (error) {
+                    response.send(error);
+                } else {
                     response.json({termCodes: termCodes});
+                }
             });
         }
     });
@@ -75,16 +82,20 @@ router.route('/')
 router.route('/:termCode_id')
     .get(parseUrlencoded, parseJSON, function (request, response) {
         TermCode.findById(request.params.termCode_id, function (error, termCode) {
-            if (error)
+            if (error) {
                 response.send(error);
-            response.json({termCode: termCode});
+            } else {
+                response.json({termCode: termCode});
+            }
         });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
         TermCode.findByIdAndRemove(request.params.termCode_id, function(error, termCode) {
-            if(error)
+            if(error) {
                 response.send(error);
-            response.send({deleted: termCode});
+            } else {
+                response.send({deleted: termCode});
+            }
         });
     });
 module.exports = router;

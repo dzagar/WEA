@@ -12,71 +12,84 @@ router.route('/')
         var grade = new Grade(request.body.grade);
 
         TermCode.findById(grade.termCode, function (error, termCode) {
-            if (error)
+            if (error) {
                 response.send(error);
+            } else {
+                termCode.grades.push(grade._id);
 
-            termCode.grades.push(grade._id);
-
-            CourseCode.findById(grade.courseCode, function (error, course) {
-                if (error)
-                    response.send(error);
-                    
-                course.grades.push(grade._id);
-
-                grade.save(function(error) {
-                    if (error)
+                CourseCode.findById(grade.courseCode, function (error, course) {
+                    if (error) {
                         response.send(error);
+                    } else {                        
+                        course.grades.push(grade._id);
 
-                    termCode.save(function(error) {
-                        if (error)
-                            response.send(error);
-
-                        course.save(function (error) {
-                            if (error)
+                        grade.save(function(error) {
+                            if (error) {
                                 response.send(error);
-                            response.json({grade: grade});
+                            } else {
+                                termCode.save(function(error) {
+                                    if (error) {
+                                        response.send(error);
+                                    } else {
+                                        course.save(function (error) {
+                                            if (error) {
+                                                response.send(error);
+                                            } else {
+                                                response.json({grade: grade});
+                                            }
+                                        });
+                                    }
+                                });
+                            }
                         });
-                    });
+                    }
                 });
-            });
+            }
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
         if (request.query.deleteAll) {
-            Grade.remove({}, function(err){
-                if (err) response.send(err);
-                else
-                {
-                    Grade.find(function (err, grade){
-                        if (err) response.send(err);
-                        response.json({grade: grade});
+            Grade.remove({}, function(error){
+                if (error) {
+                    response.send(error);
+                } else {
+                    Grade.find(function (error, grade){
+                        if (error) {
+                            response.send(error);
+                        } else {
+                            response.json({grade: grade});
+                        }
                     });
                 } console.log('removed grades');
             });
-        }
-        else {
+        } else {
             Grade.find(function(error, grades) {
-                    if (error)
-                        response.send(error);
+                if (error) {
+                    response.send(error);
+                } else {
                     response.json({grades: grades});
+                }
             });
-
         }
     });
 
 router.route('/:grade_id')
     .get(parseUrlencoded, parseJSON, function (request, response) {
         Grade.findById(request.params.grade_id, function (error, grade) {
-            if (error)
+            if (error) {
                 response.send(error);
-            response.json({grade: grade});
+            } else {
+                response.json({grade: grade});
+            }
         });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
         Grade.findByIdAndRemove(request.params.grade_id, function(error, grade) {
-            if(error)
+            if(error) {
                 response.send(error);
-            response.send({deleted: grade});
+            } else {
+                response.send({deleted: grade});
+            }
         });
     });
     

@@ -12,34 +12,39 @@ router.route('/')
         var student = new Student(request.body.student);
 
         Gender.findById(student.gender, function(error, gender) {
-            if (error)
+            if (error) {
                 response.send(error);
-            
-            gender.students.push(student._id);
+            } else {
+                gender.students.push(student._id);
 
-            Residency.findById(student.resInfo, function (error, residency) {
-                if (error)
-                    response.send(error);
-
-                residency.students.push(student._id);
-
-                student.save(function (error) {
-                    if (error) 
+                Residency.findById(student.resInfo, function (error, residency) {
+                    if (error) {
                         response.send(error);
-                    
-                    gender.save(function (error) {
-                        if (error)
-                            response.send(error);
+                    } else {
+                        residency.students.push(student._id);
 
-                        residency.save(function (error) {
-                            if (error)
+                        student.save(function (error) {
+                            if (error) {
                                 response.send(error);
-
-                            response.json({student: student});
+                            } else {
+                                gender.save(function (error) {
+                                    if (error) {
+                                        response.send(error);
+                                    } else {
+                                        residency.save(function (error) {
+                                            if (error) {
+                                                response.send(error);
+                                            } else {
+                                                response.json({student: student});
+                                            }
+                                        });
+                                    }
+                                });
+                            }
                         });
-                    });
+                    }
                 });
-            });
+            }
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
@@ -54,9 +59,12 @@ router.route('/')
         var student = request.query.student;
 
         if (deleteAll) {
-            Student.remove({}, function(err){
-                if (err) response.send(err);
-                else console.log('killed all students');
+            Student.remove({}, function(error){
+                if (error) {
+                    response.send(error);
+                } else {
+                    console.log('killed all students');
+                }
             });
         }
 
@@ -72,8 +80,9 @@ router.route('/')
                 if (studentNumber != "") conditions["studentNumber"] = regexStudentNum;
 
                 Student.find(conditions, function(error, students){
-                    if (error) response.send(error);
-                    else {
+                    if (error) {
+                        response.send(error);
+                    } else {
                         console.log(students);
                         response.json({student: students});
                     }
@@ -81,13 +90,19 @@ router.route('/')
             }
             else
             { 
-                Student.paginate({}, { offset: o, limit: l },
-                    function (error, students) {
-                        if (error) response.send(error);
-                        Student.count({}, function(err, num) {
-                            response.json({student: students.docs, meta: {total: num}});
+                Student.paginate({}, { offset: o, limit: l },function (error, students) {
+                    if (error) {
+                        response.send(error);
+                    } else {
+                        Student.count({}, function(error, num) {
+                            if (error) {
+                                response.send(error);
+                            } else {
+                                response.json({student: students.docs, meta: {total: num}});
+                            }
                         });
-                    });
+                    }
+                });
 
             }
             //models.Students.find(function (error, students) {
@@ -97,8 +112,11 @@ router.route('/')
         } else {
             //        if (Student == "residency")
             Student.find({"residency": request.query.residency}, function (error, students) {
-                if (error) response.send(error);
-                response.json({student: students});
+                if (error) {
+                    response.send(error);
+                } else {
+                    response.json({student: students});
+                }
             });
         }
     });
@@ -107,9 +125,8 @@ router.route('/:student_id')
     .get(parseUrlencoded, parseJSON, function (request, response) {
         Student.findById(request.params.student_id, function (error, student) {
             if (error) {
-                response.send({error: error});
-            }
-            else {
+                response.send(error);
+            } else {
                 response.json({student: student});
             }
         });
@@ -117,9 +134,8 @@ router.route('/:student_id')
     .put(parseUrlencoded, parseJSON, function (request, response) {
         Student.findById(request.params.student_id, function (error, student) {
             if (error) {
-                response.send({error: error});
-            }
-            else {
+                response.send(error);
+            } else {
                 student.studentNumber = request.body.student.number;
                 student.firstName = request.body.student.firstName;
                 student.lastName = request.body.student.lastName;
@@ -136,9 +152,8 @@ router.route('/:student_id')
 
                 student.save(function (error) {
                     if (error) {
-                        response.send({error: error});
-                    }
-                    else {
+                        response.send(error);
+                    } else {
                         response.json({student: student});
                     }
                 });
@@ -148,15 +163,16 @@ router.route('/:student_id')
     .delete(parseUrlencoded, parseJSON, function (request, response) {
         Student.findByIdAndRemove(request.params.student_id,
             function (error, student) {
-                if (error)
+                if (error) {
                     response.send(error);
+                } else {
+                    for(let tc = 0; tc < student.termCodes.length; tc++)
+                    {
+                        console.log(student.termCodes[tc]);
+                    }
 
-                for(let tc = 0; tc < student.termCodes.length; tc++)
-                {
-                    console.log(student.termCodes[tc]);
+                    response.json({deleted: student});
                 }
-
-                response.json({deleted: student});
             }
         );
     });

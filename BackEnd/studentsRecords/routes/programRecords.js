@@ -12,31 +12,37 @@ router.route('/')
         var programRecord = new ProgramRecord(request.body.programRecord);
 
         TermCode.findById(programRecord.termCode, function (error, termCode) {
-            if(error)
+            if(error) {
                 response.send(error);
-                
-            termCode.programRecords.push(programRecord._id);
+            } else {
+                termCode.programRecords.push(programRecord._id);
 
-            programRecord.save(function(error) {
-                if (error)
-                    response.send(error);
-
-                termCode.save(function (error) {
-                    if (error)
+                programRecord.save(function(error) {
+                    if (error) {
                         response.send(error);
-
-                    response.json({programRecord: programRecord});
+                    } else {
+                        termCode.save(function (error) {
+                            if (error) {
+                                response.send(error);
+                            } else {
+                                response.json({programRecord: programRecord});
+                            }
+                        });
+                    }
                 });
-            });
+            }
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
         var deleteAll = request.query.deleteAll;
-        if (deleteAll){
-            ProgramRecord.remove({}, function(err){
-                if (err) response.send(err);
-                else console.log('all program Records removed');
-            })
+        if (deleteAll) {
+            ProgramRecord.remove({}, function(error) {
+                if (error) {
+                    response.send(error);
+                } else {
+                    console.log('all program Records removed');
+                }
+            });
         }
         else if (request.query.studentNumber &&request.query.termName &&request.query.programName &&request.query.level &&request.query.load)
         {
@@ -44,10 +50,9 @@ router.route('/')
             Student.findOne({studentNumber: request.query.studentNumber}, function(error, student) {
                 TermCode.findOne({name: request.query.termName, student: student.id}, function(error, term) {
                     ProgramRecord.findOne({termCode: term, name: request.query.programName, level: request.query.level, load: request.query.load}, function(error, programRecord) {
-                        if (error){
-                            response.send({error: error});
-                        }
-                        else{
+                        if (error) {
+                            response.send(error);
+                        } else {
                             response.send({programRecord: programRecord});
                         }
                     });
@@ -64,9 +69,11 @@ router.route('/')
         // load: planLoad
         else {
             ProgramRecord.find({}, function (error, programRecords) {
-                if (error)
+                if (error) {
                     response.send(error);
-                response.json({programRecords: programRecords});
+                } else {
+                    response.json({programRecords: programRecords});
+                }
             });
         }
     });
@@ -74,9 +81,11 @@ router.route('/')
 router.route('/:programRecord_id')
     .get(parseUrlencoded, parseJSON, function (request, response) {
         ProgramRecord.findById(request.params.programRecord_id, function(error, programRecord) {
-            if (error)
+            if (error) {
                 response.send(error);
-            response.json({programRecord: programRecord});
+            } else {
+                response.json({programRecord: programRecord});
+            }
         });
     })
     .put(parseUrlencoded, parseJSON, function (request, response) {
@@ -102,9 +111,11 @@ router.route('/:programRecord_id')
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
         ProgramRecord.findByIdAndRemove(request.params.programRecord_id, function(error, programRecord) {
-            if (error)
+            if (error) {
                 response.send(error);
-            response.json({deleted: programRecord});
+            } else {
+                response.json({deleted: programRecord});
+            }
         });        
     });
 
