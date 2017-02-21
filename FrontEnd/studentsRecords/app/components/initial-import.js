@@ -1695,7 +1695,7 @@ export default Ember.Component.extend({
 									//if we're on a new note for the same student
 									else if (note && note.v != "")
 									{
-										var newNote = uniqueStudents.note + note.v;
+										var newNote = uniqueStudents[studentIndex].note + note.v;
 										uniqueStudents[studentIndex] = {"studentNmber": currentStudentNumber, "note": newNote};
 
 									}
@@ -1711,16 +1711,18 @@ export default Ember.Component.extend({
 									var registrationCommentsToImport = [];
 									var inRegistrationMutexIndex = 0;
 									var registrationMutex = Mutex.create();
-
 									for(var i = 0; i < uniqueStudents.length; i++)
 									{
 										registrationMutex.lock(function() {
 											var inRegistrationMutexCount = inRegistrationMutexIndex++;
 											var importStudentNumber = uniqueStudents[inRegistrationMutexCount].studentNumber;
 											var importNote = uniqueStudents[inRegistrationMutexCount].note;
-											self.get('store').queryRecord('student', {studentNumber: importStudentNumber}).then(function(studentObj) {
-												studentObj.set('registrationComments', importNote);
-												studentObj.save();
+											self.get('store').queryRecord('student', {number: importStudentNumber}).then(function(studentObj) {
+												if (studentObj)
+												{
+													studentObj.set('registrationComments', importNote);
+													studentObj.save();
+												}
 											});
 										});
 									}
