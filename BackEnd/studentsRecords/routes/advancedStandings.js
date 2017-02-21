@@ -88,12 +88,34 @@ router.route('/:advancedStanding_id')
             }
         });
     })
+    .put(parseUrlencoded, parseJSON, function (request, response) {
+        AdvancedStanding.findById(request.params.advancedStanding_id, function (error, advancedStanding) {
+            if (error) {
+                response.send(error);
+            } else {
+                advancedStanding.student = request.body.advancedStanding.student;
+                advancedStanding.course = request.body.advancedStanding.course;
+                advancedStanding.description = request.body.advancedStanding.description;
+                advancedStanding.units = request.body.advancedStanding.units;
+                advancedStanding.grade = request.body.advancedStanding.grade;
+                advancedStanding.from = request.body.advancedStanding.from;
+
+                advancedStanding.save(function(error) {
+                    if (error) {
+                        response.send(error);
+                    } else {
+                        response.json({advancedStanding: advancedStanding});
+                    }
+                });
+            }
+        });
+    })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
         AdvancedStanding.findByIdAndRemove(request.params.advancedStanding_id, function(error, advancedStanding) {
             if(error) {
                 response.send(error);
             } else {
-                response.send({deleted: advancedStanding});
+                response.json({deleted: advancedStanding});
             }
         });
     });
