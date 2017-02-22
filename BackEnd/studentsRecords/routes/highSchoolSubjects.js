@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var HighSchoolSubject = require('../models/highSchoolSubject');
+var HighSchoolCourse = require('../models/highSchoolCourse');
 var Student = require('../models/student');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
@@ -76,9 +77,40 @@ router.route('/:highSchoolSubject_id')
         });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
+        let failed = false;
+        let completed = 0;
         HighSchoolSubject.findByIdAndRemove(request.params.highSchoolSubject_id, function(error, highSchoolSubject) {
             if (error) {
+                failed = true;
                 response.send(error);
+            } else if (highSchoolSubject && highSchoolSubject.courses.length > 0) {
+                for (let i = 0; i < highSchoolSubject.courses.length && !failed; i++) {
+                    HighSchoolCourse.findById(highSchoolSubject.courses[i], function (error, course) {
+                        if (error && !failed) {
+                            failed = true;
+                            response.send(error);
+                        } else if (course) {
+                            course.subject = null;
+
+                            course.save(function (error) {
+                                if (error && !failed) {
+                                    failed = true;
+                                    response.send(error);
+                                } else {
+                                    completed++;
+                                    if (completed === highSchoolSubject.courses.length && !failed) {
+                                        response.json({deleted: highSchoolSubject});
+                                    }
+                                }
+                            });
+                        } else {
+                            completed++;
+                            if (completed === highSchoolSubject.courses.length && !failed) {
+                                response.json({deleted: highSchoolSubject});
+                            }
+                        }
+                    });
+                }
             } else {
                 response.json({deleted: highSchoolSubject});
             }

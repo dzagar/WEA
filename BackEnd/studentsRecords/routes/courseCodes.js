@@ -67,13 +67,13 @@ router.route('/:courseCode_id')
         });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
+        let failed = false;
+        let completed = 0;
         CourseCode.findByIdAndRemove(request.params.courseCode_id, function(error, courseCode) {
-            let failed = false;
             if(error) {
                 failed = true;
                 response.send(error);
             } else if (courseCode && courseCode.grades.length > 0) {
-                let completed = 0;
                 for (let i = 0; i < courseCode.grades.length && !failed; i++) {
                     Grade.findById(courseCode.grades[i], function (error, grade) {
                         if (error && !failed) {

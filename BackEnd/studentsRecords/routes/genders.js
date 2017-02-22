@@ -78,12 +78,12 @@ router.route('/:gender_id')
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
         let failed = false;
+        let completed = 0;
         Gender.findByIdAndRemove(request.params.gender_id, function(error, gender) {
             if (error) {
                 failed = true;
                 response.send(error);
             } else if (gender && gender.students.length > 0) {
-                let completed = 0;
                 for (let i = 0; i < gender.students.length; i++) {
                     Student.findById(gender.students[i], function (error, student) {
                         if(error) {
