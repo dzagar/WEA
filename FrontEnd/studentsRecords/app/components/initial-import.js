@@ -807,13 +807,10 @@ export default Ember.Component.extend({
 							{
 								var recordplansCheckerArray = ['STUDENTNUMBER','TERM','PROGRAM','LEVEL','LOAD','PLAN'];
 								var recordplansArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase()];
-								console.log("in records plans");
-								//Unique terms 
-								//Unique Program REcords 
-								//Unique Plan codes
+
 								if (VerificationFunction(recordplansCheckerArray,recordplansArray))
 								{
-									console.log("successful verification");
+									self.pushOutput("Importing Record Plans")
 									var termValues = [];
 									var programValues = [];
 									var planValues = [];
@@ -841,7 +838,7 @@ export default Ember.Component.extend({
 											console.log("there was no plan");
 											if (i === 2)
 											{
-												DisplayErrorMessage("Sheet does not contain any properly formated data");
+												self.pushOutput("<span style='color:red'>This file does not contain any properly formated data!</span>");
 												rollbackImport = true;
 											}
 											doneReading = true;
@@ -854,7 +851,7 @@ export default Ember.Component.extend({
 											{
 												rollbackImport = true;
 												doneReading = true;
-												DisplayErrorMessage("Imporperly formated data on row " + i);
+												self.pushOutput("<span style='color:red'>Imporperly formated data on row " + i + "</span>");
 											}
 											//populate new value fields for proper data
 											else
