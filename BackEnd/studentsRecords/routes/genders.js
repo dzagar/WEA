@@ -24,7 +24,16 @@ router.route('/')
                 else console.log('all genders removed');
             })
         }
-        if (!Student) {
+        else if(request.query.name)
+        {
+            Gender.find({"name": request.query.name}, function(error, gender) {
+                if (error)
+                    response.send(error);
+                else
+                    response.send({gender: gender});
+            });
+        }
+        else if (!Student) {
             Gender.find(function(error, genders) {
                 if (error)
                     response.send(error);
