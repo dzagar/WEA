@@ -90,7 +90,7 @@ router.route('/:grade_id')
             if(error) {
                 failed = true;
                 response.send(error);
-            } else {
+            } else if (grade) {
 
                 TermCode.findById(grade.termCode, function(error, termCode) {
                     if (error && !failed) {
@@ -149,6 +149,8 @@ router.route('/:grade_id')
                         }
                     }
                 });
+            } else {
+                response.json({deleted: grade});
             }
         });
     });

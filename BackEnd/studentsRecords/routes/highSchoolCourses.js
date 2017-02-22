@@ -188,7 +188,7 @@ router.route('/:highSchoolCourses_id')
             if (error) {
                 failed = true;
                 response.send(error);
-            } else {
+            } else if (highSchoolCourse) {
 
                 HighSchool.findById(highSchoolCourse.school, function (error, school) {
                     if (error && !failed) {
@@ -274,6 +274,8 @@ router.route('/:highSchoolCourses_id')
                     });
                 }
 
+            } else {
+                response.json({deleted: highSchoolCourse});
             }
         });
     });

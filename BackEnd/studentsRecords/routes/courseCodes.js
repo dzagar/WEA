@@ -72,7 +72,7 @@ router.route('/:courseCode_id')
             if(error) {
                 failed = true;
                 response.send(error);
-            } else if (courseCode.grades.length > 0) {
+            } else if (courseCode && courseCode.grades.length > 0) {
                 let completed = 0;
                 for (let i = 0; i < courseCode.grades.length && !failed; i++) {
                     Grade.findById(courseCode.grades[i], function (error, grade) {

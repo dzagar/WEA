@@ -114,7 +114,7 @@ router.route('/:advancedStanding_id')
         AdvancedStanding.findByIdAndRemove(request.params.advancedStanding_id, function(error, advancedStanding) {
             if (error) {
                 response.send(error);
-            } else {
+            } else if (advancedStanding) {
 
                 Student.findById(advancedStanding.student, function (error, student) {
                     if (error) {
@@ -135,6 +135,8 @@ router.route('/:advancedStanding_id')
                         response.json({deleted: advancedStanding});
                     }
                 });
+            } else {
+                response.json({deleted: advancedStanding});
             }
         });
     });

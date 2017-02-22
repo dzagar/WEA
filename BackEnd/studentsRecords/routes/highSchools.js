@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var HighSchool = require('../models/highSchool');
+var HighSchoolCourse = require('../models/highSchoolCourse');
 var Student = require('../models/student');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
@@ -87,11 +88,44 @@ router.route('/')
         });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
-        HighSchool.findByIdAndRemove(request.params.highSchool_id, function(error, deleted) {
+        let failed = false;
+        let completed = 0;
+        HighSchool.findByIdAndRemove(request.params.highSchool_id, function(error, school) {
             if (error) {
+                failed = true;
                 response.send(error);
+            } else if (school) {
+
+                for (let i = 0; i < school.courses.length && !failed; i++) {
+                    HighSchoolCourse.findById(school.courses[i], function (error, course) {
+                        if (error && !failed) {
+                            failed = true;
+                            response.send(error);
+                        } else if (course) {
+                            course.school = null;
+
+                            course.save(function (error) {
+                                if (error && !failed) {
+                                    failed = true;
+                                    response.send(error);
+                                } else {
+                                    completed++;
+                                    if (completed === school.courses.length && !failed) {
+                                        response.json({deleted: school});
+                                    }
+                                }
+                            });
+
+                        } else {
+                            completed++;
+                            if (completed === school.courses.length && !failed) {
+                                response.json({deleted: school});
+                            }
+                        }
+                    });
+                }
             } else {
-                response.json({highSchool: deleted});
+                response.json({deleted: school});
             }
         });
     });
