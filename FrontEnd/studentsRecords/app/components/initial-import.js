@@ -810,7 +810,7 @@ export default Ember.Component.extend({
 
 								if (VerificationFunction(recordplansCheckerArray,recordplansArray))
 								{
-									self.pushOutput("Importing Record Plans")
+									self.pushOutput("Importing Program Record Plans")
 									var termValues = [];
 									var programValues = [];
 									var planValues = [];
@@ -888,7 +888,7 @@ export default Ember.Component.extend({
 											//if there is a missing field then the data is invalid
 											if (!program || !level || !load || !plan || program.v == "" || level.v === "" || load.v == "" || plan.v == "")
 											{
-												DisplayErrorMessage("Imporperly formated data on row " + i);
+												self.pushOutput("<span style='color:red'>Imporperly formated data on row " + i + "</span>");
 												rollbackImport = true;
 												doneReading = true;
 											}
@@ -924,7 +924,7 @@ export default Ember.Component.extend({
 											//if there is a missing field then the data is invalid
 											if (!level || !load || !plan || level.v === "" || load.v == "" || plan.v == "")
 											{
-												DisplayErrorMessage("Imporperly formated data on row " + i);
+												self.pushOutput("<span style='color:red'>Imporperly formated data on row " + i + "</span>");
 												rollbackImport = true;
 												doneReading = true;
 											}
@@ -954,7 +954,7 @@ export default Ember.Component.extend({
 											//if there is a field in load or level then the data is invalid
 											if (level && level.v !== "" || load && load.v != "")
 											{
-												DisplayErrorMessage("Imporperly formated data on row " + i);
+												self.pushOutput("<span style='color:red'>Imporperly formated data on row " + i + "</span>");
 												rollbackImport = true;
 												doneReading = true;
 											}
@@ -973,14 +973,15 @@ export default Ember.Component.extend({
 									//if the import was successful
 									if (!rollbackImport)
 									{
-										//start importing
-
+										self.pushOutput("Successful read of file has completed. Beginning import of: ");
+										self.pushOutput(planValues.length + " plan codes");
+										self.pushOutput(programValues.length + " program record");
+										self.pushOutput(termValues.length + " terms");
 										var inMutexIndex = 0;
 										var termMutex = Mutex.create();
 										var savingTermMutex = Mutex.create();
 										var startedSavingTerms = false;
 										var termsToimport = [];
-										console.log(termValues);
 										for (var i = 0; i < termValues.length; i++)
 										{
 											termMutex.lock(function() {
@@ -1001,7 +1002,7 @@ export default Ember.Component.extend({
 															if (termValues.length === termsToimport.length && !startedSavingTerms)
 															{
 																startedSavingTerms = true;
-																console.log("done saving new term codes");
+																self.pushOutput("<span style='color:green'>Successfully imported Plan Codes!</span>");
 																//now we start saving programs
 
 																var inProgramMutexIndex = 0;
@@ -1035,11 +1036,12 @@ export default Ember.Component.extend({
 																					if (programsToImport.length === programValues.length && !startedSavingPrograms)
 																					{
 																						startedSavingPrograms = true;
-																						console.log("done saving programs");
+																						self.pushOutput("<span style='color:green'>Successfully imported Program Records!</span>")
 
-																						//now we save plans...
 																						var inPlanMutexIndex = 0;
 																						var planMutex = Mutex.create();
+																						var numberOfPlansSaved = 0;
+																						donePlanImport = false;
 																						for (var k = 0; k < planValues.length; k++)
 																						{
 																							planMutex.lock(function() {																											
@@ -1061,20 +1063,27 @@ export default Ember.Component.extend({
 																										name: planName
 																									});
 																									newPlanToImport.set('programRecord', programRecordObj);
-																									newPlanToImport.save();
+																									newPlanToImport.save().then(function() {
+																										numberOfPlansSaved++;
+																										if (numberOfPlansSaved == planValues.length && !donePlanImport)
+																										{																											
+																											donePlanImport = true;
+																											self.pushOutput("<span style='color:green'>Import of Plan Codes successful!</span>");
+																											self.pushOutput("<span style='color:green'>All Imports successful!</span>");
+																											Ember.$("#btnContinue").removeClass("disabled");
+																											Ember.$("#courseGrades").addClass("completed");
+																										}
+																									});
 																								});
-
 																							});
 																						}
 																					}
 																				});
 																			});
 																		});
-
 																	});
 																}
 															}
-
 														});
 													});
 												});
@@ -1090,146 +1099,151 @@ export default Ember.Component.extend({
 							{
 								var recordgradesCheckerArray = ['STUDENTNUMBER','TERM','COURSELETTER','COURSENUMBER','SECTION','GRADE','NOTE'];
 								var recordgradesArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase(),worksheet['G1'].v.toUpperCase()];
-								console.log("in recordGrades");
 								if(VerificationFunction(recordgradesCheckerArray,recordgradesArray))
 								{
-								var currentStudentNumber = "";
-								var currentTerm = "";
-								var gradesToImport = [];
-								var doneReading = false;
-								var rollBackImport = false;
+									self.pushOutput("Importing Undergraduate Student Grades");
+									var currentStudentNumber = "";
+									var currentTerm = "";
+									var gradesToImport = [];
+									var doneReading = false;
+									var rollBackImport = false;
 
-								for (var i = 2; !doneReading; i++)
-								{									
-									var studentNumber = worksheet['A' + i];
-									var term = worksheet['B' + i];
-									var courseLetter = worksheet['C' + i];
-									var courseNumber = worksheet['D' + i];
-									var courseGrade = worksheet['F' + i];
-									var courseNote = worksheet['G' + i];
+									for (var i = 2; !doneReading; i++)
+									{									
+										var studentNumber = worksheet['A' + i];
+										var term = worksheet['B' + i];
+										var courseLetter = worksheet['C' + i];
+										var courseNumber = worksheet['D' + i];
+										var courseGrade = worksheet['F' + i];
+										var courseNote = worksheet['G' + i];
 
-									//if there is a new student
-									if (studentNumber && studentNumber.v != "")
-									{
-										console.log("changin current students");
-										if (term && courseLetter && courseNumber && courseGrade)
+										//if there is a new student
+										if (studentNumber && studentNumber.v != "")
 										{
-											currentStudentNumber = studentNumber.v;
-											currentTerm = term.v;
-											console.log(currentStudentNumber);
-											console.log(currentTerm);
-											if (courseNote)
+											if (term && courseLetter && courseNumber && courseGrade)
 											{
-												gradesToImport[i - 2] = {"studentNumber": currentStudentNumber, "term": term.v, "courseLetter": courseLetter.v, "courseNumber": courseNumber.v, "courseGrade": courseGrade.v, "courseNote": courseNote.v};
+												currentStudentNumber = studentNumber.v;
+												currentTerm = term.v;
+												if (courseNote)
+												{
+													gradesToImport.push({"studentNumber": currentStudentNumber, "term": term.v, "courseLetter": courseLetter.v, "courseNumber": courseNumber.v, "courseGrade": courseGrade.v, "courseNote": courseNote.v});
+												}
+												else
+												{
+													gradesToImport.push({"studentNumber": currentStudentNumber, "term": term.v, "courseLetter": courseLetter.v, "courseNumber": courseNumber.v, "courseGrade": courseGrade.v});
+
+												}
 											}
+											//improper data
 											else
 											{
-												gradesToImport[i - 2] = {"studentNumber": currentStudentNumber, "term": term.v, "courseLetter": courseLetter.v, "courseNumber": courseNumber.v, "courseGrade": courseGrade.v};
-
+												self.pushOutput("<span style='color:red'>Improperly formatted data on row " + (i) + "</span>");
+												rollBackImport = true;
+												doneReading = true;
 											}
 										}
-										//improper data
-										else
+										//if it is the same student in a different term
+										else if (term && term.v != "")
 										{
-											DisplayErrorMessage("Improperly formatted data on row " + (i));
-											rollBackImport = true;
-											doneReading = true;
-										}
-									}
-									//if it is the same student in a different term
-									else if (term && term.v != "")
-									{
-										console.log("changing term");
-										if (courseLetter && courseNumber && courseGrade && currentStudentNumber != "")
-										{
-											currentTerm = term.v;
-											console.log(currentTerm);
-											if (courseNote)
+											if (courseLetter && courseNumber && courseGrade && currentStudentNumber != "")
 											{
-												gradesToImport[i - 2] = {"studentNumber": currentStudentNumber, "term": currentTerm, "courseLetter": courseLetter.v, "courseNumber": courseNumber.v, "courseGrade": courseGrade.v, "courseNote": courseNote.v};
+												currentTerm = term.v;
+												if (courseNote)
+												{
+													gradesToImport.push({"studentNumber": currentStudentNumber, "term": currentTerm, "courseLetter": courseLetter.v, "courseNumber": courseNumber.v, "courseGrade": courseGrade.v, "courseNote": courseNote.v});
+												}
+												else
+												{
+													gradesToImport.push({"studentNumber": currentStudentNumber, "term": currentTerm, "courseLetter": courseLetter.v, "courseNumber": courseNumber.v, "courseGrade": courseGrade.v});
+
+												}
 											}
+											//improper data
 											else
 											{
-												gradesToImport[i - 2] = {"studentNumber": currentStudentNumber, "term": currentTerm, "courseLetter": courseLetter.v, "courseNumber": courseNumber.v, "courseGrade": courseGrade.v};
-
+												self.pushOutput("<span style='color:red'>Improperly formatted data on row " + (i) + "</span>");
+												rollBackImport = true;
+												doneReading = true;
 											}
+
+
 										}
-										//improper data
+										//if it is the same student and term
 										else
 										{
-											DisplayErrorMessage("Improperly formatted data on row " + (i));
-											rollBackImport = true;
-											doneReading = true;
-										}
-
-
-									}
-									//if it is the same student and term
-									else
-									{
-										if (courseLetter && courseNumber && courseGrade && currentTerm != "" && currentStudentNumber != "")
-										{
-											if (courseNote)
+											if (courseLetter && courseNumber && courseGrade && currentTerm != "" && currentStudentNumber != "")
 											{
-												gradesToImport[i - 2] = {"studentNumber": currentStudentNumber, "term": currentTerm, "courseLetter": courseLetter.v, "courseNumber": courseNumber.v, "courseGrade": courseGrade.v, "courseNote": courseNote.v};
+												if (courseNote)
+												{
+													gradesToImport.push({"studentNumber": currentStudentNumber, "term": currentTerm, "courseLetter": courseLetter.v, "courseNumber": courseNumber.v, "courseGrade": courseGrade.v, "courseNote": courseNote.v});
+												}
+												else
+												{
+													gradesToImport.push({"studentNumber": currentStudentNumber, "term": currentTerm, "courseLetter": courseLetter.v, "courseNumber": courseNumber.v, "courseGrade": courseGrade.v});
+
+												}
 											}
+											//this is the end of the sheet
 											else
 											{
-												gradesToImport[i - 2] = {"studentNumber": currentStudentNumber, "term": currentTerm, "courseLetter": courseLetter.v, "courseNumber": courseNumber.v, "courseGrade": courseGrade.v};
-
+												
+												doneReading = true;
 											}
 										}
-										//this is the end of the sheet
-										else
-										{
-											
-											doneReading = true;
-										}
 									}
-								}
-								if (!rollBackImport)
-								{
-									console.log("done reading");
-									console.log(gradesToImport);
-									var inGradeMutexIndex = 0;
-									var gradeMutex = Mutex.create();
-									for (var i = 0; i < gradesToImport.length; i++)
-									{										
-										gradeMutex.lock(function() {
-											var inGradeMutexCount = inGradeMutexIndex++;
-											var termCode = gradesToImport[inGradeMutexCount].term;
-											var studentNumber = gradesToImport[inGradeMutexCount].studentNumber;
-											var courseLetter = gradesToImport[inGradeMutexCount].courseLetter;
-											var courseNumber = gradesToImport[inGradeMutexCount].courseNumber;
-											var courseGrade = gradesToImport[inGradeMutexCount].courseGrade;
-											var courseNote = gradesToImport[inGradeMutexCount].courseNote;
-											self.get('store').queryRecord('term-code', {
-												studentNumber: studentNumber,
-												name: termCode
-											}).then(function(termCodeObj) {
-												self.get('store').queryRecord('course-code', {
-													courseLetter: courseLetter,
-													courseNumber: courseNumber
-												}).then(function(courseCodeObj) {
-													var newGrade = self.get('store').createRecord('grade', {
-														mark: courseGrade
+									if (!rollBackImport)
+									{
+										self.pushOutput("Successful read of file has been completed. Beginning import of " + gradesToImport.length + " student grades");
+										var inGradeMutexIndex = 0;
+										var gradeMutex = Mutex.create();
+										var numberOfGradesImported = 0;
+										var startedSavingGrades = false;
+										for (var i = 0; i < gradesToImport.length; i++)
+										{										
+											gradeMutex.lock(function() {
+												var inGradeMutexCount = inGradeMutexIndex++;
+												var termCode = gradesToImport[inGradeMutexCount].term;
+												var studentNumber = gradesToImport[inGradeMutexCount].studentNumber;
+												var courseLetter = gradesToImport[inGradeMutexCount].courseLetter;
+												var courseNumber = gradesToImport[inGradeMutexCount].courseNumber;
+												var courseGrade = gradesToImport[inGradeMutexCount].courseGrade;
+												var courseNote = gradesToImport[inGradeMutexCount].courseNote;
+												self.get('store').queryRecord('term-code', {
+													studentNumber: studentNumber,
+													name: termCode
+												}).then(function(termCodeObj) {
+													self.get('store').queryRecord('course-code', {
+														courseLetter: courseLetter,
+														courseNumber: courseNumber
+													}).then(function(courseCodeObj) {
+														var newGrade = self.get('store').createRecord('grade', {
+															mark: courseGrade
+														});
+														newGrade.set('termCode', termCodeObj);
+														newGrade.set('courseCode', courseCodeObj);
+														if (courseNote)
+														{
+															newGrade.set('note', courseNote);
+														}
+														newGrade.save().then(function() {
+															numberOfGradesImported++;
+															if (numberOfGradesImported == gradesToImport.length && !startedSavingGrades)
+															{
+																startedSavingGrades = true;
+																																									
+																donePlanImport = true;
+																self.pushOutput("<span style='color:green'>Import of Grades successful!</span>");
+																Ember.$("#btnContinue").removeClass("disabled");
+																Ember.$("#courseGrades").addClass("completed");
+															}
+														});
 													});
-													console.log(termCodeObj);
-													console.log(courseCodeObj);
-													newGrade.set('termCode', termCodeObj);
-													newGrade.set('courseCode', courseCodeObj);
-													if (courseNote)
-													{
-														newGrade.set('note', courseNote);
-													}
-													newGrade.save();
 												});
-											});
-										});									
-									}
+											});									
+										}
 									}
 								}
-								break;
+							break;
 							}
 							case ImportState.SCHOLARSHIPS:
 							{
