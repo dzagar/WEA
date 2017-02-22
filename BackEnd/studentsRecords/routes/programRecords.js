@@ -3,6 +3,7 @@ var router = express.Router();
 var ProgramRecord = require('../models/programRecord');
 var Student = require('../models/student');
 var TermCode = require('../models/termCode');
+var PlanCode = require('../models/planCode');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
 var parseJSON = bodyParser.json();
@@ -110,9 +111,83 @@ router.route('/:programRecord_id')
         });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
+        let failed = false;
+        let completed = 0;
         ProgramRecord.findByIdAndRemove(request.params.programRecord_id, function(error, programRecord) {
             if (error) {
+                failed = true;
                 response.send(error);
+            } else if (programRecord) {
+                TermCode.findById(programRecord.termCode, function (error, termCode) {
+                    if (error && !failed) {
+                        failed = true;
+                        response.send(error);
+                    } else if (termCode) {
+                        let index = termCode.programCodes.indexOf(programRecord._id);
+                        if (index > -1) {
+                            termCode.programCodes.splice(index, 1);
+                        }
+
+                        termCode.save(function (error) {
+                            if (error && !failed) {
+                                failed = true;
+                                response.send(error);
+                            } else {
+                                completed++;
+                                if (completed === 2 && !failed) {
+                                    response.json({deleted: programRecord});
+                                }
+                            }
+                        });
+                    } else {
+                        completed++;
+                        if (completed === 2 && !failed) {
+                            response.json({deleted: programRecord});
+                        }
+                    }
+                });
+
+                let completedPlanCodes = 0;
+                if (programRecord.planCodes.length > 0) {
+                    for (let i = 0; i < programRecord.planCodes.length && !failed; i++) {
+                        PlanCodes.findById(programRecord.planCodes[i], function (error, planCode) {
+                            if (error && !failed) {
+                                failed = true;
+                                response.send(error);
+                            } else if (planCode) {
+                                planCode.programRecord = null;
+
+                                planCode.save(function (error) {
+                                    if (error && !failed) {
+                                        failed = true;
+                                        response.send(error);
+                                    } else {
+                                        completedPlanCodes++;
+                                        if (completedPlanCodes === programRecord.planCodes.length && !failed) {
+                                            completed++;
+                                            if (completed === 2 && !failed) {
+                                                response.json({deleted: programRecord});
+                                            }
+                                        }
+                                    }
+                                });
+                            } else {
+                                completedPlanCodes++;
+                                if (completedPlanCodes === programRecord.planCodes.length && !failed) {
+                                    completed++;
+                                    if (completed === 2 && !failed) {
+                                        response.json({deleted: programRecord});
+                                    }
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    completed++;
+                    if (completed === 2 && !failed) {
+                        response.json({deleted: programRecord});
+                    }
+                }
             } else {
                 response.json({deleted: programRecord});
             }
