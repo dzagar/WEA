@@ -19,11 +19,11 @@ router.route('/')
             } else {
                 highSchool.courses.push(highSchoolCourse._id);
 
-                HighSchoolCourses.findById(highSchoolCourse.subject, function (error, subject) {
+                HighSchoolSubject.findById(highSchoolCourse.subject, function (error, subject) {
                     if (error) {
                         response.send(error);
                     } else {    
-                        subject.courses.push(highSchoolCourses._id);
+                        subject.courses.push(highSchoolCourse._id);
 
                         highSchoolCourse.save(function(error) {
                             if (error) {
