@@ -77,33 +77,44 @@ router.route('/:gender_id')
         });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
+        let failed = false;
         Gender.findByIdAndRemove(request.params.gender_id, function(error, gender) {
             if (error) {
+                failed = true;
                 response.send(error);
-            } else {
+            } else if (gender.students.length > 0) {
 
                 let completed = 0;
                 for (let i = 0; i < gender.students.length; i++)
                 {
                     Student.findById(gender.students[i], function (error, student) {
                         if(error) {
+                            failed = true;
                             response.send(error);
-                        } else {
+                        } else if (student) {
                             student.gender = null;
 
                             student.save(function (error) {
                                 if (error) {
+                                    failed = true;
                                     response.send(error);
                                 } else {
                                     completed++;
-                                    if (completed === gender.students.length) {
+                                    if (completed === gender.students.length && !failed) {
                                         response.json({deleted: gender});
                                     }
                                 }
                             });
+                        } else {
+                            completed++;
+                            if (completed === gender.students.length && !failed) {
+                                response.json({deleted: gender});
+                            }
                         }
                     });
                 }
+            } else {
+                response.json({deleted: gender});
             }
         });
     });
