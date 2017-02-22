@@ -38,6 +38,8 @@ export default Ember.Component.extend({
   showFindStudent: false,
   store: Ember.inject.service(),
   studentAdvancedStandings: null,
+  studentCourses: null,
+  studentGrades: null,
   studentPhoto: null,
   studentsRecords: null,
   studentScholarhips: null,
@@ -138,12 +140,22 @@ export default Ember.Component.extend({
         
         var self = this;
         //loads student scholarships
-        var scholarshipStudent = this.get('currentStudent.id');
+        var scholarshipStudent = this.get('currentStudent.studentNumber');
         this.get('store').query('scholarship', {student : scholarshipStudent}).then(function(scholarships){
           self.set('studentScholarhips', scholarships);
         });
-        this.get('store').query('advancedStanding', {student : scholarshipStudent}).then(function(advancedStandings){
+        this.get('store').query('advanced-standing', {student : scholarshipStudent}).then(function(advancedStandings){
           self.set('studentAdvancedStandings', advancedStandings);
+        });
+        var studentID = this.get('currentStudent.id');
+        this.get('store').query('high-school-grade', {student : studentID}).then(function(grades){
+          //console.log(grades);
+          self.set('studentGrades', grades);
+          for (var i = 0; i < grades.length; i++){
+            self.get('store').query('high-school-course', {grades : grades[i].id}).then(function(courses){
+              self.set('studentCourses', courses);
+            });
+          }
         });
       }
   },
