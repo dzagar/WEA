@@ -68,30 +68,41 @@ router.route('/:courseCode_id')
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
         CourseCode.findByIdAndRemove(request.params.courseCode_id, function(error, courseCode) {
+            let failed = false;
             if(error) {
+                failed = true;
                 response.send(error);
-            } else {
+            } else if (courseCode.grades.length > 0) {
                 let completed = 0;
                 for (let i = 0; i < courseCode.grades.length; i++) {
                     Grade.findById(courseCode.grades[i], function (error, grade) {
                         if (error) {
+                            failed = true;
                             response.send(error);
-                        } else {
+                        } else if (grade) {
                             grade.courseCode = null;
 
                             grade.save(function (error) {
                                 if (error) {
+                                    failed = true;
                                     response.send(error);
                                 } else {
                                     completed++;
-                                    if (completed === courseCode.grades.length) {
+                                    if (completed === courseCode.grades.length && !failed) {
                                         response.json({deleted: courseCode});
                                     }
                                 }
                             });
+                        } else {
+                            completed++;
+                            if (completed === courseCode.grades.length && !failed) {
+                                response.json({deleted: courseCode});
+                            }
                         }
                     });
                 }
+            } else {
+                response.json({deleted: courseCode});
             }
         });
     });
