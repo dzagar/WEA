@@ -1253,9 +1253,69 @@ export default Ember.Component.extend({
 								var scholarshipsArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
 								if(VerificationFunction(scholarshipsCheckerArray,scholarshipsArray))
 								{
+									var currentStudentNumber = "";
+									var scholarshipArray=[];
+									var doneReading = false;
+									var rollBackImport = false;
+									var studentIndex = -1;
 
+									for(var i = 2; !doneReading; i++)
+									{
+										var studentNumber = worksheet['A' + i];
+										var note = worksheet ['B'+ i];
+									}
+
+									if(studentNumber && studentNumber.v !="")
+									{
+										console.log("Current Student Number Found!");
+										studentIndex++;
+										currentStudentNumber= studentNumber.v;
+
+										if(note)
+										{
+											scholarshipArray[studentIndex]= {"studentNumber":currentStudentNumber, "note": note};
+										}
+
+										else
+										{
+											scholarshipArray[studentIndex]={"studentNumber":currentStudentNumber};
+										}
+									}
+
+									else if(note && note.v !="")
+									{
+										currentNote = note.v;
+										scholarshipArray[studentIndex]={"studentNumber":currentStudentNumber, "note":currentNote};
+									}
+
+									if(!rollBackImport)
+									{
+										console.log("done reading");
+										console.log(scholarshipArray);
+										var ScholarshipIndex = 0;
+										var ScholarshipMutex = Mutex.create();
+										for (var i = 0; i < gradesToImport.length; i++)
+										{										
+											ScholarshipMutex.lock(function() {
+											var ScholarshipMutexCount = ScholarshipIndex++;
+											var studentNumber = scholarshipArray[ScholarshipMutexCount].studentNumber;
+											var note = scholarshipArray[ScholarshipMutexCount].note;
+											self.get('store').queryRecord('student',{
+												studentNumber: studentNumber
+											}).then(function(studentObj){
+												var Scholarship=self.get('store').createRecord('scholarship', {
+													note: note
+											});
+											
+										});
+
+										Scholarship.set('student',studentObj);
+										Scholarship.save();								
+										});
+									}
+									}
 								}
-								//Implement error checker if there is no student number but there is a scholarship
+								
 							}
 							break;
 							case ImportState.ADVANCEDSTANDINGS: 
@@ -1264,9 +1324,136 @@ export default Ember.Component.extend({
 								var advancedstandingsArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase()];
 								if(VerificationFunction(advancedstandingsCheckerArray,advancedstandingsArray))
 								{
+									var currentStudentNumber = "";
+									var currentCourse = "";
+									var gradesToImport = [];
+									var doneReading = false;
+									var rollBackImport = false;
 
+								for (var i = 2; !doneReading; i++)
+								{									
+									var studentNumber = worksheet['A' + i];
+									var course = worksheet['B' + i];
+									var description = worksheet['C' + i];
+									var units = worksheet['D' + i];
+									var courseGrade = worksheet['F' + i];
+									var courseFrom = worksheet['G' + i];
+
+									
+									if (studentNumber && studentNumber.v != "")
+									{
+										console.log("Current Student Number Found");
+										if (course && description && units && courseGrade)
+										{
+											currentStudentNumber = studentNumber.v;
+											currentCourse = course.v;
+											console.log(currentStudentNumber);
+											console.log(currentCourse);
+											if (courseFrom)
+											{
+												gradesToImport[i - 2] = {"studentNumber": currentStudentNumber, "course": course.v, "description": courseLetter.v, "units": courseNumber.v, "courseGrade": courseGrade.v, "courseFrom": courseFrom.v};
+											}
+											else
+											{
+												gradesToImport[i - 2] = {"studentNumber": currentStudentNumber, "course": course.v, "description": courseLetter.v, "units": courseNumber.v, "courseGrade": courseGrade.v};
+
+											}
+										}
+										
+										else
+										{
+											DisplayErrorMessage("Improperly formatted data on row " + (i));
+											rollBackImport = true;
+											doneReading = true;
+										}
+									}
+									
+									//if it is the same student in a different course
+									else if (course && course.v != "")
+									{
+										console.log("changing course");
+										if (description && units && courseGrade && currentStudentNumber != "")
+										{
+											currentCourse = course.v;
+											console.log(currentCourse);
+											if (courseFrom)
+											{
+												gradesToImport[i - 2] = {"studentNumber": currentStudentNumber, "course": currentCourse, "description": description.v, "units": units.v, "courseGrade": courseGrade.v, "courseFrom": courseFrom.v};
+											}
+											else
+											{
+												gradesToImport[i - 2] = {"studentNumber": currentStudentNumber, "course": currentCourse, "description": description.v, "units": units.v, "courseGrade": courseGrade.v};
+
+											}
+										}
+										//improper data
+										else
+										{
+											DisplayErrorMessage("Improperly formatted data on row " + (i));
+											rollBackImport = true;
+											doneReading = true;
+										}
+
+
+									}
+									//if it is the same student and course
+									else
+									{
+										if (description && units && courseGrade && currentCourse != "" && currentStudentNumber != "")
+										{
+											if (courseFrom)
+											{
+												gradesToImport[i - 2] = {"studentNumber": currentStudentNumber, "course": currentCourse, "description": description.v, "units": units.v, "courseGrade": courseGrade.v, "courseNote": courseFrom.v};
+											}
+											else
+											{
+												gradesToImport[i - 2] = {"studentNumber": currentStudentNumber, "course": currentCourse, "description": description.v, "units": units.v, "courseGrade": courseGrade.v};
+
+											}
+										}
+										//this is the end of the sheet
+										else
+										{
+											doneReading = true;
+										}
+									}
 								}
+								if (!rollBackImport)
+								{
+									console.log("done reading");
+									console.log(gradesToImport);
+									var AdvancedStandingIndex = 0;
+									var AdvancedStandingMutex = Mutex.create();
+									for (var i = 0; i < gradesToImport.length; i++)
+									{										
+											AdvancedStandingMutex.lock(function() {
+											var ASMutexCount = AdvancedStandingIndex++;
+											var studentNumber = gradesToImport[ASMutexCount].studentNumber;
+											var course = gradesToImport[ASMutexCount].course;
+											var description = gradesToImport[ASMutexCount].description;
+											var units = gradesToImport[ASMutexCount].units;
+											var courseGrade = gradesToImport[ASMutexCount].courseGrade;
+											var courseFrom = gradesToImport[ASMutexCount].courseFrom;
+											self.get('store').queryRecord('student',{
+												studentNumber: studentNumber
+											}).then(function(studentObj){
+												var AdvancedStanding=self.get('store').createRecord('advanced-standing', {
+													courseName: course,
+													courseDescription: description,
+													units: units,
+													mark: courseGrade,
+													locationEarned: courseFrom
+											});
+											
+										});
 
+										AdvancedStanding.set('student',studentObj);
+										AdvancedStanding.save();								
+										});
+									}
+								}
+								}
+								
 							}
 							break;
 							case ImportState.REGISTRATIONCOMMENTS:
@@ -1504,8 +1691,6 @@ export default Ember.Component.extend({
 
 								}
 							}
-							break;
-							default:
 							break;
 						}
 						console.log(currentWorkSheet);
