@@ -245,16 +245,6 @@ export default Ember.Component.extend({
       this.set('showDeleteConfirmation', false);
     },
 
-    firstNameFocusIn() {
-        var fName = this.get('currentStudent.firstName');
-        var self = this;
-        this.get('undoManager').add({
-          undo: function(){
-            self.set('currentStudent.firstName', fName);
-          }
-        });
-    },
-
     onFieldChange(){
       console.log("on field change");
       this.set('noFieldChange', false);
@@ -274,14 +264,14 @@ export default Ember.Component.extend({
         }
     },
 
-    lastNameFocusIn(){
-        var lName = this.get('currentStudent.lastName');
-        var self = this;
-        this.get('undoManager').add({
-          undo: function(){
-            self.set('currentStudent.lastName', lName);
-          }
-        });
+    textFocusIn(field){
+      var oldVal = this.get('currentStudent').get(field);
+      var self = this;
+      this.get('undoManager').add({
+        undo: function(){
+          self.set('currentStudent.' + field, oldVal);
+        }
+      });
     },
 
     dobFocusIn(){
@@ -332,44 +322,12 @@ export default Ember.Component.extend({
     },
     undoSave(){
       this.get('undoManager').undo();
-      // //Reset all text fields (number, first name, last name)
-      // this.get('currentStudent').rollbackAttributes();
-      // //Reset date
-      // var date = this.get('currentStudent').get('DOB');
-      // var datestring = date.toISOString().substring(0, 10);
-      // this.set('selectedDate', datestring);
-      
-      // //Reset gender
-      // var gender = this.get('currentStudent').get('gender.id');
-      // Ember.$("#ddlGender").val(gender);
-      // this.set('selectedGender', this.get('currentStudent').get('gender'));
-
-      // //Reset residency
-      // var resInfo = this.get('currentStudent').get('resInfo').get('id');
-      // Ember.$("#ddlResidency").val(resInfo);
-      // this.set('selectedResidency', this.get('currentStudent').get('resInfo'));
-
     },
     findStudent(){
       this.set("showAllStudents", false);
       this.set("showDeleteConfirmation", false);
       this.set("showHelp", false);
       this.set("showFindStudent",true);
-      // var self = this;
-      // this.get('store').query('student', {
-      //   firstName: "a",
-      //   lastName: "a"
-      // }).then(function (records) {
-      //   console.log("did things");
-      //   self.set('studentsRecords', records);
-      //   self.set('firstIndex', records.indexOf(records.get("firstObject")));
-      //   self.set('lastIndex', records.indexOf(records.get("lastObject")));
-      //   // Show first student data
-      //   self.set('currentIndex', self.get('firstIndex'));
-      //   self.set('offset', 0);
-    //});
-
-
     },
     deleteCurrentStudent(){
       //Spawn confirmation modal window
