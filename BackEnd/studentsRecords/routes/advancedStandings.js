@@ -116,11 +116,11 @@ router.route('/:advancedStanding_id')
                 response.send(error);
             } else {
 
-                Student.findById(advancedStanding._id, function (error, student) {
+                Student.findById(advancedStanding.student, function (error, student) {
                     if (error) {
                         response.send(error);
-                    } else {
-                        let index = student.advancedStandings.indexOf(advancedStanding._id);
+                    } else if (student) {
+                        let index = student.advancedStandings.indexOf(advancedStanding.student);
                         if (index > -1) {
                             student.advancedStandings.splice(index, 1); //removes the item located at index
                         }
@@ -131,6 +131,8 @@ router.route('/:advancedStanding_id')
                                 response.json({deleted: advancedStanding});
                             }
                         });
+                    } else {
+                        response.json({deleted: advancedStanding});
                     }
                 });
             }
