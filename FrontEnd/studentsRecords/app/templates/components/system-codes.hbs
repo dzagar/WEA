@@ -7,6 +7,8 @@
     {{delete-gender gender = currentGender showWindow = showGenderDeleteConfirmation}}
     {{else if showResidencyDeleteConfirmation}}
     {{delete-residency residency = currentResidency showWindow = showResidencyDeleteConfirmation}}
+    {{else if showCourseCodeDeleteConfirmation}}
+    {{delete-courseCode courseCode = currentCourseCode showWindow = showCourseCodeDeleteConfirmation}}
 {{/if}}
 
   <!-- Show data entry form -->
@@ -125,7 +127,7 @@
         <tr>
             <td>
                 <div class="ui fluid input">
-                    {{input type="text" value = newcourseCodeName}}
+                    {{input type="text" value = newCourseCodeName}}
                 </div>
             </td>
             <td>
