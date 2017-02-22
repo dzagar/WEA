@@ -25,6 +25,10 @@
     </a>
   </div> 
 
+  <div class="ui button" {{action 'back'}}>
+    <i class="arrow left icon"></i>Back
+  </div>
+  
   <div class="ui vertically padded grid">
     {{#each studentsRecords as |student index|}}
       <div class="eight wide column">
@@ -36,6 +40,4 @@
     {{/each}}
   </div>
   
-  <div class="ui button" {{action 'back'}}>
-    Back
-  </div>
+  
