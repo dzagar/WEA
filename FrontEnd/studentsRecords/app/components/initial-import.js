@@ -1732,7 +1732,7 @@ export default Ember.Component.extend({
 														studentObj.set('admissionComments', importNote);
 														studentObj.save().then(function() {
 															numberOfCommentsImported++;
-															if (numberOfCommentsWithNoStudent == uniqueStudents.length - numberOfCommentsWithNoStudent && !doneSavingComments)
+															if (numberOfCommentsImported == uniqueStudents.length - numberOfCommentsWithNoStudent && !doneSavingComments)
 															{
 																self.pushOutput("<span style='color:green'>Import of Admission Averages successful!</span>");
 																Ember.$("#btnContinue").removeClass("disabled");
@@ -1743,7 +1743,7 @@ export default Ember.Component.extend({
 													else
 													{
 														numberOfCommentsWithNoStudent++;
-														if (numberOfCommentsWithNoStudent == uniqueStudents.length - numberOfCommentsWithNoStudent && !doneSavingComments)
+														if (numberOfCommentsImported == uniqueStudents.length - numberOfCommentsWithNoStudent && !doneSavingComments)
 														{
 																self.pushOutput("<span style='color:green'>Import of Admission Averages successful!</span>");
 																Ember.$("#btnContinue").removeClass("disabled");
