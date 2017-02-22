@@ -243,12 +243,12 @@
 
 
   <div class="ui bottom attached tab segment" data-tab="hsinfo">
-    <h2>Highschool Info</h2>
+    <h2>High School Info</h2>
 
     <table class="ui fixed table">
       <thead>
         <tr>
-          <th>HighSchools</th>
+          <th>High Schools</th>
           <th>
             <!--spacer-->
           </th>
@@ -257,15 +257,28 @@
           </th>
         </tr>
       </thead>
-      {{#each highSchoolModel as |highSchool|}}
+      {{#each studentGrades as |grade|}}
+      <!--Will work with proper course set up-->
+      {{#each studentCourses as |course|}}
       <tr>
         <td>
           <div class="ui fluid input">
-            {{input type="text" value = highSchool.name}}
+            {{input type="text" value = grade.mark}}
+          </div>
+        </td>
+        <td>
+          <div class="ui fluid input">
+            {{input type="text" value = course.subject}}
+          </div>
+        </td>
+        <td>
+          <div class="ui fluid input">
+            {{input type="text" value = course.school}}
           </div>
         </td>
         <td>
           <div class="ui inverted buttons">
+            <!--This will not work-->
             <button class="ui blue inverted button" {{action "saveHighSchool" highschool}}>Save</button>
             <div class="divider" />
             <button class="ui red inverted button" {{action "deleteHighSchool" highschool}}>Delete</button>
@@ -275,6 +288,7 @@
           <!--spacer-->
         </td>
       </tr>
+      {{/each}}
       {{/each}}
       <tr>
         <td>
