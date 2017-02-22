@@ -2,14 +2,19 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
     
+    currentCourseCode: null,
     currentGender: null,
     currentResidency: null,
+    courseCodeModel: null,
     genderModel: null,
+    newCourseCodeName: "",
+    newCourseCodeObj: null,
     newGenderName: "",
     newGenderObj: null,
     newResidencyName: "",
     newResidencyObj: null,
     residencyModel: null,
+    showCourseCodeDeleteConfirmation: false,
     showDeleteGenderConfirmation: false,
     showDeleteResidencyConfirmation: false,
     store: Ember.inject.service(),
@@ -27,8 +32,15 @@ export default Ember.Component.extend({
         this.get('store').findAll('gender').then(function (records) {
             self.set('genderModel',records);
         });
+
+        this.get('store').findAll('course-code').then(function (records) {
+            self.set('courseCodeModel',records);
+        });
+        
+        this.set('currentCourseCode', null);
         this.set('currentGender', null);
         this.set('currentResidency', null);
+        
     },
     
     didRender() {
@@ -60,6 +72,7 @@ export default Ember.Component.extend({
             this.set('currentGender', gender);
             this.set('showGenderDeleteConfirmation', true);
             this.set('showResidencyDeleteConfirmation', false);
+            this.set('showCourseCodeDeleteConfirmation', false);
         },
 
         addResidency()
@@ -84,7 +97,34 @@ export default Ember.Component.extend({
            this.set('currentResidency',residency);
            this.set('showResidencyDeleteConfirmation', true);
            this.set('showGenderDeleteConfirmation', false); 
+           this.set('showCourseCodeDeleteConfirmation' , false);
         },
+
+        addCourseCode()
+        {
+            if(this.get('newCourseCodeName'.trim()!=""))
+            {
+                this.set('newCourseCodeObj',this.get('store').createRecord('course-code', {
+                    name: this.get('newCourseCodeName').trim()
+                }));
+                this.get('newCourseCodeObj').save();
+                this.set('newCourseCodeName',"");
+            }
+        },
+
+        saveCourseCode(courseCode)
+        {
+            courseCode.save();
+        },
+
+        deleteCourseCode(courseCode)
+        {
+            this.set('currentCourseCode',courseCode);
+            this.set('showCourseCodeDeleteConfirmation',true);
+            this.set('showGenderDeleteConfirmation', false);
+            this.set('showResidencyDeleteConfirmation', false);
+
+        }
 
     }
 
