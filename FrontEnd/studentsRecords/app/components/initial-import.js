@@ -499,6 +499,8 @@ export default Ember.Component.extend({
 									var studentSheetD = worksheet['D' + i];
 									var studentSheetE = worksheet['E' + i];
 									var studentSheetF = worksheet['F' + i];
+									console.log(studentSheetE);
+									
 									if (studentSheetA && studentSheetA.v != "" && studentSheetB && studentSheetC && studentSheetD && studentSheetE && studentSheetF)
 									{
 										if (uniqueStudentNumbers.includes(studentSheetA.v))
@@ -510,7 +512,8 @@ export default Ember.Component.extend({
 										else
 										{
 											uniqueStudentNumbers.push(studentSheetA.v);
-											studentsToImportInfo.push({"studentNumber": studentSheetA.v, "firstName": studentSheetB.v, "lastName": studentSheetC.v, "gender": studentSheetD.v, "dateOfBirth": studentSheetE.w, "residency": studentSheetF.v});
+											var formattedDate = new Date(0, 0, studentSheetE.v - 1);
+											studentsToImportInfo.push({"studentNumber": studentSheetA.v, "firstName": studentSheetB.v, "lastName": studentSheetC.v, "gender": studentSheetD.v, "dateOfBirth": formattedDate, "residency": studentSheetF.v});
 											//query res by id then gender then create student
 											mutex.lock(function(){
 												
@@ -520,6 +523,7 @@ export default Ember.Component.extend({
 												var lastName = studentsToImportInfo[inMutexStudentCount].lastName;
 												var gender = studentsToImportInfo[inMutexStudentCount].gender;
 												var dateOfBirth = studentsToImportInfo[inMutexStudentCount].dateOfBirth;
+												console.log(dateOfBirth);
 												var residency = studentsToImportInfo[inMutexStudentCount].residency;
 												self.get('store').queryRecord('gender', {name: gender}).then(function(genderObj) {
 													//console.log("got gender: ");
