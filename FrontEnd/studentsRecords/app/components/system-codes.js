@@ -2,10 +2,10 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
     
+    courseCodeModel: null,
     currentCourseCode: null,
     currentGender: null,
     currentResidency: null,
-    courseCodeModel: null,
     genderModel: null,
     newCourseCodeName: "",
     newCourseCodeObj: null,
@@ -102,7 +102,7 @@ export default Ember.Component.extend({
 
         addCourseCode()
         {
-            if(this.get('newCourseCodeName'.trim()!=""))
+            if(this.get('newCourseCodeName').trim()!="")
             {
                 this.set('newCourseCodeObj',this.get('store').createRecord('course-code', {
                     name: this.get('newCourseCodeName').trim()
