@@ -17,6 +17,7 @@ router.route('/')
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
         var deleteAll = request.query.deleteAll;
+        var Student = request.query.student;
         if (deleteAll)
         {
             HighSchoolGrade.remove({}, function(error) {
@@ -31,6 +32,14 @@ router.route('/')
                             response.json({highSchoolGrade: highSchoolGrade});
                         }console.log('removed high school grades');
                     });
+                }
+            });
+        }
+        if (Student){
+            HighSchoolGrade.find({student: Student}, function(err, highSchoolGrades){
+                if (err) response.send(err);
+                else {
+                    response.json({highSchoolGrade: highSchoolGrades});
                 }
             });
         }

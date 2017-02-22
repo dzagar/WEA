@@ -19,6 +19,7 @@ router.route('/')
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
+        var Course = request.query.courses;
         if (request.query.deleteAll)
         {
             console.log("delete All was true");
@@ -36,6 +37,14 @@ router.route('/')
                     } console.log("removed highschools");
                 });
          }
+        else if (Course){
+            HighSchool.find({courses: {"$elemMatch": Course}}, function(err, highSchool){
+                if (err) response.send(err);
+                else {
+                    response.json({highSchool: highSchool});
+                }
+            });
+        }
         else{
              var Student = request.query.filter;
             if (!Student) {
