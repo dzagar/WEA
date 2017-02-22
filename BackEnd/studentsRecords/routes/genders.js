@@ -84,7 +84,7 @@ router.route('/:gender_id')
                 failed = true;
                 response.send(error);
             } else if (gender && gender.students.length > 0) {
-                for (let i = 0; i < gender.students.length; i++) {
+                for (let i = 0; i < gender.students.length && !failed; i++) {
                     Student.findById(gender.students[i], function (error, student) {
                         if(error) {
                             failed = true;

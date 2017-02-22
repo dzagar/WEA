@@ -77,11 +77,43 @@ router.route('/:residency_id')
         })
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
-        Residency.findByIdAndRemove(request.params.residency_id, function(error, deleted) {
+        let failed = false;
+        let completed = 0;
+        Residency.findByIdAndRemove(request.params.residency_id, function(error, residency) {
             if (error) {
+                failed = true;
                 response.send(error);
+            } else if (residency && residency.students.length > 0) {
+                for (let i = 0; i < residency.students.length && !failed; i++) {
+                    Student.findById(residency.students[i], function (error, student) {
+                        if (error && !failed) {
+                            failed = true;
+                            response.send(error);
+                        } else if (student) {
+                            student.resInfo = null;
+
+                            student.save(function (error) {
+                                if (error && !failed) {
+                                    failed = true;
+                                    response.send(error);
+                                } else {
+                                    completed++;
+                                    if (completed === residency.students.length && !failed) {
+                                        response.json({deleted: residency});
+                                    }
+                                }
+                            });
+
+                        } else {
+                            completed++;
+                            if (completed === residency.students.length && !failed) {
+                                response.json({deleted: residency});
+                            }
+                        }
+                    });
+                }
             } else {
-                response.json({residency: deleted});
+                response.json({deleted: residency});
             }
         });
     });
