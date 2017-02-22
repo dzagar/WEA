@@ -21,7 +21,16 @@ router.route('/')
         if (deleteAll){
             Gender.remove({}, function(err){
                 if (err) response.send(err);
-                else console.log('all genders removed');
+                else
+                {
+                    Gender.find({}, function(error, genders) {
+                        if (error)
+                            response.send(error)
+                        else
+                            response.send({genders: genders});
+                    });
+                    
+                }
             })
         }
         else if(request.query.name)

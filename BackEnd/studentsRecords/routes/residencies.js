@@ -20,7 +20,15 @@ router.route('/')
         if (deleteAll){
             Residency.remove({}, function(err){
                 if (err) response.send(err);
-                else console.log('residencies removed');
+                else 
+                {
+                    Residency.find({}, function(error, residencies){
+                        if (error)
+                            response.send(error);
+                        else
+                            response.send({residencies:residencies});
+                    });
+                }
             });
         }
         else if (request.query.name)
