@@ -74,16 +74,16 @@ router.route('/:courseCode_id')
                 response.send(error);
             } else if (courseCode.grades.length > 0) {
                 let completed = 0;
-                for (let i = 0; i < courseCode.grades.length; i++) {
+                for (let i = 0; i < courseCode.grades.length && !failed; i++) {
                     Grade.findById(courseCode.grades[i], function (error, grade) {
-                        if (error) {
+                        if (error && !failed) {
                             failed = true;
                             response.send(error);
                         } else if (grade) {
                             grade.courseCode = null;
 
                             grade.save(function (error) {
-                                if (error) {
+                                if (error && !failed) {
                                     failed = true;
                                     response.send(error);
                                 } else {

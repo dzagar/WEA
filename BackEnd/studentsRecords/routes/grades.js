@@ -84,42 +84,69 @@ router.route('/:grade_id')
         });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
+        let failed = false;
+        let completed = 0;
         Grade.findByIdAndRemove(request.params.grade_id, function(error, grade) {
             if(error) {
+                failed = true;
                 response.send(error);
             } else {
 
                 TermCode.findById(grade.termCode, function(error, termCode) {
-                    if (error) {
+                    if (error && !failed) {
+                        failed = true;
                         response.send(error);
-                    } else {
-                        let index = termCodes.grades.indexOf(grade.termCode);
+                    } else if (termCode) {
+                        let index = termCodes.grades.indexOf(grade._id);
                         if (index > -1) {
                             termCode.grades.splice(index, 1);
                         }
 
-                        CourseCode.findById(grade.courseCode, function(error, courseCode) {
-                            if (error) {
+                        termCode.save(function (error) {
+                            if (error && !failed) {
+                                failed = true;
                                 response.send(error);
                             } else {
-                                courseCode.grades.splice(courseCodes.grades.indexOf(grade.termCode), 1);
-
-                                termCode.save(function (error) {
-                                    if (error) {
-                                        response.send(error);
-                                    } else {
-
-                                        courseCode.save(function (error) {
-                                            if (error) {
-                                                response.send(error);
-                                            } else {
-                                                response.json({deleted: grade});
-                                            }
-                                        });
-                                    }
-                                });
+                                completed++;
+                                if (completed === 2 && !failed) {
+                                    response.json({deleted: grade});
+                                }
                             }
                         });
+                    } else {
+                        completed++;
+                        if (completed === 2 && !failed) {
+                            response.json({deleted: grade});
+                        }
+                    }
+                });
+
+                CourseCode.findById(grade.courseCode, function(error, courseCode) {
+                    if (error && !failed) {
+                        failed = true;
+                        response.send(error);
+                    } else if (courseCode) {
+                        let index = courseCodes.grades.indexOf(grade._id);
+                        if (index > -1) {
+                            courseCode.grades.splice(index, 1);
+                        }
+
+                        courseCode.save(function (error) {
+                            if (error && !failed) {
+                                failed = true;
+                                response.send(error);
+                            } else {
+                                completed++;
+                                if (completed === 2 && !failed) {
+                                    response.json({deleted: grade});
+                                }
+                            }
+                        });
+                    } else {
+                        completed++;
+                        if (completed === 2 && !failed) {
+                            response.json({deleted: grade});
+                        }
                     }
                 });
             }

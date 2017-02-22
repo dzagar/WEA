@@ -120,7 +120,7 @@ router.route('/:advancedStanding_id')
                     if (error) {
                         response.send(error);
                     } else if (student) {
-                        let index = student.advancedStandings.indexOf(advancedStanding.student);
+                        let index = student.advancedStandings.indexOf(advancedStanding._id);
                         if (index > -1) {
                             student.advancedStandings.splice(index, 1); //removes the item located at index
                         }
