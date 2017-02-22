@@ -498,9 +498,7 @@ export default Ember.Component.extend({
 									var studentSheetC = worksheet['C' + i];
 									var studentSheetD = worksheet['D' + i];
 									var studentSheetE = worksheet['E' + i];
-									var studentSheetF = worksheet['F' + i];
-									console.log(studentSheetE);
-									
+									var studentSheetF = worksheet['F' + i];							
 									if (studentSheetA && studentSheetA.v != "" && studentSheetB && studentSheetC && studentSheetD && studentSheetE && studentSheetF)
 									{
 										if (uniqueStudentNumbers.includes(studentSheetA.v))
