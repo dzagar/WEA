@@ -306,13 +306,23 @@ export default Ember.Component.extend({
       });
     },
 
+    residencyFocusIn(){
+      var res = this.get('currentStudent.resInfo.id');
+      var self = this;
+      this.get('undoManager').add({
+        undo: function(){
+          self.set('selectedResidency', res);
+          Ember.$('#ddlResidency').val(res);
+        }
+      });
+    },
+
     selectGender (gender){
       this.send('onFieldChange');
       this.set('selectedGender', gender);
     },
 
     selectResidency (residency){
-      //console.log(residency);
       this.send('onFieldChange');
       this.set('selectedResidency', residency);
     },

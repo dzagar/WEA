@@ -83,7 +83,7 @@
           </div>
           <div class="item inline field">
             <label>Gender</label>
-            <select id="ddlGender" onchange={{action 'selectGender' value="target.value"}} onclick = {{action 'genderFocusIn'}} >
+            <select id="ddlGender" onchange={{action 'selectGender' value="target.value"}} onclick = {{action 'genderFocusIn'}} onblur = {{action 'onFocusOut'}}>
               {{#each genderModel as |genderChoice|}}
               <option value={{genderChoice.id}} selected={{eq currentStudent.genInfo.id genderChoice.id}}>{{genderChoice.name}}</option>
               {{/each}}
@@ -95,7 +95,7 @@
           </div>
           <div class="item inline field">
             <label>Residency</label>
-            <select id="ddlResidency" onchange={{action 'selectResidency' value="target.value" }}>
+            <select id="ddlResidency" onchange={{action 'selectResidency' value="target.value" }} onclick = {{action 'residencyFocusIn'}} onblur = {{action 'onFocusOut'}}>
                   {{#each residencyModel as |residencyChoice|}}
                     <option value={{residencyChoice.id}} selected={{eq currentStudent.resInfo.id residencyChoice.id}}>{{residencyChoice.name}} </option>
                   {{/each}}
