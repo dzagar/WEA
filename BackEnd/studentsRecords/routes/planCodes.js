@@ -85,6 +85,27 @@ router.route('/:planCode_id')
         PlanCode.findByIdAndRemove(request.params.planCode_id, function(error, planCode) {
             if (error) {
                 response.send(error);
+            } else if (planCode) {
+                ProgramRecord.findById(planCode.programRecord, function (error, programRecord) {
+                    if (error) {
+                        response.send(error);
+                    } else if (programRecord) {
+                        let index = programRecord.planCodes.indexOf(planCode._id);
+                        if (index > 1) {
+                            programRecord.planCodes.splice(index, 1);
+                        }
+
+                        programRecord.save(function (error) {
+                            if (error) {
+                                response.send(error);
+                            } else {
+                                response.json({deleted: planCode});
+                            }
+                        });
+                    } else {
+                        response.json({deleted: planCode});
+                    }
+                });
             } else {
                 response.json({deleted: planCode});
             }
