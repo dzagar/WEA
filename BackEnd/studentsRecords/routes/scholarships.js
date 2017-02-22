@@ -83,11 +83,32 @@ router.route('/:scholarship_id')
     // })
     //removes user scholarship
     .delete(parseUrlencoded, parseJSON, function (request, response) {
-        Scholarship.findByIdAndRemove(request.params.scholarship_id, function(error, deleted) {
+        Scholarship.findByIdAndRemove(request.params.scholarship_id, function(error, scholarship) {
             if (error) {
                 response.send(error);
+            } else if (scholarship) {
+                Student.findById(scholarship.student, function (error, student) {
+                    if (error) {
+                        response.send(error);
+                    } else if (student) {
+                        let index = student.scholarships.indexOf(scholarship._id);
+                        if (index > -1) {
+                            student.scholarships.splice(index, 1);
+                        }
+
+                        student.save(function (error) {
+                            if (error) {
+                                response.send(error);
+                            } else {
+                                response.json({deleted: scholarship});
+                            }
+                        });
+                    } else {
+                        response.json({deleted: scholarship});
+                    }
+                });
             } else {
-                response.json({scholarship: deleted});
+                response.json({deleted: scholarship});
             }
         });
     });
