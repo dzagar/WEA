@@ -25,7 +25,7 @@ router.route('/')
     //get all scholarship
     .get(parseUrlencoded, parseJSON, function (request, response) {
         var deleteAll = request.query.deleteAll;
-        var Student = parseInt(request.query.student);
+        var Student = request.query.student;
         if (deleteAll){
             Scholarship.remove({}, function(err){
                 if (err) response.send(err);
@@ -42,7 +42,7 @@ router.route('/')
         else
         {
             
-            Scholarship.find({"studentNumber" : Student}, function(error, scholarships){
+            Scholarship.find({"student" : Student}, function(error, scholarships){
                 if (error) response.send(error);
                 else {
                     response.json({scholarship: scholarships});

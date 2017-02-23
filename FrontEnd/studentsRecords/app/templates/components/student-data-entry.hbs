@@ -139,7 +139,7 @@
     <h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
 
     <select class="ui dropdown" onchange={{action 'selectTerm' value="target.value"}}>
-      {{#each currentStudent.termCodes as |semester index|}}
+      {{#each currentStudent.termCodes as |semester|}}
         <option value={{index}}>{{semester.name}}</option>
       {{/each}}
     </select>
@@ -154,10 +154,10 @@
           <th>Note</th>
         </tr>
       </thead>
-      {{#each semseter.courses as grade}}
+      {{#each semester.courses as grade}}
         <tr>
-          <td>Mark</td>
-          <td>name</td>
+          <td>{{grade.mark}}</td>
+          <td>{{grade.courseCode.name}}</td>
         </tr>
       {{/each}}
     </table>

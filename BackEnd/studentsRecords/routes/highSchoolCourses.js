@@ -102,11 +102,11 @@ router.route('/')
                     });
                 });
             });*/
-        } else if (Grades){
-            HighSchoolCourse.find({grades: {"$elemMatch": Grade}}, function(err, courses){
+        } else if (Grade){
+            HighSchoolCourse.findOne({grades: Grade}, function(err, course){
                 if (err) response.send(err);
                 else {
-                    response.json({highSchoolCourse: courses});
+                    response.json({highSchoolCourse: course});
                 }
             });
 
