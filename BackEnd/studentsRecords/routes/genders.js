@@ -21,10 +21,28 @@ router.route('/')
         if (deleteAll){
             Gender.remove({}, function(err){
                 if (err) response.send(err);
-                else console.log('all genders removed');
+                else
+                {
+                    Gender.find({}, function(error, genders) {
+                        if (error)
+                            response.send(error)
+                        else
+                            response.send({genders: genders});
+                    });
+                    
+                }
             })
         }
-        if (!Student) {
+        else if(request.query.name)
+        {
+            Gender.find({"name": request.query.name}, function(error, gender) {
+                if (error)
+                    response.send(error);
+                else
+                    response.send({gender: gender});
+            });
+        }
+        else if (!Student) {
             Gender.find(function(error, genders) {
                 if (error)
                     response.send(error);

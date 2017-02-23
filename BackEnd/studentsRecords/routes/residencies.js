@@ -20,10 +20,27 @@ router.route('/')
         if (deleteAll){
             Residency.remove({}, function(err){
                 if (err) response.send(err);
-                else console.log('residencies removed');
+                else 
+                {
+                    Residency.find({}, function(error, residencies){
+                        if (error)
+                            response.send(error);
+                        else
+                            response.send({residencies:residencies});
+                    });
+                }
             });
         }
-        if (!Student) {
+        else if (request.query.name)
+        {
+            Residency.find({"name": request.query.name}, function(error, residency) {
+                if (error)
+                    response.send(error);
+                else   
+                    response.send({residency: residency});
+            });
+        }
+        else if (!Student) {
             Residency.find(function (error, residencies) {
                 if (error) response.send(error);
                 response.json({residency: residencies});

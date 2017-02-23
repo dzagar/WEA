@@ -16,7 +16,6 @@ export default Ember.Component.extend({
 				deleteAll: true
 			});
 			console.log('deleted genders');
-
 			this.get('store').query('residency', {
 				deleteAll: true
 			});
@@ -74,6 +73,7 @@ export default Ember.Component.extend({
 				console.log(response);
 			});
 			console.log('deleted students');
+			this.get('store').unloadAll();
 
 			this.set('isImporting', true);
 			this.set('notDONE', false);
