@@ -10,7 +10,6 @@ router.route('/')
     //posting new scholarship
     .post(parseUrlencoded, parseJSON, function (request, response) {
         var scholarship = new Scholarship(request.body.scholarship);
-
         Student.findById(scholarship.student, function(error, student) {
             if (error) {
                 response.send(error);

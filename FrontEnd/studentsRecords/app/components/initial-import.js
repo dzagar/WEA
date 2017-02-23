@@ -1004,7 +1004,7 @@ export default Ember.Component.extend({
 															if (termValues.length === termsToimport.length && !startedSavingTerms)
 															{
 																startedSavingTerms = true;
-																self.pushOutput("<span style='color:green'>Successfully imported Plan Codes!</span>");
+																self.pushOutput("<span style='color:green'>Successfully imported Term Codes!</span>");
 																//now we start saving programs
 
 																var inProgramMutexIndex = 0;
@@ -1070,7 +1070,7 @@ export default Ember.Component.extend({
 																										if (numberOfPlansSaved == planValues.length && !donePlanImport)
 																										{																											
 																											donePlanImport = true;
-																											self.pushOutput("<span style='color:green'>Import of Plan Codes successful!</span>");
+																											self.pushOutput("<span style='color:green'>Successfully Imported Plan Codes!</span>");
 																											self.pushOutput("<span style='color:green'>All Imports successful!</span>");
 																											Ember.$("#btnContinue").removeClass("disabled");
 																											Ember.$("#recordPlans").addClass("completed");
@@ -1294,6 +1294,7 @@ export default Ember.Component.extend({
 										var scholarshipIndex = 0;
 										var scholarshipMutex = Mutex.create();
 										var numberOfScholarshipsImported = 0;
+										var numberOfScholarShipsCanceled = 0;
 										var doneSavingScholarships = false;
 										for (var i = 0; i < scholarshipArray.length; i++)
 										{										
@@ -1302,15 +1303,31 @@ export default Ember.Component.extend({
 												var studentNumber = scholarshipArray[scholarshipMutexCount].studentNumber;
 												var note = scholarshipArray[scholarshipMutexCount].note;
 												self.get('store').queryRecord('student',{
-													studentNumber: studentNumber
+													number: studentNumber,
+													findOneStudent: true
 												}).then(function(studentObj){
 													var newScholarshipToImport=self.get('store').createRecord('scholarship', {
 														note: note
 													});	
-													newScholarshipToImport.set('student',studentObj);
-													newScholarshipToImport.save().then(function() {
-														numberOfScholarshipsImported++;
-														if (numberOfScholarshipsImported == scholarshipArray.length && !doneSavingScholarships)
+													if (studentObj)
+													{
+														newScholarshipToImport.set('student',studentObj);
+														newScholarshipToImport.save().then(function() {
+															numberOfScholarshipsImported++;
+															if (numberOfScholarshipsImported == scholarshipArray.length - numberOfScholarShipsCanceled && !doneSavingScholarships)
+															{
+																doneSavingScholarships = true;														
+																self.pushOutput("<span style='color:green'>Import of Scholarships successful!</span>");
+																Ember.$("#btnContinue").removeClass("disabled");
+																Ember.$("#awards").addClass("completed");														
+
+															}
+														});	
+													}
+													else
+													{
+														numberOfScholarShipsCanceled++;
+														if (numberOfScholarshipsImported == scholarshipArray.length - numberOfScholarShipsCanceled && !doneSavingScholarships)
 														{
 															doneSavingScholarships = true;														
 															self.pushOutput("<span style='color:green'>Import of Scholarships successful!</span>");
@@ -1318,7 +1335,7 @@ export default Ember.Component.extend({
 															Ember.$("#awards").addClass("completed");														
 
 														}
-													});											
+													}										
 												});																		
 											});
 										}
@@ -1395,6 +1412,7 @@ export default Ember.Component.extend({
 										var AdvancedStandingIndex = 0;
 										var AdvancedStandingMutex = Mutex.create();
 										var advancedStandingsImported = 0;
+										var advancedStandingsCancelled = 0;
 										var doneSaving = false;
 										for (var i = 0; i < advancedStandingsToImport.length; i++)
 										{										
@@ -1407,7 +1425,8 @@ export default Ember.Component.extend({
 												var courseGrade = advancedStandingsToImport[ASMutexCount].courseGrade;
 												var courseFrom = advancedStandingsToImport[ASMutexCount].courseFrom;
 												self.get('store').queryRecord('student',{
-													studentNumber: studentNumber
+													number: studentNumber,
+													findOneStudent: true
 												}).then(function(studentObj){
 													var AdvancedStanding=self.get('store').createRecord('advanced-standing', {
 														course: course,
@@ -1415,11 +1434,26 @@ export default Ember.Component.extend({
 														units: units,
 														grade: courseGrade,
 														from: courseFrom
-													});											
-													AdvancedStanding.set('student',studentObj);
-													AdvancedStanding.save().then(function() {
-														advancedStandingsImported++;
-														if (advancedStandingsImported == advancedStandingsToImport.length && !doneSaving)
+													});	
+													if (studentObj)
+													{																								
+														AdvancedStanding.set('student',studentObj);
+														AdvancedStanding.save().then(function() {
+															advancedStandingsImported++;
+															if (advancedStandingsImported == advancedStandingsToImport.length - advancedStandingsCancelled && !doneSaving)
+															{
+																doneSaving = true;														
+																self.pushOutput("<span style='color:green'>Import of Avanced Standings successful!</span>");
+																Ember.$("#btnContinue").removeClass("disabled");
+																Ember.$("#advancedStandings").addClass("completed");	
+
+															}
+														});
+													}
+													else
+													{
+														advancedStandingsCancelled++;
+														if (advancedStandingsImported == advancedStandingsToImport.length - advancedStandingsCancelled && !doneSaving)
 														{
 															doneSaving = true;														
 															self.pushOutput("<span style='color:green'>Import of Avanced Standings successful!</span>");
@@ -1427,7 +1461,7 @@ export default Ember.Component.extend({
 															Ember.$("#advancedStandings").addClass("completed");	
 
 														}
-													});									
+													}									
 												});								
 											});
 										}
@@ -1505,6 +1539,14 @@ export default Ember.Component.extend({
 													else
 													{
 														numberOfCommentWithNoStudent++;
+														if (numberOfCommentsImported == (uniqueStudents.length - numberOfCommentWithNoStudent) && !doneImportingComments)
+														{
+															doneImportingComments = true;
+															self.pushOutput("<span style='color:green'>Import of Registration Comments successful!</span>");
+															Ember.$("#btnContinue").removeClass("disabled");
+															Ember.$("#registrationComments").addClass("completed");
+
+														}
 													}
 												});
 											});
