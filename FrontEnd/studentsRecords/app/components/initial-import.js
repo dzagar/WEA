@@ -492,13 +492,8 @@ export default Ember.Component.extend({
 									var studentSheetC = worksheet['C' + i];
 									var studentSheetD = worksheet['D' + i];
 									var studentSheetE = worksheet['E' + i];
-<<<<<<< HEAD
-									var studentSheetF = worksheet['F' + i];
-									if (studentSheetA && studentSheetB && studentSheetC && studentSheetD && studentSheetE && studentSheetF)
-=======
 									var studentSheetF = worksheet['F' + i];							
 									if (studentSheetA && studentSheetA.v != "" && studentSheetB && studentSheetC && studentSheetD && studentSheetE && studentSheetF)
->>>>>>> master
 									{
 										if (uniqueStudentNumbers.includes(studentSheetA.v))
 										{

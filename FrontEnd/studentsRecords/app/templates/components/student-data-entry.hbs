@@ -109,10 +109,10 @@
             <label>Admission Average</label> {{input type="text" value = currentStudent.admissionAverage focus-in = (action "textFocusIn" "admissionAverage") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
           </div>
           <div class="ui two column grid">
-            <div class="item inline field">
+            <div class="item inline field column">
               <label>Admission Comments</label> {{textarea rows="4" type="text" value = currentStudent.admissionComments focus-in = (action "textFocusIn" "admissionComments") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
             </div>
-            <div class="item inline field">
+            <div class="item inline field column">
               <label>Registration Comments</label> {{textarea rows="4" type="text" value = currentStudent.registrationComments focus-in = (action "textFocusIn" "registrationComments") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
             </div>
           </div>
