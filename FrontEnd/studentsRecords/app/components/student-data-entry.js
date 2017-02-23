@@ -173,16 +173,19 @@ export default Ember.Component.extend({
           console.log(grades.content.length);
           self.set('studentGrades', grades);
           for (var i = 0; i < grades.content.length; i++){
-            //console.log(grades.objectAt(i));
+            
+            var gradeSource = grades.objectAt(i).get('source');
+            var gradeSourceID = gradeSource.get('id');
+
             // self.get('store').queryRecord('high-school-course', {grades : grades.objectAt(i).id}).then(function(course){
             //   //console.log(course);
             //   self.get('studentCourses').push(course);
             // });
-            console.log(grades.objectAt(i).source);
-            self.get('store').queryRecord('high-school-subject', {course : grades.objectAt(i).source}).then(function(subject){
+           
+            self.get('store').queryRecord('high-school-subject', {course : gradeSourceID}).then(function(subject){
               self.get('studentSubjects').push(subject.name);
             });
-            self.get('store').queryRecord('high-school', {course: grades.objectAt(i).source}).then(function(school){
+            self.get('store').queryRecord('high-school', {course: gradeSourceID}).then(function(school){
               self.get('studentSchools').push(school.name);
             });
           }
