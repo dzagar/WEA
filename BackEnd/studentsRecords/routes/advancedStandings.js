@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var AdvancedStanding = require('../models/advancedStanding');
+var Student = require('../models/student');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
 var parseJSON = bodyParser.json();
@@ -25,7 +26,7 @@ router.route('/')
 
     .get(parseUrlencoded, parseJSON, function (request, response) {
         
-        var Student = parseInt(request.query.student);
+        var studentNumber = parseInt(request.query.student);
         var deleteAll = request.query.deleteAll;
 
         if (deleteAll){
@@ -41,7 +42,7 @@ router.route('/')
             });
         }
         
-        else if (!Student) {
+        else if (!studentNumber) {
             AdvancedStanding.find(function (err, advancedStandings){
                 if (err)
                     response.send(err);
@@ -50,17 +51,25 @@ router.route('/')
         }
         else
         {
-            AdvancedStanding.find({"studentNumber" : Student}, function(error, advancedStandings){
-                if (error) 
-                    {
-                        response.send(error);
-                    }
-                else 
-                    {
-                        console.log(advancedStandings);
-                        response.json({advancedStandings: advancedStandings});
-                    }
+            Student.findOne({"studentNumber": studentNumber}, function(error, student) {
+                AdvancedStanding.find({student: student.id}, function(error, advancedStandings) {
+                    if (error)
+                        response.send(error)
+                    else
+                        response.send({advancedStandings: advancedStandings});
+                });
             });
+            // AdvancedStanding.find({"studentNumber" : Student}, function(error, advancedStandings){
+            //     if (error) 
+            //         {
+            //             response.send(error);
+            //         }
+            //     else 
+            //         {
+            //             console.log(advancedStandings);
+            //             response.json({advancedStandings: advancedStandings});
+            //         }
+            // });
         }
     });
 
