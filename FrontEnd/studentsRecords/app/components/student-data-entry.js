@@ -139,6 +139,7 @@ export default Ember.Component.extend({
   },
 
   showStudentData: function (student) {
+    this.set('termIndex', 0);
       this.set("showHelp", false);
       this.set("showFindStudent",false);
       if (student != null) {
