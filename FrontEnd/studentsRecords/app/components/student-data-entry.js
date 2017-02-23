@@ -25,6 +25,7 @@ export default Ember.Component.extend({
   }),
   pageSize: null,
   residencyModel: null,
+  scholarshipModel: null,
   selectedDate: null,
   selectedGender: null,
   selectedResidency: null,
@@ -88,6 +89,10 @@ export default Ember.Component.extend({
     // load Gender data model 
     this.get('store').findAll('gender').then(function (records) {
       self.set('genderModel',records);
+    });
+
+    this.get('store').findAll('scholarship').then(function (records) {
+      self.set('scholarshipModel',records);
     });
 
     // load first page of the students records
@@ -366,7 +371,7 @@ export default Ember.Component.extend({
       if (this.get('newScholarshipName').trim() != "")
         {
             this.set('newScholarshipObj', this.get('store').createRecord('scholarship', {
-                name: this.get('newScholarshipName').trim()
+                note: this.get('newScholarshipName').trim()
             }));
             this.get('newScholarshipObj').save();
             this.set('newScholarshipName', "");

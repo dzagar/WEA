@@ -43,7 +43,7 @@
 {{else if showAdvancedStandingDeleteConfirmation}}
   {{delete-advanced-standing AdvancedStanding = currentAdvancedStanding showWindow = showAdvancedStandingDeleteConfirmation}}
 {{else if showScholarshipDeleteConfirmation}}
-  {{delete-scholarship Scholarship = currentScholarship showWindow = showScholarshipDeleteConfirmation}}
+  {{delete-scholarship scholarship = currentScholarship showWindow = showScholarshipDeleteConfirmation}}
 {{/if}}
 
 <!-- Other non-popup screens -->
@@ -320,11 +320,11 @@
             <th><!--spacer--></th>  
         </tr>
         </thead>
-        {{#each studentScholarhips  as |oneScholarship|}}
+        {{#each scholarshipModel  as |scholarship|}}
         <tr>
             <td>
                 <div class="ui fluid input">
-                    {{input type="text" value = oneScholarship.note}}
+                    {{input type="text" value = scholarship.note}}
                 </div>
             </td>
             <td>
