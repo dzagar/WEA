@@ -2,12 +2,8 @@ import Ember from 'ember';
 import UndoManager from 'npm:undo-manager';
 
 export default Ember.Component.extend({
-<<<<<<< HEAD
 
   advancedStandingModel: null,
-=======
-  undoManager: null,
->>>>>>> master
   currentAdvancedStanding: null,
   currentHighSchool: null,
   currentScholarship: null,
@@ -58,6 +54,7 @@ export default Ember.Component.extend({
       let ttl = Math.ceil(this.get('totalStudents')/this.get('pageSize'));
       return ttl;
   }),
+  undoManager: null,
   
 
   studentModel: Ember.observer('offset', function () {
