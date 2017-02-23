@@ -1,13 +1,13 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-    highschool: null,
+  grade: null,
 	showWindow: null,
 	store: Ember.inject.service(),
 
 	actions: {
-		deleteHighSchool: function(){
-			this.get('highschool').destroyRecord();
+		deleteHSGrade: function(){
+			this.get('grade').destroyRecord();
 			this.set('showWindow', false);
 			Ember.$('.ui.modal').modal('hide');
       		Ember.$('.ui.modal').remove();

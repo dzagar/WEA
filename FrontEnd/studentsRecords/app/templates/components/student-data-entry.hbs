@@ -38,8 +38,8 @@
 <!-- Delete confirmation popups -->
 {{#if showDeleteConfirmation}} 
   {{delete-student INDEX = currentIndex student = currentStudent showWindow = showDeleteConfirmation total = totalStudents}}
-{{else if showHighSchoolDeleteConfirmation}}
-  {{delete-highschool highschool = currentHighSchool showWindow = showHighSchoolDeleteConfirmation}}
+{{else if showHSGradeDeleteConfirmation}}
+  {{delete-highschool grade = currentHSGrade showWindow = showHSGradeDeleteConfirmation}}
 {{else if showAdvancedStandingDeleteConfirmation}}
   {{delete-advanced-standing AdvancedStanding = currentAdvancedStanding showWindow = showAdvancedStandingDeleteConfirmation}}
 {{else if showScholarshipDeleteConfirmation}}
@@ -292,10 +292,10 @@
         </td>
         <td>
           <div class="ui inverted buttons">
-            <!--This will not work-->
-            <button class="ui blue inverted button" {{action "saveHighSchool" highschool}}>Save</button>
+            
+            <button class="ui blue inverted button" {{action "saveHSGrade" grade}}>Save</button>
             <div class="divider" />
-            <button class="ui red inverted button" {{action "deleteHighSchool" highschool}}>Delete</button>
+            <button class="ui red inverted button" {{action "deleteHSGrade" grade}}>Delete</button>
           </div>
         </td>
       </tr>
