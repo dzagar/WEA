@@ -150,16 +150,20 @@
         <tr>
           <th>Course</th>
           <th><!--spacer--></th>
-          <th><!--spacer--></th>
+          <th>Course Code</th>
           <th>Grade</th>
           <th>Note</th>
         </tr>
       </thead>
-      {{#each semester.courses as grade}}
-        <tr>
-          <td>{{grade.mark}}</td>
-          <td>{{grade.courseCode.name}}</td>
-        </tr>
+      {{#each currentStudent.termCodes as |term|}}
+        {{#each term.grades as |grade|}}
+          <tr>
+            <td colspan="2">{{grade.courseCode.name}}</td>
+            <td>{{grade.courseCode.courseLetter}}{{grade.courseCode.courseNumber}}</td>
+            <td>{{grade.mark}}</td>
+            <td>{{grade.note}}</td>
+          </tr>
+        {{/each}}
       {{/each}}
     </table>
   </div>
