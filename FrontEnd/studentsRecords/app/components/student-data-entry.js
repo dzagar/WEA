@@ -429,6 +429,7 @@ export default Ember.Component.extend({
         if (this.get('newAdvancedStandingName').trim() != "")
         {
             this.set('newAdvancedStandingObj', this.get('store').createRecord('advanced-standing', {
+                student: this.get('currentStudent'),
                 name: this.get('newAdvancedStandingName').trim()
             }));
             this.get('newAdvancedStandingObj').save();
@@ -455,6 +456,7 @@ export default Ember.Component.extend({
       if (this.get('newScholarshipName').trim() != "")
         {
             this.set('newScholarshipObj', this.get('store').createRecord('scholarship', {
+                student: this.get('currentStudent'),
                 note: this.get('newScholarshipName').trim()
             }));
             this.get('newScholarshipObj').save();
