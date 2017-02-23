@@ -2,6 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
 
+  advancedStandingModel: null,
   currentAdvancedStanding: null,
   currentHighSchool: null,
   currentScholarship: null,
@@ -12,8 +13,8 @@ export default Ember.Component.extend({
   lastIndex: 0,
   limit: null,
   movingBackword: false,
-  newASName:"",
-  newASObj: null,
+  newAdvancedStandingName:"",
+  newAdvancedStandingObj: null,
   newHighSchoolName:"",
   newHighSchoolObj: null,
   newScholarshipName:"",
@@ -93,6 +94,10 @@ export default Ember.Component.extend({
 
     this.get('store').findAll('scholarship').then(function (records) {
       self.set('scholarshipModel',records);
+    });
+
+    this.get('store'),findAll('advanced-standing').then(function (records) {
+      self.set('advancedStandingModel',records);
     });
 
     // load first page of the students records
@@ -340,15 +345,16 @@ export default Ember.Component.extend({
         $("#hsInfoTab").show(200);
       }
     },
+    
     addAS()
     {
-        if (this.get('newASName').trim() != "")
+        if (this.get('newAdvancedStandingName').trim() != "")
         {
-            this.set('newASObj', this.get('store').createRecord('advancedStandings', {
-                name: this.get('newASName').trim()
+            this.set('newAdvancedStandingObj', this.get('store').createRecord('advancedStandings', {
+                name: this.get('newAdvancedStandingName').trim()
             }));
-            this.get('newASObj').save();
-            this.set('newASName', "");
+            this.get('newAdvancedStandingObj').save();
+            this.set('newAdvancedStandingName', "");
         }
     },
 

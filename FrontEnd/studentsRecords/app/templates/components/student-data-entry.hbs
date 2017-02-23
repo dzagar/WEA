@@ -171,14 +171,14 @@
         </tr>
       </thead>
 
-      {{#each studentAdvancedStandings as |oneAdvancedStandings|}}
+      {{#each advancedStandingModel as |advancedStanding|}}
          <tr>
             <td>
                 <label>
                   Course: 
                 </label>
                 <div class="ui fluid input">
-                    {{input type="text" value = oneAdvancedStandings.course}}
+                    {{input type="text" value = advancedStanding.course}}
                 </div>
             </td>
             <td>
@@ -186,7 +186,7 @@
                   Description: 
                 </label>
                 <div class="ui fluid input">
-                    {{input type="text" value = oneAdvancedStandings.description}}
+                    {{input type="text" value = advancedStanding.description}}
                 </div>
             </td>
             <td>
@@ -194,7 +194,7 @@
                   Units: 
                 </label>
                 <div class="ui fluid input">
-                    {{input type="text" value = oneAdvancedStandings.units}}
+                    {{input type="text" value = advancedStanding.units}}
                 </div>
             </td>
             <td>
@@ -202,7 +202,7 @@
                   Grade: 
                 </label>
                 <div class="ui fluid input">
-                    {{input type="text" value = oneAdvancedStandings.grade}}
+                    {{input type="text" value = advancedStanding.grade}}
                 </div>
             </td>
             <td>
@@ -210,14 +210,14 @@
                   From: 
                 </label>
                 <div class="ui fluid input">
-                    {{input type="text" value = oneAdvancedStandings.from}}
+                    {{input type="text" value = advancedStanding.from}}
                 </div>
             </td>
             <td>
                 <div class="ui inverted buttons">
-                    <button class="ui blue inverted button" {{action "saveAS" advancedStandings}}>Save</button>
+                    <button class="ui blue inverted button" {{action "saveAS" advancedStanding}}>Save</button>
                     <div class="divider"/>
-                    <button class="ui red inverted button" {{action "deleteAS" advancedStandings}}>Delete</button>
+                    <button class="ui red inverted button" {{action "deleteAS" advancedStanding}}>Delete</button>
                 </div> 
             </td>
         </tr>
@@ -228,7 +228,7 @@
         </td>
         <td>
           <div class="ui fluid input">
-            {{input type="text" value = AdvancedStandingsName}}
+            {{input type="text" value = newAdvancedStandingName}}
           </div>
         </td>
         <td>

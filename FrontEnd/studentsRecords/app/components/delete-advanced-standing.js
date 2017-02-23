@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
 
-    advancedstanding: null,
+  advancedstanding: null,
 	showWindow: null,
 	store: Ember.inject.service(),
 
