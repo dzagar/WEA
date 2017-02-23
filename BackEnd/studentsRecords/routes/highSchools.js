@@ -19,25 +19,34 @@ router.route('/')
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
+        var Course = request.query.courses;
         if (request.query.deleteAll)
         {
             console.log("delete All was true");
             HighSchool.remove({}, function(error) {
-                if (error) {
-                    response.send(error);
-                } else {
-                    HighSchool.find({}, function(error, highSchools) {
-                        if (error) {
-                            response.send(error);
-                        } else {
-                            response.json({highSchool: highSchools});
-                        }
-                    });
+                    if (error)
+                        response.send(error);
+                    else{
+                        HighSchool.find({}, function(error, highSchools) {
+                            if (error)
+                                response.send(error);
+                                else{
+                                    response.json({highSchool: highSchools});
+                                }
+                        });
+                    } console.log("removed highschools");
+                });
+         }
+        else if (Course){
+            HighSchool.find({courses: {"$elemMatch": Course}}, function(err, highSchool){
+                if (err) response.send(err);
+                else {
+                    response.json({highSchool: highSchool});
                 }
-                console.log("removed highschools");
             });
-         } else {
-            var Student = request.query.filter;
+        }
+        else{
+             var Student = request.query.filter;
             if (!Student) {
                 console.log("no Student passed into hs get");
                 HighSchool.find({schoolName: request.query.schoolName}, function(error, highSchools) {

@@ -20,16 +20,31 @@ router.route('/')
     .get(parseUrlencoded, parseJSON, function (request, response) {
         var Student = request.query.filter;
         var deleteAll = request.query.deleteAll;
-        if (deleteAll) {
-            Gender.remove({}, function(error){
-                if (error) {
-                    response.send(error);
-                }  else {
-                    console.log('all genders removed');
+        if (deleteAll){
+            Gender.remove({}, function(err){
+                if (err) response.send(err);
+                else
+                {
+                    Gender.find({}, function(error, genders) {
+                        if (error)
+                            response.send(error)
+                        else
+                            response.send({genders: genders});
+                    });
+                    
                 }
             });
         }
-        if (!Student) {
+        else if(request.query.name)
+        {
+            Gender.find({"name": request.query.name}, function(error, gender) {
+                if (error)
+                    response.send(error);
+                else
+                    response.send({gender: gender});
+            });
+        }
+        else if (!Student) {
             Gender.find(function(error, genders) {
                 if (error) {
                     response.send(error);

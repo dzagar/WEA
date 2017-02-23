@@ -36,14 +36,11 @@ router.route('/')
     //get all scholarship
     .get(parseUrlencoded, parseJSON, function (request, response) {
         var deleteAll = request.query.deleteAll;
-        var Student = parseInt(request.query.student);
-        if (deleteAll) {
-            Scholarship.remove({}, function(error){
-                if (error) {
-                    response.send(error);
-                } else {
-                    console.log('removed scholarships');
-                }
+        var Student = request.query.student;
+        if (deleteAll){
+            Scholarship.remove({}, function(err){
+                if (err) response.send(err);
+                else console.log('removed scholarships');
             });
         }
         if (!Student) {
@@ -54,11 +51,13 @@ router.route('/')
                     response.json({scholarships: scholarships});
                 }
             });
-        } else {
-            Scholarship.find({"studentNumber" : Student}, function(error, scholarships){
-                if (error) {
-                    response.send(error);
-                } else {
+        }
+        else
+        {
+            
+            Scholarship.find({"student" : Student}, function(error, scholarships){
+                if (error) response.send(error);
+                else {
                     response.json({scholarship: scholarships});
                 }
             });

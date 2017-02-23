@@ -19,6 +19,7 @@ router.route('/')
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
+        var course = request.query.course;
         if (request.query.deleteAll)
         {
             HighSchoolSubject.remove({}, function(error) {
@@ -35,7 +36,16 @@ router.route('/')
                     });
                 }
             });
-        } else {
+        } else if (course){
+            HighSchoolSubject.findOne({courses: course}, function(err, highSchoolSubject){
+                console.log("entered proper fcn");
+                if (err) response.send(err);
+                else {
+                    response.json({highSchoolSubject: highSchoolSubject});
+                }
+            });
+        }
+        else{
           
             HighSchoolSubject.find({name: request.query.name, description: request.query.description}, function (error, subjects) {
                 if (error) {

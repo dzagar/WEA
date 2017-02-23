@@ -99,10 +99,30 @@
                   {{/each}}
                 </select>
           </div>
+
+          <div class="item inline field">
+            <label>Admission Average</label> {{input type="text" value = currentStudent.admissionAverage}}
+          </div>
+          <div class="item inline field">
+            <label>Basis of Admission</label> {{input type="text" value = currentStudent.basisOfAdmission}}
+          </div>
+          <div class="ui two column grid">
+            <div class="item inline field column">
+              <label>Admission Comments</label> {{textarea rows="4" type="text" value = currentStudent.admissionComments}}
+            </div>
+            <div class="item inline field column">
+              <label>Registration Comments</label> {{textarea rows="4" type="text" value = currentStudent.registrationComments}}
+            </div>
+          </div>
+          
+
           <div class="inline field">
             <button class="ui inverted red icon button" {{action 'deleteCurrentStudent'}}>
                   Delete <i class="trash icon"></i>
-                </button>
+            </button>
+            <button class="ui inverted green icon button" {{action 'saveStudent'}}>
+                  Save <i class="save icon"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -119,7 +139,7 @@
     <h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
 
     <select class="ui dropdown" onchange={{action 'selectTerm' value="target.value"}}>
-      {{#each currentStudent.termCodes as |semester index|}}
+      {{#each currentStudent.termCodes as |semester|}}
         <option value={{index}}>{{semester.name}}</option>
       {{/each}}
     </select>
@@ -134,10 +154,10 @@
           <th>Note</th>
         </tr>
       </thead>
-      {{#each semseter.courses as grade}}
+      {{#each semester.courses as grade}}
         <tr>
-          <td>Mark</td>
-          <td>name</td>
+          <td>{{grade.mark}}</td>
+          <td>{{grade.courseCode.name}}</td>
         </tr>
       {{/each}}
     </table>
@@ -231,12 +251,12 @@
 
 
   <div class="ui bottom attached tab segment" data-tab="hsinfo">
-    <h2>Highschool Info</h2>
+    <h2>High School Info</h2>
 
     <table class="ui fixed table">
       <thead>
         <tr>
-          <th>HighSchools</th>
+          <th>High Schools</th>
           <th>
             <!--spacer-->
           </th>
@@ -245,15 +265,26 @@
           </th>
         </tr>
       </thead>
-      {{#each highSchoolModel as |highSchool|}}
+      {{#each studentGrades as |grade index|}}
       <tr>
         <td>
           <div class="ui fluid input">
-            {{input type="text" value = highSchool.name}}
+            {{input type="text" value = grade.mark}}
+          </div>
+        </td>
+        <td>
+          <div class="ui fluid input">
+            {{input type="text" value = ""}}
+          </div>
+        </td>
+        <td>
+          <div class="ui fluid input">
+            {{input type="text" value = ""}}
           </div>
         </td>
         <td>
           <div class="ui inverted buttons">
+            <!--This will not work-->
             <button class="ui blue inverted button" {{action "saveHighSchool" highschool}}>Save</button>
             <div class="divider" />
             <button class="ui red inverted button" {{action "deleteHighSchool" highschool}}>Delete</button>

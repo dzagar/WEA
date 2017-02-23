@@ -51,6 +51,7 @@ router.route('/')
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
         var deleteAll = request.query.deleteAll;
+        var Grade = request.query.grades;
         if (deleteAll)
         {
             HighSchoolCourse.remove({}, function(error) {
@@ -138,6 +139,14 @@ router.route('/')
                     });
                 });
             });*/
+        } else if (Grade){
+            HighSchoolCourse.findOne({grades: Grade}, function(err, course){
+                if (err) response.send(err);
+                else {
+                    response.json({highSchoolCourse: course});
+                }
+            });
+
         } else {
             HighSchoolCourse.find({level: request.query.level, source: request.query.source, unit: request.query.unit}, function (error, courses) {
                 if (error) {

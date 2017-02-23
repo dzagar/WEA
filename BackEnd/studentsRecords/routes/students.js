@@ -63,16 +63,29 @@ router.route('/')
         var student = request.query.student;
 
         if (deleteAll) {
-            Student.remove({}, function(error){
-                if (error) {
-                    response.send(error);
-                } else {
-                    console.log('killed all students');
+            Student.remove({}, function(err){
+                if (err) response.send(err);
+                else 
+                {
+                    Student.find({}, function(error, students) {
+                        if (error)
+                            response.send(error);
+                        else
+                            response.send({students:students});
+                    });
                 }
             });
         }
-
-        if (!student) {
+        else if (request.query.findOneStudent)
+        {
+            Student.findOne({studentNumber: studentNumber}, function(error, student) {
+                if (error)
+                    response.send(error);
+                else   
+                    response.send({student:student});
+            });
+        }
+        else if (!student) {
             if (firstName != null || lastName != null || studentNumber != null)
             {
                 var regexFName = new RegExp(firstName, "img");
@@ -139,8 +152,9 @@ router.route('/:student_id')
         Student.findById(request.params.student_id, function (error, student) {
             if (error) {
                 response.send(error);
-            } else {
-                student.studentNumber = request.body.student.number;
+            }
+            else {
+                student.studentNumber = request.body.student.studentNumber;                
                 student.firstName = request.body.student.firstName;
                 student.lastName = request.body.student.lastName;
                 student.gender = request.body.student.gender;
@@ -151,8 +165,8 @@ router.route('/:student_id')
                 student.basisOfAdmission = request.body.student.basisOfAdmission;
                 student.admissionAverage = request.body.student.admissionAverage;
                 student.admissionComments = request.body.student.admissionComments;
-                student.scholarships = request.body.student.scholarships;
-                student.termCodes = request.body.student.termCodes;
+                if (request.body.student.scholarships) student.scholarships = request.body.student.scholarships.slice();
+                if (request.body.student.termCodes) student.termCodes = request.body.student.termCodes.slice();
 
                 student.save(function (error) {
                     if (error) {
