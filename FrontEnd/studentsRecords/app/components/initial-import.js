@@ -784,7 +784,7 @@ export default Ember.Component.extend({
 																										self.pushOutput("<span style='color:green'>Import of grades successful!</span>");
 																										self.pushOutput("<span style='color:green'>All Imports successful!</span>");
 																										Ember.$("#btnContinue").removeClass("disabled");
-																										Ember.$("#recordPlans").addClass("completed");
+																										Ember.$("#highschoolInfo").addClass("completed");
 																									}
 																								});
 																							});
@@ -1684,6 +1684,7 @@ export default Ember.Component.extend({
 								var admissioncommentsArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
 								if(VerificationFunction(admissioncommentsCheckerArray,admissioncommentsArray))
 								{
+									self.pushOutput("Importing Admission Comments");
 									var currentStudentNumber= "";
 									var doneReading = false;
 									var uniqueStudents = [];
@@ -1714,6 +1715,7 @@ export default Ember.Component.extend({
 
 									if(!rollBackImport)
 									{
+										self.pushOutput("Successful read of file has completed. Beginning import of " + uniqueStudents.length + " admission comments.")
 										var inAdmissionMutexIndex = 0;
 										var admissionMutex = Mutex.create();
 										var numberOfCommentsImported = 0;
@@ -1734,7 +1736,7 @@ export default Ember.Component.extend({
 															numberOfCommentsImported++;
 															if (numberOfCommentsImported == uniqueStudents.length - numberOfCommentsWithNoStudent && !doneSavingComments)
 															{
-																self.pushOutput("<span style='color:green'>Import of Admission Averages successful!</span>");
+																self.pushOutput("<span style='color:green'>Import of Admission Comments successful!</span>");
 																Ember.$("#btnContinue").removeClass("disabled");
 																Ember.$("#admissionComments").addClass("completed");																
 															}
@@ -1745,7 +1747,7 @@ export default Ember.Component.extend({
 														numberOfCommentsWithNoStudent++;
 														if (numberOfCommentsImported == uniqueStudents.length - numberOfCommentsWithNoStudent && !doneSavingComments)
 														{
-																self.pushOutput("<span style='color:green'>Import of Admission Averages successful!</span>");
+																self.pushOutput("<span style='color:green'>Import of Admission Comments successful!</span>");
 																Ember.$("#btnContinue").removeClass("disabled");
 																Ember.$("#admissionComments").addClass("completed");															
 														}
