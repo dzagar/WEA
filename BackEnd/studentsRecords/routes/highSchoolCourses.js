@@ -169,7 +169,7 @@ router.route('/:highSchoolCourses_id')
         });
     })
     .put(parseUrlencoded, parseJSON, function (request, response) {
-        HighSchoolCourse.findById(request.params.highSchool_id, function(error, highSchoolCourse) {
+        HighSchoolCourse.findById(request.params.highSchoolCourses_id, function(error, highSchoolCourse) {
             if (error) {
                 response.send(error);
             } else {
@@ -193,7 +193,7 @@ router.route('/:highSchoolCourses_id')
     .delete(parseUrlencoded, parseJSON, function (request, response) {
         let failed = false;
         let completed = 0;
-        HighSchoolCourse.findByIdAndRemove(request.params.highSchoolCourse_id, function(error, highSchoolCourse) {
+        HighSchoolCourse.findByIdAndRemove(request.params.highSchoolCourses_id, function(error, highSchoolCourse) {
             if (error) {
                 failed = true;
                 response.send(error);
