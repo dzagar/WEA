@@ -66,34 +66,36 @@
   </div>
   <div class="ui bottom attached active tab segment" data-tab="basics">
     <!-- student basic information !-->
-
-    <div class="ui grid">
+    <div class="ui grid studentInfo">
       <div class="ui right aligned  seven wide column">
         <div class="ui relaxed items form">
-          <div class=" item inline field">
-            <label>Student Number</label> {{input size="10" type="number" value = currentStudent.studentNumber}}
+          <div class="item inline field">
+            <label>Student Number</label>
+            {{input size="10" type="number"  value = currentStudent.studentNumber readonly=true}}
           </div>
           <div class="item inline field">
-            <label>First Name</label> {{input type="text" value = currentStudent.firstName}}
+            <label>First Name</label>
+            {{input type="text"  value = currentStudent.firstName focus-in = (action "textFocusIn" "firstName") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
           </div>
           <div class="item inline field">
-            <label>Last Name</label> {{input type="text" value = currentStudent.lastName }}
+            <label>Last Name</label>
+            {{input type="text" value = currentStudent.lastName focus-in = (action "textFocusIn" "lastName") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
           </div>
           <div class="item inline field">
             <label>Gender</label>
-            <select id="ddlGender" onchange={{action 'selectGender' value="target.value" }}>
-                  {{#each genderModel as |genderChoice|}}
-                  <option value={{genderChoice.id}} selected={{eq currentStudent.gender.id genderChoice.id}}>{{genderChoice.name}}</option>
-                  {{/each}}
-                </select>
+            <select id="ddlGender" onchange={{action 'selectGender' value="target.value"}} onclick = {{action 'genderFocusIn'}} onblur = {{action 'onFocusOut'}}>
+              {{#each genderModel as |genderChoice|}}
+              <option value={{genderChoice.id}} selected={{eq currentStudent.genInfo.id genderChoice.id}}>{{genderChoice.name}}</option>
+              {{/each}}
+            </select>
           </div>
           <div class="item inline field">
             <label>Date of Birth</label>
-            <input value={{selectedDate}} type="date" onchange={{action 'assignDate' value="target.value" }}>
+            <input value={{selectedDate}} type="date" onchange={{action 'assignDate' value="target.value"}} onFocus = {{action 'dobFocusIn'}} onBlur = {{action 'onFocusOut'}}>
           </div>
           <div class="item inline field">
             <label>Residency</label>
-            <select id="ddlResidency" onchange={{action 'selectResidency' value="target.value" }}>
+            <select id="ddlResidency" onchange={{action 'selectResidency' value="target.value" }} onclick = {{action 'residencyFocusIn'}} onblur = {{action 'onFocusOut'}}>
                   {{#each residencyModel as |residencyChoice|}}
                     <option value={{residencyChoice.id}} selected={{eq currentStudent.resInfo.id residencyChoice.id}}>{{residencyChoice.name}} </option>
                   {{/each}}
@@ -101,17 +103,17 @@
           </div>
 
           <div class="item inline field">
-            <label>Admission Average</label> {{input type="text" value = currentStudent.admissionAverage}}
+            <label>Basis of Admission</label> {{input type="text" value = currentStudent.basisOfAdmission focus-in = (action "textFocusIn" "basisOfAdmission") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
           </div>
           <div class="item inline field">
-            <label>Basis of Admission</label> {{input type="text" value = currentStudent.basisOfAdmission}}
+            <label>Admission Average</label> {{input type="text" value = currentStudent.admissionAverage focus-in = (action "textFocusIn" "admissionAverage") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
           </div>
           <div class="ui two column grid">
             <div class="item inline field column">
-              <label>Admission Comments</label> {{textarea rows="4" type="text" value = currentStudent.admissionComments}}
+              <label>Admission Comments</label> {{textarea rows="4" type="text" value = currentStudent.admissionComments focus-in = (action "textFocusIn" "admissionComments") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
             </div>
             <div class="item inline field column">
-              <label>Registration Comments</label> {{textarea rows="4" type="text" value = currentStudent.registrationComments}}
+              <label>Registration Comments</label> {{textarea rows="4" type="text" value = currentStudent.registrationComments focus-in = (action "textFocusIn" "registrationComments") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
             </div>
           </div>
           
@@ -130,7 +132,6 @@
       <div class=" ui relaxed items center aligned six wide column ">
         <img src={{studentPhoto}} class="item">
       </div>
-
     </div>
   </div>
 

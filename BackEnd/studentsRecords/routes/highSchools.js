@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var HighSchool = require('../models/highSchool');
+var HighSchoolCourse = require('../models/highSchoolCourse');
 var Student = require('../models/student');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
@@ -10,11 +11,10 @@ router.route('/')
     .post(parseUrlencoded, parseJSON, function (request, response) {
         var highSchool = new HighSchool(request.body.highSchool);
         highSchool.save(function(error) {
-            if (error)
+            if (error) {
                 response.send(error);
-            else{
+            } else {
                 response.json({highSchool: highSchool});
-
             }
         });
     })
@@ -50,17 +50,19 @@ router.route('/')
             if (!Student) {
                 console.log("no Student passed into hs get");
                 HighSchool.find({schoolName: request.query.schoolName}, function(error, highSchools) {
-                    if (error)
+                    if (error) {
                         response.send(error);
-                        else{
-                            response.json({highSchool: highSchools});
-                        }
+                    } else {
+                        response.json({highSchool: highSchools});
+                    }
                 });
             } else {
                 HighSchool.find({"student": Student.student}, function (error, students) {
-                    if (error)
+                    if (error) {
                         response.send(error);
-                    response.json({highSchool: students});
+                    } else {
+                        response.json({highSchool: students});
+                    }
                 });
             } 
         }
@@ -69,22 +71,24 @@ router.route('/')
     router.route('/:highSchool_id')
     .get(parseUrlencoded, parseJSON, function (request, response) {
         HighSchool.findById(request.params.highSchool_id, function(error, highSchool) {
-            if (error)
+            if (error) {
                 response.send(error);
-            response.json({highSchool: highSchool})
+            } else {
+                response.json({highSchool: highSchool})
+            }
         });
     })
     .put(parseUrlencoded, parseJSON, function (request, response) {
         HighSchool.findById(request.params.highSchool_id, function(error, highSchool) {
             if (error) {
-                response.send({error: error});
+                response.send(error);
             } else {
                 highSchool.name = request.body.highSchool.name;
                 highSchool.students = request.body.highSchool.students;
 
                 highSchool.save(function(error) {
                     if (error) {
-                        response.send({error: error});
+                        response.send(error);
                     } else {
                         response.json({highSchool: highSchool});
                     }
@@ -93,19 +97,46 @@ router.route('/')
         });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
-        Student.update({"highSchool": request.params.highSchool_id}, {"$set": {"highSchool": null}}, false, 
-        function(error, success){
-            if (error){
+        let failed = false;
+        let completed = 0;
+        HighSchool.findByIdAndRemove(request.params.highSchool_id, function(error, school) {
+            if (error) {
+                failed = true;
                 response.send(error);
+            } else if (school) {
+
+                for (let i = 0; i < school.courses.length && !failed; i++) {
+                    HighSchoolCourse.findById(school.courses[i], function (error, course) {
+                        if (error && !failed) {
+                            failed = true;
+                            response.send(error);
+                        } else if (course) {
+                            course.school = null;
+
+                            course.save(function (error) {
+                                if (error && !failed) {
+                                    failed = true;
+                                    response.send(error);
+                                } else {
+                                    completed++;
+                                    if (completed === school.courses.length && !failed) {
+                                        response.json({deleted: school});
+                                    }
+                                }
+                            });
+
+                        } else {
+                            completed++;
+                            if (completed === school.courses.length && !failed) {
+                                response.json({deleted: school});
+                            }
+                        }
+                    });
+                }
             } else {
-                HighSchool.findByIdAndRemove(request.params.highSchool_id, function(error, deleted) {
-                    if (error)
-                        response.send(error);
-                    response.json({highSchool: deleted});
-                });
+                response.json({deleted: school});
             }
         });
-        
     });
 
 module.exports = router;

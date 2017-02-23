@@ -3,6 +3,7 @@ var router = express.Router();
 var HighSchoolCourse = require('../models/highSchoolCourse');
 var HighSchoolSubject = require('../models/highSchoolSubject');
 var HighSchool = require('../models/highSchool');
+var HighSchoolGrade = require('../models/highSchoolGrade');
 var Student = require('../models/student');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
@@ -11,10 +12,41 @@ var parseJSON = bodyParser.json();
 router.route('/')
     .post(parseUrlencoded, parseJSON, function (request, response) {
         var highSchoolCourse = new HighSchoolCourse(request.body.highSchoolCourse);
-        highSchoolCourse.save(function(error) {
-            if (error)
+
+        HighSchool.findById(highSchoolCourse.school, function (error, highSchool) {
+            if (error) {
                 response.send(error);
-            response.json({highSchoolCourse: highSchoolCourse});
+            } else {
+                highSchool.courses.push(highSchoolCourse._id);
+
+                HighSchoolSubject.findById(highSchoolCourse.subject, function (error, subject) {
+                    if (error) {
+                        response.send(error);
+                    } else {    
+                        subject.courses.push(highSchoolCourse._id);
+
+                        highSchoolCourse.save(function(error) {
+                            if (error) {
+                                response.send(error);
+                            } else {
+                                highSchool.save(function (error) {
+                                    if (error) {
+                                        response.send(error);
+                                    } else {
+                                        subject.save(function (error) {
+                                            if (error) {
+                                                response.send(error);
+                                            } else {
+                                                response.json({highSchoolCourse: highSchoolCourse});
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
@@ -23,38 +55,43 @@ router.route('/')
         if (deleteAll)
         {
             HighSchoolCourse.remove({}, function(error) {
-                if (error)
-                {
+                if (error) {
                     response.send(error);
                 }
-                else{
-                     HighSchoolCourse.find(function (err, highSchoolCourse){
-                        if (err) response.send(err);
-                        else{
+                else {
+                     HighSchoolCourse.find(function (error, highSchoolCourse){
+                        if (error) {
+                            response.send(error);
+                        } else {
                             response.json({highSchoolCourse: highSchoolCourse});
-                        }console.log('removed high school courses');
+                        }
+                        console.log('removed high school courses');
                     });
                 }
             });
         } else if (request.query.schoolName && request.query.subjectName && request.query.subjectDescription) {
             HighSchool.findOne({schoolName: request.query.schoolName}, function(error, school) {
-                if (error)
+                if (error) {
                     response.send(error);   //should only return one record anyway
-                if(school) {
+                } else if(school) {
                     HighSchoolSubject.findOne({name: request.query.subjectName, description: request.query.subjectDescription}, function (error, subject) {
-                        if (error)
+                        if (error) {
                             response.send(error);
-                        if(subject) {
+                        } else if(subject) {
                             HighSchoolCourse.findOne({level: request.query.level, source: request.query.source, unit: request.query.unit, school: school.id, subject: subject.id}, function (error, course) {
-                                if (error)
+                                if (error) {
                                     response.send(error);
-                                response.json({highSchoolCourse: course});
+                                } else {
+                                    response.json({highSchoolCourse: course});
+                                }
                             });
-                        } else 
+                        } else {
                             response.json({error: "No subject was found"});
+                        }
                     });
-                } else
+                } else {
                     response.json({error: "No highschool was found"});
+                }
             });
 
             /*
@@ -80,7 +117,7 @@ router.route('/')
                         }
                     }
 
-                    HighSchoolSubject.find({name: request.query.subjectName, description: request.query.subjectDescription}, function (error, subjects) {
+                    HighSchoolCourses.find({name: request.query.subjectName, description: request.query.subjectDescription}, function (error, subjects) {
                         if (error)
                             response.send(error);
                         
@@ -112,53 +149,144 @@ router.route('/')
 
         } else {
             HighSchoolCourse.find({level: request.query.level, source: request.query.source, unit: request.query.unit}, function (error, courses) {
-                if (error)
+                if (error) {
                     response.send(error);
-                response.json({highSchoolCourses: courses});
+                } else {
+                    response.json({highSchoolCourses: courses});
+                }
             });
         }
     });
 
-    router.route('/:highSchoolCourses_id')
+router.route('/:highSchoolCourses_id')
     .get(parseUrlencoded, parseJSON, function (request, response) {
-        // HighSchoolSubject.findById(request.params.highSchoolSubjects_id, function(error, highSchoolSubject) {
-        //     if (error)
-        //         response.send(error);
-        //     response.json({highSchoolSubject: highSchoolSubject})
-        // });
+        HighSchoolCourse.findById(request.params.highSchoolCourses_id, function(error, highSchoolCourse) {
+            if (error) {
+                response.send(error);
+            } else {
+                response.json({highSchoolCourse: highSchoolCourse});
+            }
+        });
     })
     .put(parseUrlencoded, parseJSON, function (request, response) {
-        //HighSchoolSubject.findById(request.params.highSchool_id, function(error, highSchoolSubject) {
-            // if (error) {
-            //     response.send({error: error});
-            // } else {
-            //     highSchoolSubject.name = request.body.highSchool.name;
-            //     highSchoolSubject.students = request.body.highSchoolSubject.students;
+        HighSchoolCourse.findById(request.params.highSchool_id, function(error, highSchoolCourse) {
+            if (error) {
+                response.send(error);
+            } else {
+                highSchoolCourse.level = request.body.highSchoolCourse.level;
+                highSchoolCourse.source = request.body.highSchoolCourse.source;
+                highSchoolCourse.unit = request.body.highSchoolCourse.unit;
+                highSchoolCourse.subject = request.body.highSchoolCourse.subject;
+                highSchoolCourse.school = request.body.highSchoolCourse.school;
+                highSchoolCourse.grades = request.body.highSchoolCourse.grades;
 
-            //     highSchoolSubject.save(function(error) {
-            //         if (error) {
-            //             response.send({error: error});
-            //         } else {
-            //             response.json({highSchool: highSchool});
-            //         }
-            //     });
-            // }
-        //});
+                highSchoolCourses.save(function(error) {
+                    if (error) {
+                        response.send(error);
+                    } else {
+                        response.json({highSchoolCourse: highSchoolCourse});
+                    }
+                });
+            }
+        });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
-        // Student.update({"highSchool": request.params.highSchool_id}, {"$set": {"highSchool": null}}, false, 
-        // function(error, success){
-        //     if (error){
-        //         response.send(error);
-        //     } else {
-        //         HighSchool.findByIdAndRemove(request.params.highSchool_id, function(error, deleted) {
-        //             if (error)
-        //                 response.send(error);
-        //             response.json({highSchool: deleted});
-        //         });
-        //     }
-        // });
-        
+        let failed = false;
+        let completed = 0;
+        HighSchoolCourse.findByIdAndRemove(request.params.highSchoolCourse_id, function(error, highSchoolCourse) {
+            if (error) {
+                failed = true;
+                response.send(error);
+            } else if (highSchoolCourse) {
+
+                HighSchool.findById(highSchoolCourse.school, function (error, school) {
+                    if (error && !failed) {
+                        failed = true;
+                        response.send(error);
+                    } else if (school) {
+                        let index = school.courses.indexOf(highSchoolCourse._id);
+                        if (index > -1) {
+                            school.courses.splice(index, 1);
+                        }
+
+                        school.save(function (error) {
+                            if (error && !failed) {
+                                failed = true;
+                                response.send(error);
+                            } else {
+                                completed++;
+                                if (completed === 3 && !failed) {
+                                    response.json({deleted: highSchoolCourse});
+                                }
+                            }
+                        });
+                    } else {
+                        completed++;
+                        if (completed === 3 && !failed) {
+                            response.json({deleted: highSchoolCourse});
+                        }
+                    }
+                });
+
+                HighSchoolSubject.findById(highSchoolCourse.subject, function (error, subject) {
+                    if (error && !failed) {
+                        failed = true;
+                        response.send(error);
+                    } else if (subject) {
+                        let index = subject.courses.indexOf(highSchoolCourse._id);
+                        if (index > -1) {
+                            subject.courses.splice(index, 1);
+                        }
+
+                        subject.save(function (error) {
+                            if (error && !failed) {
+                                failed = true;
+                                response.send(error);
+                            } else {
+                                completed++;
+                                if (completed === 3 && !failed) {
+                                    response.json({deleted: highSchoolCourse});
+                                }
+                            }
+                        });
+                    } else {
+                        completed++;
+                        if (completed === 3 && !failed) {
+                            response.json({deleted: highSchoolCourse});
+                        }
+                    }
+                });
+
+                let completedGrades = 0;
+                for (let i = 0; i < highSchoolCourse.grades.length && !failed; i++) {
+                    HighSchoolGrade.findById(highSchoolCourse.grades[i], function (error, grade) {
+                        if (error && !failed) {
+                            failed = true;
+                            response.send(error);
+                        } else if (grade) {
+                            grade.source = null;
+                            grade.save(function (error) {
+                                if (error && !failed) {
+                                    failed = true;
+                                    response.send(error);
+                                } else {
+                                    completedGrades++;
+                                    if (completedGrades === highSchoolCourse.grades.length && !failed) {
+                                        completed++;
+                                        if (completed === 3 && !failed) {
+                                            response.json({deleted: highSchoolCourse});
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+
+            } else {
+                response.json({deleted: highSchoolCourse});
+            }
+        });
     });
 
 module.exports = router;

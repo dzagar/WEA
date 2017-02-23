@@ -10,8 +10,11 @@ router.route('/')
     .post(parseUrlencoded, parseJSON, function (request, response) {
         var residency = new Residency(request.body.residency);
         residency.save(function (error) {
-            if (error) response.send(error);
-            response.json({residency: residency});
+            if (error) {
+                response.send(error);
+            } else {
+                response.json({residency: residency});
+            }
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
@@ -42,13 +45,19 @@ router.route('/')
         }
         else if (!Student) {
             Residency.find(function (error, residencies) {
-                if (error) response.send(error);
-                response.json({residency: residencies});
+                if (error) {
+                    response.send(error);
+                } else {
+                    response.json({residency: residencies});   
+                }
             });
         } else {
             Residency.find({"student": Student.student}, function (error, students) {
-                if (error) response.send(error);
-                response.json({residency: students});
+                if (error) {
+                    response.send(error);
+                } else {
+                    response.json({residency: students});
+                }
             });
         }
     });
@@ -56,24 +65,25 @@ router.route('/')
 router.route('/:residency_id')
     .get(parseUrlencoded, parseJSON, function (request, response) {
         Residency.findById(request.params.residency_id, function (error, residency) {
-            if (error) response.send(error);
-            response.json({residency: residency});
+            if (error) {
+                response.send(error);
+            } else {
+                response.json({residency: residency});
+            }
         })
     })
     .put(parseUrlencoded, parseJSON, function (request, response) {
         Residency.findById(request.params.residency_id, function (error, residency) {
             if (error) {
-                response.send({error: error});
-            }
-            else {
+                response.send(error);
+            } else {
                 residency.name = request.body.residency.name;
                 residency.students = request.body.residency.students;
 
                 residency.save(function (error) {
                     if (error) {
-                        response.send({error: error});
-                    }
-                    else {
+                        response.send(error);
+                    } else {
                         response.json({residency: residency});
                     }
                 });
@@ -81,16 +91,43 @@ router.route('/:residency_id')
         })
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
-        Student.update({"resInfo": request.params.residency_id}, {"$set": {"resInfo": null}}, false, 
-        function(error, success){
-            if (error){
+        let failed = false;
+        let completed = 0;
+        Residency.findByIdAndRemove(request.params.residency_id, function(error, residency) {
+            if (error) {
+                failed = true;
                 response.send(error);
+            } else if (residency && residency.students.length > 0) {
+                for (let i = 0; i < residency.students.length && !failed; i++) {
+                    Student.findById(residency.students[i], function (error, student) {
+                        if (error && !failed) {
+                            failed = true;
+                            response.send(error);
+                        } else if (student) {
+                            student.resInfo = null;
+
+                            student.save(function (error) {
+                                if (error && !failed) {
+                                    failed = true;
+                                    response.send(error);
+                                } else {
+                                    completed++;
+                                    if (completed === residency.students.length && !failed) {
+                                        response.json({deleted: residency});
+                                    }
+                                }
+                            });
+
+                        } else {
+                            completed++;
+                            if (completed === residency.students.length && !failed) {
+                                response.json({deleted: residency});
+                            }
+                        }
+                    });
+                }
             } else {
-                Residency.findByIdAndRemove(request.params.residency_id, function(error, deleted) {
-                    if (error)
-                        response.send(error);
-                    response.json({residency: deleted});
-                });
+                response.json({deleted: residency});
             }
         });
     });

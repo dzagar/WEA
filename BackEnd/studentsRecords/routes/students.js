@@ -1,6 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var Student = require('../models/student');
+var Gender = require('../models/gender');
+var Residency = require('../models/residency');
+var Scholarship = require('../models/scholarship');
+var TermCode = require('../models/termCode');
+var AdvancedStanding = require('../models/advancedStanding');
+var HighSchoolGrade = require('../models/highSchoolGrade');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
 var parseJSON = bodyParser.json();
@@ -8,9 +14,41 @@ var parseJSON = bodyParser.json();
 router.route('/')
     .post(parseUrlencoded, parseJSON, function (request, response) {
         var student = new Student(request.body.student);
-        student.save(function (error) {
-            if (error) response.send(error);
-            response.json({student: student});
+
+        Gender.findById(student.gender, function(error, gender) {
+            if (error) {
+                response.send(error);
+            } else {
+                gender.students.push(student._id);
+
+                Residency.findById(student.resInfo, function (error, residency) {
+                    if (error) {
+                        response.send(error);
+                    } else {
+                        residency.students.push(student._id);
+
+                        student.save(function (error) {
+                            if (error) {
+                                response.send(error);
+                            } else {
+                                gender.save(function (error) {
+                                    if (error) {
+                                        response.send(error);
+                                    } else {
+                                        residency.save(function (error) {
+                                            if (error) {
+                                                response.send(error);
+                                            } else {
+                                                response.json({student: student});
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
@@ -35,7 +73,6 @@ router.route('/')
                         else
                             response.send({students:students});
                     });
-
                 }
             });
         }
@@ -60,8 +97,9 @@ router.route('/')
                 if (studentNumber != "") conditions["studentNumber"] = regexStudentNum;
 
                 Student.find(conditions, function(error, students){
-                    if (error) response.send(error);
-                    else {
+                    if (error) {
+                        response.send(error);
+                    } else {
                         console.log(students);
                         response.json({student: students});
                     }
@@ -69,13 +107,19 @@ router.route('/')
             }
             else
             { 
-                Student.paginate({}, { offset: o, limit: l },
-                    function (error, students) {
-                        if (error) response.send(error);
-                        Student.count({}, function(err, num) {
-                            response.json({student: students.docs, meta: {total: num}});
+                Student.paginate({}, { offset: o, limit: l },function (error, students) {
+                    if (error) {
+                        response.send(error);
+                    } else {
+                        Student.count({}, function(error, num) {
+                            if (error) {
+                                response.send(error);
+                            } else {
+                                response.json({student: students.docs, meta: {total: num}});
+                            }
                         });
-                    });
+                    }
+                });
 
             }
             //models.Students.find(function (error, students) {
@@ -85,8 +129,11 @@ router.route('/')
         } else {
             //        if (Student == "residency")
             Student.find({"residency": request.query.residency}, function (error, students) {
-                if (error) response.send(error);
-                response.json({student: students});
+                if (error) {
+                    response.send(error);
+                } else {
+                    response.json({student: students});
+                }
             });
         }
     });
@@ -95,9 +142,8 @@ router.route('/:student_id')
     .get(parseUrlencoded, parseJSON, function (request, response) {
         Student.findById(request.params.student_id, function (error, student) {
             if (error) {
-                response.send({error: error});
-            }
-            else {
+                response.send(error);
+            } else {
                 response.json({student: student});
             }
         });
@@ -105,7 +151,7 @@ router.route('/:student_id')
     .put(parseUrlencoded, parseJSON, function (request, response) {
         Student.findById(request.params.student_id, function (error, student) {
             if (error) {
-                response.send({error: error});
+                response.send(error);
             }
             else {
                 student.studentNumber = request.body.student.studentNumber;                
@@ -124,9 +170,8 @@ router.route('/:student_id')
 
                 student.save(function (error) {
                     if (error) {
-                        response.send({error: error});
-                    }
-                    else {
+                        response.send(error);
+                    } else {
                         response.json({student: student});
                     }
                 });
@@ -134,12 +179,223 @@ router.route('/:student_id')
         });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
-        Student.findByIdAndRemove(request.params.student_id,
-            function (error, deleted) {
-                if (!error) {
-                    response.json({student: deleted});
+        let failed = false;
+        let completed = 0;
+        Student.findByIdAndRemove(request.params.student_id, function (error, student) {
+            if (error) {
+                failed = true;
+                response.send(error);
+            } else if (student) {
+                Gender.findById(student.gender, function (error, gender) {
+                    if (error && !failed) {
+                        failed = true;
+                        response.send(error);
+                    } else if (gender) {
+                        let index = gender.students.indexOf(student._id);
+                        if (index > -1) {
+                            gender.students.splice(index, 1);
+                        }
+
+                        gender.save(function (error) {
+                            if (error && !failed) {
+                                failed = true;
+                                response.send(error);
+                            } else {
+                                completed++;
+                                if (completed === 6 && !failed) {
+                                    response.json({deleted: student});
+                                }
+                            }
+                        });
+
+                    } else {
+                        completed++;
+                        if (completed === 6 && !failed) {
+                            response.json({deleted: student});
+                        }
+                    }
+                });
+
+                Residency.findById(student.resInfo, function (error, residency) {
+                    if (error && !failed) {
+                        failed = true;
+                        response.send(error);
+                    } else if (residency) {
+                        let index = residency.students.indexOf(student._id);
+                        if (index > -1) {
+                            residency.students.splic(index, 1);
+                        }
+
+                        residency.save(function (error) {
+                            if (error && !failed) {
+                                failed = true;
+                                response.send(error);
+                            } else {
+                                completed++;
+                                if (completed === 6 && !failed) {
+                                    response.json({deleted: student});
+                                }
+                            }
+                        });
+                    } else {
+                        completed++;
+                        if (completed === 6 && !failed) {
+                            response.json({deleted: student});
+                        }
+                    }
+                });
+
+                if (student.scholarships.length > 0) {
+                    let completedScholarships = 0;
+                    for (let i = 0; i < student.scholarships.length && !failed; i++) {
+                        Scholarship.findById(student.scholarships[i], function (error, scholarship) {
+                            if (error && !failed) {
+                                failed = true;
+                                response.send(error);
+                            } else if (scholarship) {
+                                scholarship.student = null;
+
+                                scholarship.save(function (error) {
+                                    completedScholarships++;
+                                    if (completedScholarships === student.scholarships.length && !failed) {
+                                        completed++;
+                                        if (completed === 6 && !failed) {
+                                            response.json({deleted: student});
+                                        }
+                                    }
+                                });
+                            } else {
+                                completedScholarships++;
+                                if (completedScholarships === student.scholarships.length && !failed) {
+                                    completed++;
+                                    if (completed === 6 && !failed) {
+                                        response.json({deleted: student});
+                                    }
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    completed++;
+                    if (completed === 6 && !failed) {
+                        response.json({deleted: student});
+                    }
                 }
+
+                if (student.termCodes.length > 0) {
+                    let completedTermCodes = 0;
+                    for (let i = 0; i < student.termCodes.length && !failed; i++) {
+                        TermCode.findById(student.termCodes[i], function (error, termCode) {
+                            if (error && !failed) {
+                                failed = true;
+                                response.send(error);
+                            } else if (termCode) {
+                                termCode.student = null;
+
+                                termCode.save(function (error) {
+                                    completedTermCodes++;
+                                    if (completedTermCodes === student.termCodes.length && !failed) {
+                                        completed++;
+                                        if (completed === 6 && !failed) {
+                                            response.json({deleted: student});
+                                        }
+                                    }
+                                });
+                            } else {
+                                completedTermCodes++;
+                                if (completedTermCodes === student.termCodes.length && !failed) {
+                                    completed++;
+                                    if (completed === 6 && !failed) {
+                                        response.json({deleted: student});
+                                    }
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    completed++;
+                    if (completed === 6 && !failed) {
+                        response.json({deleted: student});
+                    }
+                }
+
+                if (student.advancedStandings.length > 0) {
+                    let completedAdvancedStandings = 0;
+                    for (let i = 0; i < student.advancedStandings.length && !failed; i++) {
+                        AdvancedStanding.findById(student.advancedStandings[i], function (error, advancedStanding) {
+                            if (error && !failed) {
+                                failed = true;
+                                response.send(error);
+                            } else if (advancedStanding) {
+                                advancedStanding.student = null;
+
+                                advancedStanding.save(function (error) {
+                                    completedAdvancedStandings++;
+                                    if (completedAdvancedStandings === student.advancedStandings.length && !failed) {
+                                        completed++;
+                                        if (completed === 6 && !failed) {
+                                            response.json({deleted: student});
+                                        }
+                                    }
+                                });
+                            } else {
+                                completedAdvancedStandings++;
+                                if (completedAdvancedStandings === student.advancedStandings.length && !failed) {
+                                    completed++;
+                                    if (completed === 6 && !failed) {
+                                        response.json({deleted: student});
+                                    }
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    completed++;
+                    if (completed === 6 && !failed) {
+                        response.json({deleted: student});
+                    }
+                }
+
+                if (student.highSchoolGrades.length > 0) {
+                    let completedHighSchoolGrades = 0;
+                    for (let i = 0; i < student.highSchoolGrades.length && !failed; i++) {
+                        HighSchoolGrade.findById(student.highSchoolGrades[i], function (error, highSchoolGrade) {
+                            if (error && !failed) {
+                                failed = true;
+                                response.send(error);
+                            } else if (highSchoolGrade) {
+                                highSchoolGrade.student = null;
+
+                                highSchoolGrade.save(function (error) {
+                                    completedHighSchoolGrades++;
+                                    if (completedHighSchoolGrades === student.highSchoolGrades.length && !failed) {
+                                        completed++;
+                                        if (completed === 6 && !failed) {
+                                            response.json({deleted: student});
+                                        }
+                                    }
+                                });
+                            } else {
+                                completedHighSchoolGrades++;
+                                if (completedHighSchoolGrades === student.highSchoolGrades.length && !failed) {
+                                    completed++;
+                                    if (completed === 6 && !failed) {
+                                        response.json({deleted: student});
+                                    }
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    completed++;
+                    if (completed === 6 && !failed) {
+                        response.json({deleted: student});
+                    }
+                }
+
+            } else {
+                response.json({deleted: student});
             }
-        );
+        });
     });
 module.exports = router;

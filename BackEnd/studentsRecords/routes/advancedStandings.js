@@ -9,19 +9,29 @@ var parseJSON = bodyParser.json();
 router.route('/')
     //posting new advanced standing
     .post(parseUrlencoded, parseJSON, function (request, response) {
-        var advancedStandings = new AdvancedStanding(request.body.advancedStanding);
-        advancedStandings.save(function(error) {
-            if (error)
-            {
+        var advancedStanding = new AdvancedStanding(request.body.advancedStanding);
+
+        Student.findById(advancedStanding.student, function (error, student) {
+            if (error) {
                 response.send(error);
-            } 
-            else
-            {
-                response.json({advancedStanding: advancedStandings});                
+            } else {   
+                student.advancedStandings.push(advancedStanding._id);
+
+                advancedStanding.save(function(error) {
+                    if (error) {
+                        response.send(error);
+                    } else {                    
+                        student.save(function(error) {
+                            if (error) {
+                                response.send(error);
+                            } else {
+                                response.json({advancedStanding: advancedStanding});
+                            }
+                        });   
+                    }             
+                });
             }
         });
-
-
     })
 
     .get(parseUrlencoded, parseJSON, function (request, response) {
@@ -30,24 +40,30 @@ router.route('/')
 
         var deleteAll = request.query.deleteAll;
 
-        if (deleteAll){
-            AdvancedStanding.remove({}, function(err){
-                if (err) response.send(err);
-                else
-                {
-                    AdvancedStanding.find(function (err, advancedStandings){
-                        if (err) response.send(err);
-                        response.json({advancedStanding: advancedStandings});
+        if (deleteAll) {
+            AdvancedStanding.remove({}, function(error) {
+                if (error) {
+                    response.send(error);
+                } else {
+                    AdvancedStanding.find(function (error, advancedStandings) {
+                        if (error) {
+                            response.send(error);
+                        } else {
+                            response.json({advancedStanding: advancedStandings});
+                        }
                     });
-                } console.log('removed advanced standings');
+                } 
+                console.log('removed advanced standings');
             });
         }
         
         else if (!Student) {
-            AdvancedStanding.find(function (err, advancedStandings){
-                if (err)
+            AdvancedStanding.find(function (error, advancedStandings){
+                if (error) {
                     response.send(err);
-                response.json({advancedStanding: advancedStandings});
+                } else {
+                    response.json({advancedStanding: advancedStandings});
+                }
             });
         }
         else
@@ -61,7 +77,7 @@ router.route('/')
                     {
                         //console.log(advancedStandings);
                         response.json({advancedStandings: advancedStandings});
-                    }
+                }
             });
             // AdvancedStanding.find({"studentNumber" : Student}, function(error, advancedStandings){
             //     if (error) 
@@ -80,16 +96,63 @@ router.route('/')
 router.route('/:advancedStanding_id')
     .get(parseUrlencoded, parseJSON, function (request, response) {
         AdvancedStanding.findById(request.params.advancedStanding_id, function (error, advancedStanding) {
-            if (error)
+            if (error) {
                 response.send(error);
-            response.json({advancedStanding: advancedStanding});
+            } else {
+                response.json({advancedStanding: advancedStanding});
+            }
+        });
+    })
+    .put(parseUrlencoded, parseJSON, function (request, response) {
+        AdvancedStanding.findById(request.params.advancedStanding_id, function (error, advancedStanding) {
+            if (error) {
+                response.send(error);
+            } else {
+                advancedStanding.student = request.body.advancedStanding.student;
+                advancedStanding.course = request.body.advancedStanding.course;
+                advancedStanding.description = request.body.advancedStanding.description;
+                advancedStanding.units = request.body.advancedStanding.units;
+                advancedStanding.grade = request.body.advancedStanding.grade;
+                advancedStanding.from = request.body.advancedStanding.from;
+
+                advancedStanding.save(function(error) {
+                    if (error) {
+                        response.send(error);
+                    } else {
+                        response.json({advancedStanding: advancedStanding});
+                    }
+                });
+            }
         });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
         AdvancedStanding.findByIdAndRemove(request.params.advancedStanding_id, function(error, advancedStanding) {
-            if(error)
+            if (error) {
                 response.send(error);
-            response.send({deleted: advancedStanding});
+            } else if (advancedStanding) {
+
+                Student.findById(advancedStanding.student, function (error, student) {
+                    if (error) {
+                        response.send(error);
+                    } else if (student) {
+                        let index = student.advancedStandings.indexOf(advancedStanding._id);
+                        if (index > -1) {
+                            student.advancedStandings.splice(index, 1); //removes the item located at index
+                        }
+                        student.save(function (error) {
+                            if (error) {
+                                response.send(error);
+                            } else {
+                                response.json({deleted: advancedStanding});
+                            }
+                        });
+                    } else {
+                        response.json({deleted: advancedStanding});
+                    }
+                });
+            } else {
+                response.json({deleted: advancedStanding});
+            }
         });
     });
 

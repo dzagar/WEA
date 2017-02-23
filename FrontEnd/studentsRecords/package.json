@@ -44,6 +44,7 @@
     "ember-welcome-page": "^1.0.3",
     "loader.js": "^4.0.10",
     "semantic-ui-ember": "2.0.0",
-    "xlsx-browserify-shim": "0.0.5"
+    "xlsx-browserify-shim": "0.0.5",
+    "undo-manager": "1.0.5"
   }
 }
