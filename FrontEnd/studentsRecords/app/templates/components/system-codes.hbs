@@ -100,10 +100,14 @@
   </div>
 
 <div class="ui bottom attached tab segment" data-tab="coursecode">
-    <table class="ui fixed table">
+    <table class="ui table">
         <thead>
             <tr>
             <th>Course Codes</th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>
             <th><!--spacer--></th>
             
             </tr>
@@ -112,7 +116,24 @@
         <tr>
             <td>
                 <div class="ui fluid input">
+                    {{input type="text" value = courseCode.courseLetter}}
+                </div>
+            </td>
+
+            <td>
+                <div class="ui fluid input">
+                    {{input type="text" value = courseCode.courseNumber}}
+                </div>
+            </td>
+
+            <td>
+                <div class="ui fluid input">
                     {{input type="text" value = courseCode.name}}
+                </div>
+            </td>
+            <td>
+                <div class="ui fluid input">
+                    {{input type="text" value = courseCode.unit}}
                 </div>
             </td>
             <td>
@@ -127,9 +148,27 @@
         <tr>
             <td>
                 <div class="ui fluid input">
+                    {{input type="text" value = newCourseCodeCourseLetter}}
+                </div>
+            </td>
+            <td>
+                <div class="ui fluid input">
+                    {{input type="text" value = newCourseCodeCourseNumber}}
+                </div>
+            </td>
+
+            <td>
+                <div class="ui fluid input">
                     {{input type="text" value = newCourseCodeName}}
                 </div>
             </td>
+                
+            <td> 
+                <div class="ui fluid input">
+                    {{input type="text" value = newCourseCodeUnit}}
+                </div>
+            </td>
+
             <td>
                 <button class="ui inverted green button" {{action "addCourseCode"}}> 
                 Add &nbsp; <i class="add square icon"></i>

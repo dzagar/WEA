@@ -7,7 +7,10 @@ export default Ember.Component.extend({
     currentGender: null,
     currentResidency: null,
     genderModel: null,
+    newCourseCodeCourseLetter: "",
+    newCourseCodeCourseNumber: "",
     newCourseCodeName: "",
+    newCourseCodeUnit: "",
     newCourseCodeObj: null,
     newGenderName: "",
     newGenderObj: null,
@@ -102,13 +105,19 @@ export default Ember.Component.extend({
 
         addCourseCode()
         {
-            if(this.get('newCourseCodeName').trim()!="")
+            if((this.get('newCourseCodeName').trim()!="") && (this.get('newCourseCodeCourseLetter').trim()!="") && (this.get('newCourseCodeCourseNumber').trim()!="") && (this.get('newCourseCodeUnit').trim()!=""))
             {
                 this.set('newCourseCodeObj',this.get('store').createRecord('course-code', {
-                    name: this.get('newCourseCodeName').trim()
+                    courseLetter: this.get('newCourseCodeCourseLetter').trim(),
+                    courseNumber: this.get('newCourseCodeCourseNumber').trim(),
+                    name: this.get('newCourseCodeName').trim(),
+                    unit: this.get('newCourseCodeUnit').trim()
                 }));
                 this.get('newCourseCodeObj').save();
                 this.set('newCourseCodeName',"");
+                this.set('newCourseCodeCourseLetter',"");
+                this.set('newCourseCodeCourseNumber',"");
+                this.set('newCourseCodeUnit',"");
             }
         },
 
