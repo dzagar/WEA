@@ -236,13 +236,30 @@
       {{/each}}
       <tr>
         <td>
-          <!--spacer-->
+          <div class="ui fluid input">
+            {{input type="text" value = newAdvancedStandingCourse}}
+          </div>
         </td>
         <td>
           <div class="ui fluid input">
-            {{input type="text" value = newAdvancedStandingName}}
-          </div>
+            {{input type="text" value = newAdvancedStandingDescription}}
+            </div>
         </td>
+        <td>
+          <div class="ui fluid input">
+            {{input type="text" value = newAdvancedStandingUnits}}
+            </div>
+          </td>
+          <td>
+          <div class="ui fluid input">
+            {{input type="text" value = newAdvancedStandingGrade}}
+            </div>
+          </td>
+          <td>
+          <div class="ui fluid input">
+            {{input type="text" value = newAdvancedStandingFrom}}
+            </div>
+          </td>
         <td>
           <button class="ui inverted green button" {{action "addAS"}}> 
                     Add &nbsp; <i class="add square icon"></i>

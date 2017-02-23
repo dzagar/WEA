@@ -14,8 +14,12 @@ export default Ember.Component.extend({
   lastIndex: 0,
   limit: null,
   movingBackword: false,
-  newAdvancedStandingName:"",
+  newAdvancedStandingCourse:"",
+  newAdvancedStandingDescription:"",
+  newAdvancedStandingFrom:"",
+  newAdvancedStandingGrade:"",
   newAdvancedStandingObj: null,
+  newAdvancedStandingUnits:"",
   newHighSchoolName:"",
   newHighSchoolObj: null,
   newScholarshipName:"",
@@ -426,14 +430,22 @@ export default Ember.Component.extend({
     
     addAS()
     {
-        if (this.get('newAdvancedStandingName').trim() != "")
+        if ((this.get('newAdvancedStandingCourse').trim() != "") && (this.get('newAdvancedStandingDescription').trim() != "") && (this.get('newAdvancedStandingUnits').trim() != "") && (this.get('newAdvancedStandingFrom').trim() != "") && (this.get('newAdvancedStandingGrade').trim() != ""))
         {
             this.set('newAdvancedStandingObj', this.get('store').createRecord('advanced-standing', {
                 student: this.get('currentStudent'),
-                name: this.get('newAdvancedStandingName').trim()
+                course: this.get('newAdvancedStandingCourse').trim(),
+                description: this.get('newAdvancedStandingDescription').trim(),
+                grade: this.get('newAdvancedStandingGrade').trim(),
+                units: this.get('newAdvancedStandingUnits').trim(),
+                from: this.get('newAdvancedStandingFrom').trim()
             }));
             this.get('newAdvancedStandingObj').save();
-            this.set('newAdvancedStandingName', "");
+            this.set('newAdvancedStandingCourse', "");
+            this.set('newAdvancedStandingDescription',"");
+            this.set('newAdvancedStandingGrade',"");
+            this.set('newAdvancedStandingUnits',"");
+            this.set('newAdvancedStandingFrom',"");
         }
     },
 
