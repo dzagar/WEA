@@ -1412,6 +1412,7 @@ export default Ember.Component.extend({
 										var AdvancedStandingIndex = 0;
 										var AdvancedStandingMutex = Mutex.create();
 										var advancedStandingsImported = 0;
+										var advancedStandingsCancelled = 0;
 										var doneSaving = false;
 										for (var i = 0; i < advancedStandingsToImport.length; i++)
 										{										
@@ -1433,11 +1434,26 @@ export default Ember.Component.extend({
 														units: units,
 														grade: courseGrade,
 														from: courseFrom
-													});											
-													AdvancedStanding.set('student',studentObj);
-													AdvancedStanding.save().then(function() {
-														advancedStandingsImported++;
-														if (advancedStandingsImported == advancedStandingsToImport.length && !doneSaving)
+													});	
+													if (studentObj)
+													{																								
+														AdvancedStanding.set('student',studentObj);
+														AdvancedStanding.save().then(function() {
+															advancedStandingsImported++;
+															if (advancedStandingsImported == advancedStandingsToImport.length - advancedStandingsCancelled && !doneSaving)
+															{
+																doneSaving = true;														
+																self.pushOutput("<span style='color:green'>Import of Avanced Standings successful!</span>");
+																Ember.$("#btnContinue").removeClass("disabled");
+																Ember.$("#advancedStandings").addClass("completed");	
+
+															}
+														});
+													}
+													else
+													{
+														advancedStandingsCancelled++;
+														if (advancedStandingsImported == advancedStandingsToImport.length - advancedStandingsCancelled && !doneSaving)
 														{
 															doneSaving = true;														
 															self.pushOutput("<span style='color:green'>Import of Avanced Standings successful!</span>");
@@ -1445,7 +1461,7 @@ export default Ember.Component.extend({
 															Ember.$("#advancedStandings").addClass("completed");	
 
 														}
-													});									
+													}									
 												});								
 											});
 										}
@@ -1523,6 +1539,14 @@ export default Ember.Component.extend({
 													else
 													{
 														numberOfCommentWithNoStudent++;
+														if (numberOfCommentsImported == (uniqueStudents.length - numberOfCommentWithNoStudent) && !doneImportingComments)
+														{
+															doneImportingComments = true;
+															self.pushOutput("<span style='color:green'>Import of Registration Comments successful!</span>");
+															Ember.$("#btnContinue").removeClass("disabled");
+															Ember.$("#registrationComments").addClass("completed");
+
+														}
 													}
 												});
 											});
