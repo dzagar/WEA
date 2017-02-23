@@ -40,7 +40,9 @@ export default Ember.Component.extend({
   showFindStudent: false,
   store: Ember.inject.service(),
   studentAdvancedStandings: null,
-  studentCourses: null,
+  //studentCourses: [],
+  studentSubjects: [],
+  studentSchools: [],
   studentGrades: null,
   studentPhoto: null,
   studentsRecords: null,
@@ -128,7 +130,14 @@ export default Ember.Component.extend({
       this.set("showHelp", false);
       this.set("showFindStudent",false);
       if (student != null) {
-        this.set('studentPhoto', this.get('currentStudent').get('photo'));
+        if (this.get('currentStudent.photo'))
+        {
+          this.set('studentPhoto', this.get('currentStudent').get('photo'));
+        }
+        else
+        {
+          this.set('studentPhoto', "/assets/studentsPhotos/noImageFound.png");
+        }
         var date = this.get('currentStudent').get('DOB');
         var datestring = date.substring(0, 10);
         this.set('selectedDate', datestring);
@@ -149,24 +158,40 @@ export default Ember.Component.extend({
         this.set('selectedGender', this.get('currentStudent.gender.id'));
         
         var self = this;
+
+
+        //NOTE -- THIS SHOULD WORK WITH PROPERLY SET UP DB....
+
+        
+        var studentID = this.get('currentStudent.id');
         //loads student scholarships
-        var scholarshipStudent = this.get('currentStudent.studentNumber');
-        this.get('store').query('scholarship', {student : scholarshipStudent}).then(function(scholarships){
+        this.get('store').query('scholarship', {student : studentID}).then(function(scholarships){
           self.set('studentScholarhips', scholarships);
         });
-        this.get('store').query('advanced-standing', {student : scholarshipStudent}).then(function(advancedStandings){
+        //loads student advanced standings
+        this.get('store').query('advanced-standing', {student : studentID}).then(function(advancedStandings){
           self.set('studentAdvancedStandings', advancedStandings);
         });
-        var studentID = this.get('currentStudent.id');
+        //loads student high school information
         this.get('store').query('high-school-grade', {student : studentID}).then(function(grades){
-          //console.log(grades);
+          console.log(grades.content.length);
           self.set('studentGrades', grades);
-          for (var i = 0; i < grades.length; i++){
-            self.get('store').query('high-school-course', {grades : grades[i].id}).then(function(courses){
-              self.set('studentCourses', courses);
+          for (var i = 0; i < grades.content.length; i++){
+            //console.log(grades.objectAt(i));
+            // self.get('store').queryRecord('high-school-course', {grades : grades.objectAt(i).id}).then(function(course){
+            //   //console.log(course);
+            //   self.get('studentCourses').push(course);
+            // });
+            console.log(grades.objectAt(i).source);
+            self.get('store').queryRecord('high-school-subject', {course : grades.objectAt(i).source}).then(function(subject){
+              self.get('studentSubjects').push(subject.name);
+            });
+            self.get('store').queryRecord('high-school', {course: grades.objectAt(i).source}).then(function(school){
+              self.get('studentSchools').push(school.name);
             });
           }
         });
+
       }
   },
 

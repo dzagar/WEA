@@ -521,7 +521,6 @@ export default Ember.Component.extend({
 												var lastName = studentsToImportInfo[inMutexStudentCount].lastName;
 												var gender = studentsToImportInfo[inMutexStudentCount].gender;
 												var dateOfBirth = studentsToImportInfo[inMutexStudentCount].dateOfBirth;
-												console.log(dateOfBirth);
 												var residency = studentsToImportInfo[inMutexStudentCount].residency;
 												self.get('store').queryRecord('gender', {name: gender}).then(function(genderObj) {
 													//console.log("got gender: ");
@@ -597,7 +596,6 @@ export default Ember.Component.extend({
 									var currentSchoolName;
 									for (var i = 2; !doneReading; i++)
 									{
-										console.log("in row " + i);
 										var studentNumber = worksheet['A' + i];
 										var schoolName = worksheet['B' + i];
 										var level = worksheet['C' + i];
@@ -619,13 +617,13 @@ export default Ember.Component.extend({
 												self.pushOutput("<span style='color:red'>Improperly formated data in  row " (i) + "</span>");
 											}
 											//otherwise get data
-											else
+											else if (!(schoolName.v == "NONE FOUND"))
 											{
 												currentSchoolName = schoolName.v;
 												currentStudentNumber = studentNumber.v;
 
 												//if there is information to include...
-												if (!(schoolName.v == "NONE FOUND") && level && source && units && subject && description && grade)
+												if (level && source && units && subject && description && grade)
 												{
 													gradeValues.push({"studentNumber": currentStudentNumber, "schoolName" : schoolName.v, "level":  level.v, "source": source.v, "unit": units.v, "name" : subject.v, "description": description.v, "grade": grade.v});
 													if (checkUniqueSubject(highschoolSubjectValues, subject.v, description.v))
@@ -641,7 +639,7 @@ export default Ember.Component.extend({
 												{
 													rollBackImport = true;
 													doneReading = true;
-													self.pushOutput("<span style='color:red'>Improperly formated data in  row " (i) + "</span>");
+													self.pushOutput("<span style='color:red'>Improperly formated data in  row " + i + "</span>");
 												}
 											}
 
@@ -693,6 +691,7 @@ export default Ember.Component.extend({
 									}
 									if (!rollBackImport)
 									{
+										console.log(gradeValues);
 										self.pushOutput("Successful read of file has completed. Beginning import of");
 										self.pushOutput(highschoolSubjectValues.length + " Subjects");
 										self.pushOutput(highschoolCourseValues.length + " Courses");
@@ -720,78 +719,79 @@ export default Ember.Component.extend({
 														var numberOfCourses = highschoolCourseValues.length;
 														var inMutexCount = 0;
 														var doneCourseSave = false;
+														var numberOfCourseImported = 0;
 														//loop through each course record
 														for (var k = 0; k < highschoolCourseValues.length; k++)
 														{
 															courseMutex.lock(function() {
 																var inMutexIndex = inMutexCount++;
-																	var courseSchoolName = highschoolCourseValues[inMutexIndex].schoolName;
-																	var courseLevel = highschoolCourseValues[inMutexIndex].level;
-																	var courseUnit = highschoolCourseValues[inMutexIndex].unit;
-																	var courseSource = highschoolCourseValues[inMutexIndex].source;
-																	var subjectNameParam = highschoolCourseValues[inMutexIndex].name;
-																	var subjectDescParam = highschoolCourseValues[inMutexIndex].description;
-																	self.get('store').queryRecord('high-school-subject', {name: subjectNameParam, description: subjectDescParam}).then(function(subjectObj) {
-																		self.get('store').queryRecord('high-school', {schoolName: courseSchoolName}).then(function(highSchoolObj) {
-																			var newCourseToSave = self.get('store').createRecord('high-school-course', {
-																				level: courseLevel,
-																				unit: courseUnit,
-																				source: courseSource
-																				//Once the course is created
-																			});
-																			newCourseToSave.set('school', highSchoolObj);
-																			newCourseToSave.set('subject', subjectObj);
-																			newCourseToSave.save().then(function() {
-																				if (inMutexIndex === numberOfCourses && !doneCourseSave)
+																var courseSchoolName = highschoolCourseValues[inMutexIndex].schoolName;
+																var courseLevel = highschoolCourseValues[inMutexIndex].level;
+																var courseUnit = highschoolCourseValues[inMutexIndex].unit;
+																var courseSource = highschoolCourseValues[inMutexIndex].source;
+																var subjectNameParam = highschoolCourseValues[inMutexIndex].name;
+																var subjectDescParam = highschoolCourseValues[inMutexIndex].description;
+																self.get('store').queryRecord('high-school-subject', {name: subjectNameParam, description: subjectDescParam}).then(function(subjectObj) {
+																	self.get('store').queryRecord('high-school', {schoolName: courseSchoolName}).then(function(highSchoolObj) {
+																		var newCourseToSave = self.get('store').createRecord('high-school-course', {
+																			level: courseLevel,
+																			unit: courseUnit,
+																			source: courseSource
+																			//Once the course is created
+																		});
+																		newCourseToSave.set('school', highSchoolObj);
+																		newCourseToSave.set('subject', subjectObj);
+																		newCourseToSave.save().then(function() {
+																			
+																			numberOfCourseImported++;
+																			if (numberOfCourseImported === numberOfCourses && !doneCourseSave)
+																			{
+																				doneCourseSave = true;
+																				self.pushOutput("<span style='color:green'>Import of courses successful!</span>");
+																				
+																				var gradeMutex = Mutex.create();
+																				var inGradeMutexCount = 0;
+																				var numberOfGradesImported = 0;
+																				var doneGradeImport = false;
+																				//import grades here
+																				for (var n = 0; n < gradeValues.length; n++)
 																				{
-																					doneCourseSave = true;
-																					self.pushOutput("<span style='color:green'>Import of courses successful!</span>");
-																					
-																					var gradeMutex = Mutex.create();
-																					var inGradeMutexCount = 0;
-																					var numberOfGradesImported = 0;
-																					var doneGradeImport = false;
-																					//import grades here
-																					for (var n = 0; n < gradeValues.length; n++)
-																					{
-																						uniqueCourseGrades[uniqueCourseGrades.length] = gradeValues[n];
-																						gradeMutex.lock(function() {
-																							var inGradeMutexIndex = inGradeMutexCount++;
-																																															
-																							var gradeCourseSchoolName = gradeValues[inGradeMutexIndex].schoolName;
-																							var gradeCourseLevel = gradeValues[inGradeMutexIndex].level;
-																							var gradeCourseUnit = gradeValues[inGradeMutexIndex].unit;
-																							var gradeCourseSource = gradeValues[inGradeMutexIndex].source;
-																							var gradeSubjectNameParam = gradeValues[inGradeMutexIndex].name;
-																							var gradeSubjectDescParam = gradeValues[inGradeMutexIndex].description;
-																							var gradeStudentNumber = gradeValues[inGradeMutexIndex].studentNumber;
-																							var recordGrade = gradeValues[inGradeMutexIndex].grade;
-																							console.log(recordGrade);
-																							self.get('store').queryRecord('student', {number: gradeStudentNumber}).then(function(studentObj) {
-																								var studentNumberID = studentObj.id;
-																								self.get('store').queryRecord('high-school-course', {schoolName: gradeCourseSchoolName, subjectName: gradeSubjectNameParam, subjectDescription: gradeSubjectDescParam,  level: gradeCourseLevel, source: gradeCourseSource, unit: gradeCourseUnit}).then(function(highSchoolCourseObj) {
-																									var courseID = highSchoolCourseObj.id;
-																									var newGradeToSave = self.get('store').createRecord('high-school-grade', {
-																										mark: recordGrade
-																									});
-																									newGradeToSave.set('student', studentObj);
-																									newGradeToSave.set('source', highSchoolCourseObj);
-																									newGradeToSave.save().then(function() {
-																										numberOfGradesImported++;
-																										if (numberOfGradesImported == gradeValues.length && !doneGradeImport)
-																										{
-																											doneGradeImport = true;
-																											self.pushOutput("<span style='color:green'>Import of grades successful!</span>");
-																											self.pushOutput("<span style='color:green'>All Imports successful!</span>");
-																											Ember.$("#btnContinue").removeClass("disabled");
-																											Ember.$("#recordPlans").addClass("completed");
-																										}
-																									});
+																					gradeMutex.lock(function() {
+																						var inGradeMutexIndex = inGradeMutexCount++;
+																																														
+																						var gradeCourseSchoolName = gradeValues[inGradeMutexIndex].schoolName;
+																						var gradeCourseLevel = gradeValues[inGradeMutexIndex].level;
+																						var gradeCourseUnit = gradeValues[inGradeMutexIndex].unit;
+																						var gradeCourseSource = gradeValues[inGradeMutexIndex].source;
+																						var gradeSubjectNameParam = gradeValues[inGradeMutexIndex].name;
+																						var gradeSubjectDescParam = gradeValues[inGradeMutexIndex].description;
+																						var gradeStudentNumber = gradeValues[inGradeMutexIndex].studentNumber;
+																						var recordGrade = gradeValues[inGradeMutexIndex].grade;
+																						self.get('store').queryRecord('student', {number: gradeStudentNumber, findOneStudent: true}).then(function(studentObj) {
+																							console.log(studentObj);
+																							self.get('store').queryRecord('high-school-course', {schoolName: gradeCourseSchoolName, subjectName: gradeSubjectNameParam, subjectDescription: gradeSubjectDescParam,  level: gradeCourseLevel, source: gradeCourseSource, unit: gradeCourseUnit}).then(function(highSchoolCourseObj) {
+																								var courseID = highSchoolCourseObj.id;
+																								var newGradeToSave = self.get('store').createRecord('high-school-grade', {
+																									mark: recordGrade
+																								});
+																								newGradeToSave.set('student', studentObj);
+																								newGradeToSave.set('source', highSchoolCourseObj);
+																								newGradeToSave.save().then(function() {
+																									numberOfGradesImported++;
+																									if (numberOfGradesImported == gradeValues.length && !doneGradeImport)
+																									{
+																										doneGradeImport = true;
+																										self.pushOutput("<span style='color:green'>Import of grades successful!</span>");
+																										self.pushOutput("<span style='color:green'>All Imports successful!</span>");
+																										Ember.$("#btnContinue").removeClass("disabled");
+																										Ember.$("#highschoolInfo").addClass("completed");
+																									}
 																								});
 																							});
-																						});																						
-																					}
+																						});
+																					});																						
 																				}
+																			}
 																		});
 																	});
 																});
@@ -1043,7 +1043,7 @@ export default Ember.Component.extend({
 																						var inPlanMutexIndex = 0;
 																						var planMutex = Mutex.create();
 																						var numberOfPlansSaved = 0;
-																						donePlanImport = false;
+																						var donePlanImport = false;
 																						for (var k = 0; k < planValues.length; k++)
 																						{
 																							planMutex.lock(function() {																											
@@ -1073,7 +1073,7 @@ export default Ember.Component.extend({
 																											self.pushOutput("<span style='color:green'>Import of Plan Codes successful!</span>");
 																											self.pushOutput("<span style='color:green'>All Imports successful!</span>");
 																											Ember.$("#btnContinue").removeClass("disabled");
-																											Ember.$("#courseGrades").addClass("completed");
+																											Ember.$("#recordPlans").addClass("completed");
 																										}
 																									});
 																								});
@@ -1233,7 +1233,6 @@ export default Ember.Component.extend({
 															{
 																startedSavingGrades = true;
 																																									
-																donePlanImport = true;
 																self.pushOutput("<span style='color:green'>Import of Grades successful!</span>");
 																Ember.$("#btnContinue").removeClass("disabled");
 																Ember.$("#courseGrades").addClass("completed");
@@ -1253,69 +1252,78 @@ export default Ember.Component.extend({
 								var scholarshipsArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
 								if(VerificationFunction(scholarshipsCheckerArray,scholarshipsArray))
 								{
+									self.pushOutput("Importing Scholarships!");
 									var currentStudentNumber = "";
 									var scholarshipArray=[];
 									var doneReading = false;
 									var rollBackImport = false;
-									var studentIndex = -1;
 
 									for(var i = 2; !doneReading; i++)
 									{
 										var studentNumber = worksheet['A' + i];
 										var note = worksheet ['B'+ i];
-									}
 
-									if(studentNumber && studentNumber.v !="")
-									{
-										console.log("Current Student Number Found!");
-										studentIndex++;
-										currentStudentNumber= studentNumber.v;
-
-										if(note)
+										if(studentNumber && studentNumber.v !="")
 										{
-											scholarshipArray[studentIndex]= {"studentNumber":currentStudentNumber, "note": note};
-										}
+											currentStudentNumber= studentNumber.v;
 
+											if(note)
+											{
+												scholarshipArray.push({"studentNumber":currentStudentNumber, "note": note.v});
+											}
+											else
+											{
+												self.pushOutput("improperly formatted data on row" + i);
+												rollBackImport = true;
+												doneReading = true;
+											}
+										}
+										else if(note && note.v !="")
+										{
+											scholarshipArray.push({"studentNumber":currentStudentNumber, "note":note.v});
+										}
 										else
 										{
-											scholarshipArray[studentIndex]={"studentNumber":currentStudentNumber};
+											doneReading = true;
 										}
-									}
-
-									else if(note && note.v !="")
-									{
-										currentNote = note.v;
-										scholarshipArray[studentIndex]={"studentNumber":currentStudentNumber, "note":currentNote};
 									}
 
 									if(!rollBackImport)
 									{
-										console.log("done reading");
-										console.log(scholarshipArray);
-										var ScholarshipIndex = 0;
-										var ScholarshipMutex = Mutex.create();
-										for (var i = 0; i < gradesToImport.length; i++)
+										self.pushOutput("Successful read of file has completed. Beginning import of " + scholarshipArray.length + " student scholarships");
+										var scholarshipIndex = 0;
+										var scholarshipMutex = Mutex.create();
+										var numberOfScholarshipsImported = 0;
+										var doneSavingScholarships = false;
+										for (var i = 0; i < scholarshipArray.length; i++)
 										{										
-											ScholarshipMutex.lock(function() {
-											var ScholarshipMutexCount = ScholarshipIndex++;
-											var studentNumber = scholarshipArray[ScholarshipMutexCount].studentNumber;
-											var note = scholarshipArray[ScholarshipMutexCount].note;
-											self.get('store').queryRecord('student',{
-												studentNumber: studentNumber
-											}).then(function(studentObj){
-												var Scholarship=self.get('store').createRecord('scholarship', {
-													note: note
-											});
-											
-										});
+											scholarshipMutex.lock(function() {
+												var scholarshipMutexCount = scholarshipIndex++;
+												var studentNumber = scholarshipArray[scholarshipMutexCount].studentNumber;
+												var note = scholarshipArray[scholarshipMutexCount].note;
+												self.get('store').queryRecord('student',{
+													studentNumber: studentNumber
+												}).then(function(studentObj){
+													var newScholarshipToImport=self.get('store').createRecord('scholarship', {
+														note: note
+													});	
+													newScholarshipToImport.set('student',studentObj);
+													newScholarshipToImport.save().then(function() {
+														numberOfScholarshipsImported++;
+														if (numberOfScholarshipsImported == scholarshipArray.length && !doneSavingScholarships)
+														{
+															doneSavingScholarships = true;														
+															self.pushOutput("<span style='color:green'>Import of Scholarships successful!</span>");
+															Ember.$("#btnContinue").removeClass("disabled");
+															Ember.$("#awards").addClass("completed");														
 
-										Scholarship.set('student',studentObj);
-										Scholarship.save();								
-										});
+														}
+													});											
+												});																		
+											});
+										}
 									}
-									}
-								}
-								
+								}								
 							}
 							break;
 							case ImportState.ADVANCEDSTANDINGS: 
@@ -1324,136 +1332,107 @@ export default Ember.Component.extend({
 								var advancedstandingsArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase()];
 								if(VerificationFunction(advancedstandingsCheckerArray,advancedstandingsArray))
 								{
+									self.pushOutput("Importing Advanced Standings!");
 									var currentStudentNumber = "";
-									var currentCourse = "";
-									var gradesToImport = [];
+									var advancedStandingsToImport = [];
 									var doneReading = false;
 									var rollBackImport = false;
 
-								for (var i = 2; !doneReading; i++)
-								{									
-									var studentNumber = worksheet['A' + i];
-									var course = worksheet['B' + i];
-									var description = worksheet['C' + i];
-									var units = worksheet['D' + i];
-									var courseGrade = worksheet['F' + i];
-									var courseFrom = worksheet['G' + i];
+									for (var i = 2; !doneReading; i++)
+									{									
+										var studentNumber = worksheet['A' + i];
+										var course = worksheet['B' + i];
+										var description = worksheet['C' + i];
+										var units = worksheet['D' + i];
+										var courseGrade = worksheet['E' + i];
+										var courseFrom = worksheet['F' + i];
 
-									
-									if (studentNumber && studentNumber.v != "")
-									{
-										console.log("Current Student Number Found");
-										if (course && description && units && courseGrade)
+										
+										if (studentNumber && studentNumber.v != "")
 										{
-											currentStudentNumber = studentNumber.v;
-											currentCourse = course.v;
-											console.log(currentStudentNumber);
-											console.log(currentCourse);
-											if (courseFrom)
+											if (course.v == "NONE FOUND")
 											{
-												gradesToImport[i - 2] = {"studentNumber": currentStudentNumber, "course": course.v, "description": courseLetter.v, "units": courseNumber.v, "courseGrade": courseGrade.v, "courseFrom": courseFrom.v};
+
 											}
+											else if (course && description && units && courseGrade && courseFrom)
+											{
+												currentStudentNumber = studentNumber.v;										
+												advancedStandingsToImport.push({"studentNumber": currentStudentNumber, "course": course.v, "description": description.v, "units": units.v, "courseGrade": courseGrade.v, "courseFrom": courseFrom.v});
+												
+											}											
 											else
 											{
-												gradesToImport[i - 2] = {"studentNumber": currentStudentNumber, "course": course.v, "description": courseLetter.v, "units": courseNumber.v, "courseGrade": courseGrade.v};
-
+												self.pushOutput("<span style='color:red'>Import Cancelled! Improperly formatted data on row " + i + "</span>");
+												rollBackImport = true;
+												doneReading = true;
 											}
 										}
 										
-										else
+										//if it is the same student in a different course
+										else if (course && course.v != "")
 										{
-											DisplayErrorMessage("Improperly formatted data on row " + (i));
-											rollBackImport = true;
-											doneReading = true;
-										}
-									}
-									
-									//if it is the same student in a different course
-									else if (course && course.v != "")
-									{
-										console.log("changing course");
-										if (description && units && courseGrade && currentStudentNumber != "")
-										{
-											currentCourse = course.v;
-											console.log(currentCourse);
-											if (courseFrom)
+											if (description && units && courseGrade && courseFrom && currentStudentNumber != "")
 											{
-												gradesToImport[i - 2] = {"studentNumber": currentStudentNumber, "course": currentCourse, "description": description.v, "units": units.v, "courseGrade": courseGrade.v, "courseFrom": courseFrom.v};
-											}
-											else
-											{
-												gradesToImport[i - 2] = {"studentNumber": currentStudentNumber, "course": currentCourse, "description": description.v, "units": units.v, "courseGrade": courseGrade.v};
-
-											}
-										}
-										//improper data
-										else
-										{
-											DisplayErrorMessage("Improperly formatted data on row " + (i));
-											rollBackImport = true;
-											doneReading = true;
-										}
-
-
-									}
-									//if it is the same student and course
-									else
-									{
-										if (description && units && courseGrade && currentCourse != "" && currentStudentNumber != "")
-										{
-											if (courseFrom)
-											{
-												gradesToImport[i - 2] = {"studentNumber": currentStudentNumber, "course": currentCourse, "description": description.v, "units": units.v, "courseGrade": courseGrade.v, "courseNote": courseFrom.v};
-											}
-											else
-											{
-												gradesToImport[i - 2] = {"studentNumber": currentStudentNumber, "course": currentCourse, "description": description.v, "units": units.v, "courseGrade": courseGrade.v};
-
-											}
-										}
-										//this is the end of the sheet
-										else
-										{
-											doneReading = true;
-										}
-									}
-								}
-								if (!rollBackImport)
-								{
-									console.log("done reading");
-									console.log(gradesToImport);
-									var AdvancedStandingIndex = 0;
-									var AdvancedStandingMutex = Mutex.create();
-									for (var i = 0; i < gradesToImport.length; i++)
-									{										
-											AdvancedStandingMutex.lock(function() {
-											var ASMutexCount = AdvancedStandingIndex++;
-											var studentNumber = gradesToImport[ASMutexCount].studentNumber;
-											var course = gradesToImport[ASMutexCount].course;
-											var description = gradesToImport[ASMutexCount].description;
-											var units = gradesToImport[ASMutexCount].units;
-											var courseGrade = gradesToImport[ASMutexCount].courseGrade;
-											var courseFrom = gradesToImport[ASMutexCount].courseFrom;
-											self.get('store').queryRecord('student',{
-												studentNumber: studentNumber
-											}).then(function(studentObj){
-												var AdvancedStanding=self.get('store').createRecord('advanced-standing', {
-													courseName: course,
-													courseDescription: description,
-													units: units,
-													mark: courseGrade,
-													locationEarned: courseFrom
-											});
+												advancedStandingsToImport.push({"studentNumber": currentStudentNumber, "course": course.v, "description": description.v, "units": units.v, "courseGrade": courseGrade.v, "courseFrom": courseFrom.v});
 											
-										});
-
-										AdvancedStanding.set('student',studentObj);
-										AdvancedStanding.save();								
-										});
+											}
+											//improper data
+											else
+											{
+												self.pushOutput("<span style='color:red'>Import Cancelled! Improperly formatted data on row " + i + "</span>");
+												rollBackImport = true;
+												doneReading = true;
+											}
+										}
+										else
+										{
+											doneReading = true;
+										}										
 									}
-								}
-								}
-								
+									if (!rollBackImport)
+									{
+										self.pushOutput("Successful read of file has completed. Beginning import of " + advancedStandingsToImport.length + " Advanced Standings.");
+										var AdvancedStandingIndex = 0;
+										var AdvancedStandingMutex = Mutex.create();
+										var advancedStandingsImported = 0;
+										var doneSaving = false;
+										for (var i = 0; i < advancedStandingsToImport.length; i++)
+										{										
+											AdvancedStandingMutex.lock(function() {
+												var ASMutexCount = AdvancedStandingIndex++;
+												var studentNumber = advancedStandingsToImport[ASMutexCount].studentNumber;
+												var course = advancedStandingsToImport[ASMutexCount].course;
+												var description = advancedStandingsToImport[ASMutexCount].description;
+												var units = advancedStandingsToImport[ASMutexCount].units;
+												var courseGrade = advancedStandingsToImport[ASMutexCount].courseGrade;
+												var courseFrom = advancedStandingsToImport[ASMutexCount].courseFrom;
+												self.get('store').queryRecord('student',{
+													studentNumber: studentNumber
+												}).then(function(studentObj){
+													var AdvancedStanding=self.get('store').createRecord('advanced-standing', {
+														course: course,
+														description: description,
+														units: units,
+														grade: courseGrade,
+														from: courseFrom
+													});											
+													AdvancedStanding.set('student',studentObj);
+													AdvancedStanding.save().then(function() {
+														advancedStandingsImported++;
+														if (advancedStandingsImported == advancedStandingsToImport.length && !doneSaving)
+														{
+															doneSaving = true;														
+															self.pushOutput("<span style='color:green'>Import of Avanced Standings successful!</span>");
+															Ember.$("#btnContinue").removeClass("disabled");
+															Ember.$("#advancedStandings").addClass("completed");	
+
+														}
+													});									
+												});								
+											});
+										}
+									}
+								}								
 							}
 							break;
 							case ImportState.REGISTRATIONCOMMENTS:
@@ -1462,58 +1441,75 @@ export default Ember.Component.extend({
 								var registrationcommentsArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
 								if(VerificationFunction(registrationcommentsCheckerArray,registrationcommentsArray))
 								{
-								var currentStudentNumber = "";
-								var doneReading = false;
-								var uniqueStudents = [];
-								var rollbackImport = false;
-								var studentIndex = -1;
-								
-								for (var i = 2; !doneReading; i++)
-								{
-									var studentNumber = worksheet['A' + i];
-									var note = worksheet['B' + i];
+									self.pushOutput("Importing Registration Comments");
+									var currentStudentNumber = "";
+									var doneReading = false;
+									var uniqueStudents = [];
+									var rollbackImport = false;
+									
+									for (var i = 2; !doneReading; i++)
+									{
+										var studentNumber = worksheet['A' + i];
+										var note = worksheet['B' + i];
 
-									//if we're on a new student
-									if (studentNumber && studentNumber.v != "")
-									{
-										studentIndex++;
-										currentStudentNumber = studentNumber.v;
-										uniqueStudents[studentIndex] = {"studentNumber": currentStudentNumber, "note": note.v};
+										//if we're on a new student
+										if (studentNumber && studentNumber.v != "")
+										{
+											currentStudentNumber = studentNumber.v;
+											uniqueStudents.push({"studentNumber": currentStudentNumber, "note": note.v});
 
+										}
+										//if we're on a new note for the same student
+										else if (note && note.v != "")
+										{
+											var newNote = uniqueStudents[uniqueStudents.length - 1].note + note.v;
+											uniqueStudents[uniqueStudents.length - 1] = {"studentNumber": currentStudentNumber, "note": newNote};
+										}
+										//import is done
+										else
+										{
+											doneReading = true;
+										}
 									}
-									//if we're on a new note for the same student
-									else if (note && note.v != "")
+									//begin importing
+									if (!rollbackImport)
 									{
-										var newNote = uniqueStudents[studentIndex].note + note.v;
-										uniqueStudents[studentIndex] = {"studentNmber": currentStudentNumber, "note": newNote};
-									}
-									//import is done
-									else
-									{
-										doneReading = true;
-									}
-								}
-								//begin importing
-								if (!rollbackImport)
-								{
-									var inRegistrationMutexIndex = 0;
-									var registrationMutex = Mutex.create();
-									for(var i = 0; i < uniqueStudents.length; i++)
-									{
-										registrationMutex.lock(function() {
-											var inRegistrationMutexCount = inRegistrationMutexIndex++;
-											var importStudentNumber = uniqueStudents[inRegistrationMutexCount].studentNumber;
-											var importNote = uniqueStudents[inRegistrationMutexCount].note;
-											self.get('store').queryRecord('student', {number: importStudentNumber}).then(function(studentObj) {
-												if (studentObj)
-												{
-													studentObj.set('registrationComments', importNote);
-													studentObj.save();
-												}
+										self.pushOutput("Successful read of file has completed. Beginning import of " + uniqueStudents.length + " registration comments");
+										var inRegistrationMutexIndex = 0;
+										var registrationMutex = Mutex.create();
+										var numberOfCommentsImported = 0;
+										var doneImportingComments = false;
+										var numberOfCommentWithNoStudent = 0;
+										for(var i = 0; i < uniqueStudents.length; i++)
+										{
+											registrationMutex.lock(function() {
+												var inRegistrationMutexCount = inRegistrationMutexIndex++;
+												var importStudentNumber = uniqueStudents[inRegistrationMutexCount].studentNumber;
+												var importNote = uniqueStudents[inRegistrationMutexCount].note;
+												self.get('store').queryRecord('student', {number: importStudentNumber, findOneStudent:true}).then(function(studentObj) {
+													if (studentObj)
+													{
+														studentObj.set('registrationComments', importNote);
+														studentObj.save().then(function() {
+															numberOfCommentsImported++;
+															if (numberOfCommentsImported == (uniqueStudents.length - numberOfCommentWithNoStudent) && !doneImportingComments)
+															{
+																doneImportingComments = true;
+																self.pushOutput("<span style='color:green'>Import of Registration Comments successful!</span>");
+																Ember.$("#btnContinue").removeClass("disabled");
+																Ember.$("#registrationComments").addClass("completed");
+
+															}
+														});
+													}
+													else
+													{
+														numberOfCommentWithNoStudent++;
+													}
+												});
 											});
-										});
+										}
 									}
-								}
 
 								}
 							}
@@ -1524,11 +1520,11 @@ export default Ember.Component.extend({
 								var basisofadmissionArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
 								if(VerificationFunction(basisofadmissionCheckerArray,basisofadmissionArray))
 								{
+									self.setOutput("Importing Basis of Admission.")
 									var currentStudentNumber= "";
 									var doneReading = false;
 									var uniqueStudents = [];
 									var rollbackImport = false;
-									var studentIndex = -1;
 
 									for(var i = 2; !doneReading; i++)
 									{
@@ -1537,15 +1533,14 @@ export default Ember.Component.extend({
 
 										if(studentNumber && studentNumber.v!="")
 										{
-											studentIndex++;
 											currentStudentNumber=studentNumber.v;
-											uniqueStudents[studentIndex]={"studentnumber":currentStudentNumber, "note":note.v};
+											uniqueStudents.push({"studentNumber":currentStudentNumber, "note":note.v});
 										}
 
 										else if(note && note.v !="")
 										{
-											var newNote = uniqueStudents.note + note.v;
-											uniqueStudents[studentIndex]={"studentnumber":currentStudentNumber, "note":newNote};
+											var newNote = uniqueStudents[uniqueStudents.length - 1].note + note.v;
+											uniqueStudents[uniqueStudents.length - 1]={"studentNumber":currentStudentNumber, "note":newNote};
 										}
 
 										else
@@ -1556,21 +1551,46 @@ export default Ember.Component.extend({
 
 									if(!rollBackImport)
 									{
+										self.pushOutput("Successful read of file complete. Beginning import of " + uniqueStudents.length + " Basis of Admissions.");
 										var inAdmissionMutexIndex = 0;
 										var admissionMutex = Mutex.create();
-
-									for(var i = 0; i < uniqueStudents.length; i++)
-									{
-										admissionMutex.lock(function() {
-											var inAdmissionMutexCount = inAdmissionMutexIndex++;
-											var importStudentNumber = uniqueStudents[inAdmissionMutexCount].studentNumber;
-											var importNote = uniqueStudents[inAdmissionMutexCount].note;
-											self.get('store').queryRecord('student', {studentNumber: importStudentNumber}).then(function(studentObj) {
-												studentObj.set('basisofadmissionComments', importNote);
-												studentObj.save();
+										var numberOfAdmissionsImported = 0;
+										var numberOfAdmissionsWithNoStudent = 0;
+										var doneImportingAdmissions = false;
+										for(var i = 0; i < uniqueStudents.length; i++)
+										{
+											admissionMutex.lock(function() {
+												var inAdmissionMutexCount = inAdmissionMutexIndex++;
+												var importStudentNumber = uniqueStudents[inAdmissionMutexCount].studentNumber;
+												var importNote = uniqueStudents[inAdmissionMutexCount].note;
+												self.get('store').queryRecord('student', {number: importStudentNumber}).then(function(studentObj) {
+													if  (studentObj)
+													{														
+														studentObj.set('basisOfAdmission', importNote);
+														studentObj.save().then(function() {
+															numberOfAdmissionsImported++;
+															if (numberOfAdmissionsImported == uniqueStudents.length - numberOfAdmissionsWithNoStudent && !doneImportingAdmissions)
+															{
+																doneImportingAdmissions = true;
+																self.pushOutput("<span style='color:green'>Import of Basis of Admissions successful!</span>");
+																Ember.$("#btnContinue").removeClass("disabled");
+																Ember.$("#basisOfAdmission").addClass("completed");
+															}
+														});
+													}
+													else{
+														numberOfAdmissionsWithNoStudent++;
+															if (numberOfAdmissionsImported == uniqueStudents.length - numberOfAdmissionsWithNoStudent && !doneImportingAdmissions)
+															{
+																doneImportingAdmissions = true;
+																self.pushOutput("<span style='color:green'>Import of Basis of Admissions successful!</span>");
+																Ember.$("#btnContinue").removeClass("disabled");
+																Ember.$("#basisOfAdmission").addClass("completed");
+															}
+													}
+												});
 											});
-										});
-									}
+										}
 									}
 
 								}
@@ -1582,11 +1602,11 @@ export default Ember.Component.extend({
 								var admissionaverageArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
 								if(VerificationFunction(admissionaverageCheckerArray,admissionaverageArray))
 								{
+									self.setOutput("Importing Admission Averages.");
 									var currentStudentNumber= "";
 									var doneReading = false;
 									var uniqueStudents = [];
 									var rollbackImport = false;
-									var studentIndex = -1;
 
 									for(var i = 2; !doneReading; i++)
 									{
@@ -1595,15 +1615,14 @@ export default Ember.Component.extend({
 
 										if(studentNumber && studentNumber.v!="")
 										{
-											studentIndex++;
 											currentStudentNumber=studentNumber.v;
-											uniqueStudents[studentIndex]={"studentnumber":currentStudentNumber, "note":note.v};
+											uniqueStudents.push({"studentNumber":currentStudentNumber, "note":note.v});
 										}
 
 										else if(note && note.v !="")
 										{
-											var newNote = uniqueStudents.note + note.v;
-											uniqueStudents[studentIndex]={"studentnumber":currentStudentNumber, "note":newNote};
+											var newNote = uniqueStudents[uniqueStudents.length - 1].note + note.v;
+											uniqueStudents[uniqueStudents.length - 1]={"studentNumber":currentStudentNumber, "note":newNote};
 										}
 
 										else
@@ -1614,21 +1633,46 @@ export default Ember.Component.extend({
 
 									if(!rollBackImport)
 									{
+										self.pushOutput("Successful read of file complete. Beginning Import of " + uniqueStudents.length + " Admission Averages");
 										var inAdmissionMutexIndex = 0;
 										var admissionMutex = Mutex.create();
-
-									for(var i = 0; i < uniqueStudents.length; i++)
-									{
-										admissionMutex.lock(function() {
-											var inAdmissionMutexCount = inAdmissionMutexIndex++;
-											var importStudentNumber = uniqueStudents[inAdmissionMutexCount].studentNumber;
-											var importNote = uniqueStudents[inAdmissionMutexCount].note;
-											self.get('store').queryRecord('student', {studentNumber: importStudentNumber}).then(function(studentObj) {
-												studentObj.set('admissionaverageComments', importNote);
-												studentObj.save();
+										var numberOfAveragesImported = 0;
+										var numberOfAveragesWithNoStudent = 0;
+										var doneSavingAverages = false;
+										for(var i = 0; i < uniqueStudents.length; i++)
+										{
+											admissionMutex.lock(function() {
+												var inAdmissionMutexCount = inAdmissionMutexIndex++;
+												var importStudentNumber = uniqueStudents[inAdmissionMutexCount].studentNumber;
+												var importNote = uniqueStudents[inAdmissionMutexCount].note;
+												self.get('store').queryRecord('student', {number: importStudentNumber, findOneStudent:true}).then(function(studentObj) {
+													if  (studentObj)
+													{														
+														studentObj.set('admissionAverage', importNote);
+														studentObj.save().then(function() {
+															numberOfAveragesImported++;
+															if (numberOfAveragesImported == uniqueStudents.length - numberOfAveragesWithNoStudent && !doneSavingAverages)
+															{
+																doneSavingAverages = true;
+																self.pushOutput("<span style='color:green'>Import of Admission Averages successful!</span>");
+																Ember.$("#btnContinue").removeClass("disabled");
+																Ember.$("#admissionAverage").addClass("completed");
+															}
+														});
+													}
+													else{
+														numberOfAveragesWithNoStudent++;
+														if (numberOfAveragesImported == uniqueStudents.length - numberOfAveragesWithNoStudent && !doneSavingAverages)
+														{
+															doneSavingAverages = true;
+															self.pushOutput("<span style='color:green'>Import of Admission Averages successful!</span>");
+															Ember.$("#btnContinue").removeClass("disabled");
+															Ember.$("#admissionAverage").addClass("completed");
+														}
+													}
+												});
 											});
-										});
-									}
+										}
 									}
 
 								}
@@ -1640,11 +1684,11 @@ export default Ember.Component.extend({
 								var admissioncommentsArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
 								if(VerificationFunction(admissioncommentsCheckerArray,admissioncommentsArray))
 								{
+									self.pushOutput("Importing Admission Comments");
 									var currentStudentNumber= "";
 									var doneReading = false;
 									var uniqueStudents = [];
 									var rollbackImport = false;
-									var studentIndex = -1;
 
 									for(var i = 2; !doneReading; i++)
 									{
@@ -1653,15 +1697,14 @@ export default Ember.Component.extend({
 
 										if(studentNumber && studentNumber.v!="")
 										{
-											studentIndex++;
 											currentStudentNumber=studentNumber.v;
-											uniqueStudents[studentIndex]={"studentnumber":currentStudentNumber, "note":note.v};
+											uniqueStudents.push({"studentNumber":currentStudentNumber, "note":note.v});
 										}
 
 										else if(note && note.v !="")
 										{
 											var newNote = uniqueStudents.note + note.v;
-											uniqueStudents[studentIndex]={"studentnumber":currentStudentNumber, "note":newNote};
+											uniqueStudents[uniqueStudents.length - 1]={"studentNumber":currentStudentNumber, "note":newNote};
 										}
 
 										else
@@ -1672,26 +1715,51 @@ export default Ember.Component.extend({
 
 									if(!rollBackImport)
 									{
+										self.pushOutput("Successful read of file has completed. Beginning import of " + uniqueStudents.length + " admission comments.")
 										var inAdmissionMutexIndex = 0;
 										var admissionMutex = Mutex.create();
+										var numberOfCommentsImported = 0;
+										var numberOfCommentsWithNoStudent = 0;
+										var doneSavingComments = false;
 
-									for(var i = 0; i < uniqueStudents.length; i++)
-									{
-										admissionMutex.lock(function() {
-											var inAdmissionMutexCount = inAdmissionMutexIndex++;
-											var importStudentNumber = uniqueStudents[inAdmissionMutexCount].studentNumber;
-											var importNote = uniqueStudents[inAdmissionMutexCount].note;
-											self.get('store').queryRecord('student', {studentNumber: importStudentNumber}).then(function(studentObj) {
-												studentObj.set('admissionComments', importNote);
-												studentObj.save();
+										for(var i = 0; i < uniqueStudents.length; i++)
+										{
+											admissionMutex.lock(function() {
+												var inAdmissionMutexCount = inAdmissionMutexIndex++;
+												var importStudentNumber = uniqueStudents[inAdmissionMutexCount].studentNumber;
+												var importNote = uniqueStudents[inAdmissionMutexCount].note;
+												self.get('store').queryRecord('student', {number: importStudentNumber, findOneStudent:true}).then(function(studentObj) {
+													if (studentObj)
+													{														
+														studentObj.set('admissionComments', importNote);
+														studentObj.save().then(function() {
+															numberOfCommentsImported++;
+															if (numberOfCommentsImported == uniqueStudents.length - numberOfCommentsWithNoStudent && !doneSavingComments)
+															{
+																self.pushOutput("<span style='color:green'>Import of Admission Comments successful!</span>");
+																Ember.$("#btnContinue").removeClass("disabled");
+																Ember.$("#admissionComments").addClass("completed");																
+															}
+														});
+													}
+													else
+													{
+														numberOfCommentsWithNoStudent++;
+														if (numberOfCommentsImported == uniqueStudents.length - numberOfCommentsWithNoStudent && !doneSavingComments)
+														{
+																self.pushOutput("<span style='color:green'>Import of Admission Comments successful!</span>");
+																Ember.$("#btnContinue").removeClass("disabled");
+																Ember.$("#admissionComments").addClass("completed");															
+														}
+													}
+												});
 											});
-										});
-									}
+										}
 									}
 
 								}
 							}
-							break;
+						break;
 						}
 						console.log(currentWorkSheet);
 					};
