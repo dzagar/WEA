@@ -3,7 +3,10 @@ var router = express.Router();
 var Student = require('../models/student');
 var Gender = require('../models/gender');
 var Residency = require('../models/residency');
-var Scholarship = require('../modesl/scholarship');
+var Scholarship = require('../models/scholarship');
+var TermCode = require('../models/termCode');
+var AdvancedStanding = require('../models/advancedStanding');
+var HighSchoolGrade = require('../models/highSchoolGrade');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
 var parseJSON = bodyParser.json();
@@ -342,7 +345,7 @@ router.route('/:student_id')
                 if (student.highSchoolGrades.length > 0) {
                     let completedHighSchoolGrades = 0;
                     for (let i = 0; i < student.highSchoolGrades.length && !failed; i++) {
-                        AdvancedStanding.findById(student.highSchoolGrades[i], function (error, highSchoolGrade) {
+                        HighSchoolGrade.findById(student.highSchoolGrades[i], function (error, highSchoolGrade) {
                             if (error && !failed) {
                                 failed = true;
                                 response.send(error);
