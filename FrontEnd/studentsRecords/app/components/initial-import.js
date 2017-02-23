@@ -149,6 +149,9 @@ export default Ember.Component.extend({
 		showEraseDataModal: function(){
 			this.set('showDeleteConfirmation', true);
 		},
+		changeFile() {
+			this.setOutput("");
+		},
 
 		import() {
 			var files = $("#newFile")[0].files;
@@ -189,7 +192,7 @@ export default Ember.Component.extend({
 										var genderName = gender.v;
 										//if the gender has already been added
 										if (uniqueGenderNames.includes(genderName)){
-											DisplayErrorMessage("Import cancelled. Your excel sheet contains duplicate gender names '" + genderName + "'");
+											self.pushOutput("<font color='red'>Import cancelled. Your excel sheet contains duplicate gender names '" + genderName + "'</font>");
 											rollBackImport = true;
 											doneImporting = true;
 										} else { //create new gender object
@@ -197,14 +200,14 @@ export default Ember.Component.extend({
 											{
 												name: genderName
 											});
-											uniqueGenderNames[i] = genderName;
+											uniqueGenderNames[i-2] = genderName;
 										}
 									} else {
 										doneImporting = true;
 										//if no gender was imported
 										if (i == 2) {
 											rollBackImport = true;
-											self.pushOutput("<span style='color:red'>Import cancelled. File does not contain any values...</span>");
+											self.pushOutput("<span style='color:red'>Import cancelled. File does not contain any values...</span>")
 										}
 									}
 								}
@@ -214,6 +217,8 @@ export default Ember.Component.extend({
 										gendersToImport[i].deleteRecord();
 									}
 								} else {
+									self.pushOutput("Successful read of file has completed. Beginning import of " + gendersToImport.length + " genders.");
+									var gendersImportedCount = 0;
 									for (var i = 0; i < gendersToImport.length; i++) {
 										gendersToImport[i].save().then(function() {
 											gendersImportedCount++;
@@ -246,7 +251,7 @@ export default Ember.Component.extend({
 										var residencyName = residency.v;
 										//if the residency has already been added
 										if (uniqueResidencyNames.includes(residencyName)) {
-											DisplayErrorMessage("Import cancelled. Your excel sheet contains duplicate residency names '" + residencyName + "'");
+											this.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate residency names '" + residencyName + "'</span>");
 											rollBackImport = true;
 											doneImporting = true;
 										} else { //create new residency object
@@ -254,14 +259,14 @@ export default Ember.Component.extend({
 											{
 												name: residencyName
 											});
-											uniqueResidencyNames[i] = residencyName;
+											uniqueResidencyNames[i-2] = residencyName;
 										}
 									} else {
 										doneImporting = true;
 										//if no residency was imported
 										if (i == 2) {
 											rollBackImport = true;
-											this.pushOutput("<span style='color:red'>File does not contain any values...</span>");
+											this.pushOutput("<span style='color:red'>File does not contain any values...</span>")
 										}
 									}
 								}
@@ -312,7 +317,7 @@ export default Ember.Component.extend({
 											{
 												name: termCodeName
 											});
-											uniqueTermCodeNames[i] = termCodeName;
+											uniqueTermCodeNames[i-2] = termCodeName;
 										}
 									} else {
 										doneImporting = true;
@@ -341,11 +346,11 @@ export default Ember.Component.extend({
 							var coursecodeCheckerArray = ['COURSELETTER','COURSENUMBER','NAME','UNIT'];
 							var coursecodeArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),];
 							if (VerificationFunction(coursecodeCheckerArray,coursecodeArray)) {
-								self.setOutput("Importing Course Codes");
+								self.setOutput("Importing Course Codes")
 								var rollBackImport = false;
 								var doneImporting = false;
 								var courseCodesToImport = [];
-								var uniqueCourseCodeNames = [];
+								var uniqueCourseCodes = [];
 								for (var i = 2; !doneImporting; i++) {
 									//get the next course code name
 									var courseCode1 = worksheet['A' + i];
@@ -365,14 +370,14 @@ export default Ember.Component.extend({
 											rollBackImport = true;
 											doneImporting = true;
 										} else { //create new course code object
-											courseCodesToImport[i - 2] = self.get('store').createRecord('course-code', 
+											courseCodesToImport[courseCodesToImport.length] = self.get('store').createRecord('course-code', 
 											{
 												courseLetter: courseCodeLetter,
 												courseNumber: courseCodeNum,
 												name: courseCodeName,
 												unit: courseCodeUnit
 											});
-											uniqueCourseCodeNames[i] = courseCodeName;
+											uniqueCourseCodes[uniqueCourseCodes.length] = {"letter": courseCodeLetter, "number": courseCodeNum};
 										}
 									} else {
 										doneImporting = true;
@@ -432,7 +437,7 @@ export default Ember.Component.extend({
 										} else { //create new hs object
 											highSchoolsToImport[i - 2] = self.get('store').createRecord('high-school', 
 											{
-												name: highSchoolName
+												schoolName: highSchoolName
 											});
 											uniqueHighSchoolNames[i] = highSchoolName;
 										}
@@ -481,6 +486,7 @@ export default Ember.Component.extend({
 								var doneImporting = false;
 								var startedSave = false;
 								var startedRollback = false;
+								var inMutexStudentIndex = 0;
 								var studentsToImport = [];
 								var uniqueStudentNumbers = [];
 								var studentsToImportInfo = [];
@@ -526,11 +532,8 @@ export default Ember.Component.extend({
 															studentNumber: studentNumber,
 															firstName: firstName,
 															lastName: lastName,
-															gender: genderObj.id,
-															DOB: dateOfBirth,
-															resInfo: residencyObj.id
+															DOB: dateOfBirth
 														});
-
 														newStudent.set('resInfo',residencyObj);
 														newStudent.set('gender', genderObj);
 														studentsToImport.push(newStudent);
@@ -576,7 +579,6 @@ export default Ember.Component.extend({
 								numberOfStudent = uniqueStudentNumbers.length;
 							}
 							break;
-
 							case ImportState.HSCOURSEINFO:
 							{
 								var hscourseinfoCheckerArray = ['STUDENTNUMBER','SCHOOLNAME','LEVEL','SUBJECT','DESCRIPTION','SOURCE','UNITS','GRADE'];
@@ -689,6 +691,7 @@ export default Ember.Component.extend({
 									}
 									if (!rollBackImport)
 									{
+										console.log(gradeValues);
 										self.pushOutput("Successful read of file has completed. Beginning import of");
 										self.pushOutput(highschoolSubjectValues.length + " Subjects");
 										self.pushOutput(highschoolCourseValues.length + " Courses");
@@ -1268,7 +1271,6 @@ export default Ember.Component.extend({
 											{
 												scholarshipArray.push({"studentNumber":currentStudentNumber, "note": note.v});
 											}
-											//improper data
 											else
 											{
 												self.pushOutput("improperly formatted data on row" + i);
@@ -1314,6 +1316,7 @@ export default Ember.Component.extend({
 															self.pushOutput("<span style='color:green'>Import of Scholarships successful!</span>");
 															Ember.$("#btnContinue").removeClass("disabled");
 															Ember.$("#awards").addClass("completed");														
+
 														}
 													});											
 												});																		
@@ -1513,7 +1516,6 @@ export default Ember.Component.extend({
 							break;
 							case ImportState.BASISOFADMISSION:
 							{
-
 								var basisofadmissionCheckerArray = ['STUDENTNUMBER','NOTE'];
 								var basisofadmissionArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
 								if(VerificationFunction(basisofadmissionCheckerArray,basisofadmissionArray))
@@ -1776,6 +1778,7 @@ export default Ember.Component.extend({
 				this.clearOutput();
 				Ember.$("#newFile").val('');
 				this.set('changingIndex', this.get('changingIndex')+1);
+				console.log("changed Index to " + this.get('changingIndex'));
 				switch(this.get('changingIndex')){
   					case 2:
   						$("#residencies").addClass("active");
