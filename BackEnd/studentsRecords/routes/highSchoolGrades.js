@@ -113,7 +113,7 @@ router.route('/:highSchoolGrade_id')
             if (error) {
                 failed = true;
                 response.send(error);
-            } else if (highSchool) {
+            } else if (highSchoolGrade) {
 
                 Student.findById(highSchoolGrade.student, function (error, student) {
                     if (error && !failed) {

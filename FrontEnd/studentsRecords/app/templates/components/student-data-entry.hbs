@@ -38,8 +38,8 @@
 <!-- Delete confirmation popups -->
 {{#if showDeleteConfirmation}} 
   {{delete-student INDEX = currentIndex student = currentStudent showWindow = showDeleteConfirmation total = totalStudents}}
-{{else if showHighSchoolDeleteConfirmation}}
-  {{delete-highschool highschool = currentHighSchool showWindow = showHighSchoolDeleteConfirmation}}
+{{else if showHSGradeDeleteConfirmation}}
+  {{delete-highschool grade = currentHSGrade showWindow = showHSGradeDeleteConfirmation}}
 {{else if showAdvancedStandingDeleteConfirmation}}
   {{delete-advanced-standing advancedStanding = currentAdvancedStanding showWindow = showAdvancedStandingDeleteConfirmation}}
 {{else if showScholarshipDeleteConfirmation}}
@@ -281,42 +281,43 @@
 
   <div class="ui bottom attached tab segment" data-tab="hsinfo">
     <h2>High School Info</h2>
-    
-    <div>
-      Attended:<!--inprogress-->
-    </div>
+  
     <table class="ui fixed table">
       <thead>
         <tr>
-          <th>High Schools</th>
-          <th><!--spacer--></th>
-          <th><!--spacer--></th>
-          <th><!--spacer--></th>
+          <th class="six wide">High School</th>
+          <th class="five wide">Course</th>
+          <th class="two wide">Grade</th>
+          <th class="four wide"><!--spacer--></th>
         </tr>
       </thead>
       {{#each currentStudent.highSchoolCourses as |grade index|}}
       <tr>
         <td>
+          <div>
+            {{grade.source.school.schoolName}}
+          </div>
+        </td>
+        <td>
+          <span style="float: left;">
+            {{grade.source.subject.name}}
+          </span>
+          <span style="float: right;" data-tooltip={{grade.source.subject.description}} data-position="left center">
+            <i class="help circle icon"></i>
+          </span>
+        </td>
+        <td>
           <div class="ui fluid input">
             {{input type="text" value = grade.mark}}
-          </div>
-        </td>
-        <td>
-          <div class="ui fluid input">
-            {{input type="text" value = grade.source.source}}
-          </div>
-        </td>
-        <td>
-          <div class="ui fluid input">
-            {{input type="text" value = grade.source.subject.name}}
+            
           </div>
         </td>
         <td>
           <div class="ui inverted buttons">
-            <!--This will not work-->
-            <button class="ui blue inverted button" {{action "saveHighSchool" highschool}}>Save</button>
+            
+            <button class="ui blue inverted button" {{action "saveHSGrade" grade}}>Save</button>
             <div class="divider" />
-            <button class="ui red inverted button" {{action "deleteHighSchool" highschool}}>Delete</button>
+            <button class="ui red inverted button" {{action "deleteHSGrade" grade}}>Delete</button>
           </div>
         </td>
       </tr>

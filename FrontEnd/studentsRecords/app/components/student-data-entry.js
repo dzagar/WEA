@@ -5,7 +5,7 @@ export default Ember.Component.extend({
 
   advancedStandingModel: null,
   currentAdvancedStanding: null,
-  currentHighSchool: null,
+  currentHSGrade: null,
   currentScholarship: null,
   currentStudent: null,
   currentIndex: null,
@@ -41,7 +41,7 @@ export default Ember.Component.extend({
   showAllStudents: true,
   showAdvancedStandingDeleteConfirmation: false,
   showDeleteConfirmation: false,
-  showHighSchoolDeleteConfirmation: false,
+  showHSGradeDeleteConfirmation: false,
   showScholarshipDeleteConfirmation: false,
   showFindStudent: false,
   store: Ember.inject.service(),
@@ -507,18 +507,18 @@ export default Ember.Component.extend({
         }
     },
 
-    deleteHighSchool(highSchool)
+    deleteHSGrade(grade)
     {
-      this.set('currentHighSchool',highschool);
+      this.set('currentHSGrade', grade);
       this.set('showAdvancedStandingDeleteConfirmation', false);
-      this.set('showHighSchoolDeleteConfirmation', true); 
+      this.set('showHSGradeDeleteConfirmation', true); 
       this.set('showScholarshipDeleteConfirmation',false);
       this.set('showDeleteConfirmation',false);
     },
 
-    saveHighSchool(highSchool)
+    saveHSGrade(grade)
     {
-      highSchool.save();
+      grade.save();
     },
 
     switchPage(pageNum)
