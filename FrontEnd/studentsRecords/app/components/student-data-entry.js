@@ -118,7 +118,14 @@ export default Ember.Component.extend({
       this.set("showHelp", false);
       this.set("showFindStudent",false);
       if (student != null) {
-        this.set('studentPhoto', this.get('currentStudent').get('photo'));
+        if (this.get('currentStudent.photo'))
+        {
+          this.set('studentPhoto', this.get('currentStudent').get('photo'));
+        }
+        else
+        {
+          this.set('studentPhoto', "/assets/studentsPhotos/noImageFound.png");
+        }
         var date = this.get('currentStudent').get('DOB');
         var datestring = date.substring(0, 10);
         this.set('selectedDate', datestring);
