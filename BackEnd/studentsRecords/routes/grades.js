@@ -83,6 +83,26 @@ router.route('/:grade_id')
             }
         });
     })
+    .put(parseUrlencoded, parseJSON, function (request, response) {
+        Grade.findById(request.params.grade_id, function(error, grade) {
+            if (error) {
+                response.send(error);
+            } else {
+                grade.mark = request.body.grade.mark;
+                grade.note = request.body.grade.note;
+                grade.termCode = request.body.grade.termCode;
+                grade.courseCode = request.body.grade.courseCode;
+
+                grade.save(function(error) {
+                    if (error) {
+                        response.send(error);
+                    } else {
+                        response.json({grade: grade});
+                    }
+                });
+            }
+        });
+    })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
         let failed = false;
         let completed = 0;
