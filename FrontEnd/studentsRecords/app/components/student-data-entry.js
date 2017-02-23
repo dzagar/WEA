@@ -102,7 +102,7 @@ export default Ember.Component.extend({
       self.set('scholarshipModel',records);
     });
 
-    this.get('store'),findAll('advanced-standing').then(function (records) {
+    this.get('store').findAll('advanced-standing').then(function (records) {
       self.set('advancedStandingModel',records);
     });
 
@@ -436,18 +436,18 @@ export default Ember.Component.extend({
         }
     },
 
-    deleteAS(AdvancedStanding)
+    deleteAS(advancedStanding)
     {
-      this.set('currentAdvancedStanding',AdvancedStanding);
-      this.set('showAdvancedStandingDeleteConfirmation', false);
+      this.set('currentAdvancedStanding',advancedStanding);
+      this.set('showAdvancedStandingDeleteConfirmation', true);
       this.set('showHighSchoolDeleteConfirmation', false); 
-      this.set('showScholarshipDeleteConfirmation',true);
+      this.set('showScholarshipDeleteConfirmation',false);
       this.set('showDeleteConfirmation',false);
     },
 
-    saveAS(AdvancedStanding)
+    saveAS(advancedStanding)
     {
-      AdvancedStanding.save();
+      advancedStanding.save();
     },
 
     addScholarship()
