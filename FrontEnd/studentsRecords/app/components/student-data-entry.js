@@ -47,6 +47,7 @@ export default Ember.Component.extend({
   studentPhoto: null,
   studentsRecords: null,
   studentScholarhips: null,
+  termIndex: 0,
   totalStudents: 0,
   totalPages: Ember.computed('totalStudents', 'pageSize', function() {
       let ttl = Math.ceil(this.get('totalStudents')/this.get('pageSize'));
@@ -500,7 +501,8 @@ export default Ember.Component.extend({
 
     selectTerm(index)
     {
-      console.log('select term ' + index);
+      this.set('termIndex', Number(index));
+      console.log("new index = " + this.get('termIndex'));
     }
   }
 });
