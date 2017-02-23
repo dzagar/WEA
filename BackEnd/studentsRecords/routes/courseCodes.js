@@ -19,6 +19,8 @@ router.route('/')
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
+        var o = parseInt(request.query.offset);
+        var l = parseInt(request.query.limit);
         if (request.query.deleteAll){
             CourseCode.remove({}, function(error){
                 if (error) {
@@ -45,14 +47,28 @@ router.route('/')
                     response.send({courseCode: courseCode});
                 }
             });
-        } else{
-            CourseCode.find(function(error, courseCodes) {
-                if (error) {
-                    response.send(error);
-                } else {
-                    response.json({courseCodes: courseCodes});
+        } else {
+            //Paginate
+            // CourseCode.find(function(error, courseCodes) {
+            //     if (error) {
+            //         response.send(error);
+            //     } else {
+            //         response.json({courseCodes: courseCodes});
+            //     }
+            // });
+            CourseCode.paginate({}, { offset: o, limit: l }, function(err, courseCodes){
+                if (err) response.send(err);
+                else {
+                    CourseCode.count({}, function(err, num){
+                        if (err) response.send(err);
+                        else {
+                            response.json({courseCodes: courseCodes.docs, meta: {total: num}});
+                        }
+                    });
                 }
             });
+
+
         }
     });
 

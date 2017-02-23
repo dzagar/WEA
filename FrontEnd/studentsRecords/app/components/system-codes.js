@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
     
-    courseCodeModel: null,
+    courseCodeRecords: null,
     currentCourseCode: null,
     currentGender: null,
     currentResidency: null,
@@ -20,6 +20,18 @@ export default Ember.Component.extend({
     showCourseCodeDeleteConfirmation: false,
     showDeleteGenderConfirmation: false,
     showDeleteResidencyConfirmation: false,
+    limit: null,
+    offset: null,
+    pageSize: null,
+    pageNumber: Ember.computed('offset', 'pageSize', function() {
+    let num = this.get('offset')/this.get('pageSize')+1;
+    return num;
+    }),
+    totalCourseCodes: null,
+    totalPages: Ember.computed('totalCourseCodes', 'pageSize', function() {
+    let ttl = Math.ceil(this.get('totalCourseCodes')/this.get('pageSize'));
+    return ttl;
+    }),
     store: Ember.inject.service(),
 
     init() {
@@ -36,20 +48,52 @@ export default Ember.Component.extend({
             self.set('genderModel',records);
         });
 
-        this.get('store').findAll('course-code').then(function (records) {
-            self.set('courseCodeModel',records);
+        this.set('limit', 10);
+        this.set('offset', 0);
+        this.set('pageSize', 10);
+        this.get('store').query('course-code', {
+            limit: self.get('limit'),
+            offset: self.get('offset')
+        }).then(function(records){
+            self.set('totalCourseCodes', records.get('meta').total);
+            self.set('courseCodeRecords', records);
         });
-        
         this.set('currentCourseCode', null);
         this.set('currentGender', null);
         this.set('currentResidency', null);
-        
     },
+
+    courseCodeModel: Ember.observer('offset', function () {
+      var self = this;
+      this.get('store').query('course-code', {
+        limit: self.get('limit'),
+        offset: self.get('offset')
+      }).then(function (records) {
+        self.set('totalCourseCodes', records.get('meta').total);
+        self.set('courseCodeRecords', records);
+      });
+    }),
     
     didRender() {
     Ember.$('.menu .item').tab();
     },
 
+    //Changes the offset based on offsetDelta and relative.
+    //If relative is true, the offsetDelta is added to offset
+    //If relative is false, the offsetDelta becomes the new offset
+    //Checks and deals with the edge of the set
+    changeOffset: function (offsetDelta, relative) {
+      if (relative) {
+        if (this.get('offset') + offsetDelta >= this.get('totalCourseCodes'))
+          this.set('offset', (this.get('totalPages') - 1) * this.get('pageSize'));
+        else if (this.get('offset') + offsetDelta < 0)
+          this.set('offset', 0);
+        else
+          this.set('offset', this.get('offset') + offsetDelta);
+      } else {
+        this.set('offset', offsetDelta);
+      }
+    },
 
     actions:
     {
@@ -133,8 +177,12 @@ export default Ember.Component.extend({
             this.set('showGenderDeleteConfirmation', false);
             this.set('showResidencyDeleteConfirmation', false);
 
-        }
+        },
 
+        switchPage(pageNum)
+        {
+          this.changeOffset((pageNum - 1) * this.get('pageSize'), false);
+        }
     }
 
 
