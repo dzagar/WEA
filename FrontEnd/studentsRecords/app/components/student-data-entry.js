@@ -530,6 +530,11 @@ export default Ember.Component.extend({
     {
       this.set('termIndex', Number(index));
       console.log("new index = " + this.get('termIndex'));
+    },
+    saveGrade(grade)
+    {
+        grade.save();
+        console.log('save grade');
     }
   }
 });

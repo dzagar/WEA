@@ -153,6 +153,7 @@
           <th>Course Code</th>
           <th>Grade</th>
           <th>Note</th>
+          <th></th>
         </tr>
       </thead>
       {{#each currentStudent.termCodes as |term index|}}
@@ -161,8 +162,9 @@
           <tr>
             <td colspan="2">{{grade.courseCode.name}}</td>
             <td>{{grade.courseCode.courseLetter}}{{grade.courseCode.courseNumber}}</td>
-            <td>{{grade.mark}}</td>
+            <td><div class="ui fluid input">{{input type="text" value = grade.mark }}</div></td>
             <td>{{grade.note}}</td>
+            <td><button class="ui blue inverted button" {{action "saveGrade" grade}}>Save</button></td>
           </tr>
         {{/each}}
       {{/if}}
