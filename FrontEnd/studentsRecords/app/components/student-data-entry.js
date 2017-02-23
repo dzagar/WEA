@@ -96,7 +96,7 @@ export default Ember.Component.extend({
       self.set('scholarshipModel',records);
     });
 
-    this.get('store'),findAll('advanced-standing').then(function (records) {
+    this.get('store'),findAll('advancedStanding').then(function (records) {
       self.set('advancedStandingModel',records);
     });
 
