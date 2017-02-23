@@ -145,6 +145,24 @@
       {{/each}}
     </select>
 
+    <h5>Plan Codes</h5>
+    <div class="ui bulleted list">
+      {{#each currentStudent.termCodes as |term index|}}
+        <div class="item">
+          <div>{{term.name}}</div>
+          {{#each term.programs as |programRecord|}}
+            <div class="item">
+              <div>{{programRecord.name}}</div>
+              {{#each programRecord.planCodes as |planCode|}}
+                <div class="item">{{planCode.name}}</div>
+              {{/each}}
+            </div>
+          {{/each}}
+          </div>
+      {{/each}}
+      <div class="item">Test!</div>
+    </div>
+
     <table class="ui fixed table">
       <thead>
         <tr>
