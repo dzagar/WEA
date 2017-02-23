@@ -2,7 +2,8 @@ import Ember from 'ember';
 import UndoManager from 'npm:undo-manager';
 
 export default Ember.Component.extend({
-  undoManager: null,
+
+  advancedStandingModel: null,
   currentAdvancedStanding: null,
   currentHighSchool: null,
   currentScholarship: null,
@@ -13,8 +14,12 @@ export default Ember.Component.extend({
   lastIndex: 0,
   limit: null,
   movingBackword: false,
-  newASName:"",
-  newASObj: null,
+  newAdvancedStandingCourse:"",
+  newAdvancedStandingDescription:"",
+  newAdvancedStandingFrom:"",
+  newAdvancedStandingGrade:"",
+  newAdvancedStandingObj: null,
+  newAdvancedStandingUnits:"",
   newHighSchoolName:"",
   newHighSchoolObj: null,
   newScholarshipName:"",
@@ -27,6 +32,7 @@ export default Ember.Component.extend({
   }),
   pageSize: null,
   residencyModel: null,
+  scholarshipModel: null,
   selectedDate: null,
   selectedGender: null,
   selectedResidency: null,
@@ -52,6 +58,7 @@ export default Ember.Component.extend({
       let ttl = Math.ceil(this.get('totalStudents')/this.get('pageSize'));
       return ttl;
   }),
+  undoManager: null,
   
 
   studentModel: Ember.observer('offset', function () {
@@ -93,6 +100,14 @@ export default Ember.Component.extend({
     // load Gender data model 
     this.get('store').findAll('gender').then(function (records) {
       self.set('genderModel',records);
+    });
+
+    this.get('store').findAll('scholarship').then(function (records) {
+      self.set('scholarshipModel',records);
+    });
+
+    this.get('store').findAll('advanced-standing').then(function (records) {
+      self.set('advancedStandingModel',records);
     });
 
     // load first page of the students records
@@ -415,30 +430,40 @@ export default Ember.Component.extend({
         $("#hsInfoTab").show(200);
       }
     },
+    
     addAS()
     {
-        if (this.get('newASName').trim() != "")
+        if ((this.get('newAdvancedStandingCourse').trim() != "") && (this.get('newAdvancedStandingDescription').trim() != "") && (this.get('newAdvancedStandingUnits').trim() != "") && (this.get('newAdvancedStandingFrom').trim() != "") && (this.get('newAdvancedStandingGrade').trim() != ""))
         {
-            this.set('newASObj', this.get('store').createRecord('advancedStandings', {
-                name: this.get('newASName').trim()
+            this.set('newAdvancedStandingObj', this.get('store').createRecord('advanced-standing', {
+                student: this.get('currentStudent'),
+                course: this.get('newAdvancedStandingCourse').trim(),
+                description: this.get('newAdvancedStandingDescription').trim(),
+                grade: this.get('newAdvancedStandingGrade').trim(),
+                units: this.get('newAdvancedStandingUnits').trim(),
+                from: this.get('newAdvancedStandingFrom').trim()
             }));
-            this.get('newASObj').save();
-            this.set('newASName', "");
+            this.get('newAdvancedStandingObj').save();
+            this.set('newAdvancedStandingCourse', "");
+            this.set('newAdvancedStandingDescription',"");
+            this.set('newAdvancedStandingGrade',"");
+            this.set('newAdvancedStandingUnits',"");
+            this.set('newAdvancedStandingFrom',"");
         }
     },
 
-    deleteAS(AdvancedStanding)
+    deleteAS(advancedStanding)
     {
-      this.set('currentAdvancedStanding',AdvancedStanding);
-      this.set('showAdvancedStandingDeleteConfirmation', false);
+      this.set('currentAdvancedStanding',advancedStanding);
+      this.set('showAdvancedStandingDeleteConfirmation', true);
       this.set('showHighSchoolDeleteConfirmation', false); 
-      this.set('showScholarshipDeleteConfirmation',true);
+      this.set('showScholarshipDeleteConfirmation',false);
       this.set('showDeleteConfirmation',false);
     },
 
-    saveAS(AdvancedStanding)
+    saveAS(advancedStanding)
     {
-      AdvancedStanding.save();
+      advancedStanding.save();
     },
 
     addScholarship()
@@ -446,7 +471,8 @@ export default Ember.Component.extend({
       if (this.get('newScholarshipName').trim() != "")
         {
             this.set('newScholarshipObj', this.get('store').createRecord('scholarship', {
-                name: this.get('newScholarshipName').trim()
+                student: this.get('currentStudent'),
+                note: this.get('newScholarshipName').trim()
             }));
             this.get('newScholarshipObj').save();
             this.set('newScholarshipName', "");
