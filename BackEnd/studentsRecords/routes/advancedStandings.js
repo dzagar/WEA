@@ -14,7 +14,7 @@ router.route('/')
         Student.findById(advancedStanding.student, function (error, student) {
             if (error) {
                 response.send(error);
-            } else {   
+            } else {
                 student.advancedStandings.push(advancedStanding._id);
 
                 advancedStanding.save(function(error) {

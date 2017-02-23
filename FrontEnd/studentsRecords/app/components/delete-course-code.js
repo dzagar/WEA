@@ -2,13 +2,14 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
 
-  advancedStanding: null,
+    courseCode: null,
 	showWindow: null,
 	store: Ember.inject.service(),
 
 	actions: {
-		deleteAS: function(){
-			this.get('advancedStanding').destroyRecord();
+	
+    deleteCourseCode: function(){
+			this.get('courseCode').destroyRecord();
 			this.set('showWindow', false);
 			Ember.$('.ui.modal').modal('hide');
       		Ember.$('.ui.modal').remove();
@@ -27,6 +28,6 @@ export default Ember.Component.extend({
         closable: false,
       })
       .modal('show');
-  }
-});
+    }
 
+});

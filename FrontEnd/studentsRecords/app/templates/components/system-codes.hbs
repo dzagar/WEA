@@ -7,6 +7,8 @@
     {{delete-gender gender = currentGender showWindow = showGenderDeleteConfirmation}}
     {{else if showResidencyDeleteConfirmation}}
     {{delete-residency residency = currentResidency showWindow = showResidencyDeleteConfirmation}}
+    {{else if showCourseCodeDeleteConfirmation}}
+    {{delete-course-code courseCode = currentCourseCode showWindow = showCourseCodeDeleteConfirmation}}
 {{/if}}
 
   <!-- Show data entry form -->
@@ -14,6 +16,7 @@
   <div class="ui top attached tabular menu">
     <div style="cursor: pointer;" class="active item" data-tab="gender">Gender</div>
     <div style="cursor: pointer;" class="item" data-tab="residency">Residency</div>
+    <div style="cursor: pointer;" class="item" data-tab="coursecode">Course Codes</div>
   </div>
 
   <div class="ui bottom attached active tab segment" data-tab="gender">
@@ -95,4 +98,85 @@
         </tr>
         </table>
   </div>
-  
+
+<div class="ui bottom attached tab segment" data-tab="coursecode">
+    <table class="ui table">
+        <thead>
+            <tr>
+            <th>Course Codes</th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>
+            
+            </tr>
+        </thead>
+        {{#each courseCodeModel as |courseCode|}}
+        <tr>
+            <td>
+                <div class="ui fluid input">
+                    {{input type="text" value = courseCode.courseLetter}}
+                </div>
+            </td>
+
+            <td colspan="2">
+                <div class="ui fluid input">
+                    {{input type="text" value = courseCode.courseNumber}}
+                </div>
+            </td>
+
+            <td colspan="3">
+                <div class="ui fluid input">
+                    {{input type="text" value = courseCode.name}}
+                </div>
+            </td>
+            <td style="width:90px;">
+                <div class="ui fluid input">
+                    {{input type="text" value = courseCode.unit}}
+                </div>
+            </td>
+            <td>
+                <div class="ui inverted buttons">
+                    <button class="ui blue inverted button" {{action "saveCourseCode" courseCode}}>Save</button>
+                    <div class="divider"/>
+                    <button class="ui red inverted button" {{action "deleteCourseCode" courseCode}}>Delete</button>
+                </div>
+            </td>
+        </tr>
+        {{/each}}
+        <tr>
+            <td>
+                <div class="ui fluid input">
+                    {{input type="text" value = newCourseCodeCourseLetter}}
+                </div>
+            </td>
+            <td>
+                <div class="ui fluid input">
+                    {{input type="text" value = newCourseCodeCourseNumber}}
+                </div>
+            </td>
+
+            <td>
+                <div class="ui fluid input">
+                    {{input type="text" value = newCourseCodeName}}
+                </div>
+            </td>
+                
+            <td> 
+                <div class="ui fluid input">
+                    {{input type="text" value = newCourseCodeUnit}}
+                </div>
+            </td>
+
+            <td>
+                <button class="ui inverted green button" {{action "addCourseCode"}}> 
+                Add &nbsp; <i class="add square icon"></i>
+                </button>
+            </td>
+        </tr>
+    </table>
+ </div>

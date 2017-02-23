@@ -41,9 +41,9 @@
 {{else if showHSGradeDeleteConfirmation}}
   {{delete-highschool grade = currentHSGrade showWindow = showHSGradeDeleteConfirmation}}
 {{else if showAdvancedStandingDeleteConfirmation}}
-  {{delete-advanced-standing AdvancedStanding = currentAdvancedStanding showWindow = showAdvancedStandingDeleteConfirmation}}
+  {{delete-advanced-standing advancedStanding = currentAdvancedStanding showWindow = showAdvancedStandingDeleteConfirmation}}
 {{else if showScholarshipDeleteConfirmation}}
-  {{delete-scholarship Scholarship = currentScholarship showWindow = showScholarshipDeleteConfirmation}}
+  {{delete-scholarship scholarship = currentScholarship showWindow = showScholarshipDeleteConfirmation}}
 {{/if}}
 
 <!-- Other non-popup screens -->
@@ -136,7 +136,7 @@
   </div>
 
   <div class="ui bottom attached tab segment" data-tab="program">
-    <h2>Program Info</h2>
+    <h2>Program Records</h2>
     <h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
 
     <select class="ui dropdown" onchange={{action 'selectTerm' value='target.value'}}>
@@ -173,7 +173,7 @@
   <div class="ui bottom attached tab segment" data-tab="advanced">
     <h2>Advanced Standings</h2>
 
-    <table class="ui fixed table">
+    <table class="ui table">
       <thead>
         <tr>
           <th>Advanced Standings</th>
@@ -183,17 +183,20 @@
           <th>
             <!--spacer-->
           </th>
+          <th><!--spacer--></th>
+          <th><!--spacer--></th>
+          <th><!--spacer--></th>
         </tr>
       </thead>
 
-      {{#each studentAdvancedStandings as |oneAdvancedStandings|}}
+      {{#each advancedStandingModel as |advancedStanding|}}
          <tr>
             <td>
                 <label>
                   Course: 
                 </label>
                 <div class="ui fluid input">
-                    {{input type="text" value = oneAdvancedStandings.course}}
+                    {{input type="text" value = advancedStanding.course }}
                 </div>
             </td>
             <td>
@@ -201,7 +204,7 @@
                   Description: 
                 </label>
                 <div class="ui fluid input">
-                    {{input type="text" value = oneAdvancedStandings.description}}
+                    {{input type="text" value = advancedStanding.description}}
                 </div>
             </td>
             <td>
@@ -209,7 +212,7 @@
                   Units: 
                 </label>
                 <div class="ui fluid input">
-                    {{input type="text" value = oneAdvancedStandings.units}}
+                    {{input type="text" value = advancedStanding.units}}
                 </div>
             </td>
             <td>
@@ -217,7 +220,7 @@
                   Grade: 
                 </label>
                 <div class="ui fluid input">
-                    {{input type="text" value = oneAdvancedStandings.grade}}
+                    {{input type="text" value = advancedStanding.grade}}
                 </div>
             </td>
             <td>
@@ -225,27 +228,44 @@
                   From: 
                 </label>
                 <div class="ui fluid input">
-                    {{input type="text" value = oneAdvancedStandings.from}}
+                    {{input type="text" value = advancedStanding.from}}
                 </div>
             </td>
             <td>
                 <div class="ui inverted buttons">
-                    <button class="ui blue inverted button" {{action "saveAS" advancedStandings}}>Save</button>
+                    <button class="ui blue inverted button" {{action "saveAS" advancedStanding}}>Save</button>
                     <div class="divider"/>
-                    <button class="ui red inverted button" {{action "deleteAS" advancedStandings}}>Delete</button>
+                    <button class="ui red inverted button" {{action "deleteAS" advancedStanding}}>Delete</button>
                 </div> 
             </td>
         </tr>
       {{/each}}
       <tr>
         <td>
-          <!--spacer-->
+          <div class="ui fluid input">
+            {{input type="text" value = newAdvancedStandingCourse}}
+          </div>
         </td>
         <td>
           <div class="ui fluid input">
-            {{input type="text" value = AdvancedStandingsName}}
-          </div>
+            {{input type="text" value = newAdvancedStandingDescription}}
+            </div>
         </td>
+        <td>
+          <div class="ui fluid input">
+            {{input type="text" value = newAdvancedStandingUnits}}
+            </div>
+          </td>
+          <td>
+          <div class="ui fluid input">
+            {{input type="text" value = newAdvancedStandingGrade}}
+            </div>
+          </td>
+          <td>
+          <div class="ui fluid input">
+            {{input type="text" value = newAdvancedStandingFrom}}
+            </div>
+          </td>
         <td>
           <button class="ui inverted green button" {{action "addAS"}}> 
                     Add &nbsp; <i class="add square icon"></i>
@@ -329,11 +349,11 @@
             <th><!--spacer--></th>  
         </tr>
         </thead>
-        {{#each studentScholarhips  as |oneScholarship|}}
+        {{#each scholarshipModel  as |scholarship|}}
         <tr>
             <td>
                 <div class="ui fluid input">
-                    {{input type="text" value = oneScholarship.note}}
+                    {{input type="text" value = scholarship.note}}
                 </div>
             </td>
             <td>
@@ -343,11 +363,10 @@
                     <button class="ui red inverted button" {{action "deleteScholarship" scholarship}}>Delete</button>
                 </div> 
             </td>
-            <td><!--spacer--></td>
+            
         </tr>
     {{/each}}
     <tr>
-            <td><!--spacer--></td>
             <td>
                 <div class="ui fluid input">
                     {{input type="text" value = newScholarshipName}}
