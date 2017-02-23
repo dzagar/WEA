@@ -265,9 +265,7 @@
           </th>
         </tr>
       </thead>
-      {{#each studentGrades as |grade|}}
-      <!--Will work with proper course set up-->
-      {{#each studentCourses as |course|}}
+      {{#each studentGrades as |grade index|}}
       <tr>
         <td>
           <div class="ui fluid input">
@@ -276,12 +274,12 @@
         </td>
         <td>
           <div class="ui fluid input">
-            {{input type="text" value = course.subject}}
+            {{input type="text" value = studentSubjects[index].name}}
           </div>
         </td>
         <td>
           <div class="ui fluid input">
-            {{input type="text" value = course.school}}
+            {{input type="text" value = studentSchools[index].name}}
           </div>
         </td>
         <td>
@@ -296,7 +294,6 @@
           <!--spacer-->
         </td>
       </tr>
-      {{/each}}
       {{/each}}
       <tr>
         <td>

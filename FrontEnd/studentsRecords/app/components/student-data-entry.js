@@ -38,7 +38,9 @@ export default Ember.Component.extend({
   showFindStudent: false,
   store: Ember.inject.service(),
   studentAdvancedStandings: null,
-  studentCourses: [],
+  //studentCourses: [],
+  studentSubjects: [],
+  studentSchools: [],
   studentGrades: null,
   studentPhoto: null,
   studentsRecords: null,
@@ -162,13 +164,20 @@ export default Ember.Component.extend({
         });
         //loads student high school information
         this.get('store').query('high-school-grade', {student : studentID}).then(function(grades){
-          //console.log(grades.content.length);
+          console.log(grades.content.length);
           self.set('studentGrades', grades);
           for (var i = 0; i < grades.content.length; i++){
             //console.log(grades.objectAt(i));
-            self.get('store').queryRecord('high-school-course', {grades : grades.objectAt(i).id}).then(function(course){
-              //console.log(course);
-              self.get('studentCourses').push(course);
+            // self.get('store').queryRecord('high-school-course', {grades : grades.objectAt(i).id}).then(function(course){
+            //   //console.log(course);
+            //   self.get('studentCourses').push(course);
+            // });
+            console.log(grades.objectAt(i).source);
+            self.get('store').queryRecord('high-school-subject', {course : grades.objectAt(i).source}).then(function(subject){
+              self.get('studentSubjects').push(subject.name);
+            });
+            self.get('store').queryRecord('high-school', {course: grades.objectAt(i).source}).then(function(school){
+              self.get('studentSchools').push(school.name);
             });
           }
         });
