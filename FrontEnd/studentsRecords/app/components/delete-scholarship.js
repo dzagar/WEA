@@ -1,22 +1,23 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-    scholarship: null,
+  
+	scholarship: null,
 	showWindow: null,
 	store: Ember.inject.service(),
 
 	actions: {
 		deleteScholarship: function(){
-			this.get('gender').destroyRecord();
+			this.get('scholarship').destroyRecord();
 			this.set('showWindow', false);
 			Ember.$('.ui.modal').modal('hide');
-      		Ember.$('.ui.modal').remove();
+      Ember.$('.ui.modal').remove();
 
 		},
 		cancel: function(){
 			this.set('showWindow', false);
 			Ember.$('.ui.modal').modal('hide');
-      		Ember.$('.ui.modal').remove();
+      Ember.$('.ui.modal').remove();
 		}
 	},
 
