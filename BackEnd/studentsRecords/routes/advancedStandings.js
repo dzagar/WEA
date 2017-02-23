@@ -43,7 +43,7 @@ router.route('/')
             });
         }
         
-        else if (!studentNumber) {
+        else if (!Student) {
             AdvancedStanding.find(function (err, advancedStandings){
                 if (err)
                     response.send(err);
