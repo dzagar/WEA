@@ -139,8 +139,8 @@
     <h2>Program Info</h2>
     <h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
 
-    <select class="ui dropdown" onchange={{action 'selectTerm' value="target.value"}}>
-      {{#each currentStudent.termCodes as |semester|}}
+    <select class="ui dropdown" onchange={{action 'selectTerm' value='target.value'}}>
+      {{#each currentStudent.termCodes as |semester index|}}
         <option value={{index}}>{{semester.name}}</option>
       {{/each}}
     </select>
@@ -150,16 +150,22 @@
         <tr>
           <th>Course</th>
           <th><!--spacer--></th>
-          <th><!--spacer--></th>
+          <th>Course Code</th>
           <th>Grade</th>
           <th>Note</th>
         </tr>
       </thead>
-      {{#each semester.courses as grade}}
-        <tr>
-          <td>{{grade.mark}}</td>
-          <td>{{grade.courseCode.name}}</td>
-        </tr>
+      {{#each currentStudent.termCodes as |term index|}}
+      {{#if (eq index termIndex)}}
+        {{#each term.grades as |grade|}}
+          <tr>
+            <td colspan="2">{{grade.courseCode.name}}</td>
+            <td>{{grade.courseCode.courseLetter}}{{grade.courseCode.courseNumber}}</td>
+            <td>{{grade.mark}}</td>
+            <td>{{grade.note}}</td>
+          </tr>
+        {{/each}}
+      {{/if}}
       {{/each}}
     </table>
   </div>
@@ -253,20 +259,20 @@
 
   <div class="ui bottom attached tab segment" data-tab="hsinfo">
     <h2>High School Info</h2>
-
+    
+    <div>
+      Attended:<!--inprogress-->
+    </div>
     <table class="ui fixed table">
       <thead>
         <tr>
           <th>High Schools</th>
-          <th>
-            <!--spacer-->
-          </th>
-          <th>
-            <!--spacer-->
-          </th>
+          <th><!--spacer--></th>
+          <th><!--spacer--></th>
+          <th><!--spacer--></th>
         </tr>
       </thead>
-      {{#each studentGrades as |grade index|}}
+      {{#each currentStudent.highSchoolCourses as |grade index|}}
       <tr>
         <td>
           <div class="ui fluid input">
@@ -275,12 +281,12 @@
         </td>
         <td>
           <div class="ui fluid input">
-            {{input type="text" value = ""}}
+            {{input type="text" value = grade.source.source}}
           </div>
         </td>
         <td>
           <div class="ui fluid input">
-            {{input type="text" value = ""}}
+            {{input type="text" value = grade.source.subject.name}}
           </div>
         </td>
         <td>
@@ -291,15 +297,11 @@
             <button class="ui red inverted button" {{action "deleteHighSchool" highschool}}>Delete</button>
           </div>
         </td>
-        <td>
-          <!--spacer-->
-        </td>
       </tr>
       {{/each}}
       <tr>
-        <td>
-          <!--spacer-->
-        </td>
+        <td><!--spacer--></td>
+        <td><!--spacer--></td>
         <td>
           <div class="ui fluid input">
             {{input type="text" value = newHighSchool}}
@@ -307,8 +309,8 @@
         </td>
         <td>
           <button class="ui inverted green button" {{action "addHighSchool"}}> 
-                    Add &nbsp; <i class="add square icon"></i>
-                    </button>
+            Add &nbsp; <i class="add square icon"></i>
+          </button>
         </td>
       </tr>
     </table>
