@@ -428,7 +428,7 @@ export default Ember.Component.extend({
     {
         if (this.get('newAdvancedStandingName').trim() != "")
         {
-            this.set('newAdvancedStandingObj', this.get('store').createRecord('advancedStandings', {
+            this.set('newAdvancedStandingObj', this.get('store').createRecord('advanced-standing', {
                 name: this.get('newAdvancedStandingName').trim()
             }));
             this.get('newAdvancedStandingObj').save();
