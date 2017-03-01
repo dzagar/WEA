@@ -17,3 +17,7 @@ div > div > div> .step{
 .ui.menu .item img.logo {
     margin-right: 1.5em;
 }
+
+.appBody.ui.grid {
+	margin-top: 1rem;
+}
