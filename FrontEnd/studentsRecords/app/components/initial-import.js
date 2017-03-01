@@ -1064,6 +1064,7 @@ export default Ember.Component.extend({
 																									var newPlanToImport = self.get('store').createRecord('plan-code', {
 																										name: planName
 																									});
+																									console.log(programRecordObj);
 																									newPlanToImport.set('programRecord', programRecordObj);
 																									newPlanToImport.save().then(function() {
 																										numberOfPlansSaved++;
