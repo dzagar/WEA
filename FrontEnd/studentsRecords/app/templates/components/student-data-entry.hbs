@@ -147,18 +147,18 @@
 
     <h5>Plan Codes</h5>
     <table class="ui fixed table">
-    <div class="ui bulleted list">
       {{#each currentStudent.termCodes as |term index|}}
         {{#if (eq index termIndex)}}
           {{#each term.programRecords as |programRecord|}}
             <label>{{programRecord.name}}</label>
+            <div class="ui bulleted list">
             {{#each programRecord.planCodes as |planCode|}}
-              {{!--<label>{{planCode.name}}</label>--}}
+              <div class="item">{{planCode.name}}</div>
             {{/each}}
+            </div>
           {{/each}}
         {{/if}}
       {{/each}}
-    </div>
     </table>
 
     <table class="ui fixed table">
