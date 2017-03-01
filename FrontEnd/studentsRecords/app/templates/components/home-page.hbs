@@ -1,25 +1,31 @@
 <div class="ui grid">
     <div class="ui fixed inverted menu">
-      <a class="item active" {{action "home"}}>
-        <i class="large home icon"></i>
-        Home
-      </a>
-      <a class="item" {{action "studentsDataEntry"}}>
-        <i class="large leanpub icon"></i>
-        Students Records
-      </a>
-      <a class="item" {{action "SystemCodes"}}>
-        <i class="large settings icon"></i>
-        System Codes        
-      </a>
-      <a class="item" {{action "import"}}>
-        <i class="large upload icon"></i>
-        Import New Records        
-      </a>
-      <a class="item " {{action "about"}}>
-        <i class="large user icon"></i>
-        About
-      </a>
+      <div class = "ui container">
+        <a class = "header item">
+        <img class="logo" src="/assets/images/UWO Stacked_Rev.png" data-pin-nopin = "true">
+        WE Adjudication
+        </a>
+        <a class="item active" {{action "home"}}>
+          <i class="large home icon"></i>
+          Home
+        </a>
+        <a class="item" {{action "studentsDataEntry"}}>
+          <i class="large leanpub icon"></i>
+          Students Records
+        </a>
+        <a class="item" {{action "SystemCodes"}}>
+          <i class="large settings icon"></i>
+          System Codes        
+        </a>
+        <a class="item" {{action "import"}}>
+          <i class="large upload icon"></i>
+          Import New Records        
+        </a>
+        <a class="item " {{action "about"}}>
+          <i class="large user icon"></i>
+          About
+        </a>
+      </div>
     </div>
 
     <div class="ui segment container">
