@@ -30,7 +30,7 @@
 
     <div class="ui basic segment container">
       {{#if isHomeShowing}}
-        {{welcome-page}}
+        {{welcome-page studentDataEntry = (action 'studentsDataEntry')}}
       {{else if isStudentsRecordsDataEntry}}
         {{student-data-entry}}
       {{else if isAboutShowing}}
