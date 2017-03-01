@@ -30,16 +30,23 @@
     <i class="arrow left icon"></i>Back
   </div>
   -->
-  
-  <div class="ui vertically padded grid">
-    {{#each studentsRecords as |student index|}}
-      <div class="eight wide column">
-        <div class="ui fluid labeled icon button" {{action "selectStudent" student index}}>
-          <img class="ui avatar image icon" src={{student.photo}}>
-          {{student.firstName}} {{student.lastName}}
-        </div>
+  <div style="min-height: 300px;">
+    {{#if (inline-compare studentsRecords.length '>' 0)}}
+      <div class="ui vertically padded grid">
+        {{#each studentsRecords as |student index|}}
+          <div class="eight wide column">
+            <div class="ui fluid labeled icon button" {{action "selectStudent" student index}}>
+              <img class="ui avatar image icon" src={{student.photo}}>
+              {{student.firstName}} {{student.lastName}}
+            </div>
+          </div>
+        {{/each}}
       </div>
-    {{/each}}
+    {{else}}
+      <div class="ui disabled header" style="text-align: center; line-height: 300px">
+        {{message}}
+      </div>
+    {{/if}}
   </div>
   
   

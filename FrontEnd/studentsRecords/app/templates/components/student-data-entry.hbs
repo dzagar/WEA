@@ -49,7 +49,7 @@
 <!-- Other non-popup screens -->
 {{#if showAllStudents}}
 <!-- Note that offset is an "in" and "out" parameter !-->
-  {{all-students currentIndex = currentIndex currentStudent = currentStudent showAllStudents = showAllStudents showMenuBar = showMenuBar offset = offset studentsRecords = studentsRecords totalPages = totalPages pageNumber = pageNumber changeOffset = (action 'changeOffset')}}
+  {{all-students currentIndex = currentIndex currentStudent = currentStudent showAllStudents = showAllStudents showMenuBar = showMenuBar offset = offset studentsRecords = studentsRecords totalPages = totalPages pageNumber = pageNumber message = studentDataMessage changeOffset = (action 'changeOffset')}}
 {{else if showAddStudent}}
   {{add-student INDEX = currentIndex student = currentStudent notDONE = showAddStudent total = totalStudents}}
 {{else if showFindStudent}}

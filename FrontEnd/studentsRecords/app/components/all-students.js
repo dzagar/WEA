@@ -4,6 +4,7 @@ export default Ember.Component.extend({
   
   currentIndex: null,
   currentStudent: null,
+  message: null,
   offset: 0,
   oldIndex: 0,
   oldOffset: 0,
