@@ -37,11 +37,11 @@ router.route('/')
         }
         else if(request.query.name)
         {
-            Gender.find({"name": request.query.name}, function(error, gender) {
+            Gender.find({"name": request.query.name}, function(error, genders) {
                 if (error)
                     response.send(error);
                 else
-                    response.send({gender: gender});
+                    response.send({gender: genders});
             });
         }
         else if (!Student) {

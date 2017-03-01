@@ -140,7 +140,7 @@ export default Ember.Component.extend({
 	},
 	setOutput: function(newOutput) {
 		this.set('fileOutput', newOutput);
-
+		
 	},
 	changeHeaderRequirements: function(newHeader) {
 		this.set('fileFormat', newHeader);
