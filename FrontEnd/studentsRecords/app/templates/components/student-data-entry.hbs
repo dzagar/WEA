@@ -145,25 +145,18 @@
       {{/each}}
     </select>
 
-<!--
     <h5>Plan Codes</h5>
+    <table class="ui fixed table">
     <div class="ui bulleted list">
       {{#each currentStudent.termCodes as |term index|}}
-        <div class="item">
-          <div>{{term.name}}</div>
-          {{#each term.programs as |programRecord|}}
-            <div class="item">
-              <div>{{programRecord.name}}</div>
-              {{#each programRecord.planCodes as |planCode|}}
-                <div class="item">{{planCode.name}}</div>
-              {{/each}}
-            </div>
-          {{/each}}
-          </div>
+        {{#if (eq index termIndex)}}
+        {{#each term.programRecords as |programRecord|}}
+          <label>{{programRecord.name}}</label>
+        {{/each}}
+      {{/if}}
       {{/each}}
-      <div class="item">Test!</div>
     </div>
-    -->
+    </table>
 
     <table class="ui fixed table">
       <thead>
