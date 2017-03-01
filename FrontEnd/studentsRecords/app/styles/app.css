@@ -14,10 +14,26 @@ div > div > div> .step{
 	height:35px;
 }
 
+/*Home Page*/
 .ui.menu .item img.logo {
     margin-right: 1.5em;
 }
 
 .appBody.ui.grid {
 	margin-top: 1rem;
+}
+
+/*Welcome Page*/
+.appBody h1.ui.header {
+    margin-top: 1.5em;
+    margin-bottom: 0em;
+    font-size: 4em;
+    font-weight: normal;
+    text-align: center;
+}
+.appBody h2 {
+	text-align: center;
+}
+.appBody.ui.container.button {
+	text-align: center;
 }
