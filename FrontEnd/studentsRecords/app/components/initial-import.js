@@ -140,7 +140,7 @@ export default Ember.Component.extend({
 	},
 	setOutput: function(newOutput) {
 		this.set('fileOutput', newOutput);
-		
+
 	},
 	changeHeaderRequirements: function(newHeader) {
 		this.set('fileFormat', newHeader);
@@ -395,7 +395,7 @@ export default Ember.Component.extend({
 									}
 								} else {
 									var numberOfCodesImported = 0;
-									self.pushOutput("Successful read of file has completed. Beginning import of " + courseCodesToImport.length + " residencies.");
+									self.pushOutput("Successful read of file has completed. Beginning import of " + courseCodesToImport.length + " courses.");
 									for (var i = 0; i < courseCodesToImport.length; i++) {
 										courseCodesToImport[i].save().then(function() {
 											numberOfCodesImported++;
