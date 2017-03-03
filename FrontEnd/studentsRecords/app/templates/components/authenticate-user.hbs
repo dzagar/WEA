@@ -1,0 +1,61 @@
+<!-- Display the login screen with the main application background -->
+{{#if isPasswordChanging}}
+  <section class="hero">
+    <div class="row intro">
+      <div>
+        <div class="row">
+          <div class="large-10  large-centered columns">
+            <div class="panel">
+              <h3>Please change your password and login again</h3>
+              <br>
+              <div class="row">
+                <div class="small-3 columns">
+                  <label class="right">Enter Password</label>
+                </div>
+                <div class="small-7 columns" class="left">
+                  {{input value=firstPassword type="password" }}
+                </div>
+              </div>
+              <div class="row">
+                <div class="small-3 columns">
+                  <label class="right">Reenter Password</label>
+                </div>
+                <div class="small-7 columns" class="left">
+                  {{input value=secondPassword type="password" }}
+                </div>
+              </div>
+              <br> <br>
+              <a href="#" class="button radius" {{action 'save'}}>Save</a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+{{else}}
+
+  <div class="ui one column center aligned grid">
+    <div class="column six wide form-holder">
+      <h2 class="center aligned header form-head">WE Adjudication</h2>
+      <div class="ui form">
+        <div class="field">
+          {{input value=name  type="text" placeholder="user name"}}
+        </div>
+        <div class="field">
+          {{input value=password  type="password" placeholder="password"}}
+        </div>
+        <div class="field">
+          <button class="ui button large fluid green" {{action 'login'}}>
+            Log In
+          </button>
+          <p> {{errorMessage}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+{{/if}}
+
+
