@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var Roots = require('../models/roots');
+var Roots = require('../models/root');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
 var parseJSON = bodyParser.json();

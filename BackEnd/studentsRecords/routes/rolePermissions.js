@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var RolePermissions = require('../models/rolePermissions');
+var RolePermissions = require('../models/rolePermission');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
 var parseJSON = bodyParser.json();

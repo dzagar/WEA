@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var Passwords = require('../models/passwords');
+var Passwords = require('../models/password');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
 var parseJSON = bodyParser.json();
