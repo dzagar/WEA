@@ -1,7 +1,59 @@
-<!-- <h2>About the WE Adjudication System</h2> -->
-<P>
-  The <b>Western Engineering Adjudication System</b> is a comprehensive Web-based application that allows you to interact with the database containing second, third and fourth year engineering student Information Technology Services (ITS) records. This site allows you to appropriately review and approve students to move forward by specifying a set of criteria. The goal of this application is to effectively <b>increase productivity and organization</b> in Engineering Undergraduate Services, and by extension, the adjudication process will become <b>faster and more efficient</b>.
-  <br><br>
-  Developed by Digital Sloth: Nicholas Van Bommel, Michael Romao, Dana Zagar, Tom Machado, and Daniela Arcese.
+<h1 class = "ui header"> Meet Digital Sloth. </h1>
+<br>
+<br>
+<div class = "ui five column grid">
+	<div class = "column">
+		<div class = "ui segment headshot" onMouseEnter = {{action 'onDanielaHover'}} onMouseLeave = {{action 'onHoverAway'}}>
+			<img class = "ui image" src = "/assets/images/daniela_headshot.jpg">
+		</div>
+		<h3>Daniela Arcese</h3>
+	</div>
+	<div class = "column">
+		<div class = "ui segment headshot" onMouseEnter = {{action 'onTomHover'}} onMouseLeave = {{action 'onHoverAway'}}>
+			<img src = "/assets/images/tom_headshot.jpg">
+		</div>
+		<h3>Tom Machado</h3>
+	</div>
+	<div class = "column">
+		<div class = "ui segment headshot" onMouseEnter = {{action 'onMikeHover'}} onMouseLeave = {{action 'onHoverAway'}}>
+			<img src = "/assets/images/mike_headshot.jpg">
+		</div>
+		<h3>Michael Romao</h3>
+	</div>
+	<div class = "column">
+		<div class = "ui segment headshot" onMouseEnter = {{action 'onNickHover'}} onMouseLeave = {{action 'onHoverAway'}}>
+			<img src = "/assets/images/nick_headshot.jpg">
+		</div>
+		<h3>Nicholas Van Bommel</h3>
+	</div>
+	<div class = "column">
+		<div class = "ui segment headshot" onMouseEnter = {{action 'onDanaHover'}} onMouseLeave = {{action 'onHoverAway'}}>
+			<img src = "/assets/images/dana_headshot.jpg">
+		</div>
+		<h3>Dana Zagar</h3>
+	</div>
+</div>
 
-</P>
+	{{#if danielaHover}}
+		<div class = "ui raised segment description">
+			<p class = "ui text"> Daniela! </p>
+		</div>
+	{{else if tomHover}}
+		<div class = "ui raised segment description">
+			<p class = "ui text"> Tom! </p>
+		</div>
+	{{else if mikeHover}}
+		<div class = "ui raised segment description">
+			<p class = "ui text"> Mike! </p>
+		</div>
+	{{else if nickHover}}
+		<div class = "ui raised segment description">
+			<p class = "ui text"> Nick! </p>
+		</div>
+	{{else if danaHover}}
+		<div class = "ui raised segment description">
+			<p class = "ui text"> Dana! </p>
+		</div>
+	{{else}}
+
+	{{/if}}
