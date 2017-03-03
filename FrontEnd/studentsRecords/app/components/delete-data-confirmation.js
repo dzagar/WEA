@@ -73,6 +73,24 @@ export default Ember.Component.extend({
 				console.log(response);
 			});
 			console.log('deleted students');
+
+			this.get('store').query('program-record', {
+				deleteAll: true
+			}).then(function(response) {
+				console.log(response);
+			});
+
+			this.get('store').query('plan-code', {
+				deleteAll: true
+			}).then(function(response) {
+				console.log(response);
+			});
+			this.get('store').query('grade', {
+				deleteAll: true
+			}).then(function(response) {
+				console.log(response);
+			});
+		
 			this.get('store').unloadAll();
 
 			this.set('isImporting', true);

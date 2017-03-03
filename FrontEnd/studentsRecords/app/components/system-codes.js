@@ -7,6 +7,7 @@ export default Ember.Component.extend({
     currentGender: null,
     currentResidency: null,
     genderModel: null,
+    genderOutput: "",
     newCourseCodeCourseLetter: "",
     newCourseCodeCourseNumber: "",
     newCourseCodeName: "",
@@ -17,6 +18,7 @@ export default Ember.Component.extend({
     newResidencyName: "",
     newResidencyObj: null,
     residencyModel: null,
+    residencyOutput: "",
     showCourseCodeDeleteConfirmation: false,
     showDeleteGenderConfirmation: false,
     showDeleteResidencyConfirmation: false,
@@ -33,6 +35,14 @@ export default Ember.Component.extend({
     return ttl;
     }),
     store: Ember.inject.service(),
+
+    setResidencyOutput: function(newOutput) {
+		this.set('residencyOutput', newOutput);	
+	},
+
+    setGenderOutput: function(newOutput) {
+        this.set('genderOutput',newOutput);
+    },
 
     init() {
         this._super(...arguments);
@@ -99,13 +109,30 @@ export default Ember.Component.extend({
     {
         addGender()
         {
-            if (this.get('newGenderName').trim() != "")
+            var genderArray=this.get('genderModel');
+            var genderName=this.get('newGenderName');
+            var isGenderCreated=true;
+
+            for(var i=0;i<genderArray.content.length;i++)
             {
-                this.set('newGenderObj', this.get('store').createRecord('gender', {
-                    name: this.get('newGenderName').trim()
-                }));
-                this.get('newGenderObj').save();
-                this.set('newGenderName', "");
+                if(genderName.toUpperCase()==genderArray.content[i]._data.name.toUpperCase())
+                {
+                    this.setGenderOutput("The gender entered is already created! Please enter a new gender name!");
+                    isGenderCreated=false;
+                }
+            }
+            
+            if(isGenderCreated)
+            {
+                this.setGenderOutput("");
+                if (this.get('newGenderName').trim() != "")
+                {
+                    this.set('newGenderObj', this.get('store').createRecord('gender', {
+                     name: this.get('newGenderName').trim()
+                    }));
+                    this.get('newGenderObj').save();
+                    this.set('newGenderName', "");
+                }
             }
         },
 
@@ -124,13 +151,30 @@ export default Ember.Component.extend({
 
         addResidency()
         {   
-            if (this.get('newResidencyName').trim() != "")
+            var residencyArray=this.get('residencyModel');
+            var residencyName=this.get('newResidencyName');
+            var isResidencyCreated=true;
+
+             for(var i=0;i<residencyArray.content.length;i++)
             {
-                this.set('newResidencyObj',this.get('store').createRecord('residency',{
-                    name: this.get('newResidencyName').trim()
-                }));
-                this.get('newResidencyObj').save();
-                this.set('newResidencyName',"");
+                if(residencyName.toUpperCase()==residencyArray.content[i]._data.name.toUpperCase())
+                {
+                    this.setResidencyOutput("The residency entered is already created! Please enter a new residency name!");
+                    isResidencyCreated=false;
+                }
+            }
+
+            if(isResidencyCreated)
+            {
+                this.setResidencyOutput("");
+                if (this.get('newResidencyName').trim() != "")
+                {
+                    this.set('newResidencyObj',this.get('store').createRecord('residency',{
+                        name: this.get('newResidencyName').trim()
+                    }));
+                    this.get('newResidencyObj').save();
+                    this.set('newResidencyName',"");
+                }
             }
         },
 
@@ -149,20 +193,23 @@ export default Ember.Component.extend({
 
         addCourseCode()
         {
+            
             if((this.get('newCourseCodeName').trim()!="") && (this.get('newCourseCodeCourseLetter').trim()!="") && (this.get('newCourseCodeCourseNumber').trim()!="") && (this.get('newCourseCodeUnit').trim()!=""))
             {
                 this.set('newCourseCodeObj',this.get('store').createRecord('course-code', {
-                    courseLetter: this.get('newCourseCodeCourseLetter').trim(),
-                    courseNumber: this.get('newCourseCodeCourseNumber').trim(),
-                    name: this.get('newCourseCodeName').trim(),
-                    unit: this.get('newCourseCodeUnit').trim()
+                courseLetter: this.get('newCourseCodeCourseLetter').trim(),
+                courseNumber: this.get('newCourseCodeCourseNumber').trim(),
+                name: this.get('newCourseCodeName').trim(),
+                unit: this.get('newCourseCodeUnit').trim()
                 }));
+                
                 this.get('newCourseCodeObj').save();
                 this.set('newCourseCodeName',"");
                 this.set('newCourseCodeCourseLetter',"");
                 this.set('newCourseCodeCourseNumber',"");
                 this.set('newCourseCodeUnit',"");
             }
+            
         },
 
         saveCourseCode(courseCode)

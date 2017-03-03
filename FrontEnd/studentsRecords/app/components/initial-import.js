@@ -395,7 +395,7 @@ export default Ember.Component.extend({
 									}
 								} else {
 									var numberOfCodesImported = 0;
-									self.pushOutput("Successful read of file has completed. Beginning import of " + courseCodesToImport.length + " residencies.");
+									self.pushOutput("Successful read of file has completed. Beginning import of " + courseCodesToImport.length + " courses.");
 									for (var i = 0; i < courseCodesToImport.length; i++) {
 										courseCodesToImport[i].save().then(function() {
 											numberOfCodesImported++;
@@ -1064,6 +1064,7 @@ export default Ember.Component.extend({
 																									var newPlanToImport = self.get('store').createRecord('plan-code', {
 																										name: planName
 																									});
+																									console.log(programRecordObj);
 																									newPlanToImport.set('programRecord', programRecordObj);
 																									newPlanToImport.save().then(function() {
 																										numberOfPlansSaved++;

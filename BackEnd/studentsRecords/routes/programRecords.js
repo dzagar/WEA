@@ -41,7 +41,15 @@ router.route('/')
                 if (error) {
                     response.send(error);
                 } else {
-                    console.log('all program Records removed');
+                    ProgramRecord.find({}, function(error, programRecords) {
+                        if (error)
+                        {
+                            response.send(error);
+                        }
+                        else{
+                            response.send({programRecords: programRecords});
+                        }
+                    });
                 }
             });
         }
@@ -49,7 +57,15 @@ router.route('/')
         {
             //student.find
             Student.findOne({studentNumber: request.query.studentNumber}, function(error, student) {
+                if (!student)
+                {
+                    console.log("no student found");
+                }
                 TermCode.findOne({name: request.query.termName, student: student.id}, function(error, term) {
+                    if (!term)
+                    {
+                        console.log("no term found");
+                    }
                     ProgramRecord.findOne({termCode: term, name: request.query.programName, level: request.query.level, load: request.query.load}, function(error, programRecord) {
                         if (error) {
                             response.send(error);

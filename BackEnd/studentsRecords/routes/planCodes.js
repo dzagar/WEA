@@ -39,7 +39,13 @@ router.route('/')
                 if (error) {
                     response.send(error);
                 } else {
-                    console.log('all plan Codes removed');
+                    PlanCode.find({}, function(error, planCodes) {
+                        if (error) {
+                            response.send(error);
+                        } else {
+                            response.json({planCodes: planCodes});
+                        }
+                    });
                 }
             });
         } else {

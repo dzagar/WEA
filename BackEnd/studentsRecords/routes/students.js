@@ -223,7 +223,7 @@ router.route('/:student_id')
                     } else if (residency) {
                         let index = residency.students.indexOf(student._id);
                         if (index > -1) {
-                            residency.students.splic(index, 1);
+                            residency.students.splice(index, 1);
                         }
 
                         residency.save(function (error) {

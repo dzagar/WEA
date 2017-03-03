@@ -47,7 +47,7 @@
 <!-- Other non-popup screens -->
 {{#if showAllStudents}}
 <!-- Note that offset is an "in" and "out" parameter !-->
-  {{all-students currentIndex = currentIndex currentStudent = currentStudent showAllStudents = showAllStudents showMenuBar = showMenuBar offset = offset studentsRecords = studentsRecords totalPages = totalPages pageNumber = pageNumber changeOffset = (action 'changeOffset')}}
+  {{all-students currentIndex = currentIndex currentStudent = currentStudent showAllStudents = showAllStudents showMenuBar = showMenuBar offset = offset studentsRecords = studentsRecords totalPages = totalPages pageNumber = pageNumber message = studentDataMessage changeOffset = (action 'changeOffset')}}
 {{else if showAddStudent}}
   {{add-student INDEX = currentIndex student = currentStudent notDONE = showAddStudent total = totalStudents}}
 {{else if showFindStudent}}
@@ -143,25 +143,19 @@
       {{/each}}
     </select>
 
-<!--
     <h5>Plan Codes</h5>
-    <div class="ui bulleted list">
-      {{#each currentStudent.termCodes as |term index|}}
-        <div class="item">
-          <div>{{term.name}}</div>
-          {{#each term.programs as |programRecord|}}
-            <div class="item">
-              <div>{{programRecord.name}}</div>
-              {{#each programRecord.planCodes as |planCode|}}
-                <div class="item">{{planCode.name}}</div>
-              {{/each}}
-            </div>
+    {{#each currentStudent.termCodes as |term index|}}
+      {{#if (eq index termIndex)}}
+        {{#each term.programRecords as |programRecord|}}
+          <label>{{programRecord.name}}</label>
+          <div class="ui bulleted list">
+          {{#each programRecord.planCodes as |planCode|}}
+            <div class="item">{{planCode.name}}</div>
           {{/each}}
           </div>
-      {{/each}}
-      <div class="item">Test!</div>
-    </div>
-    -->
+        {{/each}}
+      {{/if}}
+    {{/each}}
 
     <table class="ui fixed table">
       <thead>
@@ -374,7 +368,7 @@
         </thead>
         {{#each currentStudent.scholarships as |scholarship|}}
         <tr>
-            <td>
+            <td colspan="2">
                 <div class="ui fluid input">
                     {{input type="text" value = scholarship.note}}
                 </div>

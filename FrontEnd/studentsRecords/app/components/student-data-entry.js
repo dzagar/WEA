@@ -46,6 +46,7 @@ export default Ember.Component.extend({
   showFindStudent: false,
   store: Ember.inject.service(),
   studentAdvancedStandings: null,
+  studentDataMessage: "Loading Student Data...",
   //studentCourses: [],
   studentSubjects: [],
   studentSchools: [],
@@ -64,12 +65,18 @@ export default Ember.Component.extend({
 
   studentModel: Ember.observer('offset', function () {
     var self = this;
+    this.set('studentDataMessage', "Loading Student Data...");
     this.get('store').query('student', {
       limit: self.get('limit'),
       offset: self.get('offset')
     }).then(function (records) {
       self.set('totalStudents', records.get('meta').total);
       self.set('studentsRecords', records);
+      if (self.get('studentsRecords.length') === 0)
+        self.set('studentDataMessage', "No Student Data Found");
+      else
+        self.set('studentDataMessage', "Student Data Found");
+
       self.set('firstIndex', records.indexOf(records.get("firstObject")));
       self.set('lastIndex', records.indexOf(records.get("lastObject")));
       if (self.get('movingBackword')) {
@@ -79,6 +86,9 @@ export default Ember.Component.extend({
         self.set('currentIndex', records.indexOf(records.get("firstObject")));
         self.setCurrentStudent(self.get('currentIndex'));
       }
+    }, function (reason) {
+      console.log("Query to student records failed");
+      self.set('studentDataMessage', "No Student Data Found");
     });
   }),
 
@@ -115,6 +125,7 @@ export default Ember.Component.extend({
     this.set('limit', 10);
     this.set('offset', 0);
     this.set('pageSize', 10);
+    this.set('studentDataMessage', "Loading Student Data...");
     var self = this;
     this.get('store').query('student', {
       limit: self.get('limit'),
@@ -122,11 +133,19 @@ export default Ember.Component.extend({
     }).then(function (records) {
       self.set('totalStudents', records.get("meta").total);
       self.set('studentsRecords', records);
+      if (self.get('studentsRecords.length') === 0)
+        self.set('studentDataMessage', "No Student Data Found");
+      else
+        self.set('studentDataMessage', "Student Data Found");
+      
       self.set('firstIndex', records.indexOf(records.get("firstObject")));
       self.set('lastIndex', records.indexOf(records.get("lastObject")));
 
       // Show first student data
       self.set('currentIndex', self.get('firstIndex'));
+    }, function (reason) {
+      console.log("Query to student records failed");
+      self.set('studentDataMessage', "No Student Data Found");
     });
 
     //Set up UNDO
