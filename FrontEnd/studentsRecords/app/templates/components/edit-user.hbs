@@ -1,0 +1,85 @@
+{{#if  isUserFormEditing }}
+  {{#if EU001IsPermitted }}
+    <div class="ui modal">
+      <div class="header">Modify User Profile for {{userRecord.firstName}} {{userRecord.lastName}}</div>
+      <div class="content">
+        <div class="ui form">
+          <div class="inline field">
+            <label>First Name</label>
+            {{input value=userRecord.firstName type="text" placeholder="enter first name" }}
+          </div>
+          <div class="inline field">
+            <label>Last Name</label>
+            {{input value=userRecord.lastName type="text" placeholder="enter last name"}}
+          </div>
+          <div class="inline field">
+            <label>EMail Address</label>
+            {{input value=userRecord.email type="text" placeholder="enter email address"}}
+          </div>
+          <div class="inline field">
+            <label>User Name</label>
+            <input value={{userName}} type="text" placeholder="enter user name">
+          </div>
+          {{#if  isResettingPassword }}
+            {{#if EU002IsPermitted}}
+              <div class="inline field">
+                <label>Temp. Password</label>
+                {{input value=tempPassword type="text" placeholder="enter temporary password"}}
+                <button class="ui button"  {{action 'cancelResetPassword'}}>Cancel</button>
+              </div>
+            {{else}}
+              <div class="ui negative message">
+                <i class="close icon">{{action 'cancelResetPassword'}}</i>
+                <div class="header">
+                  This feature (EU002) is not allowed for your account
+                </div>
+                <p>Please contact the system administrator for more information</p>
+              </div>
+            {{/if}}
+          {{else}}
+            <div class="inline field">
+              <label>Password</label>
+              <button class="ui button"  {{action 'resetPassword'}}>Reset password</button>
+            </div>
+
+          {{/if}}
+          <div class="inline field">
+            <label>Account Expiry Date</label>
+            <input value={{selectedDate}} id="AccountExpiryDate" type="date" onchange={{action 'assignDate'
+                                                                                               value="target.value"}}>
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <div class="ui button" {{action "saveUser"}}>
+          Save
+        </div>
+        <div class="ui button" {{action "cancel"}}>
+          Cancel
+        </div>
+      </div>
+    </div>
+  {{else}}
+    <div class="ui basic modal">
+      <div class="ui icon header">
+        <i class="protect icon"></i>
+        Permission Denied
+      </div>
+      <div class="content">
+        <p>This feature (EU001) is not allowed for your account.</p>
+        <p>Please contact the system administrator for more information.</p>
+      </div>
+      <div class="actions">
+        <div class="ui red basic cancel inverted button"{{action 'cancel'}}>
+          <i class="remove icon"></i>
+          Exit
+        </div>
+      </div>
+    </div>
+
+  {{/if}}
+{{else}}
+  <button class="ui mini circular icon button" {{action 'editUser'}}
+          title="Edit"><i class="write icon"></i>
+  </button>
+{{/if}}

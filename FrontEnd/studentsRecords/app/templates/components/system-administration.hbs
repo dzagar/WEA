@@ -1,0 +1,51 @@
+{{#if ADM01IsPermitted }}
+
+  <div class="ui grid">
+    <div class="three wide column">
+      <div class="ui violet vertical pointing menu">
+        <a class="item active" {{action "manageUsers"}}>
+          <i class="large users icon"></i>
+          Users Accounts
+        </a>
+        <a class="item" {{action "manageRoles"}}>
+          <i class="large list layout icon"></i>
+          System Roles
+        </a>
+        <a class="item " {{action "manageFeatures"}}>
+          <i class="large lock icon"></i>
+          System Features/Privileges
+        </a>
+      </div>
+    </div>
+    <div class="thirteen wide column ">
+      <div class="ui segment container">
+        {{#if isUsersShowing}}
+          <br>
+          {{manage-users}}
+        {{/if}}
+        {{#if isRolesEditing }}
+          <br>
+          {{manage-roles}}
+        {{/if}}
+        {{#if isFeaturesEditing }}
+          <br>
+          {{manage-features}}
+        {{/if}}
+      </div>
+    </div>
+  </div>
+
+{{else}}
+  <div class="ui center aligned raised segment">
+    <div class="ui icon header">
+      <i class="protect icon"></i>
+      Permission Denied
+    </div>
+    <div>
+      <p>This feature (ADM01) is not allowed for your account.</p>
+      <p>Please contact the system administrator for more information.</p>
+    </div>
+
+  </div>
+
+{{/if}}

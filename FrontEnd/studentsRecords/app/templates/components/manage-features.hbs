@@ -1,0 +1,66 @@
+{{#if MF001IsPermitted }}
+  {{#if isEditing }}
+    <h2>Add new system feature</h2>
+    <div class="ui form">
+      <div class="inline field">
+        <label>Feature code</label>
+        {{input value=code type="text" placeholder="enter feature code" }}
+      </div>
+      <div class="inline field">
+        <label>Feature name</label>
+        {{input value=sysFeature type="text" placeholder="enter feature description" }}
+      </div>
+    </div>
+    <br>
+    <button class="ui button" {{action 'save'}}>Save</button>
+    <button class="ui button" {{action 'cancel'}}>Cancel</button>
+  {{else}}
+    <h2>Manage System Features</h2>
+    <table class="ui table" style="margin-top: 25px;">
+      <thead>
+      <tr>
+        <th>System Role Name</th>
+        <th></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+
+      {{#each rolePermissionModel as |oneFeature|}}
+        <tr>
+          <td>
+            {{oneFeature.code}}
+          </td>
+          <td>
+            {{oneFeature.sysFeature}}
+          </td>
+          <td class="right aligned">
+            {{delete-feature ID=oneFeature.id }}
+          </td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+    <br><br>
+    <button class="ui button" {{action 'addNewFeature'}}>Add System Feature</button>
+
+      <button class="ui button">{{#file-picker fileLoaded="importFromExcel" accept=".xlsx"
+      readAs="readAsBinaryString"
+      dropzone=false progress=false  preview=false
+      }}
+        Import System Features
+      {{/file-picker}}</button>
+
+  {{/if}}
+{{else}}
+  <div class="ui center aligned raised segment">
+    <div class="ui icon header">
+      <i class="protect icon"></i>
+      Permission Denied
+    </div>
+    <div>
+      <p>This feature (MF001) is not allowed for your account.</p>
+      <p>Please contact the system administrator for more information.</p>
+    </div>
+  </div>
+{{/if}}

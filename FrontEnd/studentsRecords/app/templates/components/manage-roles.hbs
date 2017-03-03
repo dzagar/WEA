@@ -1,0 +1,59 @@
+{{#if MSR01IsPermitted }}
+  {{#if isEditing }}
+    <h2>Add new system role</h2>
+    <div class="ui form">
+      <div class="field">
+        <label>Role name</label>
+        {{input value=name type="text" placeholder="enter role name" }}
+      </div>
+    </div>
+    <br>
+    <button class="ui button" {{action 'save'}}>Save</button>
+    <button class="ui button" {{action 'cancel'}}>Cancel</button>
+  {{else}}
+    <h2>Manage System Roles</h2>
+    <table class="ui table" style="margin-top: 25px;">
+      <thead>
+      <tr>
+        <th>System Role Name</th>
+        <th></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+
+      {{#each roleCodeModel as |oneCode|}}
+        <tr>
+          <td>
+            {{oneCode.name}}
+          </td>
+          <td>
+            {{manage-permission roleID = oneCode.id}}
+
+          </td>
+          <td class="right aligned">
+            {{delete-role key=oneCode.id}}
+          </td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+
+
+    <br><br>
+    <button class="ui button" {{action 'addNewRole'}}>Add New Role</button>
+
+
+  {{/if}}
+{{else}}
+  <div class="ui center aligned raised segment">
+    <div class="ui icon header">
+      <i class="protect icon"></i>
+      Permission Denied
+    </div>
+    <div>
+      <p>This feature (MSR01) is not allowed for your account.</p>
+      <p>Please contact the system administrator for more information.</p>
+    </div>
+  </div>
+{{/if}}
