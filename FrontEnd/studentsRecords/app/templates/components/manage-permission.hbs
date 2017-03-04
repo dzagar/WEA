@@ -5,7 +5,7 @@
      <!-- display a dropdown list to assign a new  system features  -->
      {{#ui-dropdown   class="fluid multiple selection" selected=[selectedFeatures] onChange=(action 'selectPermission')}}
        <i class="dropdown icon"></i>
-       <div class="default text">Select Country</div>
+       <div class="default text">Select Permission</div>
        <div class="menu">
          {{#each rolePermissionModel as |permissionChoice|}}
            <div class="item"   data-value= "{{permissionChoice.id}}" >

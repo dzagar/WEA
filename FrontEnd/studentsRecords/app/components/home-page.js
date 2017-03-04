@@ -16,6 +16,7 @@ export default Ember.Component.extend({
   isStudentsRecordsDataEntry: false,
   isSystemCodesShowing: false,
   isImportShowing: false,
+  routing: Ember.inject.service('-routing'),
 
   actions: {
     home () {
@@ -61,6 +62,9 @@ export default Ember.Component.extend({
       this.set('isAboutShowing', false);
       this.set('isSystemCodesShowing', false);
       this.set('isImportShowing', true);
+    },
+    admin () {
+      this.get('routing').transitionTo('admin-portal');
     }
   }
 });
