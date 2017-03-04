@@ -111,7 +111,14 @@
 			</button>
 		</div>
 		<div>
-			<label>{{{fileOutput}}}</label>
+			{{#if importInProgress}}
+				{{#ui-progress value = progressVal progress = progressVal total = 100}}
+					<div class="bar">
+					  <div class="progress"></div>
+					</div>
+					<div class = "label">{{{fileOutput}}}</div>
+				{{/ui-progress}}
+			{{/if}}
 		</div>
 	</div>
 </div>

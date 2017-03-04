@@ -127,6 +127,9 @@ export default Ember.Component.extend({
 	showDeleteConfirmation: false,
 	importData: false,
 	changingIndex: 1,
+	progressVal: 0,
+	importInProgress: false,
+	halfCompleteVal: 0,
 	fileFormat: "The file must have one header with the title <b>'name'</b>.",
 	fileOutput: "",
 
@@ -154,6 +157,7 @@ export default Ember.Component.extend({
 		},
 
 		import() {
+			this.set('importInProgress', true);
 			var files = $("#newFile")[0].files;
 			var i,f;
 			for (i = 0; i != files.length; ++i) {
@@ -204,6 +208,7 @@ export default Ember.Component.extend({
 										}
 									} else {
 										doneImporting = true;
+										
 										//if no gender was imported
 										if (i == 2) {
 											rollBackImport = true;
@@ -217,9 +222,12 @@ export default Ember.Component.extend({
 										gendersToImport[i].deleteRecord();
 									}
 								} else {
+									self.set('progressVal', 50); //50% complete
+									self.set('halfCompleteVal', gendersToImport.length/2);
 									self.pushOutput("Successful read of file has completed. Beginning import of " + gendersToImport.length + " genders.");
 									var gendersImportedCount = 0;
 									for (var i = 0; i < gendersToImport.length; i++) {
+										self.set('progressVal', self.get('progressVal')+((self.get('halfCompleteVal')/gendersToImport.length)*100)/2);
 										gendersToImport[i].save().then(function() {
 											gendersImportedCount++;
 											if (gendersImportedCount == gendersToImport.length)
@@ -276,9 +284,12 @@ export default Ember.Component.extend({
 										residenciesToImport[i].deleteRecord();
 									}
 								} else { //save residencies to back-end
+									self.set('progressVal', 50); //50% complete
+									self.set('halfCompleteVal', residenciesToImport.length/2);
 									var numberOfResidenciesImported = 0;
 									self.pushOutput("Successful read of file has completed. Beginning import of " + residenciesToImport.length + " residencies.");
 									for (var i = 0; i < residenciesToImport.length; i++) {
+										self.set('progressVal', self.get('progressVal')+((self.get('halfCompleteVal')/residenciesToImport.length)*100)/2);
 										residenciesToImport[i].save().then(function() {
 											numberOfResidenciesImported++;
 											if (numberOfResidenciesImported === residenciesToImport.length)
@@ -334,7 +345,10 @@ export default Ember.Component.extend({
 										termCodesToImport[i].deleteRecord();
 									}
 								} else {
+									self.set('progressVal', 50);
+									self.set('halfCompleteVal', termCodesToImport.length/2);
 									for (var i = 0; i < termCodesToImport.length; i++) {
+										self.set('progressVal', self.get('progressVal')+((self.get('halfCompleteVal')/termCodesToImport.length)*100)/2);
 										console.log("trying to save");
 										termCodesToImport[i].save();
 									}
@@ -394,9 +408,13 @@ export default Ember.Component.extend({
 										courseCodesToImport[i].deleteRecord();
 									}
 								} else {
+									self.set('progressVal', 50);
+									self.set('halfCompleteVal', courseCodesToImport.length/2);
 									var numberOfCodesImported = 0;
 									self.pushOutput("Successful read of file has completed. Beginning import of " + courseCodesToImport.length + " courses.");
 									for (var i = 0; i < courseCodesToImport.length; i++) {
+										self.set('progressVal', self.get('progressVal')+((self.get('halfCompleteVal')/courseCodesToImport.length)*100)/2);
+										console.log(self.get('progressVal') + " in loop");
 										courseCodesToImport[i].save().then(function() {
 											numberOfCodesImported++;
 											if (numberOfCodesImported === courseCodesToImport.length)
@@ -456,9 +474,12 @@ export default Ember.Component.extend({
 										highSchoolsToImport[i].deleteRecord();
 									}
 								} else {
+									self.set('progressVal', 50);
+									self.set('halfCompleteVal', highSchoolsToImport.length/2);
 									var numberOfHSImported = 0;
 									self.pushOutput("Successful read of file has completed. Beginning import of " + highSchoolsToImport.length + " Secondary Schools.");
 									for (var i = 0; i < highSchoolsToImport.length; i++) {
+										self.set('progressVal', self.get('progressVal')+((self.get('halfCompleteVal')/highSchoolsToImport.length)*100)/2);
 										highSchoolsToImport[i].save().then(function() {
 											numberOfHSImported++;
 											if (numberOfHSImported === highSchoolsToImport.length)
@@ -540,10 +561,13 @@ export default Ember.Component.extend({
 														if (studentsToImport.length === numberOfStudent && !startedSave)
 														{
 															startedSave = true;
+															self.set('progressVal', 50); //50% complete
+															self.set('halfCompleteVal', studentsToImport.length/2);
 															self.pushOutput("Successful read of file has completed. Beginning import of " + studentsToImport.length + " students");
 															var numberOfStudentsImported = 0;
 															for (var j = 0; j < studentsToImport.length; j++)
 															{
+																self.set('progressVal', self.get('progressVal')+((self.get('halfCompleteVal')/studentsToImport.length)*100)/2);
 																studentsToImport[j].save().then(function() {
 																	numberOfStudentsImported++;
 																	if (numberOfStudentsImported === studentsToImport.length)
@@ -691,6 +715,8 @@ export default Ember.Component.extend({
 									}
 									if (!rollBackImport)
 									{
+										self.set('progressVal', 50);
+										self.set('halfCompleteVal', (highschoolSubjectValues.length+highschoolCourseValues.length+gradeValues.length)/2);
 										console.log(gradeValues);
 										self.pushOutput("Successful read of file has completed. Beginning import of");
 										self.pushOutput(highschoolSubjectValues.length + " Subjects");
@@ -701,6 +727,7 @@ export default Ember.Component.extend({
 										var subjectSavingMutex = Mutex.create();
 										for (var i = 0; i < highschoolSubjectValues.length; i++)
 										{
+											self.set('progressVal', self.get('progressVal')+((self.get('halfCompleteVal')/(highschoolSubjectValues.length+highschoolCourseValues.length+gradeValues.length))*100)/2);
 											var subjectName = highschoolSubjectValues[i].name;
 											var subjectDescription = highschoolSubjectValues[i].description;
 											var newSubjectToSave = self.get('store').createRecord('high-school-subject', {
@@ -723,6 +750,7 @@ export default Ember.Component.extend({
 														//loop through each course record
 														for (var k = 0; k < highschoolCourseValues.length; k++)
 														{
+															self.set('progressVal', self.get('progressVal')+((self.get('halfCompleteVal')/(highschoolSubjectValues.length+highschoolCourseValues.length+gradeValues.length))*100)/2);
 															courseMutex.lock(function() {
 																var inMutexIndex = inMutexCount++;
 																var courseSchoolName = highschoolCourseValues[inMutexIndex].schoolName;
@@ -756,6 +784,7 @@ export default Ember.Component.extend({
 																				//import grades here
 																				for (var n = 0; n < gradeValues.length; n++)
 																				{
+																					self.set('progressVal', self.get('progressVal')+((self.get('halfCompleteVal')/(highschoolSubjectValues.length+highschoolCourseValues.length+gradeValues.length))*100)/2);
 																					gradeMutex.lock(function() {
 																						var inGradeMutexIndex = inGradeMutexCount++;
 																																														
@@ -844,6 +873,7 @@ export default Ember.Component.extend({
 												rollbackImport = true;
 											}
 											doneReading = true;
+
 										}
 										//new student number
 										else if (studentNumber && studentNumber.v !== "")
@@ -975,6 +1005,8 @@ export default Ember.Component.extend({
 									//if the import was successful
 									if (!rollbackImport)
 									{
+										self.set('progressVal', 50); //50% complete
+										self.set('halfCompleteVal', (termValues.length + programValues.length)/2);
 										self.pushOutput("Successful read of file has completed. Beginning import of: ");
 										self.pushOutput(planValues.length + " plan codes");
 										self.pushOutput(programValues.length + " program record");
@@ -986,6 +1018,7 @@ export default Ember.Component.extend({
 										var termsToimport = [];
 										for (var i = 0; i < termValues.length; i++)
 										{
+											self.set('progressVal', self.get('progressVal')+((self.get('halfCompleteVal')/(termValues.length + programValues.length))*100)/2);
 											termMutex.lock(function() {
 												var inMutexCountIndex = inMutexIndex++	
 												var termStudentNumber = termValues[inMutexCountIndex].studentNumber;								
@@ -1015,6 +1048,7 @@ export default Ember.Component.extend({
 																
 																for (var j = 0; j < programValues.length; j++)
 																{
+																	self.set('progressVal', self.get('progressVal')+((self.get('halfCompleteVal')/(termValues.length + programValues.length))*100)/2);
 																	programMutex.lock(function() {
 																		var inProgramMutexCountIndex = inProgramMutexIndex++;
 																		var programStudentNumber = programValues[inProgramMutexCountIndex].studentNumber;
@@ -1196,13 +1230,16 @@ export default Ember.Component.extend({
 									}
 									if (!rollBackImport)
 									{
+										self.set('progressVal', 50); //50% complete
+										self.set('halfCompleteVal', gradesToImport.length/2);
 										self.pushOutput("Successful read of file has been completed. Beginning import of " + gradesToImport.length + " student grades");
 										var inGradeMutexIndex = 0;
 										var gradeMutex = Mutex.create();
 										var numberOfGradesImported = 0;
 										var startedSavingGrades = false;
 										for (var i = 0; i < gradesToImport.length; i++)
-										{										
+										{
+											self.set('progressVal', self.get('progressVal')+((self.get('halfCompleteVal')/gradesToImport.length)*100)/2);										
 											gradeMutex.lock(function() {
 												var inGradeMutexCount = inGradeMutexIndex++;
 												var termCode = gradesToImport[inGradeMutexCount].term;
@@ -1291,6 +1328,8 @@ export default Ember.Component.extend({
 
 									if(!rollBackImport)
 									{
+										self.set('progressVal', 50); //50% complete
+										self.set('halfCompleteVal', scholarshipArray.length/2);
 										self.pushOutput("Successful read of file has completed. Beginning import of " + scholarshipArray.length + " student scholarships");
 										var scholarshipIndex = 0;
 										var scholarshipMutex = Mutex.create();
@@ -1298,7 +1337,9 @@ export default Ember.Component.extend({
 										var numberOfScholarShipsCanceled = 0;
 										var doneSavingScholarships = false;
 										for (var i = 0; i < scholarshipArray.length; i++)
-										{										
+										{
+											self.set('progressVal', self.get('progressVal')+((self.get('halfCompleteVal')/scholarshipArray.length)*100)/2);
+
 											scholarshipMutex.lock(function() {
 												var scholarshipMutexCount = scholarshipIndex++;
 												var studentNumber = scholarshipArray[scholarshipMutexCount].studentNumber;
@@ -1409,6 +1450,8 @@ export default Ember.Component.extend({
 									}
 									if (!rollBackImport)
 									{
+										self.set('progressVal', 50); //50% complete
+										self.set('halfCompleteVal', advancedStandingsToImport.length/2);
 										self.pushOutput("Successful read of file has completed. Beginning import of " + advancedStandingsToImport.length + " Advanced Standings.");
 										var AdvancedStandingIndex = 0;
 										var AdvancedStandingMutex = Mutex.create();
@@ -1416,7 +1459,8 @@ export default Ember.Component.extend({
 										var advancedStandingsCancelled = 0;
 										var doneSaving = false;
 										for (var i = 0; i < advancedStandingsToImport.length; i++)
-										{										
+										{
+											self.set('progressVal', self.get('progressVal')+((self.get('halfCompleteVal')/advancedStandingsToImport.length*100)/2));										
 											AdvancedStandingMutex.lock(function() {
 												var ASMutexCount = AdvancedStandingIndex++;
 												var studentNumber = advancedStandingsToImport[ASMutexCount].studentNumber;
@@ -1509,6 +1553,8 @@ export default Ember.Component.extend({
 									//begin importing
 									if (!rollbackImport)
 									{
+										self.set('progressVal', 50);
+										self.set('halfCompleteVal', uniqueStudents.length/2);
 										self.pushOutput("Successful read of file has completed. Beginning import of " + uniqueStudents.length + " registration comments");
 										var inRegistrationMutexIndex = 0;
 										var registrationMutex = Mutex.create();
@@ -1517,6 +1563,7 @@ export default Ember.Component.extend({
 										var numberOfCommentWithNoStudent = 0;
 										for(var i = 0; i < uniqueStudents.length; i++)
 										{
+											self.set('progressVal', self.get('progressVal')+((self.get('halfCompleteVal')/uniqueStudents.length)*100)/2);
 											registrationMutex.lock(function() {
 												var inRegistrationMutexCount = inRegistrationMutexIndex++;
 												var importStudentNumber = uniqueStudents[inRegistrationMutexCount].studentNumber;
@@ -1594,6 +1641,8 @@ export default Ember.Component.extend({
 
 									if(!rollBackImport)
 									{
+										self.set('progressVal', 50);
+										self.set('halfCompleteVal', uniqueStudents.length/2);
 										self.pushOutput("Successful read of file complete. Beginning import of " + uniqueStudents.length + " Basis of Admissions.");
 										var inAdmissionMutexIndex = 0;
 										var admissionMutex = Mutex.create();
@@ -1602,6 +1651,7 @@ export default Ember.Component.extend({
 										var doneImportingAdmissions = false;
 										for(var i = 0; i < uniqueStudents.length; i++)
 										{
+											self.set('progressVal', self.get('progressVal')+((self.get('halfCompleteVal')/uniqueStudents.length)*100)/2);
 											admissionMutex.lock(function() {
 												var inAdmissionMutexCount = inAdmissionMutexIndex++;
 												var importStudentNumber = uniqueStudents[inAdmissionMutexCount].studentNumber;
@@ -1676,6 +1726,8 @@ export default Ember.Component.extend({
 
 									if(!rollBackImport)
 									{
+										self.set('progressVal', 50);
+										self.set('halfCompleteVal', uniqueStudents.length/2);
 										self.pushOutput("Successful read of file complete. Beginning Import of " + uniqueStudents.length + " Admission Averages");
 										var inAdmissionMutexIndex = 0;
 										var admissionMutex = Mutex.create();
@@ -1684,6 +1736,7 @@ export default Ember.Component.extend({
 										var doneSavingAverages = false;
 										for(var i = 0; i < uniqueStudents.length; i++)
 										{
+											self.set('progressVal', self.get('progressVal')+((self.get('halfCompleteVal')/uniqueStudents.length)*100)/2);
 											admissionMutex.lock(function() {
 												var inAdmissionMutexCount = inAdmissionMutexIndex++;
 												var importStudentNumber = uniqueStudents[inAdmissionMutexCount].studentNumber;
@@ -1758,6 +1811,8 @@ export default Ember.Component.extend({
 
 									if(!rollBackImport)
 									{
+										self.set('progressVal', 50);
+										self.set('halfCompleteVal', uniqueStudents.length/2);
 										self.pushOutput("Successful read of file has completed. Beginning import of " + uniqueStudents.length + " admission comments.")
 										var inAdmissionMutexIndex = 0;
 										var admissionMutex = Mutex.create();
@@ -1767,6 +1822,7 @@ export default Ember.Component.extend({
 
 										for(var i = 0; i < uniqueStudents.length; i++)
 										{
+											self.set('progressVal', self.get('progressVal')+((self.get('halfCompleteVal')/uniqueStudents.length)*100)/2);
 											admissionMutex.lock(function() {
 												var inAdmissionMutexCount = inAdmissionMutexIndex++;
 												var importStudentNumber = uniqueStudents[inAdmissionMutexCount].studentNumber;
@@ -1817,6 +1873,9 @@ export default Ember.Component.extend({
 				console.log("index is now " + this.get('changingIndex'));
 			},	
 			continue(){
+				this.set('importInProgress', false);
+				this.set('progressVal', 0);
+				this.set('halfCompleteVal', 0);
 				Ember.$("#btnContinue").addClass("disabled");
 				this.clearOutput();
 				Ember.$("#newFile").val('');
