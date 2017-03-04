@@ -33,27 +33,28 @@
 		<h3>Dana Zagar</h3>
 	</div>
 </div>
+	<div class = "description">
+		{{#if danielaHover}}
+			<div class = "ui raised segment">
+				<p class = "ui text"> Daniela is currently pursuing her degree in Software Engineering, and enjoys pasta.</p>
+			</div>
+		{{else if tomHover}}
+			<div class = "ui raised segment">
+				<p class = "ui text"> Tom is a sarcastic but lovable undergraduate software engineering student, who enjoys anything about Overwatch. His dancing is legendary and he is a meme lord.</p>
+			</div>
+		{{else if mikeHover}}
+			<div class = "ui raised segment">
+				<p class = "ui text"> Mike is the dad of the team, passionately pursuing his B.ESc in Software Engineering. He unsurprisingly enjoys mayonnaise packaged in micro-sized jars.</p>
+			</div>
+		{{else if nickHover}}
+			<div class = "ui raised segment">
+				<p class = "ui text"> Nicholas loves long walks to the fridge, button-up shirts, and venting. He is not skilled at following verbal directions while driving, but thankfully is very skilled in the art of software engineering, which he is currently studying. </p>
+			</div>
+		{{else if danaHover}}
+			<div class = "ui raised segment">
+				<p class = "ui text"> Dana is boring and that's really all you need to know about her. </p>
+			</div>
+		{{else}}
 
-	{{#if danielaHover}}
-		<div class = "ui raised segment description">
-			<p class = "ui text"> Daniela is currently pursuing her degree in Software Engineering, and enjoys pasta.</p>
-		</div>
-	{{else if tomHover}}
-		<div class = "ui raised segment description">
-			<p class = "ui text"> Tom is a sarcastic but lovable undergraduate software engineering student, who enjoys anything about Overwatch. His dancing is legendary and he is a meme lord.</p>
-		</div>
-	{{else if mikeHover}}
-		<div class = "ui raised segment description">
-			<p class = "ui text"> Mike is the dad of the team, passionately pursuing his B.ESc in Software Engineering. He unsurprisingly enjoys mayonnaise packaged in micro-sized jars.</p>
-		</div>
-	{{else if nickHover}}
-		<div class = "ui raised segment description">
-			<p class = "ui text"> Nicholas loves long walks to the fridge, button-up shirts, and venting. He is not skilled at following verbal directions while driving, but thankfully is very skilled in the art of software engineering, which he is currently studying. </p>
-		</div>
-	{{else if danaHover}}
-		<div class = "ui raised segment description">
-			<p class = "ui text"> Dana is boring and that's really all you need to know about her. </p>
-		</div>
-	{{else}}
-
-	{{/if}}
+		{{/if}}
+	</div>

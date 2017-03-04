@@ -83,4 +83,9 @@ div>div>div> .ui.huge.button {
     text-align: center;
 }
 
+.description {
+    margin: 10px;
+    min-height: 75px;
+}
+
 

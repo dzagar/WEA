@@ -7,6 +7,12 @@ export default Ember.Component.extend({
 	nickHover: false,
 	danaHover: false,
 
+	didInsertElement(){
+		Ember.$('.headshot').hover(function(){
+			$(this).transition('bounce');
+		}, function(){});
+	},
+
 	actions: {
 		onDanielaHover: function(){
 			if (this.get('danielaHover')){
