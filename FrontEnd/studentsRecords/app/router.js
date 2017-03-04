@@ -8,9 +8,10 @@ const Router = Ember.Router.extend({
 
 Router.map(function() {
   this.route('home', {path: '/'});
-  this.route('home', {path: '/*wildcard'});
+  //this.route('home', {path: '/*wildcard'});
   this.route('login');
   this.route('admin-portal');
+  this.route('error-page', {path: '/*wildcard'});
 });
 
 export default Router;

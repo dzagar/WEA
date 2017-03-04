@@ -202,7 +202,7 @@ export default Ember.Service.extend({
               self.closeRoot();
               reject("wrongPassword");
             } else {
-              // self.setName("Root");
+              //self.setName("Root");
               self.set('isAuthenticated', true);
               resolve("Root");
             }
