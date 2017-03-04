@@ -1,4 +1,4 @@
-
+{{#if oudaAuth.isAuthenticated }}
   <br> <br>
   {{outlet}}
   <br> <br>
@@ -11,8 +11,7 @@
     <div class="three wide column">
     <img style= "width:50px; height:auto" class="ui right aligned container tiny image" src="/assets/images/UWO Stacked_Rev.png">
     </div>
-  </div> -->
-
+  </div> -->  
   <div class = "footer">
     <div class="ui violet inverted vertical footer segment">
       <div class="ui center aligned grid">
@@ -23,4 +22,24 @@
       </div>
     </div>
   </div>
+  {{else}}
+  <div class="ui middle one column centered grid" >
+    <div style="margin-top:5%;">
+      {{#unless oudaAuth.getName}}
+        {{outlet "login"}}
+      {{/unless}}
+    </div> 
+  </div> 
+  <div class = "footer">
+    <div class="ui violet inverted vertical footer segment">
+      <div class="ui center aligned grid">
+        <div class="four wide column">
+          © Copyright - Digital Sloth
+          <img class="ui right spaced container mini image" src="/assets/images/UWO Stacked_Rev.png">
+        </div>
+      </div>
+    </div>
+  </div>
+  {{/if}}
+
 

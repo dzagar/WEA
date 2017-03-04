@@ -65,6 +65,10 @@ export default Ember.Component.extend({
     },
     admin () {
       this.get('routing').transitionTo('admin-portal');
+    },
+    logout () {
+      this.get('oudaAuth').close();
+      this.get('routing').transitionTo('login');
     }
   }
 });
