@@ -15,9 +15,13 @@
       <i class="step forward icon"></i>
       Last
     </a>
-    <a class="item" {{action 'findStudent'}}>
+    <a class="item" {{action 'toggleShowFilters'}}>
       <i class="search icon"></i>
-      Find Record
+      {{#if showFilters}}
+        Hide Filters
+      {{else}}
+        Show Filters
+      {{/if}}
     </a>
     <a class = "item" {{action 'createStudent'}}>
       <i class="add user icon"></i>
@@ -25,11 +29,35 @@
     </a>
   </div> 
 
-<!--
-  <div class="ui button" {{action 'back'}}>
-    <i class="arrow left icon"></i>Back
-  </div>
-  -->
+  {{#if showFilters}}
+    <div class="ui form">
+      <div class="three fields">
+        <div class="field">
+          <label>Student Number</label>
+          <input id="studentNumber" placeholder="Student Number" type="number" min="0">
+        </div>
+        <div class="field">
+          <label>First Name
+            <span data-tooltip="This field accepts RegEx expressions." data-position="right center">
+              <i class="help circle icon"></i>
+            </span>
+          </label>
+          <input id="firstName" placeholder="First Name" type="text">
+        </div>
+        <div class="field">
+          <label>Last Name
+            <span data-tooltip="This field accepts RegEx expressions." data-position="right center">
+              <i class="help circle icon"></i>
+            </span>
+          </label>
+          <input id="lastName" placeholder="Last Name" type="text">
+        </div>
+      </div>
+      <div class="ui button" {{action "applyFilters"}}>Apply</div>
+      <div class="ui button" {{action "clearFilters"}}>Clear</div>
+    </div>
+  {{/if}}
+
   <div style="min-height: 300px;">
     {{#if (inline-compare studentsRecords.length '>' 0)}}
       <div class="ui vertically padded grid">

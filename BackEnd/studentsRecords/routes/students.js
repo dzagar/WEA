@@ -96,12 +96,17 @@ router.route('/')
                 if (lastName != "") conditions["lastName"] = regexLName;
                 if (studentNumber != "") conditions["studentNumber"] = regexStudentNum;
 
-                Student.find(conditions, function(error, students){
+                Student.paginate(conditions, {offset: o, limit: l}, function(error, students) {
                     if (error) {
                         response.send(error);
                     } else {
-                        console.log(students);
-                        response.json({student: students});
+                        Student.count(conditions, function(error, num) {
+                            if (error) {
+                                response.send(error);
+                            } else {
+                                response.json({student: students.docs, meta: {total: num}})
+                            }
+                        });
                     }
                 });
             }

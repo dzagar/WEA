@@ -9,6 +9,7 @@ export default Ember.Component.extend({
   currentScholarship: null,
   currentStudent: null,
   currentIndex: null,
+  filter: {studentNumber: "", firstName: "", lastName: ""},
   firstIndex: 0,
   genderModel: null,
   lastIndex: 0,
@@ -67,6 +68,9 @@ export default Ember.Component.extend({
     var self = this;
     this.set('studentDataMessage', "Loading Student Data...");
     this.get('store').query('student', {
+      studentNumber: self.get('filter').studentNumber,
+      firstName: self.get('filter').firstName,
+      lastName: self.get('filter').lastName,
       limit: self.get('limit'),
       offset: self.get('offset')
     }).then(function (records) {
@@ -128,6 +132,9 @@ export default Ember.Component.extend({
     this.set('studentDataMessage', "Loading Student Data...");
     var self = this;
     this.get('store').query('student', {
+      studentNumber: self.get('filter').studentNumber,
+      firstName: self.get('filter').firstName,
+      lastName: self.get('filter').lastName,
       limit: self.get('limit'),
       offset: self.get('offset')
     }).then(function (records) {

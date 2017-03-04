@@ -24,7 +24,9 @@ export default Ember.Component.extend({
       this.get('store').query('student', {
         number: Ember.$('#studentNumber').val(),
         firstName: Ember.$('#firstName').val(),
-        lastName: Ember.$('#lastName').val()
+        lastName: Ember.$('#lastName').val(),
+        limit: self.get('limit'),
+        offset: 0
       }).then(function (records) {
         console.log("did things");
         console.log(records);
