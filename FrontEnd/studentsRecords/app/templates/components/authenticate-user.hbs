@@ -40,20 +40,22 @@
   <div class="ui one column center aligned grid">
     <div class="column six wide form-holder">
       <h2 class="center aligned header form-head">WE Adjudication</h2>
-      <div class="ui form">
-        <div class="field">
-          {{input value=name  type="text" placeholder="user name"}}
+      <form {{action 'login' on ="submit"}}>
+        <div class="ui form">
+          <div class="field">
+            {{input value=name  type="text" placeholder="user name"}}
+          </div>
+          <div class="field">
+            {{input value=password  type="password" placeholder="password"}}
+          </div>
+          <div class="field">
+            <button class="ui button large fluid green" {{action 'login'}}>
+              Log In
+            </button>
+            <p> {{errorMessage}}</p>
+          </div>
         </div>
-        <div class="field">
-          {{input value=password  type="password" placeholder="password"}}
-        </div>
-        <div class="field">
-          <button class="ui button large fluid green" {{action 'login'}}>
-            Log In
-          </button>
-          <p> {{errorMessage}}</p>
-        </div>
-      </div>
+      </form>
     </div>
   </div>
 {{/if}}
