@@ -1,7 +1,60 @@
-<h2>About the WE Adjudication System</h2>
-<P>
-  The <b>Western Engineering Adjudication System</b> is a comprehensive Web-based application that allows you to interact with the database containing second, third and fourth year engineering student Information Technology Services (ITS) records. This site allows you to appropriately review and approve students to move forward by specifying a set of criteria. The goal of this application is to effectively <b>increase productivity and organization</b> in Engineering Undergraduate Services, and by extension, the adjudication process will become <b>faster and more efficient</b>.
-  <br><br>
-  Developed by Digital Sloth: Nicholas Van Bommel, Michael Romao, Dana Zagar, Tom Machado, and Daniela Arcese.
+<h1 class = "ui header"> Meet Digital Sloth. </h1>
+<br>
+<br>
+<div class = "ui five column grid">
+	<div class = "column">
+		<div class = "ui segment headshot" onMouseEnter = {{action 'onDanielaHover'}} onMouseLeave = {{action 'onHoverAway'}}>
+			<img class = "ui image" src = "/assets/images/daniela_headshot.jpg">
+		</div>
+		<h3>Daniela Arcese</h3>
+	</div>
+	<div class = "column">
+		<div class = "ui segment headshot" onMouseEnter = {{action 'onTomHover'}} onMouseLeave = {{action 'onHoverAway'}}>
+			<img src = "/assets/images/tom_headshot.jpg">
+		</div>
+		<h3>Tom Machado</h3>
+	</div>
+	<div class = "column">
+		<div class = "ui segment headshot" onMouseEnter = {{action 'onMikeHover'}} onMouseLeave = {{action 'onHoverAway'}}>
+			<img src = "/assets/images/mike_headshot.jpg">
+		</div>
+		<h3>Michael Romao</h3>
+	</div>
+	<div class = "column">
+		<div class = "ui segment headshot" onMouseEnter = {{action 'onNickHover'}} onMouseLeave = {{action 'onHoverAway'}}>
+			<img src = "/assets/images/nick_headshot.jpg">
+		</div>
+		<h3>Nicholas Van Bommel</h3>
+	</div>
+	<div class = "column">
+		<div class = "ui segment headshot" onMouseEnter = {{action 'onDanaHover'}} onMouseLeave = {{action 'onHoverAway'}}>
+			<img src = "/assets/images/dana_headshot.jpg">
+		</div>
+		<h3>Dana Zagar</h3>
+	</div>
+</div>
+	<div class = "description">
+		{{#if danielaHover}}
+			<div class = "ui raised segment">
+				<p class = "ui text"> Daniela is currently pursuing her degree in Software Engineering, and enjoys pasta.</p>
+			</div>
+		{{else if tomHover}}
+			<div class = "ui raised segment">
+				<p class = "ui text"> Tom is a sarcastic but lovable undergraduate software engineering student, who enjoys anything about Overwatch. His dancing is legendary and he is a meme lord.</p>
+			</div>
+		{{else if mikeHover}}
+			<div class = "ui raised segment">
+				<p class = "ui text"> Mike is the dad of the team, passionately pursuing his B.ESc in Software Engineering. He unsurprisingly enjoys mayonnaise packaged in micro-sized jars.</p>
+			</div>
+		{{else if nickHover}}
+			<div class = "ui raised segment">
+				<p class = "ui text"> Nicholas loves long walks to the fridge, button-up shirts, and venting. He is not skilled at following verbal directions while driving, but thankfully is very skilled in the art of software engineering, which he is currently studying. </p>
+			</div>
+		{{else if danaHover}}
+			<div class = "ui raised segment">
+				<p class = "ui text"> Dana is boring and that's really all you need to know about her. </p>
+			</div>
+		{{else}}
 
-</P>
+		{{/if}}
+	</div>
