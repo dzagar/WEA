@@ -1,38 +1,34 @@
 {{#if oudaAuth.isAuthenticated }}
 
   <div class="ui segment ">
-    <div class="ui fixed inverted stackable ten item container menu">
+    <div class="ui fixed inverted stackable container menu">
       <div class = "ui container ">
-        <p class = "header item" style = "pointer-events: none;">
-        <img class="logo" src="/assets/images/UWO Stacked_Rev.png" data-pin-nopin = "true">
-        WE Adjudication
-        </p>      
-        {{#link-to 'home' class='item' style="padding: 1px;"}}
-          <i class="large user icon"></i>Home
+        {{#link-to 'home' class='item'}}
+          <img class="logo" src="/assets/images/UWO Stacked_Rev.png">WE Adjudication
         {{/link-to}}
-        {{#link-to 'about-us' class='item' style="padding: 1px;"}}
-          <i class="large user icon"></i>About Us
+        {{#link-to 'about-us' class='item'}}
+          About Us
         {{/link-to}}
-        {{#link-to 'student-records' class='item' style="padding: 1px;"}}
-          <i class="large user icon"></i>Student Records
+        {{#link-to 'student-records' class='item'}}
+          Student Records
         {{/link-to}}
-        {{#link-to 'system-codes' class='item' style="padding: 1px;"}}
-          <i class="large user icon"></i>System Codes
+        {{#link-to 'system-codes' class='item'}}
+          System Codes
         {{/link-to}}
-        {{#link-to 'system-codes' class='item' style="padding: 1px;"}}
-          <i class="large user icon"></i>Perform Adjudication
+        {{#link-to 'system-codes' class='item'}}
+          Perform Adjudication
         {{/link-to}}
-        {{#link-to 'system-codes' class='item' style="padding: 1px;"}}
-          <i class="large user icon"></i>Generate Reports
+        {{#link-to 'system-codes' class='item'}}
+          Generate Reports
         {{/link-to}}
-        {{#link-to 'import-files' class='item' style="padding: 1px;"}}
-          <i class="large user icon"></i>Import Files
+        {{#link-to 'import-files' class='item'}}
+          Import Files
         {{/link-to}}
-        {{#link-to 'admin-portal' class='item' style="padding: 1px;"}}
-          <i class="large user icon"></i>Admin Portal
+        {{#link-to 'admin-portal' class='item'}}
+          Admin Portal
         {{/link-to}}
-        <a class='item' style="padding: 1px;" {{action 'logout'}}>
-          <i class="large user icon"></i>Logout
+        <a class='item' {{action 'logout'}}>
+          Logout
         </a>
       </div>
     </div>
