@@ -127,11 +127,126 @@ export default Ember.Component.extend({
 	showDeleteConfirmation: false,
 	importData: false,
 	changingIndex: 1,
-	progressVal: 0,
+	progressVal: [],
 	importInProgress: false,
-	totalProgressVal: 100,
+	totalProgressVal: [],
 	fileFormat: "The file must have one header with the title <b>'name'</b>.",
 	fileOutput: "",
+	importBasic: null,
+	importStudent: null,
+	importHighSchool: null,
+	importUndergrad: null,
+	importCount: 0,
+	index1: false,
+	index2: false,
+	index3: false,
+
+	init(){
+		this._super(...arguments);
+		var basicCategory = [
+			{
+				"progress": 0,
+				"total": 100,
+				"name": "Genders",
+				"description": "The file must have one header with the title <b>'name'</b>."
+			},
+			{
+				"progress": 0,
+				"total": 100,
+				"name": "Residencies",
+				"description": "The file must have <b>1</b> header with the title <b>'name'</b>."
+			},
+			{
+				"progress": 0,
+				"total": 100,
+				"name": "CourseCodes",
+				"description": "The file must have <b>4</b> headers with the titles <b>'courseLetter'</b>, <b>'courseNumber'</b>, <b>'name'</b>, <b>'unit'</b>."
+			},
+		];
+		var studentCategory = [
+			{
+				"progress": 0,
+				"total": 100,
+				"name": "Students",
+				"description": "The file must have <b>6</b> headers with the titles <b>'studentNumber'</b>, <b>'firstName'</b>, <b>'lastName'</b>, <b>'gender'</b>, <b>'DOB'</b>, <b>'residency'</b>."
+			},
+			{
+				"progress": 0,
+				"total": 100,
+				"name": "AwardsScholarships",
+				"description": "The file must have <b>2</b> headers with the titles <b>'studentNumber'</b>, <b>'note'</b>."
+			},
+			{
+				"progress": 0,
+				"total": 100,
+				"name": "AdvancedStandings",
+				"description": "The file must have <b>6</b> headers with the titles <b>'studentNumber'</b>, <b>'Course'</b>, <b>'Description'</b>, <b>'Units'</b>, <b>'Grade'</b>, <b>'From'</b>."
+			},
+			{
+				"progress": 0,
+				"total": 100,
+				"name": "RegistrationComments",
+				"description": "The file must have <b>2</b> headers with the titles <b>'studentNumber'</b>, <b>'note'</b>."
+			},
+			{
+				"progress": 0,
+				"total": 100,
+				"name": "BasisofAdmissions",
+				"description": "The file must have <b>2</b> headers with the titles <b>'studentNumber'</b>, <b>'note'</b>."
+			},
+			{
+				"progress": 0,
+				"total": 100,
+				"name": "AdmissionAverages",
+				"description": "The file must have <b>2</b> headers with the titles <b>'studentNumber'</b>, <b>'note'</b>."
+			},
+			{
+				"progress": 0,
+				"total": 100,
+				"name": "AdmissionComments",
+				"description": "The file must have <b>2</b> headers with the titles <b>'studentNumber'</b>, <b>'note'</b>."
+			}
+		];
+		var highSchoolCategory = [
+			{
+				"progress": 0,
+				"total": 100,
+				"name": "HighSchools",
+				"description": "The file must have <b>1</b> header with the title <b>'School Name'</b>."
+			},
+			{
+				"progress": 0,
+				"total": 100,
+				"name": "HighSchoolCourseInformation",
+				"description": "The file must have <b>8</b> headers with the titles <b>'studentNumber'</b>, <b>'schoolName'</b>, <b>'level'</b>, <b>'subject'</b>, <b>'description'</b>, <b>'source'</b>, <b>'units'</b>, <b>'grade'</b>."
+			}
+		];
+		var undergraduateCategory = [
+			{
+				"progress": 0,
+				"total": 100,
+				"name": "Undergraduate Record Plans",
+				"description": "The file must have <b>6</b> headers with the titles <b>'studentNumber'</b>, <b>'term'</b>, <b>'program'</b>, <b>'level'</b>, <b>'load'</b>, <b>'plan'</b>."
+			},
+			{
+				"progress": 0,
+				"total": 100,
+				"name": "Undergraduate Record Courses",
+				"description": "The file must have <b>7</b> headers with the titles <b>'studentNumber'</b>, <b>'term'</b>, <b>'courseLetter'</b>, <b>'courseNumber'</b>, <b>'section'</b>, <b>'grade'</b>, <b>'note'</b>."
+			}
+			
+		];
+		this.set('importBasic', basicCategory);
+		this.set('importStudent', studentCategory);
+		this.set('importHighSchool', highSchoolCategory);
+		this.set('importUndergrad', undergraduateCategory);
+	},
+
+	indexChange: Ember.observer('changingIndex', function(){
+		this.set('index1', this.get('changingIndex') > 12);
+		this.set('index2', this.get('changingIndex') > 10);
+		this.set('index3', this.get('changingIndex') > 3);
+	}),
 
 	clearOutput: function() {
 		this.set('fileOutput', "");
@@ -142,7 +257,8 @@ export default Ember.Component.extend({
 		this.set('fileOutput', lineToAdd);
 	},
 	setOutput: function(newOutput) {
-		this.set('fileOutput', newOutput);
+		var lineToAdd = this.get('fileOutput') + "</br>" + newOutput;
+		this.set('fileOutput', lineToAdd);
 
 	},
 	changeHeaderRequirements: function(newHeader) {
@@ -158,7 +274,7 @@ export default Ember.Component.extend({
 
 		import() {
 			this.set('importInProgress', true);
-			var files = $("#newFile")[0].files;
+			var files = $("#newFile" + this.get('importCount'))[0].files;
 			var i,f;
 			for (i = 0; i != files.length; ++i) {
 				f = files[i];
@@ -222,19 +338,22 @@ export default Ember.Component.extend({
 										gendersToImport[i].deleteRecord();
 									}
 								} else {
-									self.set('totalProgressVal', gendersToImport.length*2);
-									self.set('progressVal', gendersToImport.length); //50% complete
+									var importGender = self.get('importBasic');
+									Ember.set(importGender.objectAt(0), "total", gendersToImport.length*2);
+									Ember.set(importGender.objectAt(0), "progress", gendersToImport.length);
+									self.set('importBasic', importGender);
 									self.pushOutput("Successful read of file has completed. Beginning import of " + gendersToImport.length + " genders.");
 									var gendersImportedCount = 0;
 									for (var i = 0; i < gendersToImport.length; i++) {
 										gendersToImport[i].save().then(function() {
-											self.set('progressVal', self.get('progressVal') + 1);
+											Ember.set(importGender.objectAt(0), "progress", Ember.get(importGender.objectAt(0), "progress")+1);
+											self.set('importBasic', importGender);
 											gendersImportedCount++;
 											if (gendersImportedCount == gendersToImport.length)
 											{
 												self.pushOutput("<span style='color:green'>Import Successful!</span>");
-												Ember.$("#btnContinue").removeClass("disabled");
-  												Ember.$("#gender").addClass("completed");
+  												Ember.$("#Genders").addClass("completed");
+  												self.send("continue");
 											}
 										});
 									}
@@ -284,26 +403,29 @@ export default Ember.Component.extend({
 										residenciesToImport[i].deleteRecord();
 									}
 								} else { //save residencies to back-end
-									self.set('totalProgressVal', residenciesToImport.length*2);
-									self.set('progressVal', residenciesToImport.length); //50% complete
+									var importRes = self.get('importBasic');
+									Ember.set(importRes.objectAt(1), "total", residenciesToImport.length*2);
+									Ember.set(importRes.objectAt(1), "progress", residenciesToImport.length);
+									self.set('importBasic', importRes); 
 									var numberOfResidenciesImported = 0;
 									self.pushOutput("Successful read of file has completed. Beginning import of " + residenciesToImport.length + " residencies.");
 									for (var i = 0; i < residenciesToImport.length; i++) {
 										residenciesToImport[i].save().then(function() {
-											self.set('progressVal', self.get('progressVal')+1);
+											Ember.set(importRes.objectAt(1), "progress", Ember.get(importRes.objectAt(1), "progress")+1);
+											self.set('importBasic', importRes);
 											numberOfResidenciesImported++;
 											if (numberOfResidenciesImported === residenciesToImport.length)
 											{
 												self.pushOutput("<span style='color:green'>Import Successful!</span>");
-												Ember.$("#btnContinue").removeClass("disabled");
-  												Ember.$("#residencies").addClass("completed");
+												Ember.$("#Residencies").addClass("completed");
+												self.send("continue");
 											}
 										});
 									}
 								}
 							}
 							break;
-							case ImportState.TERMCODE:
+							/*case ImportState.TERMCODE:
 							var termcodeCheckerArray = ['NAME'];
 							var termcodeArray = [worksheet['A1'].v.toUpperCase()];
 							if (VerificationFunction(termcodeCheckerArray,termcodeArray)) {
@@ -354,11 +476,10 @@ export default Ember.Component.extend({
 									}
 								}
 							}
-							break;
+							break;*/
 							case ImportState.COURSECODE:
-
 							var coursecodeCheckerArray = ['COURSELETTER','COURSENUMBER','NAME','UNIT'];
-							var coursecodeArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),];
+							var coursecodeArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase()];
 							if (VerificationFunction(coursecodeCheckerArray,coursecodeArray)) {
 								self.setOutput("Importing Course Codes")
 								var rollBackImport = false;
@@ -408,90 +529,30 @@ export default Ember.Component.extend({
 										courseCodesToImport[i].deleteRecord();
 									}
 								} else {
-									self.set('totalProgressVal', courseCodesToImport.length*2);
-									self.set('progressVal', courseCodesToImport.length);
+									var importCC = self.get('importBasic');
+									Ember.set(importCC.objectAt(2), "total", courseCodesToImport.length*2); 
+									Ember.set(importCC.objectAt(2), "progress", courseCodesToImport.length);
+									self.set('importBasic', importCC);
 									var numberOfCodesImported = 0;
 									self.pushOutput("Successful read of file has completed. Beginning import of " + courseCodesToImport.length + " courses.");
 									for (var i = 0; i < courseCodesToImport.length; i++) {
 										courseCodesToImport[i].save().then(function() {
-											self.set('progressVal', self.get('progressVal')+1);
+											Ember.set(importCC.objectAt(2), "progress", Ember.get(importCC.objectAt(2), "progress")+1);
+											self.set('importBasic', importCC);
 											numberOfCodesImported++;
 											if (numberOfCodesImported === courseCodesToImport.length)
 											{
 												self.pushOutput("<span style='color:green'>Import Successful!</span>");
 												Ember.$("#btnContinue").removeClass("disabled");
-  												Ember.$("#courseCodes").addClass("completed");
+  												Ember.$("#CourseCodes").addClass("completed");
+  												self.send("continue");
 											}
 										});
 									}
 								}
 							}
 							break;
-						// case ImportState.STUDENT:
-						// 	break;
 
-						case ImportState.HIGHSCHOOL:
-						var highschoolCheckerArray = ['SCHOOL NAME'];
-						var highschoolArray = [worksheet['A1'].v.toUpperCase()];	
-						if (VerificationFunction(highschoolCheckerArray,highschoolArray)) {
-							self.setOutput("Importing Secondary School Names");
-							var rollBackImport = false;
-							var doneImporting = false;
-							var highSchoolsToImport = [];
-							var uniqueHighSchoolNames = [];
-							for (var i = 2; !doneImporting; i++) {
-									//get the next hs name
-									var highSchool = worksheet['A' + i];
-									//if the hs exists
-									if (highSchool) {
-										//gets the highSchoolNameString
-										var highSchoolName = highSchool.v;
-										//if the hs has already been added
-										if (uniqueHighSchoolNames.includes(highSchoolName)) {
-											self.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate Secondary Schools '" + highSchoolName + "'</span>");
-											rollBackImport = true;
-											doneImporting = true;
-										} else { //create new hs object
-											highSchoolsToImport[i - 2] = self.get('store').createRecord('high-school', 
-											{
-												schoolName: highSchoolName
-											});
-											uniqueHighSchoolNames[i] = highSchoolName;
-										}
-									} else {
-										doneImporting = true;
-										//if no hs was imported
-										if (i == 2) {
-											rollBackImport = true;
-											self.pushOutput("<span style='color:red'>Import cancelled. File does not contain any values...</span>")
-										}
-									}
-								}
-								//delete high schools from the store
-								if (rollBackImport) {
-									for (var i = 0; i < highSchoolsToImport.length; i++) {
-										highSchoolsToImport[i].deleteRecord();
-									}
-								} else {
-									self.set('totalProgressVal', highSchoolsToImport.length*2);
-									self.set('progressVal', highSchoolsToImport.length);
-									var numberOfHSImported = 0;
-									self.pushOutput("Successful read of file has completed. Beginning import of " + highSchoolsToImport.length + " Secondary Schools.");
-									for (var i = 0; i < highSchoolsToImport.length; i++) {
-										highSchoolsToImport[i].save().then(function() {
-											self.set('progressVal', self.get('progressVal')+1);
-											numberOfHSImported++;
-											if (numberOfHSImported === highSchoolsToImport.length)
-											{
-												self.pushOutput("<span style='color:green'>Import Successful!</span>");
-												Ember.$("#btnContinue").removeClass("disabled");
-  												Ember.$("#secondary").addClass("completed");
-											}
-										});
-									}
-								}
-							}
-							break;
 							case ImportState.STUDENT:
 							var studentCheckerArray = ['STUDENTNUMBER','FIRSTNAME','LASTNAME','GENDER','DOB','RESIDENCY'];
 							var studentArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase()];
@@ -556,20 +617,23 @@ export default Ember.Component.extend({
 														if (studentsToImport.length === numberOfStudent && !startedSave)
 														{
 															startedSave = true;
-															self.set('totalProgressVal', studentsToImport.length*2);
-															self.set('progressVal', studentsToImport.length); //50% complete
+															var importStu = self.get('importStudent');
+															Ember.set(importStu.objectAt(0), "total", studentsToImport.length*2);
+															Ember.set(importStu.objectAt(0), "progress", studentsToImport.length);
+															self.set('importStudent', importStu);
 															self.pushOutput("Successful read of file has completed. Beginning import of " + studentsToImport.length + " students");
 															var numberOfStudentsImported = 0;
 															for (var j = 0; j < studentsToImport.length; j++)
 															{
 																studentsToImport[j].save().then(function() {
-																	self.set('progressVal', self.get('progressVal')+1);
+																	Ember.set(importStu.objectAt(0), "progress", Ember.get(importStu.objectAt(0), "progress")+1);
+																	self.set('importStudent', importStu);
 																	numberOfStudentsImported++;
 																	if (numberOfStudentsImported === studentsToImport.length)
 																	{
 																		self.pushOutput("<span style='color:green'>Import Successful!</span>");
-																		Ember.$("#btnContinue").removeClass("disabled");
-																		Ember.$("#students").addClass("completed");
+																		Ember.$("#Students").addClass("completed");
+																		self.send("continue");
 																	}
 																});
 															}
@@ -598,6 +662,73 @@ export default Ember.Component.extend({
 								numberOfStudent = uniqueStudentNumbers.length;
 							}
 							break;
+
+						case ImportState.HIGHSCHOOL:
+						var highschoolCheckerArray = ['SCHOOL NAME'];
+						var highschoolArray = [worksheet['A1'].v.toUpperCase()];	
+						if (VerificationFunction(highschoolCheckerArray,highschoolArray)) {
+							self.setOutput("Importing Secondary School Names");
+							var rollBackImport = false;
+							var doneImporting = false;
+							var highSchoolsToImport = [];
+							var uniqueHighSchoolNames = [];
+							for (var i = 2; !doneImporting; i++) {
+									//get the next hs name
+									var highSchool = worksheet['A' + i];
+									//if the hs exists
+									if (highSchool) {
+										//gets the highSchoolNameString
+										var highSchoolName = highSchool.v;
+										//if the hs has already been added
+										if (uniqueHighSchoolNames.includes(highSchoolName)) {
+											self.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate Secondary Schools '" + highSchoolName + "'</span>");
+											rollBackImport = true;
+											doneImporting = true;
+										} else { //create new hs object
+											highSchoolsToImport[i - 2] = self.get('store').createRecord('high-school', 
+											{
+												schoolName: highSchoolName
+											});
+											uniqueHighSchoolNames[i] = highSchoolName;
+										}
+									} else {
+										doneImporting = true;
+										//if no hs was imported
+										if (i == 2) {
+											rollBackImport = true;
+											self.pushOutput("<span style='color:red'>Import cancelled. File does not contain any values...</span>")
+										}
+									}
+								}
+								//delete high schools from the store
+								if (rollBackImport) {
+									for (var i = 0; i < highSchoolsToImport.length; i++) {
+										highSchoolsToImport[i].deleteRecord();
+									}
+								} else {
+									var importHS = self.get('importHighSchool');
+									Ember.set(importHS.objectAt(0), "total", highSchoolsToImport.length*2);
+									Ember.set(importHS.objectAt(0), "progress", highSchoolsToImport.length);
+									self.set('importHighSchool', importHS);
+									var numberOfHSImported = 0;
+									self.pushOutput("Successful read of file has completed. Beginning import of " + highSchoolsToImport.length + " Secondary Schools.");
+									for (var i = 0; i < highSchoolsToImport.length; i++) {
+										highSchoolsToImport[i].save().then(function() {
+											Ember.set(importHS.objectAt(0), "progress", Ember.get(importHS.objectAt(0), "progress")+1);
+											self.set('importHighSchool', importHS);
+											numberOfHSImported++;
+											if (numberOfHSImported === highSchoolsToImport.length)
+											{
+												self.pushOutput("<span style='color:green'>Import Successful!</span>");
+  												Ember.$("#HighSchools").addClass("completed");
+  												self.send("continue");
+											}
+										});
+									}
+								}
+							}
+							break;
+							
 							case ImportState.HSCOURSEINFO:
 							{
 								var hscourseinfoCheckerArray = ['STUDENTNUMBER','SCHOOLNAME','LEVEL','SUBJECT','DESCRIPTION','SOURCE','UNITS','GRADE'];
@@ -710,8 +841,10 @@ export default Ember.Component.extend({
 									}
 									if (!rollBackImport)
 									{
-										self.set('totalProgressVal', (highschoolSubjectValues.length+highschoolCourseValues.length+gradeValues.length)*2);
-										self.set('progressVal', highschoolSubjectValues.length+highschoolCourseValues.length+gradeValues.length);
+										var importHS = self.get('importHighSchool');
+										Ember.set(importHS.objectAt(1), "total", (highschoolSubjectValues.length+highschoolCourseValues.length+gradeValues.length)*2);
+										Ember.set(importHS.objectAt(1), "progress", highschoolSubjectValues.length+highschoolCourseValues.length+gradeValues.length);
+										self.set('importHighSchool', importHS);
 										self.pushOutput("Successful read of file has completed. Beginning import of");
 										self.pushOutput(highschoolSubjectValues.length + " Subjects");
 										self.pushOutput(highschoolCourseValues.length + " Courses");
@@ -728,7 +861,8 @@ export default Ember.Component.extend({
 												description: subjectDescription
 											});
 											newSubjectToSave.save().then(function() {
-												self.set('progressVal', self.get('progressVal')+1);
+												Ember.set(importHS.objectAt(1), "progress", Ember.get(importHS.objectAt(1), "progress")+1);
+												self.set('importHighSchool', importHS);
 												numberOfSubjectsSaved++;
 												subjectSavingMutex.lock(function() {
 													if (numberOfSubjectsSaved === highschoolSubjectValues.length && !startedSavingSubjects)
@@ -763,7 +897,8 @@ export default Ember.Component.extend({
 																		newCourseToSave.set('school', highSchoolObj);
 																		newCourseToSave.set('subject', subjectObj);
 																		newCourseToSave.save().then(function() {
-																			self.set('progressVal', self.get('progressVal')+1);
+																			Ember.set(importHS.objectAt(1), "progress", Ember.get(importHS.objectAt(1), "progress")+1);
+																			self.set('importHighSchool', importHS);
 																			numberOfCourseImported++;
 																			if (numberOfCourseImported === numberOfCourses && !doneCourseSave)
 																			{
@@ -797,7 +932,8 @@ export default Ember.Component.extend({
 																								newGradeToSave.set('student', studentObj);
 																								newGradeToSave.set('source', highSchoolCourseObj);
 																								newGradeToSave.save().then(function() {
-																									self.set('progressVal', self.get('progressVal')+1);
+																									Ember.set(importHS.objectAt(1), "progress", Ember.get(importHS.objectAt(1), "progress")+1);
+																									self.set('importHighSchool', importHS);
 																									numberOfGradesImported++;
 																									if (numberOfGradesImported == gradeValues.length && !doneGradeImport)
 																									{
@@ -805,7 +941,8 @@ export default Ember.Component.extend({
 																										self.pushOutput("<span style='color:green'>Import of grades successful!</span>");
 																										self.pushOutput("<span style='color:green'>All Imports successful!</span>");
 																										Ember.$("#btnContinue").removeClass("disabled");
-																										Ember.$("#highschoolInfo").addClass("completed");
+																										Ember.$("#HighSchoolCourseInformation").addClass("completed");
+																										self.send("continue");
 																									}
 																								});
 																							});
@@ -833,7 +970,7 @@ export default Ember.Component.extend({
 
 								if (VerificationFunction(recordplansCheckerArray,recordplansArray))
 								{
-									self.pushOutput("Importing Program Record Plans")
+									self.pushOutput("Importing Program Record Plans");
 									var termValues = [];
 									var programValues = [];
 									var planValues = [];
@@ -997,8 +1134,10 @@ export default Ember.Component.extend({
 									//if the import was successful
 									if (!rollbackImport)
 									{
-										self.set('totalProgressVal', (termValues.length + programValues.length)*2);
-										self.set('progressVal', termValues.length + programValues.length); //50% complete
+										var importUG = self.get('importUndergrad');
+										Ember.set(importUG.objectAt(0), "total", (termValues.length + programValues.length)*2);
+										Ember.set(importUG.objectAt(0), "progress", termValues.length + programValues.length);
+										self.set('importUndergrad', importUG);
 										self.pushOutput("Successful read of file has completed. Beginning import of: ");
 										self.pushOutput(planValues.length + " plan codes");
 										self.pushOutput(programValues.length + " program record");
@@ -1023,7 +1162,8 @@ export default Ember.Component.extend({
 													newTermToImport.set('student', studentObj);
 													termsToimport[termsToimport.length] = newTermToImport;
 													newTermToImport.save().then(function() {
-														self.set('progressVal', self.get('progressVal')+1);
+														Ember.set(importUG.objectAt(0), "progress", Ember.get(importUG.objectAt(0), "progress")+1);
+														self.set('importUndergrad', importUG);
 														//wait until all terms have been uploaded
 														savingTermMutex.lock(function() {															
 															if (termValues.length === termsToimport.length && !startedSavingTerms)
@@ -1091,15 +1231,16 @@ export default Ember.Component.extend({
 																									});
 																									newPlanToImport.set('programRecord', programRecordObj);
 																									newPlanToImport.save().then(function() {
-																										self.set('progressVal', self.get('progressVal')+1);
+																										Ember.set(importUG.objectAt(0), "progress", Ember.get(importUG.objectAt(0), "progress")+1);
+																										self.set('importUndergrad', importUG);
 																										numberOfPlansSaved++;
 																										if (numberOfPlansSaved == planValues.length && !donePlanImport)
 																										{																											
 																											donePlanImport = true;
 																											self.pushOutput("<span style='color:green'>Successfully Imported Plan Codes!</span>");
 																											self.pushOutput("<span style='color:green'>All Imports successful!</span>");
-																											Ember.$("#btnContinue").removeClass("disabled");
-																											Ember.$("#recordPlans").addClass("completed");
+																											Ember.$("#UndergraduateRecordPlans").addClass("completed");
+																											self.send("continue");
 																										}
 																									});
 																								});
@@ -1221,8 +1362,10 @@ export default Ember.Component.extend({
 									}
 									if (!rollBackImport)
 									{
-										self.set('totalProgressVal', gradesToImport.length*2);
-										self.set('progressVal', gradesToImport.length); //50% complete
+										var importUG = self.get('importUndergrad');
+										Ember.set(importUG.objectAt(1), "total", gradesToImport.length*2);
+										Ember.set(importUG.objectAt(1), "progress", gradesToImport.length);
+										self.set('importUndergrad', importUG);
 										self.pushOutput("Successful read of file has been completed. Beginning import of " + gradesToImport.length + " student grades");
 										var inGradeMutexIndex = 0;
 										var gradeMutex = Mutex.create();
@@ -1256,7 +1399,8 @@ export default Ember.Component.extend({
 															newGrade.set('note', courseNote);
 														}
 														newGrade.save().then(function() {
-															self.set('progressVal', self.get('progressVal')+1);
+															Ember.set(importUG.objectAt(1), "progress", Ember.get(importUG.objectAt(1), "progress")+1);
+															self.set('importUndergrad', importUG);
 															numberOfGradesImported++;
 															if (numberOfGradesImported == gradesToImport.length && !startedSavingGrades)
 															{
@@ -1264,7 +1408,8 @@ export default Ember.Component.extend({
 																																									
 																self.pushOutput("<span style='color:green'>Import of Grades successful!</span>");
 																Ember.$("#btnContinue").removeClass("disabled");
-																Ember.$("#courseGrades").addClass("completed");
+																Ember.$("#UndergraduateRecordGrades").addClass("completed");
+																self.send("continue");
 															}
 														});
 													});
@@ -1319,8 +1464,10 @@ export default Ember.Component.extend({
 
 									if(!rollBackImport)
 									{
-										self.set('totalProgressVal', scholarshipArray.length*2);
-										self.set('progressVal', scholarshipArray.length); //50% complete
+										var importStu = self.get('importStudent');
+										Ember.set(importStu.objectAt(1), "total", scholarshipArray.length*2);
+										Ember.set(importStu.objectAt(1), "progress", scholarshipArray.length);
+										self.set('importStudent', importStu);
 										self.pushOutput("Successful read of file has completed. Beginning import of " + scholarshipArray.length + " student scholarships");
 										var scholarshipIndex = 0;
 										var scholarshipMutex = Mutex.create();
@@ -1344,15 +1491,15 @@ export default Ember.Component.extend({
 													{
 														newScholarshipToImport.set('student',studentObj);
 														newScholarshipToImport.save().then(function() {
-															self.set('progressVal', self.get('progressVal')+1);
+															Ember.set(importStu.objectAt(1), "progress", Ember.get(importStu.objectAt(1), "progress")+1);
+															self.set('importStudent', importStu);
 															numberOfScholarshipsImported++;
 															if (numberOfScholarshipsImported == scholarshipArray.length - numberOfScholarShipsCanceled && !doneSavingScholarships)
 															{
 																doneSavingScholarships = true;														
 																self.pushOutput("<span style='color:green'>Import of Scholarships successful!</span>");
-																Ember.$("#btnContinue").removeClass("disabled");
-																Ember.$("#awards").addClass("completed");														
-
+																Ember.$("#AwardsScholarships").addClass("completed");
+																self.send("continue");													
 															}
 														});	
 													}
@@ -1440,8 +1587,10 @@ export default Ember.Component.extend({
 									}
 									if (!rollBackImport)
 									{
-										self.set('totalProgressVal', advancedStandingsToImport.length*2);
-										self.set('progressVal', advancedStandingsToImport.length); //50% complete
+										var importStu = self.get('importStudent');
+										Ember.set(importStu.objectAt(2), "total", advancedStandingsToImport.length*2);
+										Ember.set(importStu.objectAt(2), "progress", advancedStandingsToImport.length);
+										self.set('importStudent', importStu);
 										self.pushOutput("Successful read of file has completed. Beginning import of " + advancedStandingsToImport.length + " Advanced Standings.");
 										var AdvancedStandingIndex = 0;
 										var AdvancedStandingMutex = Mutex.create();
@@ -1473,14 +1622,15 @@ export default Ember.Component.extend({
 													{																								
 														AdvancedStanding.set('student',studentObj);
 														AdvancedStanding.save().then(function() {
-															self.set('progressVal', self.get('progressVal')+1);
+															Ember.set(importStu.objectAt(2), "progress", Ember.get(importStu.objectAt(2), "progress")+1);
+															self.set('importStudent', importStu);
 															advancedStandingsImported++;
 															if (advancedStandingsImported == advancedStandingsToImport.length - advancedStandingsCancelled && !doneSaving)
 															{
 																doneSaving = true;														
 																self.pushOutput("<span style='color:green'>Import of Avanced Standings successful!</span>");
-																Ember.$("#btnContinue").removeClass("disabled");
-																Ember.$("#advancedStandings").addClass("completed");	
+																Ember.$("#AdvancedStandings").addClass("completed");
+																self.send("continue");
 
 															}
 														});
@@ -1543,8 +1693,10 @@ export default Ember.Component.extend({
 									//begin importing
 									if (!rollbackImport)
 									{
-										self.set('totalProgressVal', uniqueStudents.length*2);
-										self.set('progressVal', uniqueStudents.length);
+										var importStu = self.get('importStudent');
+										Ember.set(importStu.objectAt(3), "total", uniqueStudents.length*2);
+										Ember.set(importStu.objectAt(3), "progress", uniqueStudents.length);
+										self.set('importStudent', importStu);
 										self.pushOutput("Successful read of file has completed. Beginning import of " + uniqueStudents.length + " registration comments");
 										var inRegistrationMutexIndex = 0;
 										var registrationMutex = Mutex.create();
@@ -1562,15 +1714,15 @@ export default Ember.Component.extend({
 													{
 														studentObj.set('registrationComments', importNote);
 														studentObj.save().then(function() {
-															self.set('progressVal', self.get('progressVal')+1);
+															Ember.set(importStu.objectAt(3), "progress", Ember.get(importStu.objectAt(3), "progress")+1);
+															self.set('importStudent', importStu);
 															numberOfCommentsImported++;
 															if (numberOfCommentsImported == (uniqueStudents.length - numberOfCommentWithNoStudent) && !doneImportingComments)
 															{
 																doneImportingComments = true;
 																self.pushOutput("<span style='color:green'>Import of Registration Comments successful!</span>");
-																Ember.$("#btnContinue").removeClass("disabled");
-																Ember.$("#registrationComments").addClass("completed");
-
+																Ember.$("#RegistrationComments").addClass("completed");
+																self.send("continue");
 															}
 														});
 													}
@@ -1631,8 +1783,11 @@ export default Ember.Component.extend({
 
 									if(!rollBackImport)
 									{
-										self.set('totalProgressVal', uniqueStudents.length*2);
-										self.set('progressVal', uniqueStudents.length);
+										var importStu = self.get('importStudent');
+										Ember.set(importStu.objectAt(4), "total", uniqueStudents.length*2); 
+										Ember.set(importStu.objectAt(4), "progress", uniqueStudents.length);
+										self.set('importStudent', importStu);
+
 										self.pushOutput("Successful read of file complete. Beginning import of " + uniqueStudents.length + " Basis of Admissions.");
 										var inAdmissionMutexIndex = 0;
 										var admissionMutex = Mutex.create();
@@ -1650,14 +1805,16 @@ export default Ember.Component.extend({
 													{														
 														studentObj.set('basisOfAdmission', importNote);
 														studentObj.save().then(function() {
-															self.set('progressVal', self.get('progressVal')+1);
+															Ember.set(importStu.objectAt(4), "progress", Ember.get(importStu.objectAt(4), "progress")+1);
+															self.set('importStudent', importStu);
+
 															numberOfAdmissionsImported++;
 															if (numberOfAdmissionsImported == uniqueStudents.length - numberOfAdmissionsWithNoStudent && !doneImportingAdmissions)
 															{
 																doneImportingAdmissions = true;
 																self.pushOutput("<span style='color:green'>Import of Basis of Admissions successful!</span>");
-																Ember.$("#btnContinue").removeClass("disabled");
-																Ember.$("#basisOfAdmission").addClass("completed");
+																Ember.$("#BasisofAdmissions").addClass("completed");
+																self.send("continue");
 															}
 														});
 													}
@@ -1716,8 +1873,10 @@ export default Ember.Component.extend({
 
 									if(!rollBackImport)
 									{
-										self.set('totalProgressVal', uniqueStudents.length*2);
-										self.set('progressVal', uniqueStudents.length);
+										var importStu = self.get('importStudent');
+										Ember.set(importStu.objectAt(5), "total", uniqueStudents.length*2); 
+										Ember.set(importStu.objectAt(5), "progress", uniqueStudents.length);
+										self.set('importStudent', importStu);
 										self.pushOutput("Successful read of file complete. Beginning Import of " + uniqueStudents.length + " Admission Averages");
 										var inAdmissionMutexIndex = 0;
 										var admissionMutex = Mutex.create();
@@ -1735,14 +1894,15 @@ export default Ember.Component.extend({
 													{														
 														studentObj.set('admissionAverage', importNote);
 														studentObj.save().then(function() {
-															self.set('progressVal', self.get('progressVal')+1);
+															Ember.set(importStu.objectAt(5), "progress", Ember.get(importStu.objectAt(5), "progress")+1);
+															self.set('importStudent', importStu);
 															numberOfAveragesImported++;
 															if (numberOfAveragesImported == uniqueStudents.length - numberOfAveragesWithNoStudent && !doneSavingAverages)
 															{
 																doneSavingAverages = true;
 																self.pushOutput("<span style='color:green'>Import of Admission Averages successful!</span>");
-																Ember.$("#btnContinue").removeClass("disabled");
-																Ember.$("#admissionAverage").addClass("completed");
+																Ember.$("#AdmissionAverages").addClass("completed");
+																self.send("continue");
 															}
 														});
 													}
@@ -1752,7 +1912,6 @@ export default Ember.Component.extend({
 														{
 															doneSavingAverages = true;
 															self.pushOutput("<span style='color:green'>Import of Admission Averages successful!</span>");
-															Ember.$("#btnContinue").removeClass("disabled");
 															Ember.$("#admissionAverage").addClass("completed");
 														}
 													}
@@ -1801,8 +1960,11 @@ export default Ember.Component.extend({
 
 									if(!rollBackImport)
 									{
-										self.set('totalProgressVal', uniqueStudents.length*2);
-										self.set('progressVal', uniqueStudents.length);
+										var importStu = self.get('importStudent');
+										Ember.set(importStu.objectAt(6), "total", uniqueStudents.length*2); 
+										Ember.set(importStu.objectAt(6), "progress", uniqueStudents.length);
+										self.set('importStudent', importStu);
+
 										self.pushOutput("Successful read of file has completed. Beginning import of " + uniqueStudents.length + " admission comments.")
 										var inAdmissionMutexIndex = 0;
 										var admissionMutex = Mutex.create();
@@ -1821,13 +1983,16 @@ export default Ember.Component.extend({
 													{														
 														studentObj.set('admissionComments', importNote);
 														studentObj.save().then(function() {
-															self.set('progressVal', self.get('progressVal')+1);
+															Ember.set(importStu.objectAt(6), "progress", Ember.get(importStu.objectAt(6), "progress")+1);
+															self.set('importStudent', importStu);
+
 															numberOfCommentsImported++;
 															if (numberOfCommentsImported == uniqueStudents.length - numberOfCommentsWithNoStudent && !doneSavingComments)
 															{
 																self.pushOutput("<span style='color:green'>Import of Admission Comments successful!</span>");
 																Ember.$("#btnContinue").removeClass("disabled");
-																Ember.$("#admissionComments").addClass("completed");																
+																Ember.$("#AdmissionComments").addClass("completed");
+																self.send("continue");															
 															}
 														});
 													}
@@ -1863,107 +2028,46 @@ export default Ember.Component.extend({
 				console.log("index is now " + this.get('changingIndex'));
 			},	
 			continue(){
-				this.set('importInProgress', false);
-				this.set('progressVal', 0);
-				this.set('totalProgressVal', 100);
-				Ember.$("#btnContinue").addClass("disabled");
-				this.clearOutput();
-				Ember.$("#newFile").val('');
+				//this.set('importInProgress', false);
+				//Ember.$("#btnContinue").addClass("disabled");
+				//this.clearOutput();
+				Ember.$("#newFile" + this.get('importCount')).val('');
 				this.set('changingIndex', this.get('changingIndex')+1);
 				console.log("changed Index to " + this.get('changingIndex'));
+				var self = this;
 				switch(this.get('changingIndex')){
-  					case 2:
-  						$("#residencies").addClass("active");
- 						$("#residencies").removeClass("disabled");
-  						$("#gender").removeClass("active");
-  						$("#gender").addClass("completed");
-  						this.changeHeaderRequirements("The file must have <b>1</b> header with the title <b>'name'</b>.");
-  						break;
-  					case 3:
-  						$("#courseCodes").addClass("active");
- 						$("#courseCodes").removeClass("disabled");
-  						$("#residencies").removeClass("active");
-  						$("#residencies").addClass("completed");
-  						this.changeHeaderRequirements("The file must have <b>4</b> headers with the titles <b>'courseLetter'</b>, <b>'courseNumber'</b>, <b>'name'</b>, <b>'unit'</b>.");
-  						break;
-  					case 4:
-  						$("#students").addClass("active");
- 						$("#students").removeClass("disabled");
-  						$("#courseCodes").removeClass("active");
-  						$("#courseCodes").addClass("completed");
-  						this.changeHeaderRequirements("The file must have <b>6</b> headers with the titles <b>'studentNumber'</b>, <b>'firstName'</b>, <b>'lastName'</b>, <b>'gender'</b>, <b>'DOB'</b>, <b>'residency'</b>.");
-  						break;
-  					case 5:
-  						$("#awards").addClass("active");
- 						$("#awards").removeClass("disabled");
-  						$("#students").removeClass("active");
-  						$("#students").addClass("completed");
-  						this.changeHeaderRequirements("The file must have <b>2</b> headers with the titles <b>'studentNumber'</b>, <b>'note'</b>.");
-  						break;
-  					case 6:
-  						$("#advancedStandings").addClass("active");
- 						$("#advancedStandings").removeClass("disabled");
-  						$("#awards").removeClass("active");
-  						$("#awards").addClass("completed");
-  						this.changeHeaderRequirements("The file must have <b>6</b> headers with the titles <b>'studentNumber'</b>, <b>'Course'</b>, <b>'Description'</b>, <b>'Units'</b>, <b>'Grade'</b>, <b>'From'</b>.");
-  						break;
-  					case 7:
-  						$("#registrationComments").addClass("active");
- 						$("#registrationComments").removeClass("disabled");
-  						$("#advancedStandings").removeClass("active");
-  						$("#advancedStandings").addClass("completed");
-  						this.changeHeaderRequirements("The file must have <b>2</b> headers with the titles <b>'studentNumber'</b>, <b>'note'</b>.");
-  						break;
-  					case 8:
-  						$("#basisOfAdmission").addClass("active");
- 						$("#basisOfAdmission").removeClass("disabled");
-  						$("#registrationComments").removeClass("active");
-  						$("#registrationComments").addClass("completed");
-  						this.changeHeaderRequirements("The file must have <b>2</b> headers with the titles <b>'studentNumber'</b>, <b>'note'</b>.");
-  						break;
-  					case 9:
-  						$("#admissionAverage").addClass("active");
- 						$("#admissionAverage").removeClass("disabled");
-  						$("#basisOfAdmission").removeClass("active");
-  						$("#basisOfAdmission").addClass("completed");
-  						this.changeHeaderRequirements("The file must have <b>2</b> headers with the titles <b>'studentNumber'</b>, <b>'note'</b>.");
-  						break;
-  					case 10:
-  						$("#admissionComments").addClass("active");
- 						$("#admissionComments").removeClass("disabled");
-  						$("#admissionAverage").removeClass("active");
-  						$("#admissionAverage").addClass("completed");
-  						this.changeHeaderRequirements("The file must have <b>2</b> headers with the titles <b>'studentNumber'</b>, <b>'note'</b>.");
+					case 4:
+						$("#student").addClass("active");
+ 						$("#student").removeClass("disabled");
+  						$("#basic").removeClass("active");
+  						$("#basic").addClass("completed");
+  						self.set('importCount', 0);
+  						self.set('importInProgress', false);
+  						self.clearOutput();
   						break;
   					case 11:
-  						$("#secondary").addClass("active");
-						$("#secondary").removeClass("disabled");
-  						$("#admissionComments").removeClass("active");
-  						$("#admissionComments").addClass("completed");
-  						this.changeHeaderRequirements("The file must have <b>1</b> header with the title <b>'School Name'</b>.");
-  						break;
-  					case 12:
-  						$("#highschoolInfo").addClass("active");
-						$("#highschoolInfo").removeClass("disabled");
-  						$("#secondary").removeClass("active");
-  						$("#secondary").addClass("completed");
-  						this.changeHeaderRequirements("The file must have <b>8</b> headers with the titles <b>'studentNumber'</b>, <b>'schoolName'</b>, <b>'level'</b>, <b>'subject'</b>, <b>'description'</b>, <b>'source'</b>, <b>'units'</b>, <b>'grade'</b>.");
+  						$("#highschool").addClass("active");
+						$("#highschool").removeClass("disabled");
+  						$("#student").removeClass("active");
+  						$("#student").addClass("completed");
+  						self.set('importCount', 0);
+  						self.set('importInProgress', false);
+  						self.clearOutput();
   						break;
   					case 13:
-  						$("#recordPlans").addClass("active");
-						$("#recordPlans").removeClass("disabled");
-  						$("#highschoolInfo").removeClass("active");
-  						$("#highschoolInfo").addClass("completed");
-  						this.changeHeaderRequirements("The file must have <b>6</b> headers with the titles <b>'studentNumber'</b>, <b>'term'</b>, <b>'program'</b>, <b>'level'</b>, <b>'load'</b>, <b>'plan'</b>.");
+  						$("#undergraduate").addClass("active");
+						$("#undergraduate").removeClass("disabled");
+  						$("#highschool").removeClass("active");
+  						$("#highschool").addClass("completed");
+  						self.set('importCount', 0);
+  						self.set('importInProgress', false);
+  						self.clearOutput();
   						break;
-  					case 14:
-  						$("#courseGrades").addClass("active");
-						$("#courseGrades").removeClass("disabled");
-  						$("#recordPlans").removeClass("active");
-  						$("#recordPlans").addClass("completed");
-  						this.changeHeaderRequirements("The file must have <b>7</b> headers with the titles <b>'studentNumber'</b>, <b>'term'</b>, <b>'courseLetter'</b>, <b>'courseNumber'</b>, <b>'section'</b>, <b>'grade'</b>, <b>'note'</b>.");
+  					default:
+  						self.set('importCount', self.get('importCount')+1);
+  						self.send("import");
   						break;
-				}	
+				}
 
 			}
 	}
