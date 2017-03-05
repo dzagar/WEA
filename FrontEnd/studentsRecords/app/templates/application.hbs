@@ -49,19 +49,19 @@
   </div>
   
   {{else}}
-  <div class="ui middle one column centered grid" >
-    <div style="margin-top:5%;">
-      {{#unless oudaAuth.getName}}
-        {{outlet "login"}}
-      {{/unless}}
+  <div class="ui segment">
+    <div class="appBody ui middle aligned one column centered grid" style = "margin-bottom:50px;">
+        {{#unless oudaAuth.getName}}
+          {{outlet "login"}}
+        {{/unless}}       
     </div> 
-  </div> 
-  <div class = "footer">
-    <div class="ui violet inverted vertical footer segment">
-      <div class="ui center aligned grid">
-        <div class="four wide column">
-          © Copyright - Digital Sloth
-          <img class="ui right spaced container mini image" src="/assets/images/UWO Stacked_Rev.png">
+    <div class = "footer">
+      <div class="ui violet inverted vertical footer segment">
+        <div class="ui center aligned grid">
+          <div class="four wide column">
+            © Copyright - Digital Sloth
+            <img class="ui right spaced container mini image" src="/assets/images/UWO Stacked_Rev.png">
+          </div>
         </div>
       </div>
     </div>
