@@ -45,7 +45,7 @@ router.route('/')
                 }
             });
         }
-        else{
+        else if (request.query.name && request.query.description) {
           
             HighSchoolSubject.find({name: request.query.name, description: request.query.description}, function (error, subjects) {
                 if (error) {
@@ -54,6 +54,14 @@ router.route('/')
                     response.json({highSchoolSubjects: subjects});
                 }
             });  
+        } else {
+            HighSchoolSubject.find(function (error, subjects) {
+                if (error) {
+                    response.send(error);
+                } else {
+                    response.json({highSchoolSubjects: subjects});
+                }
+            });
         }
     });
 
