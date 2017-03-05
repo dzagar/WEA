@@ -127,6 +127,9 @@ export default Ember.Component.extend({
 	showDeleteConfirmation: false,
 	importData: false,
 	changingIndex: 1,
+	progressVal: 0,
+	importInProgress: false,
+	totalProgressVal: 100,
 	fileFormat: "The file must have one header with the title <b>'name'</b>.",
 	fileOutput: "",
 
@@ -154,6 +157,7 @@ export default Ember.Component.extend({
 		},
 
 		import() {
+			this.set('importInProgress', true);
 			var files = $("#newFile")[0].files;
 			var i,f;
 			for (i = 0; i != files.length; ++i) {
@@ -204,6 +208,7 @@ export default Ember.Component.extend({
 										}
 									} else {
 										doneImporting = true;
+										
 										//if no gender was imported
 										if (i == 2) {
 											rollBackImport = true;
@@ -217,10 +222,13 @@ export default Ember.Component.extend({
 										gendersToImport[i].deleteRecord();
 									}
 								} else {
+									self.set('totalProgressVal', gendersToImport.length*2);
+									self.set('progressVal', gendersToImport.length); //50% complete
 									self.pushOutput("Successful read of file has completed. Beginning import of " + gendersToImport.length + " genders.");
 									var gendersImportedCount = 0;
 									for (var i = 0; i < gendersToImport.length; i++) {
 										gendersToImport[i].save().then(function() {
+											self.set('progressVal', self.get('progressVal') + 1);
 											gendersImportedCount++;
 											if (gendersImportedCount == gendersToImport.length)
 											{
@@ -276,10 +284,13 @@ export default Ember.Component.extend({
 										residenciesToImport[i].deleteRecord();
 									}
 								} else { //save residencies to back-end
+									self.set('totalProgressVal', residenciesToImport.length*2);
+									self.set('progressVal', residenciesToImport.length); //50% complete
 									var numberOfResidenciesImported = 0;
 									self.pushOutput("Successful read of file has completed. Beginning import of " + residenciesToImport.length + " residencies.");
 									for (var i = 0; i < residenciesToImport.length; i++) {
 										residenciesToImport[i].save().then(function() {
+											self.set('progressVal', self.get('progressVal')+1);
 											numberOfResidenciesImported++;
 											if (numberOfResidenciesImported === residenciesToImport.length)
 											{
@@ -334,9 +345,12 @@ export default Ember.Component.extend({
 										termCodesToImport[i].deleteRecord();
 									}
 								} else {
+									self.set('totalProgressVal', termCodesToImport.length*2);
+									self.set('progressVal', termCodesToImport);
 									for (var i = 0; i < termCodesToImport.length; i++) {
-										console.log("trying to save");
-										termCodesToImport[i].save();
+										termCodesToImport[i].save().then(function(){
+											self.set('progressVal', self.get('progressVal')+1);
+										});
 									}
 								}
 							}
@@ -394,10 +408,13 @@ export default Ember.Component.extend({
 										courseCodesToImport[i].deleteRecord();
 									}
 								} else {
+									self.set('totalProgressVal', courseCodesToImport.length*2);
+									self.set('progressVal', courseCodesToImport.length);
 									var numberOfCodesImported = 0;
 									self.pushOutput("Successful read of file has completed. Beginning import of " + courseCodesToImport.length + " courses.");
 									for (var i = 0; i < courseCodesToImport.length; i++) {
 										courseCodesToImport[i].save().then(function() {
+											self.set('progressVal', self.get('progressVal')+1);
 											numberOfCodesImported++;
 											if (numberOfCodesImported === courseCodesToImport.length)
 											{
@@ -456,10 +473,13 @@ export default Ember.Component.extend({
 										highSchoolsToImport[i].deleteRecord();
 									}
 								} else {
+									self.set('totalProgressVal', highSchoolsToImport.length*2);
+									self.set('progressVal', highSchoolsToImport.length);
 									var numberOfHSImported = 0;
 									self.pushOutput("Successful read of file has completed. Beginning import of " + highSchoolsToImport.length + " Secondary Schools.");
 									for (var i = 0; i < highSchoolsToImport.length; i++) {
 										highSchoolsToImport[i].save().then(function() {
+											self.set('progressVal', self.get('progressVal')+1);
 											numberOfHSImported++;
 											if (numberOfHSImported === highSchoolsToImport.length)
 											{
@@ -523,11 +543,7 @@ export default Ember.Component.extend({
 												var dateOfBirth = studentsToImportInfo[inMutexStudentCount].dateOfBirth;
 												var residency = studentsToImportInfo[inMutexStudentCount].residency;
 												self.get('store').queryRecord('gender', {name: gender}).then(function(genderObj) {
-													//console.log("got gender: ");
-													//console.log(genderObj);
 													self.get('store').queryRecord('residency', {name: residency}).then(function(residencyObj) {
-														//console.log("got resicdency");
-														//console.log(residencyObj);
 														var newStudent = self.get('store').createRecord('student', {
 															studentNumber: studentNumber,
 															firstName: firstName,
@@ -540,11 +556,14 @@ export default Ember.Component.extend({
 														if (studentsToImport.length === numberOfStudent && !startedSave)
 														{
 															startedSave = true;
+															self.set('totalProgressVal', studentsToImport.length*2);
+															self.set('progressVal', studentsToImport.length); //50% complete
 															self.pushOutput("Successful read of file has completed. Beginning import of " + studentsToImport.length + " students");
 															var numberOfStudentsImported = 0;
 															for (var j = 0; j < studentsToImport.length; j++)
 															{
 																studentsToImport[j].save().then(function() {
+																	self.set('progressVal', self.get('progressVal')+1);
 																	numberOfStudentsImported++;
 																	if (numberOfStudentsImported === studentsToImport.length)
 																	{
@@ -691,7 +710,8 @@ export default Ember.Component.extend({
 									}
 									if (!rollBackImport)
 									{
-										console.log(gradeValues);
+										self.set('totalProgressVal', (highschoolSubjectValues.length+highschoolCourseValues.length+gradeValues.length)*2);
+										self.set('progressVal', highschoolSubjectValues.length+highschoolCourseValues.length+gradeValues.length);
 										self.pushOutput("Successful read of file has completed. Beginning import of");
 										self.pushOutput(highschoolSubjectValues.length + " Subjects");
 										self.pushOutput(highschoolCourseValues.length + " Courses");
@@ -708,6 +728,7 @@ export default Ember.Component.extend({
 												description: subjectDescription
 											});
 											newSubjectToSave.save().then(function() {
+												self.set('progressVal', self.get('progressVal')+1);
 												numberOfSubjectsSaved++;
 												subjectSavingMutex.lock(function() {
 													if (numberOfSubjectsSaved === highschoolSubjectValues.length && !startedSavingSubjects)
@@ -742,7 +763,7 @@ export default Ember.Component.extend({
 																		newCourseToSave.set('school', highSchoolObj);
 																		newCourseToSave.set('subject', subjectObj);
 																		newCourseToSave.save().then(function() {
-																			
+																			self.set('progressVal', self.get('progressVal')+1);
 																			numberOfCourseImported++;
 																			if (numberOfCourseImported === numberOfCourses && !doneCourseSave)
 																			{
@@ -768,7 +789,6 @@ export default Ember.Component.extend({
 																						var gradeStudentNumber = gradeValues[inGradeMutexIndex].studentNumber;
 																						var recordGrade = gradeValues[inGradeMutexIndex].grade;
 																						self.get('store').queryRecord('student', {number: gradeStudentNumber, findOneStudent: true}).then(function(studentObj) {
-																							console.log(studentObj);
 																							self.get('store').queryRecord('high-school-course', {schoolName: gradeCourseSchoolName, subjectName: gradeSubjectNameParam, subjectDescription: gradeSubjectDescParam,  level: gradeCourseLevel, source: gradeCourseSource, unit: gradeCourseUnit}).then(function(highSchoolCourseObj) {
 																								var courseID = highSchoolCourseObj.id;
 																								var newGradeToSave = self.get('store').createRecord('high-school-grade', {
@@ -777,6 +797,7 @@ export default Ember.Component.extend({
 																								newGradeToSave.set('student', studentObj);
 																								newGradeToSave.set('source', highSchoolCourseObj);
 																								newGradeToSave.save().then(function() {
+																									self.set('progressVal', self.get('progressVal')+1);
 																									numberOfGradesImported++;
 																									if (numberOfGradesImported == gradeValues.length && !doneGradeImport)
 																									{
@@ -844,6 +865,7 @@ export default Ember.Component.extend({
 												rollbackImport = true;
 											}
 											doneReading = true;
+
 										}
 										//new student number
 										else if (studentNumber && studentNumber.v !== "")
@@ -975,6 +997,8 @@ export default Ember.Component.extend({
 									//if the import was successful
 									if (!rollbackImport)
 									{
+										self.set('totalProgressVal', (termValues.length + programValues.length)*2);
+										self.set('progressVal', termValues.length + programValues.length); //50% complete
 										self.pushOutput("Successful read of file has completed. Beginning import of: ");
 										self.pushOutput(planValues.length + " plan codes");
 										self.pushOutput(programValues.length + " program record");
@@ -999,6 +1023,7 @@ export default Ember.Component.extend({
 													newTermToImport.set('student', studentObj);
 													termsToimport[termsToimport.length] = newTermToImport;
 													newTermToImport.save().then(function() {
+														self.set('progressVal', self.get('progressVal')+1);
 														//wait until all terms have been uploaded
 														savingTermMutex.lock(function() {															
 															if (termValues.length === termsToimport.length && !startedSavingTerms)
@@ -1064,9 +1089,9 @@ export default Ember.Component.extend({
 																									var newPlanToImport = self.get('store').createRecord('plan-code', {
 																										name: planName
 																									});
-																									console.log(programRecordObj);
 																									newPlanToImport.set('programRecord', programRecordObj);
 																									newPlanToImport.save().then(function() {
+																										self.set('progressVal', self.get('progressVal')+1);
 																										numberOfPlansSaved++;
 																										if (numberOfPlansSaved == planValues.length && !donePlanImport)
 																										{																											
@@ -1196,6 +1221,8 @@ export default Ember.Component.extend({
 									}
 									if (!rollBackImport)
 									{
+										self.set('totalProgressVal', gradesToImport.length*2);
+										self.set('progressVal', gradesToImport.length); //50% complete
 										self.pushOutput("Successful read of file has been completed. Beginning import of " + gradesToImport.length + " student grades");
 										var inGradeMutexIndex = 0;
 										var gradeMutex = Mutex.create();
@@ -1229,6 +1256,7 @@ export default Ember.Component.extend({
 															newGrade.set('note', courseNote);
 														}
 														newGrade.save().then(function() {
+															self.set('progressVal', self.get('progressVal')+1);
 															numberOfGradesImported++;
 															if (numberOfGradesImported == gradesToImport.length && !startedSavingGrades)
 															{
@@ -1291,6 +1319,8 @@ export default Ember.Component.extend({
 
 									if(!rollBackImport)
 									{
+										self.set('totalProgressVal', scholarshipArray.length*2);
+										self.set('progressVal', scholarshipArray.length); //50% complete
 										self.pushOutput("Successful read of file has completed. Beginning import of " + scholarshipArray.length + " student scholarships");
 										var scholarshipIndex = 0;
 										var scholarshipMutex = Mutex.create();
@@ -1298,7 +1328,7 @@ export default Ember.Component.extend({
 										var numberOfScholarShipsCanceled = 0;
 										var doneSavingScholarships = false;
 										for (var i = 0; i < scholarshipArray.length; i++)
-										{										
+										{
 											scholarshipMutex.lock(function() {
 												var scholarshipMutexCount = scholarshipIndex++;
 												var studentNumber = scholarshipArray[scholarshipMutexCount].studentNumber;
@@ -1314,6 +1344,7 @@ export default Ember.Component.extend({
 													{
 														newScholarshipToImport.set('student',studentObj);
 														newScholarshipToImport.save().then(function() {
+															self.set('progressVal', self.get('progressVal')+1);
 															numberOfScholarshipsImported++;
 															if (numberOfScholarshipsImported == scholarshipArray.length - numberOfScholarShipsCanceled && !doneSavingScholarships)
 															{
@@ -1409,6 +1440,8 @@ export default Ember.Component.extend({
 									}
 									if (!rollBackImport)
 									{
+										self.set('totalProgressVal', advancedStandingsToImport.length*2);
+										self.set('progressVal', advancedStandingsToImport.length); //50% complete
 										self.pushOutput("Successful read of file has completed. Beginning import of " + advancedStandingsToImport.length + " Advanced Standings.");
 										var AdvancedStandingIndex = 0;
 										var AdvancedStandingMutex = Mutex.create();
@@ -1440,6 +1473,7 @@ export default Ember.Component.extend({
 													{																								
 														AdvancedStanding.set('student',studentObj);
 														AdvancedStanding.save().then(function() {
+															self.set('progressVal', self.get('progressVal')+1);
 															advancedStandingsImported++;
 															if (advancedStandingsImported == advancedStandingsToImport.length - advancedStandingsCancelled && !doneSaving)
 															{
@@ -1509,6 +1543,8 @@ export default Ember.Component.extend({
 									//begin importing
 									if (!rollbackImport)
 									{
+										self.set('totalProgressVal', uniqueStudents.length*2);
+										self.set('progressVal', uniqueStudents.length);
 										self.pushOutput("Successful read of file has completed. Beginning import of " + uniqueStudents.length + " registration comments");
 										var inRegistrationMutexIndex = 0;
 										var registrationMutex = Mutex.create();
@@ -1526,6 +1562,7 @@ export default Ember.Component.extend({
 													{
 														studentObj.set('registrationComments', importNote);
 														studentObj.save().then(function() {
+															self.set('progressVal', self.get('progressVal')+1);
 															numberOfCommentsImported++;
 															if (numberOfCommentsImported == (uniqueStudents.length - numberOfCommentWithNoStudent) && !doneImportingComments)
 															{
@@ -1594,6 +1631,8 @@ export default Ember.Component.extend({
 
 									if(!rollBackImport)
 									{
+										self.set('totalProgressVal', uniqueStudents.length*2);
+										self.set('progressVal', uniqueStudents.length);
 										self.pushOutput("Successful read of file complete. Beginning import of " + uniqueStudents.length + " Basis of Admissions.");
 										var inAdmissionMutexIndex = 0;
 										var admissionMutex = Mutex.create();
@@ -1611,6 +1650,7 @@ export default Ember.Component.extend({
 													{														
 														studentObj.set('basisOfAdmission', importNote);
 														studentObj.save().then(function() {
+															self.set('progressVal', self.get('progressVal')+1);
 															numberOfAdmissionsImported++;
 															if (numberOfAdmissionsImported == uniqueStudents.length - numberOfAdmissionsWithNoStudent && !doneImportingAdmissions)
 															{
@@ -1676,6 +1716,8 @@ export default Ember.Component.extend({
 
 									if(!rollBackImport)
 									{
+										self.set('totalProgressVal', uniqueStudents.length*2);
+										self.set('progressVal', uniqueStudents.length);
 										self.pushOutput("Successful read of file complete. Beginning Import of " + uniqueStudents.length + " Admission Averages");
 										var inAdmissionMutexIndex = 0;
 										var admissionMutex = Mutex.create();
@@ -1693,6 +1735,7 @@ export default Ember.Component.extend({
 													{														
 														studentObj.set('admissionAverage', importNote);
 														studentObj.save().then(function() {
+															self.set('progressVal', self.get('progressVal')+1);
 															numberOfAveragesImported++;
 															if (numberOfAveragesImported == uniqueStudents.length - numberOfAveragesWithNoStudent && !doneSavingAverages)
 															{
@@ -1758,6 +1801,8 @@ export default Ember.Component.extend({
 
 									if(!rollBackImport)
 									{
+										self.set('totalProgressVal', uniqueStudents.length*2);
+										self.set('progressVal', uniqueStudents.length);
 										self.pushOutput("Successful read of file has completed. Beginning import of " + uniqueStudents.length + " admission comments.")
 										var inAdmissionMutexIndex = 0;
 										var admissionMutex = Mutex.create();
@@ -1776,6 +1821,7 @@ export default Ember.Component.extend({
 													{														
 														studentObj.set('admissionComments', importNote);
 														studentObj.save().then(function() {
+															self.set('progressVal', self.get('progressVal')+1);
 															numberOfCommentsImported++;
 															if (numberOfCommentsImported == uniqueStudents.length - numberOfCommentsWithNoStudent && !doneSavingComments)
 															{
@@ -1817,6 +1863,9 @@ export default Ember.Component.extend({
 				console.log("index is now " + this.get('changingIndex'));
 			},	
 			continue(){
+				this.set('importInProgress', false);
+				this.set('progressVal', 0);
+				this.set('totalProgressVal', 100);
 				Ember.$("#btnContinue").addClass("disabled");
 				this.clearOutput();
 				Ember.$("#newFile").val('');
