@@ -43,14 +43,9 @@
     </table>
     <br><br>
     <button class="ui button" {{action 'addNewFeature'}}>Add System Feature</button>
-
-      <button class="ui button">{{#file-picker fileLoaded="importFromExcel" accept=".xlsx"
-      readAs="readAsBinaryString"
-      dropzone=false progress=false  preview=false
-      }}
-        Import System Features
-      {{/file-picker}}</button>
-
+    {{#file-picker fileLoaded="importFromExcel" accept=".xlsx" readAs="readAsBinaryString" dropzone=false progress=false  preview=false}}
+      <button class="ui button">Import System Features</button>
+    {{/file-picker}}
   {{/if}}
 {{else}}
   <div class="ui center aligned raised segment">
