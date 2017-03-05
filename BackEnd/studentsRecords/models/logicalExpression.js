@@ -2,11 +2,10 @@ var mongoose = require('mongoose');
 
 var logicalExpressionSchema = mongoose.Schema(
     {
-        code: String,
-        name: String,
-        adjudications: [{type: mongoose.Schema.ObjectId, ref: 'adjudications'}],
+        logicalExpression: String,
+        logicalLink: String,
         logicalExpressions: [{type: mongoose.Schema.ObjectId, ref: 'logicalExpressions'}],
-        departments: [{type: mongoose.Schema.ObjectId, ref: 'departments'}]
+        ownerExpression: {type: mongoose.Schema.ObjectId, ref: 'logicalExpressions'}
     },
     {
         versionKey: false
