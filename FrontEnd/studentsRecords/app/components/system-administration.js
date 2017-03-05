@@ -15,8 +15,8 @@ export default Ember.Component.extend({
 
   didInsertElement() {
     Ember.$(document).ready(function(){
-      Ember.$('.ui .item').on('click', function() {
-        Ember.$('.ui .item').removeClass('active');
+      Ember.$('.ui .adminMenu .item').on('click', function() {
+        Ember.$('.ui .adminMenu .item').removeClass('active');
         Ember.$(this).addClass('active');
       });
     });
