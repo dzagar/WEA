@@ -30,4 +30,33 @@
         <button class="ui button" {{action 'addNewRule'}}>Add New Rule</button>
     </div>
     </div>
+    <table class="ui table" style="margin-top: 25px;">
+      <thead>
+      <tr>
+        <th>Rule Name</th>
+        <th>Rule Code</th>
+        <th></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+
+      {{#each assessmentCodeModel as |oneRule|}}
+        <tr>
+          <td>
+            {{oneRule.name}}
+          </td>
+          <td>
+              {{oneRule.code}}
+          </td>
+          <td>
+              <label>Manage rule</label>
+          </td>
+          <td class="right aligned">
+              <label>delete</label>
+          </td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
 {{/if}}
