@@ -7,7 +7,7 @@ export default Ember.Component.extend({
 
         },
         cancel() {
-
+            this.set('isEditing', false);
         },
         addNewRule() {            
             this.set('code', "");
