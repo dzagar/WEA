@@ -1,22 +1,53 @@
 {{#if isEditing }}
-<h2>Add new adjudication rule</h2>
-<div class="ui form">
-    <div class="inline field">
-        <label>Rule name:</label>
-        {{input value=ruleName type="text" placeholder="enter rule name" }}
+    {{#if isAdding}}
+        <div class="ui modal">
+            <div class="header">Assign rule paramter for rule {{ruleCode}}</div>
+            <div class="ui form">
+                {{#ui-dropdown class="fluid selection" selected=selectedParameterType onChange=(action 'selectParameterType')}}
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Select Parameter Type</div>
+                    <div class="menu">
+                        {{#each parameterTypes as |oneParameter|}}
+                            <div class="item" data-value= "{{oneParameter.value}}" >{{oneParameter.text}}</div>
+                        {{/each}}
+                    </div>
+                {{/ui-dropdown}}
+                <br>
+                <div class="inline field">
+                    <label id="firstParamDesc">Minimum Average</label>
+                    {{input id="firstParamValue" value=firstParamValue disabled=true type="text"}}
+                </div>
+                <div class="inline field">
+                    <label id="secondParamDesc">Maximum Average</label>
+                    {{input id="secondParamValue" value=secondParamValue disabled=true type="text"}}
+                </div>
+                <br>                
+            </div>
+            <div class="actions">
+                <div class="ui button" {{action 'cancelRuleAdd'}}>Cancel</div>
+                <div class="ui button" {{action 'addParameter'}}>Add</div>
+            </div>
+        </div>
+    {{/if}}
+    <h2>Add new adjudication rule</h2>
+    <div class="ui form">
+        <div class="inline field">
+            <label>Rule name:</label>
+            {{input value=ruleName type="text" placeholder="enter rule name" }}
+        </div>
+        <div class="inline field">
+            <label>Rule code:</label>
+            {{input value=ruleCode type="text" placeholder="enter rule code" }}
+        </div>
+        <div class="inline field">
+            <label>Rule parameters:</label>
+            <br>
+            <button id="addFirst" class="ui button" {{action 'addFirstRule'}}>Add rule parameter</button>
+        </div>
     </div>
-    <div class="inline field">
-        <label>Rule code:</label>
-        {{input value=ruleCode type="text" placeholder="enter rule code" }}
-    </div>
-    <div class="inline field">
-        <label>Rule parameters:</label>
-        {{input value=ruleParameter type="text" placeholder="enter rule parameters" }}
-    </div>
-</div>
-<br>
-<button class="ui button" {{action 'save'}}>Save</button>
-<button class="ui button" {{action 'cancel'}}>Cancel</button>
+    <br>
+    <button class="ui button" {{action 'save'}}>Save</button>
+    <button class="ui button" {{action 'cancel'}}>Cancel</button>
 {{else}}
     <div class="ui grid">
     <div class="eight wide column">
