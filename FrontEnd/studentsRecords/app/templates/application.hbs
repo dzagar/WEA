@@ -1,7 +1,7 @@
 {{#if oudaAuth.isAuthenticated }}
 
   <div class="ui segment ">
-    <div class="ui fixed inverted stackable seven item container menu">
+    <div class="ui fixed inverted stackable eight item container menu">
       <div class = "ui container ">
         <p class = "header item" style = "pointer-events: none;">
         <img class="logo" src="/assets/images/UWO Stacked_Rev.png" data-pin-nopin = "true">
@@ -12,6 +12,9 @@
         {{/link-to}}
         {{#link-to 'admin-portal' class='item'}}
           <i class="large user icon"></i>Student Records
+        {{/link-to}}
+        {{#link-to 'admin-portal' class='item'}}
+          <i class="large user icon"></i>System Codes
         {{/link-to}}
         {{#link-to 'home' class='item'}}
           <i class="large user icon"></i>Import Files
