@@ -1,0 +1,44 @@
+{{#if isManagingPermission}}
+ <div class="ui modal">
+   <div class="header">Assign Capabilities for {{roleName}}</div>
+   <div class="content">
+     <!-- display a dropdown list to assign a new  system features  -->
+     {{#ui-dropdown   class="fluid multiple selection" selected=[selectedFeatures] onChange=(action 'selectPermission')}}
+       <i class="dropdown icon"></i>
+       <div class="default text">Select Permission</div>
+       <div class="menu">
+         {{#each rolePermissionModel as |permissionChoice|}}
+           <div class="item"   data-value= "{{permissionChoice.id}}" >
+             {{permissionChoice.code}} {{permissionChoice.sysFeature}}
+           </div>
+         {{/each}}
+
+       </div>
+     {{/ui-dropdown}}
+
+    </div>
+    <div class="actions">
+
+      <div class="ui button" {{action 'done'}}>Done
+      </div>
+
+    </div>
+  </div>
+
+{{else}}
+  {{#ui-dropdown  }}
+
+    <div class="menu">
+      {{#each rolePermissionModel as |permissionChoice|}}
+        <div class="item"   data-value= "{{permissionChoice.id}}" >
+          {{permissionChoice.code}} {{permissionChoice.sysFeature}}
+        </div>
+      {{/each}}
+
+    </div>
+  {{/ui-dropdown}}
+
+  <button class="ui  button" {{action 'managePermission'}}>
+    Manage Permissions
+  </button>
+{{/if}}

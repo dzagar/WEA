@@ -8,6 +8,14 @@ const Router = Ember.Router.extend({
 
 Router.map(function() {
   this.route('home', {path: '/'});
+  //this.route('home', {path: '/*wildcard'});
+  this.route('login');
+  this.route('admin-portal');
+  this.route('error-page', {path: '/*wildcard'});
+  this.route('about-us');
+  this.route('student-records');
+  this.route('system-codes');
+  this.route('import-files');
 });
 
 export default Router;

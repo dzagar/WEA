@@ -1,0 +1,12 @@
+{{#if EU003IsPermitted }}
+
+  <button class="ui mini circular icon button" {{action 'deleteUser' ID}}
+          title="Delete"> <i class="remove icon"></i>
+  </button>
+{{else}}
+
+  <div class="ui mini circular icon button" data-content="This feature (EU003) is disabled">
+    <i class="remove icon"></i>
+  </div>
+
+{{/if}}

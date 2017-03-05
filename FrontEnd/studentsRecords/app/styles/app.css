@@ -1,3 +1,30 @@
+/*For Footer*/
+html {
+  min-height: 100%;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body > .ember-view {
+  position: relative;
+  margin: 0;
+  min-height: 100%;
+}
+/**
+ * Footer Styles
+ */
+.footer {
+  position: fixed;  
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+/*end footer*/
+
 .ui.grid > [class*="three wide"].column {
 	padding-right: 0px !important;
 }
@@ -5,11 +32,59 @@
 	padding-left: 0px !important;
 }
 
-.divider{
+/*.divider{
     width:5px;
     height:auto;
     display:inline-block;
 }
 div > div > div> .step{
 	height:35px;
+}*/
+
+/*Home Page*/
+.ui.menu .item img.logo {
+    margin-right: 1.5em;
 }
+
+.appBody.ui.grid {
+	margin-top: 1rem;
+}
+
+/*Welcome Page*/
+.appBody h1.ui.header {
+    margin-top: 1.5em;
+    margin-bottom: 0em;
+    font-size: 4em;
+    font-weight: normal;
+    text-align: center;
+}
+.appBody h2 {
+	text-align: center;
+}
+/*div>.welcome{
+	margin-bottom: 13em;
+}*/
+div>div>div> .ui.huge.button {
+	height: 100%;
+}
+
+/*About Us*/
+.headshot > img {
+    max-width:100%;
+    max-height:100%;
+}
+
+.headshot:hover {
+    box-shadow: 0px 0px 7px #00E5EE;
+}
+
+.column > h3 {
+    text-align: center;
+}
+
+.description {
+    margin: 10px;
+    min-height: 75px;
+}
+
+

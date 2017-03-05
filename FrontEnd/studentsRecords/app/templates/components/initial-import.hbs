@@ -1,7 +1,3 @@
-<div class="ui center aligned header">
-  <h2>Import Data</h2>
-</div>
-
 {{#if showDeleteConfirmation}}
 {{delete-data-confirmation notDONE = showDeleteConfirmation isImporting = importData}}
 {{else if importData}}
@@ -115,20 +111,29 @@
 			</button>
 		</div>
 		<div>
-			<label>{{{fileOutput}}}</label>
+			{{#if importInProgress}}
+				{{#ui-progress value = progressVal progress = progressVal total = totalProgressVal}}
+					<div class="bar">
+					  <div class="progress"></div>
+					</div>
+					<div class = "label">{{{fileOutput}}}</div>
+				{{/ui-progress}}
+			{{/if}}
 		</div>
 	</div>
 </div>
 {{else}}
-<div class="content">
-	<p>
-		To import new data, you must delete all old data. This action is irreversible, so be sure you are ready before proceeding.
-	</p>
-</div>
-<div class="ui horizontal divider"></div>
-<div style="width: 50%; margin: auto;">
-	<div class="ui fluid button" {{action 'showEraseDataModal'}}>
-		Import New Data
+<div class = "ui grid">
+	<div class = "column ui yellow segment">
+		<p>
+			To import new data, you must delete all old data. This action is irreversible, so be sure you are ready before proceeding.
+		</p>
+		<div class="ui horizontal divider"></div>
+		<div style="width: 50%; margin: auto;">
+			<div class="ui fluid button" {{action 'showEraseDataModal'}}>
+				Import New Data
+			</div>
+		</div>
 	</div>
 </div>
 {{/if}}

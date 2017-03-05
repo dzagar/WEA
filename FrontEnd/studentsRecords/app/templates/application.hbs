@@ -1,26 +1,75 @@
-<div class="ui segment container">
-  <div class="ui secondary center aligned grid segment">
-    <div class="three wide column">
+{{#if oudaAuth.isAuthenticated }}
 
-      <img style="width: auto; height: 70px;" class="ui right aligned container image" src="/assets/images/UWO Stacked.png">
+  <div class="ui segment ">
+    <div class="ui fixed inverted stackable eight item container menu">
+      <div class = "ui container ">
+        <p class = "header item" style = "pointer-events: none;">
+        <img class="logo" src="/assets/images/UWO Stacked_Rev.png" data-pin-nopin = "true">
+        WE Adjudication
+        </p>      
+        {{#link-to 'home' class='application item'}}
+          <i class="large user icon"></i>Home
+        {{/link-to}}
+        {{#link-to 'about-us' class='item'}}
+          <i class="large user icon"></i>About Us
+        {{/link-to}}
+        {{#link-to 'student-records' class='item'}}
+          <i class="large user icon"></i>Student Records
+        {{/link-to}}
+        {{#link-to 'system-codes' class='item'}}
+          <i class="large user icon"></i>System Codes
+        {{/link-to}}
+        {{#link-to 'system-codes' class='item'}}
+          <i class="large user icon"></i>Perform Adjudication
+        {{/link-to}}
+        {{#link-to 'system-codes' class='item'}}
+          <i class="large user icon"></i>Generate Reports
+        {{/link-to}}
+        {{#link-to 'import-files' class='item'}}
+          <i class="large user icon"></i>Import Files
+        {{/link-to}}
+        {{#link-to 'admin-portal' class='item'}}
+          <i class="large user icon"></i>Admin Portal
+        {{/link-to}}
+        <a class='item' {{action 'logout'}}>
+          <i class="large user icon"></i>Logout
+        </a>
+      </div>
     </div>
-    <div class="thirteen wide column" style="height: 100px; vertical-align: middle;">
-      <h2>Welcome to Western Engineering Adjudication System</h2>
+    <br>
+    <br>
+    <br>
+    {{outlet}}
+    <div class = "footer">
+      <div class="ui violet inverted vertical footer segment">
+        <div class="ui center aligned grid">
+          <div class="four wide column">
+            © Copyright - Digital Sloth
+            <img class="ui right spaced container mini image" src="/assets/images/UWO Stacked_Rev.png">
+          </div>
+        </div>
+      </div>
     </div>
-
   </div>
-  <br> <br>
-  {{outlet}}
-  <br> <br>
-  <footer>
-    <div class="ui violet inverted grid segment">
-      <div class="thirteen wide column">
-        © Copyright - Digital Sloth
-      </div>
-      <div class="three wide column">
-        <img class="ui right aligned container tiny image" src="/assets/images/UWO Stacked_Rev.png">
+  
+  {{else}}
+  <div class="ui middle one column centered grid" >
+    <div style="margin-top:5%;">
+      {{#unless oudaAuth.getName}}
+        {{outlet "login"}}
+      {{/unless}}
+    </div> 
+  </div> 
+  <div class = "footer">
+    <div class="ui violet inverted vertical footer segment">
+      <div class="ui center aligned grid">
+        <div class="four wide column">
+          © Copyright - Digital Sloth
+          <img class="ui right spaced container mini image" src="/assets/images/UWO Stacked_Rev.png">
+        </div>
       </div>
     </div>
-  </footer>
+  </div>
+  {{/if}}
 
-</div>
+
