@@ -14,7 +14,7 @@ router.route('/')
                 response.send({error:error});
             }
             else{
-                response.send(assessmentCode);
+                response.send({assessmentCode:assessmentCode});
             }
 
         });
@@ -31,15 +31,32 @@ router.route('/')
         });
     });
 
-router.route('/:gender_id')
+router.route('/:assessmentCode_id')
     .get(parseUrlencoded, parseJSON, function (request, response) {
-
+        AssessmentCode.findById(request.params.assessmentCode_id, function(error, assessmentCode){
+            if (error)
+            {
+                response.send({error:error});
+            }
+            else{
+                response.send({assessmentCode:assessmentCode});
+            }
+        });
     })
     .put(parseUrlencoded, parseJSON, function (request, response) {
 
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
-
+        AssessmentCode.remove({_id: request.params.assessmentCode_id}, function(error, assessmentCode) {
+            if (error)
+            {
+                response.send({error:error});
+            }
+            else
+            {
+                response.send({});
+            }
+        });
     });
 
 module.exports = router;

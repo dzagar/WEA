@@ -1,21 +1,17 @@
 {{#if isEditing }}
-<h2>Add new system feature</h2>
+<h2>Add new adjudication rule</h2>
 <div class="ui form">
     <div class="inline field">
-        <label>Rule code</label>
-        {{input value=code type="text" placeholder="enter rule code" }}
+        <label>Rule name:</label>
+        {{input value=ruleName type="text" placeholder="enter rule name" }}
     </div>
     <div class="inline field">
-        <label>Rule description</label>
-        {{input value=ruleDescription type="text" placeholder="enter rule description" }}
+        <label>Rule code:</label>
+        {{input value=ruleCode type="text" placeholder="enter rule code" }}
     </div>
     <div class="inline field">
-        <label>Rule parameters</label>
+        <label>Rule parameters:</label>
         {{input value=ruleParameter type="text" placeholder="enter rule parameters" }}
-    </div>
-    <div class="inline field">
-        <label>Department</label>
-        {{input type="checkbox"}}
     </div>
 </div>
 <br>
@@ -53,7 +49,9 @@
               <label>Manage rule</label>
           </td>
           <td class="right aligned">
-              <label>delete</label>
+               <button class="ui mini circular icon button" {{action 'deleteRule' oneRule}} title="Delete">
+                  <i class="remove icon"></i>
+              </button>
           </td>
         </tr>
       {{/each}}
