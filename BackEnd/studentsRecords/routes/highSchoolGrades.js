@@ -88,7 +88,7 @@ router.route('/:highSchoolGrade_id')
         });
     })
     .put(parseUrlencoded, parseJSON, function (request, response) {
-        HighSchoolGrade.findById(request.params.highSchool_id, function(error, highSchoolGrade) {
+        HighSchoolGrade.findById(request.params.highSchoolGrade_id, function(error, highSchoolGrade) {
             if (error) {
                 response.send(error);
             } else {
@@ -96,7 +96,7 @@ router.route('/:highSchoolGrade_id')
                 highSchoolGrade.source = request.body.highSchoolGrade.source;
                 highSchoolGrade.student = request.body.highSchoolGrade.student;
 
-                highSchoolGrades.save(function(error) {
+                highSchoolGrade.save(function(error) {
                     if (error) {
                         response.send(error);
                     } else {

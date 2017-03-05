@@ -36,8 +36,6 @@
 <!-- Delete confirmation popups -->
 {{#if showDeleteConfirmation}} 
   {{delete-student INDEX = currentIndex student = currentStudent showWindow = showDeleteConfirmation total = totalStudents}}
-{{else if showHSGradeDeleteConfirmation}}
-  {{delete-highschool grade = currentHSGrade showWindow = showHSGradeDeleteConfirmation}}
 {{else if showAdvancedStandingDeleteConfirmation}}
   {{delete-advanced-standing advancedStanding = currentAdvancedStanding showWindow = showAdvancedStandingDeleteConfirmation}}
 {{else if showScholarshipDeleteConfirmation}}
@@ -293,65 +291,7 @@
 
 
   <div class="ui bottom attached tab segment" data-tab="hsinfo">
-    <h2>High School Info</h2>
-
-    <h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
-  
-    <table class="ui fixed table">
-      <thead>
-        <tr>
-          <th class="six wide">High School</th>
-          <th class="five wide">Course</th>
-          <th class="two wide">Grade</th>
-          <th class="four wide"><!--spacer--></th>
-        </tr>
-      </thead>
-      {{#each currentStudent.highSchoolCourses as |grade index|}}
-      <tr>
-        <td>
-          <div>
-            {{grade.source.school.schoolName}}
-          </div>
-        </td>
-        <td>
-          <span style="float: left;">
-            {{grade.source.subject.name}}
-          </span>
-          <span style="float: right;" data-tooltip={{grade.source.subject.description}} data-position="left center">
-            <i class="help circle icon"></i>
-          </span>
-        </td>
-        <td>
-          <div class="ui fluid input">
-            {{input type="text" value = grade.mark}}
-            
-          </div>
-        </td>
-        <td>
-          <div class="ui inverted buttons">
-            
-            <button class="ui blue inverted button" {{action "saveHSGrade" grade}}>Save</button>
-            <div class="divider" />
-            <button class="ui red inverted button" {{action "deleteHSGrade" grade}}>Delete</button>
-          </div>
-        </td>
-      </tr>
-      {{/each}}
-      <tr>
-        <td><!--spacer--></td>
-        <td><!--spacer--></td>
-        <td>
-          <div class="ui fluid input">
-            {{input type="text" value = newHighSchool}}
-          </div>
-        </td>
-        <td>
-          <button class="ui inverted green button" {{action "addHighSchool"}}> 
-            Add &nbsp; <i class="add square icon"></i>
-          </button>
-        </td>
-      </tr>
-    </table>
+    {{student-high-school-tab currentStudent = currentStudent store = store}}
   </div>
 
 

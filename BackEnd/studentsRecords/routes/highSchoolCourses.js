@@ -147,8 +147,16 @@ router.route('/')
                 }
             });
 
-        } else {
+        } else if (request.query.level && request.query.source && request.query.unit) {
             HighSchoolCourse.find({level: request.query.level, source: request.query.source, unit: request.query.unit}, function (error, courses) {
+                if (error) {
+                    response.send(error);
+                } else {
+                    response.json({highSchoolCourses: courses});
+                }
+            });
+        } else {
+            HighSchoolCourse.find(function (error, courses) {
                 if (error) {
                     response.send(error);
                 } else {
