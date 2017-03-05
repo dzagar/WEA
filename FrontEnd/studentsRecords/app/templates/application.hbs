@@ -1,37 +1,37 @@
 {{#if oudaAuth.isAuthenticated }}
 
   <div class="ui segment ">
-    <div class="ui fixed inverted stackable eight item container menu">
+    <div class="ui fixed inverted stackable ten item container menu">
       <div class = "ui container ">
         <p class = "header item" style = "pointer-events: none;">
         <img class="logo" src="/assets/images/UWO Stacked_Rev.png" data-pin-nopin = "true">
         WE Adjudication
         </p>      
-        {{#link-to 'home' class='application item'}}
+        {{#link-to 'home' class='item' style="padding: 1px;"}}
           <i class="large user icon"></i>Home
         {{/link-to}}
-        {{#link-to 'about-us' class='item'}}
+        {{#link-to 'about-us' class='item' style="padding: 1px;"}}
           <i class="large user icon"></i>About Us
         {{/link-to}}
-        {{#link-to 'student-records' class='item'}}
+        {{#link-to 'student-records' class='item' style="padding: 1px;"}}
           <i class="large user icon"></i>Student Records
         {{/link-to}}
-        {{#link-to 'system-codes' class='item'}}
+        {{#link-to 'system-codes' class='item' style="padding: 1px;"}}
           <i class="large user icon"></i>System Codes
         {{/link-to}}
-        {{#link-to 'system-codes' class='item'}}
+        {{#link-to 'system-codes' class='item' style="padding: 1px;"}}
           <i class="large user icon"></i>Perform Adjudication
         {{/link-to}}
-        {{#link-to 'system-codes' class='item'}}
+        {{#link-to 'system-codes' class='item' style="padding: 1px;"}}
           <i class="large user icon"></i>Generate Reports
         {{/link-to}}
-        {{#link-to 'import-files' class='item'}}
+        {{#link-to 'import-files' class='item' style="padding: 1px;"}}
           <i class="large user icon"></i>Import Files
         {{/link-to}}
-        {{#link-to 'admin-portal' class='item'}}
+        {{#link-to 'admin-portal' class='item' style="padding: 1px;"}}
           <i class="large user icon"></i>Admin Portal
         {{/link-to}}
-        <a class='item' {{action 'logout'}}>
+        <a class='item' style="padding: 1px;" {{action 'logout'}}>
           <i class="large user icon"></i>Logout
         </a>
       </div>

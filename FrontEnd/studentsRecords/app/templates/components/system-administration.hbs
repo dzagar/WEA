@@ -21,21 +21,28 @@
             System Features/Privileges
           </a>
         </div>
+        <div class="adminMenu">
+          <a class="item " {{action "manageAdjudication"}}>
+            <i class="large lock icon"></i>
+            Adjudication Rules
+          </a>
+        </div>
       </div>
     </div>
     <div class="thirteen wide column ">
       <div class="ui segment container">
-        {{#if isUsersShowing}}
           <br>
+        {{#if isUsersShowing}}
           {{manage-users}}
         {{/if}}
         {{#if isRolesEditing }}
-          <br>
           {{manage-roles}}
         {{/if}}
         {{#if isFeaturesEditing }}
-          <br>
           {{manage-features}}
+        {{/if}}
+        {{#if isAdjudicationRulesEditing}}
+          {{manage-adjudication-rules}}
         {{/if}}
       </div>
     </div>

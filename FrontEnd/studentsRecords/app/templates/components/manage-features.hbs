@@ -15,8 +15,15 @@
     <button class="ui button" {{action 'save'}}>Save</button>
     <button class="ui button" {{action 'cancel'}}>Cancel</button>
   {{else}}
-    <h2>Manage System Features</h2>
-    <table class="ui table" style="margin-top: 25px;">
+    <div class="ui grid">
+    <div class="eight wide column">
+      <h2 class="ui header" style="margin-top: 2px;">Manage System Features</h2>
+    </div>
+    <div class="eight wide column right aligned">
+      <button class="ui button" {{action 'addNewFeature'}}>Add System Feature</button>
+    </div>
+  </div>
+      <table class="ui table" style="margin-top: 25px;">
       <thead>
       <tr>
         <th>System Role Name</th>
@@ -41,8 +48,7 @@
       {{/each}}
       </tbody>
     </table>
-    <br><br>
-    <button class="ui button" {{action 'addNewFeature'}}>Add System Feature</button>
+    <br>
     {{#file-picker fileLoaded="importFromExcel" accept=".xlsx" readAs="readAsBinaryString" dropzone=false progress=false  preview=false}}
       <button class="ui button">Import System Features</button>
     {{/file-picker}}
