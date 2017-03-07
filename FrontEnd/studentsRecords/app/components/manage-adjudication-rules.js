@@ -53,10 +53,36 @@ export default Ember.Component.extend({
             Ember.$("#addFirst").hide();
             this.set('isAdding', true);
         },
-        addParameter() {            
-			Ember.$('.ui.modal').modal('hide');
-      		Ember.$('.ui.modal').remove();
-            this.set('isAdding', false);
+        addParameter() {
+            
+            var newRuleParameter = this.get('store').createRecord('logical-expression');
+            switch (this.get('selectedParameterType')){
+                case "YWA":
+                {
+                    newRuleParameter.set('booleanExpression', "Student's YWA is greater than " + this.get("firstParamValue") + " and less than " + this.get("secondParamValue"));
+                    break;
+                }
+                case "CWA":
+                {
+                    newRuleParameter.set('booleanExpression', "Student's CWA is greater than " + this.get("firstParamValue") + " and less than " + this.get("secondParamValue"));
+                    break;
+                }
+                case "fails":
+                {
+                    newRuleParameter.set('booleanExpression', "Student has at least " + this.get("firstParamValue") + "failed courses and at most " + this.get("secondParamValue") + "failed courses");
+                    break;
+                }
+                case "course":
+                {
+                    break;
+                }
+            }
+            var self = this;
+            newRuleParameter.save().then(function() {
+                Ember.$('.ui.modal').modal('hide');
+                Ember.$('.ui.modal').remove();
+                self.set('isAdding', false);
+            });  
         },
         cancelRuleAdd() {
 			Ember.$('.ui.modal').modal('hide');
