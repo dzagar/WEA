@@ -47,7 +47,7 @@ router.route('/')
                     response.send({courseCode: courseCode});
                 }
             });
-        } else if (o && l) {
+        } else if ((o || o == 0) && l) {
             CourseCode.paginate({}, { offset: o, limit: l }, function(err, courseCodes){
                 if (err) response.send(err);
                 else {
