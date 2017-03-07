@@ -2,124 +2,226 @@
 {{delete-data-confirmation notDONE = showDeleteConfirmation isImporting = importData}}
 {{else if importData}}
 
-<div class="ui grid">
-	<div class="six wide column">
-		<div class="ui violet small vertical steps">
-			<a id="gender" class="active step">
-				<i class="minus icon"></i>
-				<div class="content">
-	     			<div class="title" >Genders</div>
-	    		</div>
-			</a>
-			<a id="residencies" class="disabled step">
-				<i class="minus icon"></i>
-				<div class="content">
-	     			<div class="title" >Residencies</div>
-	    		</div>
-			</a>
-			{{!--<a id="termCodes" class=" step" {{action "setIndex" 3 }}>
-				<i class="minus icon"></i>
-				<div class="content">
-	     			<div class="title" >Term Codes</div>
-	    		</div>
-			</a>--}}
-			<a id="courseCodes" class="disabled step">
-				<i class="minus icon"></i>
-				<div class="content">
-	     			<div class="title" >Course Codes</div>
-	    		</div>
-			</a>
-			<a id="students" class="disabled step">
-				<i class="minus icon"></i>
-				<div class="content">
-	     			<div class="title" >Students</div>
-	    		</div>
-			</a>			
-			<a id="awards" class="disabled step">
-				<i class="minus icon"></i>
-				<div class="content">
-	     			<div class="title" >Awards and Scholarships</div>
-	    		</div>
-			</a>
-			<a id="advancedStandings" class="disabled step">
-				<i class="minus icon"></i>
-				<div class="content">
-	     			<div class="title" >Advanced Standings</div>
-	    		</div>
-			</a>
-			<a id="registrationComments" class="disabled step">
-				<i class="minus icon"></i>
-				<div class="content">
-	     			<div class="title" >Registration Comments</div>
-	    		</div>
-			</a>
-			<a id="basisOfAdmission" class="disabled step">
-				<i class="minus icon"></i>
-				<div class="content">
-	     			<div class="title" >Basis of Admission</div>
-	    		</div>
-			</a>
-			<a id="admissionAverage" class="disabled step">
-				<i class="minus icon"></i>
-				<div class="content">
-	     			<div class="title" >Admission Average</div>
-	    		</div>
-			</a>
-			<a id="admissionComments" class="disabled step">
-				<i class="minus icon"></i>
-				<div class="content">
-	     			<div class="title" >Admission Comments</div>
-	    		</div>
-			</a>
-			<a id="secondary" class="disabled step">
-				<i class="minus icon"></i>
-				<div class="content">
-	     			<div class="title" >Secondary Schools</div>
-	    		</div>
-			</a>
-			<a id="highschoolInfo" class="disabled step">
-				<i class="minus icon"></i>
-				<div class="content">
-	     			<div class="title" >Secondary School Information</div>
-	    		</div>
-			</a>
-			<a id="recordPlans" class="disabled step">
-				<i class="minus icon"></i>
-				<div class="content">
-	     			<div class="title" >Undergraduate Record Plans</div>
-	    		</div>
-			</a>
-			<a id="courseGrades" class="disabled step">
-				<i class="minus icon"></i>
-				<div class="content">
-	     			<div class="title" >Undergraduate Course Grades</div>
-	    		</div>
-			</a>
+<div class="ui centered middle aligned grid">
+	<div class = "row">
+		<div class="column">
+			<div class="ui small steps">
+				<a id="basic" class="active step item">
+					<i class="minus icon"></i>
+					<div class="content">
+		     			<div class="title" >Basic Information</div>
+		     			<!--Genders, Residencies, Course Codes-->
+		    		</div>
+				</a>
+				<a id="student" class="disabled step item">
+					<i class="minus icon"></i>
+					<div class="content">
+		     			<div class="title" >Student Information</div>
+		     			<!--Students, Awards & Scholarships, Advanced Standings, RC, BA, AA, AC-->
+		    		</div>
+				</a>
+				<!--<a id="termCodes" class=" step item" {{action "setIndex" 3 }}>
+					<i class="minus icon"></i>
+					<div class="content">
+		     			<div class="title" >Term Codes</div>
+		    		</div>
+				</a>-->
+				<a id="highschool" class="disabled step item">
+					<i class="minus icon"></i>
+					<div class="content">
+		     			<div class="title" >High School Information</div>
+		     			<!--High Schools, High School Course Information-->
+		    		</div>
+				</a>
+				<a id="undergraduate" class="disabled step item">
+					<i class="minus icon"></i>
+					<div class="content">
+		     			<div class="title" >Undergraduate Program Information</div>
+		     			<!--Undergraduate Record Plans, Undergraduate Record Courses-->
+		    		</div>
+				</a>			
+				<!--<a id="awards" class="disabled step item">
+					<i class="minus icon"></i>
+					<div class="content">
+		     			<div class="title" >Awards and Scholarships</div>
+		    		</div>
+				</a>
+				<a id="advancedStandings" class="disabled step item">
+					<i class="minus icon"></i>
+					<div class="content">
+		     			<div class="title" >Advanced Standings</div>
+		    		</div>
+				</a>
+				<a id="registrationComments" class="disabled step item">
+					<i class="minus icon"></i>
+					<div class="content">
+		     			<div class="title" >Registration Comments</div>
+		    		</div>
+				</a>
+				<a id="basisOfAdmission" class="disabled step item">
+					<i class="minus icon"></i>
+					<div class="content">
+		     			<div class="title" >Basis of Admission</div>
+		    		</div>
+				</a>
+				<a id="admissionAverage" class="disabled step item">
+					<i class="minus icon"></i>
+					<div class="content">
+		     			<div class="title" >Admission Average</div>
+		    		</div>
+				</a>
+				<a id="admissionComments" class="disabled step item">
+					<i class="minus icon"></i>
+					<div class="content">
+		     			<div class="title" >Admission Comments</div>
+		    		</div>
+				</a>
+				<a id="secondary" class="disabled step item">
+					<i class="minus icon"></i>
+					<div class="content">
+		     			<div class="title" >Secondary Schools</div>
+		    		</div>
+				</a>
+				<a id="highschoolInfo" class="disabled step item">
+					<i class="minus icon"></i>
+					<div class="content">
+		     			<div class="title" >Secondary School Information</div>
+		    		</div>
+				</a>
+				<a id="recordPlans" class="disabled step item">
+					<i class="minus icon"></i>
+					<div class="content">
+		     			<div class="title" >Undergraduate Record Plans</div>
+		    		</div>
+				</a>
+				<a id="courseGrades" class="disabled step item">
+					<i class="minus icon"></i>
+					<div class="content">
+		     			<div class="title" >Undergraduate Course Grades</div>
+		    		</div>
+				</a>-->
+			</div>
 		</div>
 	</div>
-	<div class="ten wide stretchered column ">
-		<div>
-			<label>{{{fileFormat}}}</label>
-		</div>
-		<div class="ui segment">
-			<input type="file" id = "newFile">
-			<button class="ui primary button" {{action 'import' }}>
-  				Import File
-			</button>
-			<button id="btnContinue" class="ui primary button disabled" {{action 'continue' }}>
-  				Continue
-			</button>
-		</div>
-		<div>
-			{{#if importInProgress}}
-				{{#ui-progress value = progressVal progress = progressVal total = totalProgressVal}}
-					<div class="bar">
-					  <div class="progress"></div>
+	<div class = "row">
+		<div class="ten wide stretchered column ui basic vertical ordered steps">
+			{{#if index1}}
+				{{#each importUndergrad as |feature index|}}
+					<div class = "ui segment step " id = {{feature.name}}>
+						<div class = "content">
+							<h3> {{feature.name}} </h3>
+							<p> {{{feature.description}}} {{index}}</p>
+							<input type = "file" id = {{concat "newFile" index}}>
+							<br>
+							<br>
+						</div>
 					</div>
-					<div class = "label">{{{fileOutput}}}</div>
-				{{/ui-progress}}
+					<div class = "row">
+						{{#if importInProgress}}
+							{{#ui-progress value = feature.progress progress = feature.progress total = feature.total}}
+								<div class="bar">
+								  <div class="progress"></div>
+								</div>
+							{{/ui-progress}}
+						{{/if}}
+					</div>
+				{{/each}}
+				<div class = "ui basic centered middle aligned grid segment">
+					<button class="ui primary button" {{action 'import' }}>
+		  				Import Files
+					</button>
+				</div>
+			{{else if index2}}
+				{{#each importHighSchool as |feature index|}}
+					<div class = "ui segment step " id = {{feature.name}}>
+						<div class = "content">
+							<h3> {{feature.name}} </h3>
+							<p> {{{feature.description}}} {{index}}</p>
+							<input type = "file" id = {{concat "newFile" index}}>
+							<br>
+							<br>
+						</div>
+					</div>
+					<div class = "row">
+						{{#if importInProgress}}
+							{{#ui-progress value = feature.progress progress = feature.progress total = feature.total}}
+								<div class="bar">
+								  <div class="progress"></div>
+								</div>
+							{{/ui-progress}}
+						{{/if}}
+					</div>
+				{{/each}}
+				<div class = "ui basic centered middle aligned grid segment">
+					<button class="ui primary button" {{action 'import' }}>
+		  				Import Files
+					</button>
+				</div>
+			{{else if index3}}
+				{{#each importStudent as |feature index|}}
+					<div class = "ui segment step " id = {{feature.name}}>
+						<div class = "content">
+							<h3> {{feature.name}} </h3>
+							<p> {{{feature.description}}} {{index}}</p>
+							<input type = "file" id = {{concat "newFile" index}}>
+							<br>
+							<br>
+						</div>
+					</div>
+					<div class = "row">
+						{{#if importInProgress}}
+							{{#ui-progress value = feature.progress progress = feature.progress total = feature.total}}
+								<div class="bar">
+								  <div class="progress"></div>
+								</div>
+							{{/ui-progress}}
+						{{/if}}
+					</div>
+				{{/each}}
+				<div class = "ui basic centered middle aligned grid segment">
+					<button class="ui primary button" {{action 'import' }}>
+		  				Import Files
+					</button>
+				</div>
+			{{else}}
+				{{#each importBasic as |feature index|}}
+					<div class = "ui segment step " id = {{feature.name}}>
+						<div class = "content">
+							<h3> {{feature.name}} </h3>
+							<p> {{{feature.description}}} {{index}}</p>
+							<input type = "file" id = {{concat "newFile" index}}>
+							<br>
+							<br>
+						</div>
+					</div>
+					<div class = "row">
+						{{#if importInProgress}}
+							{{#ui-progress value = feature.progress progress = feature.progress total = feature.total}}
+								<div class="bar">
+								  <div class="progress"></div>
+								</div>
+							{{/ui-progress}}
+						{{/if}}
+					</div>
+				{{/each}}
+				<div class = "ui basic centered middle aligned grid segment">
+					<button class="ui primary button" {{action 'import' }}>
+		  				Import Files
+					</button>
+				</div>
 			{{/if}}
 		</div>
+		{{#if importInProgress}}
+			<div class = "six wide column">
+				<div class = "header"> Importing...</div>
+				<div class = "ui segment">
+					{{{fileOutput}}}
+				</div>
+				<button id="btnContinue" class="ui primary button disabled" {{action 'continue' }}>
+		  				Continue
+				</button>
+			</div>
+		{{/if}}
 	</div>
 </div>
 {{else}}
