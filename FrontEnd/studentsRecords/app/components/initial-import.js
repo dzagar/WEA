@@ -1153,7 +1153,8 @@ export default Ember.Component.extend({
 												var inMutexCountIndex = inMutexIndex++	
 												var termStudentNumber = termValues[inMutexCountIndex].studentNumber;								
 												self.get('store').queryRecord('student', {
-													number: termStudentNumber
+													number: termStudentNumber,
+													findOneStudent: true
 												}).then(function(studentObj) {	
 													var termName = termValues[inMutexCountIndex].termCode;										
 													var newTermToImport = self.get('store').createRecord('term-code', {
@@ -1818,13 +1819,14 @@ export default Ember.Component.extend({
 														});
 													}
 													else{
+														Ember.set(importStu.objectAt(4), "progress", Ember.get(importStu.objectAt(4), "progress")+1);
 														numberOfAdmissionsWithNoStudent++;
 															if (numberOfAdmissionsImported == uniqueStudents.length - numberOfAdmissionsWithNoStudent && !doneImportingAdmissions)
 															{
 																doneImportingAdmissions = true;
 																self.pushOutput("<span style='color:green'>Import of Basis of Admissions successful!</span>");
-																Ember.$("#btnContinue").removeClass("disabled");
-																Ember.$("#basisOfAdmission").addClass("completed");
+																Ember.$("#BasisOfAdmissions").addClass("completed");
+																self.send("continue");
 															}
 													}
 												});
