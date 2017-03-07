@@ -1807,7 +1807,6 @@ export default Ember.Component.extend({
 														studentObj.save().then(function() {
 															Ember.set(importStu.objectAt(4), "progress", Ember.get(importStu.objectAt(4), "progress")+1);
 															self.set('importStudent', importStu);
-
 															numberOfAdmissionsImported++;
 															if (numberOfAdmissionsImported == uniqueStudents.length - numberOfAdmissionsWithNoStudent && !doneImportingAdmissions)
 															{
