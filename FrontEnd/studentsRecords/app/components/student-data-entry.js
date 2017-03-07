@@ -5,10 +5,10 @@ export default Ember.Component.extend({
 
   advancedStandingModel: null,
   currentAdvancedStanding: null,
-  currentHSGrade: null,
   currentScholarship: null,
   currentStudent: null,
   currentIndex: null,
+  filter: {studentNumber: "", firstName: "", lastName: ""},
   firstIndex: 0,
   genderModel: null,
   lastIndex: 0,
@@ -41,7 +41,6 @@ export default Ember.Component.extend({
   showAllStudents: true,
   showAdvancedStandingDeleteConfirmation: false,
   showDeleteConfirmation: false,
-  showHSGradeDeleteConfirmation: false,
   showScholarshipDeleteConfirmation: false,
   showFindStudent: false,
   store: Ember.inject.service(),
@@ -67,6 +66,9 @@ export default Ember.Component.extend({
     var self = this;
     this.set('studentDataMessage', "Loading Student Data...");
     this.get('store').query('student', {
+      studentNumber: self.get('filter').studentNumber,
+      firstName: self.get('filter').firstName,
+      lastName: self.get('filter').lastName,
       limit: self.get('limit'),
       offset: self.get('offset')
     }).then(function (records) {
@@ -128,6 +130,9 @@ export default Ember.Component.extend({
     this.set('studentDataMessage', "Loading Student Data...");
     var self = this;
     this.get('store').query('student', {
+      studentNumber: self.get('filter').studentNumber,
+      firstName: self.get('filter').firstName,
+      lastName: self.get('filter').lastName,
       limit: self.get('limit'),
       offset: self.get('offset')
     }).then(function (records) {
@@ -512,32 +517,6 @@ export default Ember.Component.extend({
     saveScholarship(scholarship)
     {
       scholarship.save();
-    },
-
-    addHighSchool()
-    {
-      if (this.get('newHighSchoolName').trim() != "")
-        {
-            this.set('newHighSchoolObj', this.get('store').createRecord('highSchool', {
-                name: this.get('newHighSchoolName').trim()
-            }));
-            this.get('newHighSchoolObj').save();
-            this.set('newHighSchoolName', "");
-        }
-    },
-
-    deleteHSGrade(grade)
-    {
-      this.set('currentHSGrade', grade);
-      this.set('showAdvancedStandingDeleteConfirmation', false);
-      this.set('showHSGradeDeleteConfirmation', true); 
-      this.set('showScholarshipDeleteConfirmation',false);
-      this.set('showDeleteConfirmation',false);
-    },
-
-    saveHSGrade(grade)
-    {
-      grade.save();
     },
 
     switchPage(pageNum)

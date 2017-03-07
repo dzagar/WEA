@@ -19,7 +19,6 @@ router.route('/')
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
-        var course = request.query.course;
         if (request.query.deleteAll)
         {
             console.log("delete All was true");
@@ -37,7 +36,8 @@ router.route('/')
                     } console.log("removed highschools");
                 });
          }
-        else if (course){
+        else if (request.query.course){
+            var course = request.query.course;
             HighSchool.findOne({courses: course}, function(err, highSchool){
                 if (err) response.send(err);
                 else {
@@ -45,26 +45,31 @@ router.route('/')
                 }
             });
         }
-        else{
+        else if (request.query.filter) {
              var Student = request.query.filter;
-            if (!Student) {
-                console.log("no Student passed into hs get");
-                HighSchool.find({schoolName: request.query.schoolName}, function(error, highSchools) {
-                    if (error) {
-                        response.send(error);
-                    } else {
-                        response.json({highSchool: highSchools});
-                    }
-                });
-            } else {
-                HighSchool.find({"student": Student.student}, function (error, students) {
-                    if (error) {
-                        response.send(error);
-                    } else {
-                        response.json({highSchool: students});
-                    }
-                });
-            } 
+             HighSchool.find({"student": Student.student}, function (error, students) {
+                if (error) {
+                    response.send(error);
+                } else {
+                    response.json({highSchool: students});
+                }
+            });
+        } else if (request.query.schoolName) {
+            HighSchool.find({schoolName: request.query.schoolName}, function(error, highSchools) {
+                if (error) {
+                    response.send(error);
+                } else {
+                    response.json({highSchool: highSchools});
+                }
+            });
+        } else {
+            HighSchool.find(function (error, highSchools) {
+                if (error) {
+                    response.send(error);
+                } else {
+                    response.json({highSchool: highSchools});
+                }
+            });
         }
     });
 

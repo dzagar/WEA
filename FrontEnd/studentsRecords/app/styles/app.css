@@ -18,8 +18,7 @@ body > .ember-view {
  * Footer Styles
  */
 .footer {
-  padding-top: 25px;
-  position: absolute;  
+  position: relative;  
   right: 0;
   bottom: 0;
   left: 0;

@@ -1,0 +1,70 @@
+{{#if  isUserFormEditing }}
+  {{#if ANU01IsPermitted }}
+    <div class="ui modal">
+      <div class="header">Create New User Account</div>
+      <div class="content">
+        <div class="ui form">
+          <div class="inline field">
+            <label>First Name</label>
+            {{input value=firstName type="text" placeholder="enter first name" }}
+          </div>
+          <div class="inline field">
+            <label>Last Name</label>
+            {{input value=lastName type="text" placeholder="enter last name"}}
+          </div>
+          <div class="inline field">
+            <label>EMail Address</label>
+            {{input value=email type="text" placeholder="enter email address"}}
+          </div>
+          <div class="inline field">
+            <label>User Name</label>
+            {{input value=userName type="text" placeholder="enter user name"}}
+          </div>
+          <div class="inline field">
+            <label>Password</label>
+            {{input value=password type="password" placeholder="enter password"}}
+          </div>
+          <div class="inline field">
+            <label>Account Expiry Date</label>
+            <input value={{selectedDate}} id="AccountExpiryDate" type="date" onchange={{action 'assignDate'
+                                                                                               value="target.value"}}>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <div class="ui button" {{action "saveAccount"}}>
+          Save
+        </div>
+        <div class="ui button" {{action "cancel"}}>
+          Cancel
+        </div>
+      </div>
+    </div>
+  {{else}}
+
+    <div class="ui basic modal">
+      <div class="ui icon header">
+        <i class="protect icon"></i>
+        Permission Denied
+      </div>
+      <div class="content">
+        <p>This feature (ANU01) is not allowed for your account.</p>
+        <p>Please contact the system administrator for more information.</p>
+      </div>
+      <div class="actions">
+        <div class="ui red basic cancel inverted button"{{action 'cancel'}}>
+          <i class="remove icon"></i>
+          Exit
+        </div>
+      </div>
+    </div>
+
+
+
+  {{/if}}
+{{else}}
+  <button class="ui button" {{action 'addNewAccount'}}>
+    Add New User
+  </button>
+{{/if}}

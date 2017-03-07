@@ -29,7 +29,7 @@ router.route('/')
                         if (error)
                             response.send(error)
                         else
-                            response.send({genders: genders});
+                            response.send({gender: genders});
                     });
                     
                 }

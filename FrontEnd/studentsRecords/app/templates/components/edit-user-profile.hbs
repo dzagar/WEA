@@ -1,0 +1,87 @@
+{{#if (not-eq oudaAuth.getName "Root")}}
+  {{#if EUP01IsPermitted }}
+    <div class="ui segment">
+      <h3 align="center">Modify User Profile
+        for {{getUser}} {{userProfile.firstName}} {{userProfile.lastName}}</h3>
+      <div class="ui form">
+        <div class="inline field">
+          <label class="right">First Name</label>
+          {{input value=userProfile.firstName type="text" placeholder="enter first name" }}
+        </div>
+        <div class="inline field">
+          <label class="right">Last Name</label>
+          {{input value=userProfile.lastName type="text" placeholder="enter last name"}}
+        </div>
+
+        <div class="inline field">
+          <label class="right">EMail Address</label>
+          {{input value=userProfile.email type="text" placeholder="enter email address"}}
+        </div>
+
+        {{#if  isChangingPassword }}
+          <div class="inline field">
+            <label class="right">Old Password</label>
+            {{input value=oldPassword type="password" placeholder="enter old password"}}
+          </div>
+
+          <div class="inline field">
+            <label class="right">New Password</label>
+            {{input value=newPassword1 type="password" placeholder="enter new password"}}
+          </div>
+
+          <div class="inline field">
+            <label class="right">New Password Again</label>
+            {{input value=newPassword2 type="password" placeholder="enter new password again"}}
+          </div>
+
+          <div class="inline field">
+            <p></p>
+            <button class="ui button"  {{action 'cancelChangePassword'}}>Cancel
+              Change Password
+            </button>
+          </div>
+        {{else}}
+          <div class="inline field">
+            <label class="right">Password</label>
+            <button class="ui button"  {{action 'changePassword'}}>Change
+              password
+            </button>
+          </div>
+        {{/if}}
+      </div>
+
+    </div>
+
+    <br><br>
+    <button class="ui button"  {{action 'saveUser'}}>Save</button>
+    <button class="ui button"  {{action 'cancel'}}>Cancel</button>
+
+  {{else}}
+    <div class="ui center aligned raised segment">
+      <div class="ui icon header">
+        <i class="protect icon"></i>
+        Permission Denied
+      </div>
+      <div>
+        <p>This feature (EUP01) is not allowed for your account.</p>
+        <p>Please contact the system administrator for more information.</p>
+      </div>
+
+    </div>
+
+  {{/if}}
+{{else}}
+  <div class="ui center aligned raised segment">
+    <div class="ui icon header">
+      <i class="protect icon"></i>
+      Permission Denied
+    </div>
+    <div>
+      <br>
+      <p>Not available for Root user</p>
+      <br>
+    </div>
+  </div>
+
+{{/if}}
+
