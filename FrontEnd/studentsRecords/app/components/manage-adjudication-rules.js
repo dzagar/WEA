@@ -9,12 +9,18 @@ export default Ember.Component.extend({
     isEditing: false,
     selectedParameterType: null,
     parameterTypes: null,
+    coursesModel: null,
+    selectedCourse: null,
 
     init() {
         this._super(...arguments);
         var self = this;
         this.get('store').findAll('assessment-code').then(function(codes) {
             self.set('assessmentCodeModel', codes);
+        });
+        this.get('store').findAll('course-code').then(function(courses) {
+            self.set('coursesModel', courses);
+            console.log(courses);
         });
         this.set('parameterTypes', [{"value": "YWA", "text": "Yearly weighted average"}, {"value": "CWA", "text": "Cumulative weighted average"}, {"value": "fails", "text": "Number of failed courses"}]);
     },
@@ -84,9 +90,11 @@ export default Ember.Component.extend({
                     Ember.$("#secondParamValue").attr("disabled", false);
                     break;
                 }
+            }            
+        },
+        selectCourse(newCourse) {
+            this.set('selectCourse', newCourse);
 
-            }
-            
         }
     },
     didRender() {

@@ -13,6 +13,15 @@
                     </div>
                 {{/ui-dropdown}}
                 <br>
+                {{#ui-dropdown class="fluid selection" selected=selectedCourse onChange=(action 'selectCourse')}}
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Select Course</div>
+                    <div class="menu">
+                        {{#each coursesModel as |oneCourse|}}
+                            <div class="item" data-value= "{{oneCourse.courseLetter}}{{oneCourse.courseNumber}}" >{{oneCourse.courseLetter}}{{oneCourse.courseNumber}}</div>
+                        {{/each}}
+                    </div>
+                {{/ui-dropdown}}
                 <div class="inline field">
                     <label id="firstParamDesc">Minimum Average</label>
                     {{input id="firstParamValue" value=firstParamValue disabled=true type="text"}}
