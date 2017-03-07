@@ -22,7 +22,7 @@ export default Ember.Component.extend({
             self.set('coursesModel', courses);
             console.log(courses);
         });
-        this.set('parameterTypes', [{"value": "YWA", "text": "Yearly weighted average"}, {"value": "CWA", "text": "Cumulative weighted average"}, {"value": "fails", "text": "Number of failed courses"}]);
+        this.set('parameterTypes', [{"value": "YWA", "text": "Yearly weighted average"}, {"value": "CWA", "text": "Cumulative weighted average"}, {"value": "fails", "text": "Number of failed courses"}, {"value": "course", "text": "Courses completed"}]);
     },
 
     actions: {
@@ -72,6 +72,7 @@ export default Ember.Component.extend({
                     Ember.$("#secondParamDesc").text("Maximum yearly weighted Average: ");
                     Ember.$("#firstParamValue").attr("disabled", false);
                     Ember.$("#secondParamValue").attr("disabled", false);
+                    Ember.$("#firstDropDown").addClass("disabled");
                     break;
                 }
                 case "CWA":
@@ -80,16 +81,27 @@ export default Ember.Component.extend({
                     Ember.$("#secondParamDesc").text("Maximum cumulative weighted Average: ");
                     Ember.$("#firstParamValue").attr("disabled", false);
                     Ember.$("#secondParamValue").attr("disabled", false);
+                    Ember.$("#firstDropDown").addClass("disabled");
                     break;
                 }
                 case "fails":
                 {
                     Ember.$("#firstParamDesc").text("Minimum number of failed courses: ");
-                    Ember.$("#secondParamDesc").text("Minimum number of failed courses: ");
+                    Ember.$("#secondParamDesc").text("Maximum number of failed courses: ");
                     Ember.$("#firstParamValue").attr("disabled", false);
                     Ember.$("#secondParamValue").attr("disabled", false);
+                    Ember.$("#firstDropDown").addClass("disabled");
                     break;
                 }
+                case "course":
+                {
+                    Ember.$("#firstParamDesc").text("Minimum grade in course: ");
+                    Ember.$("#secondParamDesc").text("Maximum grade in course: ");
+                    Ember.$("#firstParamValue").attr("disabled", false);
+                    Ember.$("#secondParamValue").attr("disabled", false);
+                    Ember.$("#firstDropDown").removeClass("disabled");
+                    break;
+                }            
             }            
         },
         selectCourse(newCourse) {

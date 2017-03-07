@@ -63,7 +63,7 @@ router.route('/')
                 }
             });
         } else {
-            HighSchool.find(function (error, highSchools) {
+            HighSchool.find( {}, null, {sort: 'schoolName'}, function (error, highSchools) {
                 if (error) {
                     response.send(error);
                 } else {
