@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var ProgramRecord = require('../models/programRecord');
 var Student = require('../models/student');
-var TermCode = require('../models/termCode');
+var Term = require('../models/term');
 var PlanCode = require('../models/planCode');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
@@ -12,17 +12,17 @@ router.route('/')
     .post(parseUrlencoded, parseJSON, function (request, response) {
         var programRecord = new ProgramRecord(request.body.programRecord);
 
-        TermCode.findById(programRecord.termCode, function (error, termCode) {
+        Term.findById(programRecord.term, function (error, term) {
             if(error) {
                 response.send(error);
             } else {
-                termCode.programRecords.push(programRecord._id);
+                term.programRecords.push(programRecord._id);
 
                 programRecord.save(function(error) {
                     if (error) {
                         response.send(error);
                     } else {
-                        termCode.save(function (error) {
+                        term.save(function (error) {
                             if (error) {
                                 response.send(error);
                             } else {
@@ -53,6 +53,7 @@ router.route('/')
                 }
             });
         }
+        //FIX THIS
         else if (request.query.studentNumber &&request.query.termName &&request.query.programName &&request.query.level &&request.query.load)
         {
             //student.find

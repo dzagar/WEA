@@ -4,6 +4,5 @@ export default DS.Model.extend({
     mark: DS.attr(),
     note: DS.attr(),
     courseCode: DS.belongsTo('course-code'),
-    termCode: DS.belongsTo('term-code')
-
+    term: DS.belongsTo('term')
 });

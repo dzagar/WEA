@@ -11,24 +11,11 @@ var parseJSON = bodyParser.json();
 router.route('/')
 	.post(parseUrlencoded, parseJSON, function (request, response) {
         var termCode = new TermCode(request.body.termCode);
-        Student.findById(termCode.student, function (error, student) {
+        termCode.save(function (error) {
             if (error) {
                 response.send(error);
             } else {
-                student.termCodes.push(termCode._id);
-                termCode.save(function (error) {
-                    if (error) {
-                        response.send(error);
-                    } else {
-                        student.save(function(error) {
-                            if (error) {
-                                response.send(error);
-                            } else {
-                                response.json({termCode: termCode});
-                            }
-                        });
-                    }
-                });
+                response.send();
             }
         });
     })
@@ -50,26 +37,26 @@ router.route('/')
                 }
             });
         }
-        else if (request.query.studentNumber && request.query.name) {
-            Student.find({studentNumber: request.query.studentNumber}, function(error, students) {
-                if (error) {
-                    response.send(error);
-                } else {                    
-                    let student = students[0];    //should only return one record anyway
-                    if(student) {
-                        TermCode.find({name: request.query.name, student: student.id}, function (error, termCode) {
-                            if (error) {
-                                response.send(error);
-                            } else {
-                                response.json({termCode: termCode});
-                            }
-                        });
-                    } else {
-                        response.json({error: "No student was found"});
-                    }
-                }
-            });
-        }
+        // else if (request.query.studentNumber && request.query.name) {
+        //     Student.find({studentNumber: request.query.studentNumber}, function(error, students) {
+        //         if (error) {
+        //             response.send(error);
+        //         } else {                    
+        //             let student = students[0];    //should only return one record anyway
+        //             if(student) {
+        //                 TermCode.find({name: request.query.name, student: student.id}, function (error, termCode) {
+        //                     if (error) {
+        //                         response.send(error);
+        //                     } else {
+        //                         response.json({termCode: termCode});
+        //                     }
+        //                 });
+        //             } else {
+        //                 response.json({error: "No student was found"});
+        //             }
+        //         }
+        //     });
+        // }
         else { 
             TermCode.find(function(error, termCodes) {
                 if (error) {
