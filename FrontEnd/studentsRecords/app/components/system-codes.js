@@ -6,11 +6,14 @@ export default Ember.Component.extend({
     currentCourseCode: null,
     currentGender: null,
     currentHighSchool: null,
+    currentHighSchoolSubject: null,
     currentResidency: null,
     genderModel: null,
     genderOutput: "",
     highSchoolModel: null,
     highSchoolOutput: "",
+    highSchoolSubjectModel: null,
+    highSchoolSubjectOutput: "",
     newCourseCodeCourseLetter: "",
     newCourseCodeCourseNumber: "",
     newCourseCodeName: "",
@@ -19,7 +22,9 @@ export default Ember.Component.extend({
     newGenderName: "",
     newGenderObj: null,
     newHighSchoolName: "",
+    newHighSchoolSubjectName: "",
     newHighSchoolObj: null,
+    newHighSchoolSubjectObj: null,
     newResidencyName: "",
     newResidencyObj: null,
     residencyModel: null,
@@ -27,6 +32,7 @@ export default Ember.Component.extend({
     showCourseCodeDeleteConfirmation: false,
     showDeleteGenderConfirmation: false,
     showDeleteHighSchoolConfirmation: false,
+    showDeleteHighSchoolSubjectConfirmation: false,
     showDeleteResidencyConfirmation: false,
     limit: null,
     offset: null,
@@ -70,6 +76,14 @@ export default Ember.Component.extend({
 
         this.get('store').findAll('high-school').then(function (records) {
             self.set('highSchoolModel', records);
+        });
+
+        this.get('store').findAll('high-school-subject').then(function (records){
+            self.set('highSchoolSubjectModel', records);
+        });
+
+        this.get('store').findAll('high-school-course').then(function (records){
+            self.set('highSchoolCourseModel', records);
         });
 
         this.set('limit', 10);
@@ -164,6 +178,8 @@ export default Ember.Component.extend({
             this.set('showDeleteResidencyConfirmation', false);
             this.set('showCourseCodeConfirmation', false);
             this.set('showDeleteHighSchoolConfirmation',false);
+            this.set('showDeleteHighSchoolSubjectConfirmation',false);
+            this.set('showDeleteHighSchoolCourseConfirmation',false);
         },
 
         addResidency()
@@ -207,6 +223,8 @@ export default Ember.Component.extend({
             this.set('showDeleteResidencyConfirmation', true);
             this.set('showCourseCodeConfirmation', false);
             this.set('showDeleteHighSchoolConfirmation',false);
+            this.set('showDeleteHighSchoolSubjectConfirmation',false);
+            this.set('showDeleteHighSchoolCourseConfirmation',false);
         },
 
         addCourseCode()
@@ -242,6 +260,8 @@ export default Ember.Component.extend({
             this.set('showDeleteResidencyConfirmation', false);
             this.set('showCourseCodeDeleteConfirmation', true);
             this.set('showDeleteHighSchoolConfirmation',false);
+            this.set('showDeleteHighSchoolSubjectConfirmation',false);
+            this.set('showDeleteHighSchoolCourseConfirmation',false);
 
         },
 
@@ -253,7 +273,6 @@ export default Ember.Component.extend({
 
              for(var i=0;i<highSchoolArray.content.length;i++)
             {
-                console.log(highSchoolArray);
                 if(highSchoolName.toUpperCase()==highSchoolArray.content[i]._data.schoolName.toUpperCase())
                 {
                     this.setHighSchoolOutput("The secondary school entered is already created! Please enter a new secondary school name!");
@@ -287,12 +306,61 @@ export default Ember.Component.extend({
             this.set('showDeleteResidencyConfirmation', false);
             this.set('showCourseCodeConfirmation', false);
             this.set('showDeleteHighSchoolConfirmation',true);
+            this.set('showDeleteHighSchoolSubjectConfirmation',false);
+            this.set('showDeleteHighSchoolCourseConfirmation',false);
         },
 
         switchPage(pageNum)
         {
           this.changeOffset((pageNum - 1) * this.get('pageSize'), false);
         },
+
+        addHighSchoolSubject()
+        {
+            var hsSubjectArray=this.get('highSchoolSubjectModel');
+            var highSchoolSubjectName=this.get('newHighSchoolSubjectName');
+            var isHighSchoolSubjectCreated=true;
+
+            for(var i=0;i<hsSubjectArray.content.length;i++)
+            {
+                 if(highSchoolSubjectName.toUpperCase()==hsSubjectArray.content[i]._data.name.toUpperCase())
+                {
+                    this.setHighSchoolSubjectOutput("The high school subject entered is already created! Please enter a new high school subject name!");
+                    isHighSchoolSubjectCreated=false;
+                }
+            }
+
+            if(isHighSchoolSubjectCreated)
+            {
+                this.setHighSchoolSubjectOutput("");
+                if (this.get('newHighSchoolSubjectName').trim() != "")
+                {
+                    this.set('newHighSchoolSubjectObj',this.get('store').createRecord('high-school-subject',{
+                        name: this.get('newHighSchoolSubjectName').trim()
+                    }));
+                    this.get('newHighSchoolSubjectObj').save();
+                    this.set('newHighSchoolSubjectName',"");
+                }
+            }
+        },
+
+        deleteHighSchoolSubject(hsSubject)
+        {
+            this.set('currentHighSchoolSubject',hsSubject);
+            this.set('showDeleteGenderConfirmation', false);
+            this.set('showDeleteResidencyConfirmation', false);
+            this.set('showCourseCodeConfirmation', false);
+            this.set('showDeleteHighSchoolConfirmation',false);
+            this.set('showDeleteHighSchoolCourseConfirmation',false);
+            this.set('showDeleteHighSchoolSubjectConfirmation',true);
+
+        },
+
+        saveHighSchoolSubject(hsSubject)
+        {
+            hsSubject.save();
+        },
+
     }
 
 
