@@ -425,61 +425,6 @@ export default Ember.Component.extend({
 								}
 							}
 							break;
-							case ImportState.TERMCODE:
-							{
-								var residencyCheckerArray = ['NAME'];
-								var residencyArray = [worksheet['A1'].v.toUpperCase()];
-								if (VerificationFunction(residencyCheckerArray,residencyArray)) {
-									var rollBackImport = false;
-									var doneReading = false;
-									var uniqueTermNames = [];
-									var termCodesToImport = [];
-									for (var i = 2; !doneReading; i++)
-									{
-										var termCode = worksheet['A' + i];
-										if (termCode)
-										{
-											var termCodeName = termCode.v;
-											if (uniqueTermNames.includes(termCodeName)){
-												self.pushOutput("Import cancelled. Your excel sheet contains duplicate term code names '" + termCodeName + "'");
-												rollBackImport = true;
-												doneImporting = true;
-											}
-											else{
-												uniqueTermNames.push(termCodeName);
-												var newTermCode = this.get('store').createRecord('term-code', {
-													name: termCodeName
-												});
-												termCodesToImport.push(newTermCode);
-											}
-										}
-										else{
-											doneReading = true;
-										}
-									}
-									//done reading start import
-									if (!rollBackImport)
-									{
-										self.pushOutput("Successful read of file has completed. Beginning import of " + termCodesToImport.length + " termCodes.");
-										var numberOfTermsImported = 0;
-										var doneSaving = false;
-										for (var i = 0; i < termCodesToImport.length; i++)
-										{
-											termCodesToImport[i].save().then(function() {
-												numberOfTermsImported++;
-												if (numberOfTermsImported === termCodesToImport.length && !doneSaving)
-												{
-													doneSaving = true;
-													self.pushOutput("<span style='color:green'>Import Successful!</span>");
-													//Ember.$("#Residencies").addClass("completed");
-													//self.send("continue");
-												}
-											});
-										}
-									}
-								}
-							}
-							break;
 							case ImportState.COURSECODE:
 							var coursecodeCheckerArray = ['COURSELETTER','COURSENUMBER','NAME','UNIT'];
 							var coursecodeArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase()];
@@ -2022,8 +1967,77 @@ export default Ember.Component.extend({
 								}
 							}
 						break;
+						case ImportState.TERMCODE:
+						{
+							var residencyCheckerArray = ['NAME'];
+							var residencyArray = [worksheet['A1'].v.toUpperCase()];
+							if (VerificationFunction(residencyCheckerArray,residencyArray)) {
+								var rollBackImport = false;
+								var doneReading = false;
+								var uniqueTermNames = [];
+								var termCodesToImport = [];
+								for (var i = 2; !doneReading; i++)
+								{
+									var termCode = worksheet['A' + i];
+									if (termCode)
+									{
+										var termCodeName = termCode.v;
+										if (uniqueTermNames.includes(termCodeName)){
+											self.pushOutput("Import cancelled. Your excel sheet contains duplicate term code names '" + termCodeName + "'");
+											rollBackImport = true;
+											doneImporting = true;
+										}
+										else{
+											uniqueTermNames.push(termCodeName);
+											var newTermCode = this.get('store').createRecord('term-code', {
+												name: termCodeName
+											});
+											termCodesToImport.push(newTermCode);
+										}
+									}
+									else{
+										doneReading = true;
+									}
+								}
+								//done reading start import
+								if (!rollBackImport)
+								{
+									self.pushOutput("Successful read of file has completed. Beginning import of " + termCodesToImport.length + " termCodes.");
+									var numberOfTermsImported = 0;
+									var doneSaving = false;
+									for (var i = 0; i < termCodesToImport.length; i++)
+									{
+										termCodesToImport[i].save().then(function() {
+											numberOfTermsImported++;
+											if (numberOfTermsImported === termCodesToImport.length && !doneSaving)
+											{
+												doneSaving = true;
+												self.pushOutput("<span style='color:green'>Import Successful!</span>");
+												//Ember.$("#Residencies").addClass("completed");
+												//self.send("continue");
+											}
+										});
+									}
+								}
+							}
 						}
-						console.log(currentWorkSheet);
+						break;
+						case ImportState.FACULTY:
+						{
+
+						}
+						break;
+						case ImportState.DEPARTMENT:
+						{
+
+						}
+						break;
+						case ImportState.PROGRAMADMIN:
+						{
+
+						}
+						break;
+						}
 					};
 					reader.readAsBinaryString(f);
 				}
