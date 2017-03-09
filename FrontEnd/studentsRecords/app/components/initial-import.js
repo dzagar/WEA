@@ -425,58 +425,61 @@ export default Ember.Component.extend({
 								}
 							}
 							break;
-							/*case ImportState.TERMCODE:
-							var termcodeCheckerArray = ['NAME'];
-							var termcodeArray = [worksheet['A1'].v.toUpperCase()];
-							if (VerificationFunction(termcodeCheckerArray,termcodeArray)) {
-								var rollBackImport = false;
-								var doneImporting = false;
-								var termCodesToImport = [];
-								var uniqueTermCodeNames = [];
-								for (var i = 2; !doneImporting; i++) {
-									//get the next term code name
-									var termCode = worksheet['A' + i];
-									//if the term code exists
-									if (termCode) {
-										//gets the termCodeNameString
-										var termCodeName = termCode.v;
-										//if the term code has already been added
-										if (uniqueTermCodeNames.includes(termCodeName)) {
-											DisplayErrorMessage("Import cancelled. Your excel sheet contains duplicate term code names '" + termCodeName + "'");
-											rollBackImport = true;
-											doneImporting = true;
-										} else { //create new term code object
-											termCodesToImport[i - 2] = self.get('store').createRecord('term-code', 
-											{
-												name: termCodeName
+							case ImportState.TERMCODE:
+							{
+								var residencyCheckerArray = ['NAME'];
+								var residencyArray = [worksheet['A1'].v.toUpperCase()];
+								if (VerificationFunction(residencyCheckerArray,residencyArray)) {
+									var rollBackImport = false;
+									var doneReading = false;
+									var uniqueTermNames = [];
+									var termCodesToImport = [];
+									for (var i = 2; !doneReading; i++)
+									{
+										var termCode = worksheet['A' + i];
+										if (termCode)
+										{
+											var termCodeName = termCode.v;
+											if (uniqueTermNames.includes(termCodeName)){
+												self.pushOutput("Import cancelled. Your excel sheet contains duplicate term code names '" + termCodeName + "'");
+												rollBackImport = true;
+												doneImporting = true;
+											}
+											else{
+												uniqueTermNames.push(termCodeName);
+												var newTermCode = this.get('store').createRecord('term-code', {
+													name: termCodeName
+												});
+												termCodesToImport.push(newTermCode);
+											}
+										}
+										else{
+											doneReading = true;
+										}
+									}
+									//done reading start import
+									if (!rollBackImport)
+									{
+										self.pushOutput("Successful read of file has completed. Beginning import of " + termCodesToImport.length + " termCodes.");
+										var numberOfTermsImported = 0;
+										var doneSaving = false;
+										for (var i = 0; i < termCodesToImport.length; i++)
+										{
+											termCodesToImport[i].save().then(function() {
+												numberOfTermsImported++;
+												if (numberOfTermsImported === termCodesToImport.length && !doneSaving)
+												{
+													doneSaving = true;
+													self.pushOutput("<span style='color:green'>Import Successful!</span>");
+													//Ember.$("#Residencies").addClass("completed");
+													//self.send("continue");
+												}
 											});
-											uniqueTermCodeNames[i-2] = termCodeName;
 										}
-									} else {
-										doneImporting = true;
-										//if no term code was imported
-										if (i == 2) {
-											rollBackImport = true;
-											DisplayErrorMessage("File does not contain any Values...")
-										}
-									}
-								}
-								//delete term codes from the store
-								if (rollBackImport) {
-									for (var i = 0; i < termCodesToImport.length; i++) {
-										termCodesToImport[i].deleteRecord();
-									}
-								} else {
-									self.set('totalProgressVal', termCodesToImport.length*2);
-									self.set('progressVal', termCodesToImport);
-									for (var i = 0; i < termCodesToImport.length; i++) {
-										termCodesToImport[i].save().then(function(){
-											self.set('progressVal', self.get('progressVal')+1);
-										});
 									}
 								}
 							}
-							break;*/
+							break;
 							case ImportState.COURSECODE:
 							var coursecodeCheckerArray = ['COURSELETTER','COURSENUMBER','NAME','UNIT'];
 							var coursecodeArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase()];
