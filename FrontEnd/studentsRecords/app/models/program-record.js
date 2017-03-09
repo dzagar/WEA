@@ -6,5 +6,4 @@ export default DS.Model.extend({
     load: DS.attr(),
     term: DS.belongsTo('term'),
     planCodes: DS.hasMany('plan-code')
-
 });

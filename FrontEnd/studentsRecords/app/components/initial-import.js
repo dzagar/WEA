@@ -1158,107 +1158,111 @@ export default Ember.Component.extend({
 												self.get('store').queryRecord('student', {
 													number: termStudentNumber,
 													findOneStudent: true
-												}).then(function(studentObj) {	
-													var termName = termValues[inMutexCountIndex].termCode;										
-													var newTermToImport = self.get('store').createRecord('term-code', {
+												}).then(function(studentObj) {
+													var termName = termValues[inMutexCountIndex].termCode;
+													self.get('store').queryRecord('term-code', {
 														name: termName
-													});
-													newTermToImport.set('student', studentObj);
-													termsToimport[termsToimport.length] = newTermToImport;
-													newTermToImport.save().then(function() {
-														Ember.set(importUG.objectAt(0), "progress", Ember.get(importUG.objectAt(0), "progress")+1);
-														self.set('importUndergrad', importUG);
-														//wait until all terms have been uploaded
-														savingTermMutex.lock(function() {															
-															if (termValues.length === termsToimport.length && !startedSavingTerms)
-															{
-																startedSavingTerms = true;
-																self.pushOutput("<span style='color:green'>Successfully imported Term Codes!</span>");
-																//now we start saving programs
-
-																var inProgramMutexIndex = 0;
-																var programMutex = Mutex.create();
-																var savingProgramMutex = Mutex.create();
-																var startedSavingPrograms = false;
-																var programsToImport = [];
-																
-																for (var j = 0; j < programValues.length; j++)
+													}).then(function(termCodeObj) {
+														var newTermToImport = self.get('store').createRecord('term');
+														newTermToImport.set('student', studentObj);
+														newTermToImport.set('termCode', termCodeObj);
+														termsToimport[termsToimport.length] = newTermToImport;
+														newTermToImport.save().then(function() {
+															Ember.set(importUG.objectAt(0), "progress", Ember.get(importUG.objectAt(0), "progress")+1);
+															self.set('importUndergrad', importUG);
+															//wait until all terms have been uploaded
+															savingTermMutex.lock(function() {															
+																if (termValues.length === termsToimport.length && !startedSavingTerms)
 																{
-																	programMutex.lock(function() {
-																		var inProgramMutexCountIndex = inProgramMutexIndex++;
-																		var programStudentNumber = programValues[inProgramMutexCountIndex].studentNumber;
-																		var programTerm = programValues[inProgramMutexCountIndex].term;
-																		var programName = programValues[inProgramMutexCountIndex].program;
-																		var programLevel = programValues[inProgramMutexCountIndex].level;
-																		var programLoad = programValues[inProgramMutexCountIndex].load;
-																		self.get('store').queryRecord('term-code', {
-																			studentNumber: programStudentNumber,
-																			name: programTerm
-																		}).then(function(termNameObj) {
-																			var newProgramToImport = self.get('store').createRecord('program-record', {
-																				name: programName,
-																				level: programLevel,
-																				load: programLoad
-																			});
-																			newProgramToImport.set('termCode', termNameObj);
-																			programsToImport[programsToImport.length] = newProgramToImport;
-																			programsToImport[programsToImport.length - 1].save().then(function() {
-																				savingProgramMutex.lock(function() {
-																					if (programsToImport.length === programValues.length && !startedSavingPrograms)
-																					{
-																						startedSavingPrograms = true;
-																						self.pushOutput("<span style='color:green'>Successfully imported Program Records!</span>")
+																	startedSavingTerms = true;
+																	self.pushOutput("<span style='color:green'>Successfully imported Term Codes!</span>");
+																	//now we start saving programs
 
-																						var inPlanMutexIndex = 0;
-																						var planMutex = Mutex.create();
-																						var numberOfPlansSaved = 0;
-																						var donePlanImport = false;
-																						for (var k = 0; k < planValues.length; k++)
+																	var inProgramMutexIndex = 0;
+																	var programMutex = Mutex.create();
+																	var savingProgramMutex = Mutex.create();
+																	var startedSavingPrograms = false;
+																	var programsToImport = [];
+																	
+																	for (var j = 0; j < programValues.length; j++)
+																	{
+																		programMutex.lock(function() {
+																			var inProgramMutexCountIndex = inProgramMutexIndex++;
+																			var programStudentNumber = programValues[inProgramMutexCountIndex].studentNumber;
+																			var programTerm = programValues[inProgramMutexCountIndex].term;
+																			var programName = programValues[inProgramMutexCountIndex].program;
+																			var programLevel = programValues[inProgramMutexCountIndex].level;
+																			var programLoad = programValues[inProgramMutexCountIndex].load;
+																			self.get('store').queryRecord('term', {
+																				studentNumber: programStudentNumber,
+																				name: programTerm
+																			}).then(function(termObj) {
+																				var newProgramToImport = self.get('store').createRecord('program-record', {
+																					name: programName,
+																					level: programLevel,
+																					load: programLoad
+																				});
+																				newProgramToImport.set('termCode', termObj);
+																				programsToImport[programsToImport.length] = newProgramToImport;
+																				programsToImport[programsToImport.length - 1].save().then(function() {
+																					savingProgramMutex.lock(function() {
+																						if (programsToImport.length === programValues.length && !startedSavingPrograms)
 																						{
-																							planMutex.lock(function() {																											
-																								var inPlanMutexCountIndex = inPlanMutexIndex++;
-																								var planStudentNumber = planValues[inPlanMutexCountIndex].studentNumber;
-																								var planTerm = planValues[inPlanMutexCountIndex].term;
-																								var planProgramName = planValues[inPlanMutexCountIndex].program;
-																								var planLevel = planValues[inPlanMutexCountIndex].level;
-																								var planLoad = planValues[inPlanMutexCountIndex].load;
-																								var planName = planValues[inPlanMutexCountIndex].plan;
-																								self.get('store').queryRecord('program-record', {
-																									studentNumber: planStudentNumber,
-																									termName: planTerm,
-																									programName: planProgramName,
-																									level: planLevel,
-																									load: planLoad
-																								}).then(function(programRecordObj) {
-																									var newPlanToImport = self.get('store').createRecord('plan-code', {
-																										name: planName
-																									});
-																									newPlanToImport.set('programRecord', programRecordObj);
-																									newPlanToImport.save().then(function() {
-																										Ember.set(importUG.objectAt(0), "progress", Ember.get(importUG.objectAt(0), "progress")+1);
-																										self.set('importUndergrad', importUG);
-																										numberOfPlansSaved++;
-																										if (numberOfPlansSaved == planValues.length && !donePlanImport)
-																										{																											
-																											donePlanImport = true;
-																											self.pushOutput("<span style='color:green'>Successfully Imported Plan Codes!</span>");
-																											self.pushOutput("<span style='color:green'>All Imports successful!</span>");
-																											Ember.$("#UndergraduateRecordPlans").addClass("completed");
-																											self.send("continue");
-																										}
+																							startedSavingPrograms = true;
+																							self.pushOutput("<span style='color:green'>Successfully imported Program Records!</span>")
+
+																							var inPlanMutexIndex = 0;
+																							var planMutex = Mutex.create();
+																							var numberOfPlansSaved = 0;
+																							var donePlanImport = false;
+																							for (var k = 0; k < planValues.length; k++)
+																							{
+																								planMutex.lock(function() {																											
+																									var inPlanMutexCountIndex = inPlanMutexIndex++;
+																									var planStudentNumber = planValues[inPlanMutexCountIndex].studentNumber;
+																									var planTerm = planValues[inPlanMutexCountIndex].term;
+																									var planProgramName = planValues[inPlanMutexCountIndex].program;
+																									var planLevel = planValues[inPlanMutexCountIndex].level;
+																									var planLoad = planValues[inPlanMutexCountIndex].load;
+																									var planName = planValues[inPlanMutexCountIndex].plan;
+																									self.get('store').queryRecord('program-record', {
+																										studentNumber: planStudentNumber,
+																										termName: planTerm,
+																										programName: planProgramName,
+																										level: planLevel,
+																										load: planLoad
+																									}).then(function(programRecordObj) {
+																										var newPlanToImport = self.get('store').createRecord('plan-code', {
+																											name: planName
+																										});
+																										newPlanToImport.set('programRecord', programRecordObj);
+																										newPlanToImport.save().then(function() {
+																											Ember.set(importUG.objectAt(0), "progress", Ember.get(importUG.objectAt(0), "progress")+1);
+																											self.set('importUndergrad', importUG);
+																											numberOfPlansSaved++;
+																											if (numberOfPlansSaved == planValues.length && !donePlanImport)
+																											{																											
+																												donePlanImport = true;
+																												self.pushOutput("<span style='color:green'>Successfully Imported Plan Codes!</span>");
+																												self.pushOutput("<span style='color:green'>All Imports successful!</span>");
+																												Ember.$("#UndergraduateRecordPlans").addClass("completed");
+																												self.send("continue");
+																											}
+																										});
 																									});
 																								});
-																							});
+																							}
 																						}
-																					}
+																					});
 																				});
 																			});
 																		});
-																	});
+																	}
 																}
-															}
+															});
 														});
-													});
+
+													});		
 												});
 											});
 										
@@ -1385,10 +1389,10 @@ export default Ember.Component.extend({
 												var courseNumber = gradesToImport[inGradeMutexCount].courseNumber;
 												var courseGrade = gradesToImport[inGradeMutexCount].courseGrade;
 												var courseNote = gradesToImport[inGradeMutexCount].courseNote;
-												self.get('store').queryRecord('term-code', {
+												self.get('store').queryRecord('term', {
 													studentNumber: studentNumber,
 													name: termCode
-												}).then(function(termCodeObj) {
+												}).then(function(termObj) {
 													self.get('store').queryRecord('course-code', {
 														courseLetter: courseLetter,
 														courseNumber: courseNumber
@@ -1396,7 +1400,7 @@ export default Ember.Component.extend({
 														var newGrade = self.get('store').createRecord('grade', {
 															mark: courseGrade
 														});
-														newGrade.set('termCode', termCodeObj);
+														newGrade.set('termCode', termObj);
 														newGrade.set('courseCode', courseCodeObj);
 														if (courseNote)
 														{
