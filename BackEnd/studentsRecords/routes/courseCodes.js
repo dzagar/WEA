@@ -47,15 +47,7 @@ router.route('/')
                     response.send({courseCode: courseCode});
                 }
             });
-        } else {
-            //Paginate
-            // CourseCode.find(function(error, courseCodes) {
-            //     if (error) {
-            //         response.send(error);
-            //     } else {
-            //         response.json({courseCodes: courseCodes});
-            //     }
-            // });
+        } else if ((o || o == 0) && l) {
             CourseCode.paginate({}, { offset: o, limit: l }, function(err, courseCodes){
                 if (err) response.send(err);
                 else {
@@ -67,8 +59,17 @@ router.route('/')
                     });
                 }
             });
-
-
+        }
+        else{
+            CourseCode.find({}, null, {sort: 'courseLetter'}, function(error, courseCodes) {
+                if (error)
+                {
+                    response.send(error);
+                }
+                else{
+                    response.send({courseCodes: courseCodes});
+                }
+            });
         }
     });
 
