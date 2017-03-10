@@ -15,5 +15,8 @@ export default DS.Model.extend({
   registrationComments: DS.attr(),
   basisOfAdmission: DS.attr(),
   admissionAverage: DS.attr(),
-  admissionComments: DS.attr()
+  admissionComments: DS.attr(),
+  cumAVG: DS.attr(),
+  cumUnitsPassed: DS.attr(),
+  cumUnitsTotal: DS.attr()
 });

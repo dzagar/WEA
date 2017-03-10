@@ -16,7 +16,10 @@ var studentsSchema = mongoose.Schema(
         scholarships: [{type: mongoose.Schema.ObjectId, ref: 'Scholarship'}],
         terms: [{type: mongoose.Schema.ObjectId, ref: 'Terms'}],
         advancedStandings: [{type: mongoose.Schema.ObjectId, ref: 'AdvancedStandings'}],
-        highSchoolGrades: [{type: mongoose.Schema.ObjectId, ref: 'HighSchoolGrades'}]
+        highSchoolGrades: [{type: mongoose.Schema.ObjectId, ref: 'HighSchoolGrades'}],
+        cumAVG: String,
+        cumUnitsPassed: String,
+        cumUnitsTotal: String
     },
     {
         versionKey: false
