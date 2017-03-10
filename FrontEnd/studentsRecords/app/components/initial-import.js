@@ -2024,7 +2024,60 @@ export default Ember.Component.extend({
 						break;
 						case ImportState.FACULTY:
 						{
+							var facultyCheckerArray = ['NAME'];
+							var facultyArray = [worksheet['A1'].v.toUpperCase()];
+							if (VerificationFunction(facultyCheckerArray,facultyArray)) {
+								self.setOutput("Importing Faculties");
+								var rollBackImport = false;
+								var doneImporting = false;
+								var uniqueFacultyNames = [];
+								for (var i = 2; !doneImporting; i++) {
+									var faculty = worksheet['A' + i];
+									if (faculty) {
+										var facultyName = faculty.v;
+										if (uniqueFacultyNames.includes(facultyName)) {
+											this.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate faculty names '" + facultyName + "'</span>");
+											rollBackImport = true;
+											doneImporting = true;
+										} else {
+											uniqueFacultyNames.push(facultyName);
+										}
+									} else {
+										doneImporting = true;
+										//if no residency was imported
+										if (i == 2) {
+											rollBackImport = true;
+											this.pushOutput("<span style='color:red'>File does not contain any values...</span>")
+										}
+									}
+								}
 
+								if (!rollBackImport) {
+									// var importRes = self.get('importBasic');
+									// Ember.set(importRes.objectAt(1), "total", residenciesToImport.length*2);
+									// Ember.set(importRes.objectAt(1), "progress", residenciesToImport.length);
+									//self.set('importBasic', importRes); 
+									var numberOfFacultiesImported = 0;
+									self.pushOutput("Successful read of file has completed. Beginning import of " + uniqueFacultyNames.length + " faculties.");
+									for (var i = 0; i < uniqueFacultyNames.length; i++) {
+										newFacultyName = uniqueFacultyNames[i];
+										var newFaculty = self.get('store').createRecord('faculty', {
+											name: newFacultyName
+										});
+										newFaculty.save().then(function() {
+											// Ember.set(importRes.objectAt(1), "progress", Ember.get(importRes.objectAt(1), "progress")+1);
+											// self.set('importBasic', importRes);
+											numberOfFacultiesImported++;
+											if (numberOfFacultiesImported === uniqueFacultyNames.length)
+											{
+												self.pushOutput("<span style='color:green'>Import Successful!</span>");
+												// Ember.$("#Residencies").addClass("completed");
+												// self.send("continue");
+											}
+										});
+									}
+								}
+							}
 						}
 						break;
 						case ImportState.DEPARTMENT:
@@ -2033,6 +2086,11 @@ export default Ember.Component.extend({
 						}
 						break;
 						case ImportState.PROGRAMADMIN:
+						{
+
+						}
+						break;
+						case ImportState.STUDENTADJUDICATION:
 						{
 
 						}
