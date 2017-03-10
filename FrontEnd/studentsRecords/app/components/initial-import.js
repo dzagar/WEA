@@ -2284,6 +2284,27 @@ export default Ember.Component.extend({
 						break;
 						case ImportState.STUDENTADJUDICATION:
 						{
+							var studentAdjudicationCheckerArray = ['STUDENTNUMBER','TERM','TERMAVG','TERMUNITSPASSED','TERMUNITSTOTALS','TERMADJUDICATION','SPECIALAVG','CUMAVG','CUMUNITSPASSED','CUMUNITSTOTALS'];
+							var studentAdjudicationArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase(),worksheet['G1'].v.toUpperCase(),worksheet['H1'].v.toUpperCase(),worksheet['I1'].v.toUpperCase(),worksheet['J1'].v.toUpperCase()];
+							if (VerificationFunction(studentAdjudicationCheckerArray, studentAdjudicationArray))
+							{
+								self.pushOutput("Importing student adjudication information");
+								var rollBackImport = false;
+								var doneReading = false;
+								var studentInformation = [];
+
+								for (var i = 2; !doneReading; i++)
+								{
+									var studentNumber = worksheet['A' + i];
+									var term = worksheet['B' + i];
+									var termAVG = worksheet['C' + i];
+									var units = worksheet['D' + i];
+									var courseGrade = worksheet['E' + i];
+									var courseFrom = worksheet['F' + i];
+								}
+							}
+							//update term based on termName and studentNumber
+							//update student based on studentNumber
 
 						}
 						break;
