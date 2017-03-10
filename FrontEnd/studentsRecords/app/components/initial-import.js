@@ -6,17 +6,18 @@ var ImportState = {
 	GENDER : 1,
 	RESIDENCY : 2,
 	COURSECODE : 3,
-	STUDENT : 4,
-	SCHOLARSHIPS : 5,
-	ADVANCEDSTANDINGS : 6,
-	REGISTRATIONCOMMENTS : 7,
-	BASISOFADMISSION : 8,
-	ADMISSIONAVERAGE : 9,
-	ADMISSIONCOMMENTS : 10,
-	HIGHSCHOOL : 11,
-	HSCOURSEINFO : 12,
-	RECORDPLANS : 13,
-	RECORDGRADES : 14,
+	TERMCODE : 4,
+	STUDENT : 5,
+	SCHOLARSHIPS : 6,
+	ADVANCEDSTANDINGS : 7,
+	REGISTRATIONCOMMENTS : 8,
+	BASISOFADMISSION : 9,
+	ADMISSIONAVERAGE : 10,
+	ADMISSIONCOMMENTS : 11,
+	HIGHSCHOOL : 12,
+	HSCOURSEINFO : 13,
+	RECORDPLANS : 14,
+	RECORDGRADES : 15,
 };
 
 function DisplayErrorMessage(message)
@@ -174,6 +175,12 @@ export default Ember.Component.extend({
 				"name": "CourseCodes",
 				"description": "The file must have <b>4</b> headers with the titles <b>'courseLetter'</b>, <b>'courseNumber'</b>, <b>'name'</b>, <b>'unit'</b>."
 			},
+			{
+				"progress": 0,
+				"total": 100,
+				"name": "TermCodes",
+				"description": "The file must have <b>1</b> header with the title <b>'name'</b>."
+			}
 		];
 		var studentCategory = [
 			{
@@ -255,9 +262,9 @@ export default Ember.Component.extend({
 	},
 
 	indexChange: Ember.observer('changingIndex', function(){
-		this.set('index1', this.get('changingIndex') > 12);
-		this.set('index2', this.get('changingIndex') > 10);
-		this.set('index3', this.get('changingIndex') > 3);
+		this.set('index1', this.get('changingIndex') > 13);
+		this.set('index2', this.get('changingIndex') > 11);
+		this.set('index3', this.get('changingIndex') > 4);
 	}),
 
 	clearOutput: function() {
@@ -503,7 +510,6 @@ export default Ember.Component.extend({
 											if (numberOfCodesImported === courseCodesToImport.length)
 											{
 												self.pushOutput("<span style='color:green'>Import Successful!</span>");
-												Ember.$("#btnContinue").removeClass("disabled");
   												Ember.$("#CourseCodes").addClass("completed");
   												self.send("continue");
 											}
@@ -1983,9 +1989,9 @@ export default Ember.Component.extend({
 						break;
 						case ImportState.TERMCODE:
 						{
-							var residencyCheckerArray = ['NAME'];
-							var residencyArray = [worksheet['A1'].v.toUpperCase()];
-							if (VerificationFunction(residencyCheckerArray,residencyArray)) {
+							var termCodeCheckerArray = ['NAME'];
+							var termCodeArray = [worksheet['A1'].v.toUpperCase()];
+							if (VerificationFunction(termCodeCheckerArray,termCodeArray)) {
 								var rollBackImport = false;
 								var doneReading = false;
 								var uniqueTermNames = [];
@@ -2003,7 +2009,7 @@ export default Ember.Component.extend({
 										}
 										else{
 											uniqueTermNames.push(termCodeName);
-											var newTermCode = this.get('store').createRecord('term-code', {
+											var newTermCode = self.get('store').createRecord('term-code', {
 												name: termCodeName
 											});
 											termCodesToImport.push(newTermCode);
@@ -2016,19 +2022,27 @@ export default Ember.Component.extend({
 								//done reading start import
 								if (!rollBackImport)
 								{
+									var importBasic = self.get('importBasic');
+									Ember.set(importBasic.objectAt(3), "total", termCodesToImport.length*2); 
+									Ember.set(importBasic.objectAt(3), "progress", termCodesToImport.length);
+									self.set('importBasic', importBasic);
+
 									self.pushOutput("Successful read of file has completed. Beginning import of " + termCodesToImport.length + " termCodes.");
 									var numberOfTermsImported = 0;
 									var doneSaving = false;
 									for (var i = 0; i < termCodesToImport.length; i++)
 									{
 										termCodesToImport[i].save().then(function() {
+											Ember.set(importBasic.objectAt(3), "progress", Ember.get(importBasic.objectAt(3), "progress")+1);
+											self.set('importBasic', importBasic);
 											numberOfTermsImported++;
 											if (numberOfTermsImported === termCodesToImport.length && !doneSaving)
 											{
 												doneSaving = true;
 												self.pushOutput("<span style='color:green'>Import Successful!</span>");
-												//Ember.$("#Residencies").addClass("completed");
-												//self.send("continue");
+												Ember.$("#btnContinue").removeClass("disabled");
+												Ember.$("#TermCodes").addClass("completed");
+												self.send("continue");
 											}
 										});
 									}
@@ -2294,7 +2308,7 @@ export default Ember.Component.extend({
 				console.log("changed Index to " + this.get('changingIndex'));
 				var self = this;
 				switch(this.get('changingIndex')){
-					case 4:
+					case 5:
 						$("#student").addClass("active");
  						$("#student").removeClass("disabled");
   						$("#basic").removeClass("active");
@@ -2303,7 +2317,7 @@ export default Ember.Component.extend({
   						self.set('importInProgress', false);
   						self.clearOutput();
   						break;
-  					case 11:
+  					case 12:
   						$("#highschool").addClass("active");
 						$("#highschool").removeClass("disabled");
   						$("#student").removeClass("active");
@@ -2312,7 +2326,7 @@ export default Ember.Component.extend({
   						self.set('importInProgress', false);
   						self.clearOutput();
   						break;
-  					case 13:
+  					case 14:
   						$("#undergraduate").addClass("active");
 						$("#undergraduate").removeClass("disabled");
   						$("#highschool").removeClass("active");

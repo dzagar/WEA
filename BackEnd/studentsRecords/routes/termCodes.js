@@ -15,7 +15,7 @@ router.route('/')
             if (error) {
                 response.send(error);
             } else {
-                response.send();
+                response.send({termCode: termCode});
             }
         });
     })
