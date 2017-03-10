@@ -1999,7 +1999,7 @@ export default Ember.Component.extend({
 								for (var i = 2; !doneReading; i++)
 								{
 									var termCode = worksheet['A' + i];
-									if (termCode)
+									if (termCode.v)
 									{
 										var termCodeName = termCode.v;
 										if (uniqueTermNames.includes(termCodeName)){
@@ -2061,7 +2061,7 @@ export default Ember.Component.extend({
 								var uniqueFacultyNames = [];
 								for (var i = 2; !doneImporting; i++) {
 									var faculty = worksheet['A' + i];
-									if (faculty) {
+									if (faculty.v) {
 										var facultyName = faculty.v;
 										if (uniqueFacultyNames.includes(facultyName)) {
 											this.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate faculty names '" + facultyName + "'</span>");
@@ -2120,7 +2120,7 @@ export default Ember.Component.extend({
 								for (var i = 2; !doneImporting; i++) {
 									var department = worksheet['A' + i];
 									var faculty = worksheet['B' + i];
-									if (departmentName && facultyName) {
+									if (department.v && faculty.v) {
 										var facultyName = faculty.v;
 										var departmentName = department.v;
 										if (uniqueDepartments.includes({"facultyName": facultyName, "departmentName": departmentName})) {
@@ -2131,7 +2131,7 @@ export default Ember.Component.extend({
 											uniqueDepartments.push({"facultyName": facultyName, "departmentName": departmentName});
 										}
 									} else {
-										if (faculty || department)
+										if (faculty.v || department.v)
 										{
 											this.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains improperly formatted data on row " + i + "</span>");
 											rollBackImport = true;
@@ -2210,13 +2210,13 @@ export default Ember.Component.extend({
 									var name = worksheet['A' + i];
 									var position = worksheet['B' + i];
 									var department = worksheet['C' + i];
-									if (name && position && department) {
+									if (name.v && position.v && department.v) {
 										var adminName = faculty.v;
 										var positionName = position.v;
 										var departmentName = department.v;
 										PAsToImport.push({"name": adminName, "position": positionName, "department": departmentName});
 									} else {
-										if (name || position || department)
+										if (name.v || position.v || department.v)
 										{
 											this.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains improperly formatted data on row " + i + "</span>");
 											rollBackImport = true;
@@ -2292,20 +2292,60 @@ export default Ember.Component.extend({
 								var rollBackImport = false;
 								var doneReading = false;
 								var studentInformation = [];
-
+								var cumStudentInformation = [];
+								var currentStudentNumber = -1;
+								var currentCumAvg = "";
+								var currentCumUnitsPassed = "";
+								var currentCumUnitsTotal = "";
 								for (var i = 2; !doneReading; i++)
 								{
 									var studentNumber = worksheet['A' + i];
 									var term = worksheet['B' + i];
 									var termAVG = worksheet['C' + i];
-									var units = worksheet['D' + i];
-									var courseGrade = worksheet['E' + i];
-									var courseFrom = worksheet['F' + i];
+									var termUnitsPassed = worksheet['D' + i];
+									var termUnitsTotal = worksheet['E' + i];
+									var cumAVG = worksheet['H' + i];
+									var cumUnitsPassed = worksheet['I' + i];
+									var cumUnitsTotal = worksheet['J' + i];
+
+									if (studentNumber.v && term.v && (termAVG.v || termAVG.v === 0) && (termUnitsPassed.v || termUnitsPassed.v === 0) && (termUnitsTotal.v || termUnitsTotal.v === 0) && (cumAVG.v || cumAVG.v === 0) && (cumUnitsPassed.v || cumUnitsPassed.v === 0) && (cumUnitsTotal.v || cumUnitsTotal.v === 0))
+									{
+										if (checkUniqueTerm(studentInformation, studentNumber.v, term.v))
+										{											
+											self.pushOutput("<span style='color:red'>Import Cancelled. Duplicate values found on row " + i + " for student number " + studentNumber.v + " and term " + term.v + "</span>");
+											rollbackImport = true;
+											doneReading = true;
+										}
+										else{
+											studentInformation.push({"studentNumber": studentNumber.v, "termCode": term.v, "termAVG": termAVG, "termUnitsPassed": termUnitsPassed, "termUnitsTotal": termUnitsTotal});
+											//if we are transitioning students
+											if (currentStudentNumber != studentNumber.v && currentStudentNumber !== -1)
+											{
+												cumStudentInformation.push({"studentNumber": studentNumber.v, "cumAVG": cumAVG, "cumUnitsPassed": cumUnitsPassed.v, "cumUnitsTotal": cumUnitsTotal.v});
+
+											}											
+											currentStudentNumber = studentNumber.v;
+											currentCumAvg = cumAVG.v;
+											currentCumUnitsPassed = cumUnitsPassed.v;
+											currentCumUnitsTotal = currentCumUnitsTotal.v;
+										}
+									}
+									else if (studentNumber.v || term.v || (termAVG.v || termAVG.v === 0) || (termUnitsPassed.v || termUnitsPassed.v === 0) || (termUnitsTotal.v || termUnitsTotal.v === 0) || (cumAVG.v || cumAVG.v === 0) || (cumUnitsPassed.v || cumUnitsPassed.v === 0) || (cumUnitsTotal.v || cumUnitsTotal.v === 0))
+									{
+										self.pushOutput("<span style='color:red'>Imporperly formated data on row " + i + "</span>");
+										rollbackImport = true;
+										doneReading = true;
+									}
+									else{
+										doneReading = true;
+									}
+								}
+								if (!rollBackImport)
+								{
+									//do the import here. Maybe iterate through the cumStudent array by student number then search the full array by student number to minimize hits to DB
+
 								}
 							}
-							//update term based on termName and studentNumber
-							//update student based on studentNumber
-
 						}
 						break;
 						}
