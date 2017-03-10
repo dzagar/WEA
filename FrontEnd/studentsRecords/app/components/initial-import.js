@@ -92,7 +92,7 @@ function checkUniqueCourse(sourceArray, newLetter, newNumber, newUnit)
 {
 	for (var i = 0; i < sourceArray.length; i++)
 	{
-		if (sourceArray[i] && sourceArray[i].letter == newLetter && sourceArray[i] == newNumber)
+		if (sourceArray[i] && sourceArray[i].letter == newLetter && sourceArray[i].number == newNumber)
 		{
 			console.log("found duplicate course" + newLetter + newNumber);
 			
@@ -101,6 +101,18 @@ function checkUniqueCourse(sourceArray, newLetter, newNumber, newUnit)
 		if (isNaN(newUnit))
 		{
 			console.log("ERROR: RECORD " + newLetter + newNumber + "cannot convert unit " + newUnit + " to a number");
+			return false;
+		}
+	}
+	return true;
+}
+function checkUniqueDepartment(sourceArray, newFaculty, newDepartment)
+{
+	for (var i = 0; i < sourceArray.length; i++)
+	{
+		if (sourceArray[i] && sourceArray[i].facultyName == newFaculty && sourceArray[i].departmentName == newDepartment)
+		{
+			console.log("found duplicate department" + newLetter + newNumber);			
 			return false;
 		}
 	}
@@ -1942,6 +1954,7 @@ export default Ember.Component.extend({
 															numberOfCommentsImported++;
 															if (numberOfCommentsImported == uniqueStudents.length - numberOfCommentsWithNoStudent && !doneSavingComments)
 															{
+																doneSavingComments = true;
 																self.pushOutput("<span style='color:green'>Import of Admission Comments successful!</span>");
 																Ember.$("#btnContinue").removeClass("disabled");
 																Ember.$("#AdmissionComments").addClass("completed");
@@ -1954,9 +1967,10 @@ export default Ember.Component.extend({
 														numberOfCommentsWithNoStudent++;
 														if (numberOfCommentsImported == uniqueStudents.length - numberOfCommentsWithNoStudent && !doneSavingComments)
 														{
-																self.pushOutput("<span style='color:green'>Import of Admission Comments successful!</span>");
-																Ember.$("#btnContinue").removeClass("disabled");
-																Ember.$("#admissionComments").addClass("completed");															
+															doneSavingComments = true;
+															self.pushOutput("<span style='color:green'>Import of Admission Comments successful!</span>");
+															Ember.$("#btnContinue").removeClass("disabled");
+															Ember.$("#admissionComments").addClass("completed");															
 														}
 													}
 												});
@@ -2082,12 +2096,176 @@ export default Ember.Component.extend({
 						break;
 						case ImportState.DEPARTMENT:
 						{
+							var departmentCheckerArray = ['NAME', 'FACULTY'];
+							var departmentArray = [worksheet['A1'].v.toUpperCase(), worksheet['A2'].v.toUpperCase()];
+							if (VerificationFunction(departmentCheckerArray,departmentArray)) {
+								self.setOutput("Importing departments");
+								var rollBackImport = false;
+								var doneImporting = false;
+								var uniqueDepartments = [];
+								for (var i = 2; !doneImporting; i++) {
+									var department = worksheet['A' + i];
+									var faculty = worksheet['B' + i];
+									if (departmentName && facultyName) {
+										var facultyName = faculty.v;
+										var departmentName = department.v;
+										if (uniqueDepartments.includes({"facultyName": facultyName, "departmentName": departmentName})) {
+											this.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate department names on row " + i + "</span>");
+											rollBackImport = true;
+											doneImporting = true;
+										} else {
+											uniqueDepartments.push({"facultyName": facultyName, "departmentName": departmentName});
+										}
+									} else {
+										if (faculty || department)
+										{
+											this.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains improperly formatted data on row " + i + "</span>");
+											rollBackImport = true;
+										}
+										else{
+											if (i == 2) {
+												rollBackImport = true;
+												this.pushOutput("<span style='color:red'>File does not contain any values...</span>")
+											}
+										}										
+										doneImporting = true;																				
+									}
+								}
 
+								if (!rollBackImport) {
+									// var importRes = self.get('importBasic');
+									// Ember.set(importRes.objectAt(1), "total", residenciesToImport.length*2);
+									// Ember.set(importRes.objectAt(1), "progress", residenciesToImport.length);
+									//self.set('importBasic', importRes); 
+									var numberOfDepartmentsImported = 0;
+									var numberOfDepartmentsWithoutFaculty = 0;
+									var doneSavingDepartment = false;
+									var inDepartmentMutexIndex = 0;
+									var departmentMutex = Mutex.create();
+									self.pushOutput("Successful read of file has completed. Beginning import of " + uniqueDepartments.length + " departments.");
+									for (var i = 0; i < uniqueDepartments.length; i++) {
+										departmentMutex.lock(function() {
+											var inDepartmentMutexCount = inDepartmentMutexIndex++;
+											var departmentFaculty = uniqueDepartments[inDepartmentMutexCount].facultyName;
+											var departmentName = uniqueDepartments[inDepartmentMutexCount].departmentName;
+											self.get('store').queryRecord('faculty', {name: departmentFaculty}).then(function(facultyObj) {
+												if (facultyObj){
+													var newDepartment = self.get('store').createRecord('department', {
+														name: departmentName
+													});
+													newDepartment.set('faculty', facultyObj);
+													newDepartment.save().then(function() {
+														numberOfDepartmentsImported++;
+														if (numberOfDepartmentsImported == uniqueDepartments.length - numberOfDepartmentsWithoutFaculty && !doneSavingDepartment)
+														{
+															doneSavingDepartment = true;
+															self.pushOutput("<span style='color:green'>Import of Departments successful!</span>");
+															// Ember.$("#btnContinue").removeClass("disabled");
+															// Ember.$("#admissionComments").addClass("completed");														
+														}
+													});
+												}
+												else{
+													numberOfDepartmentsWithoutFaculty++;
+													if (numberOfDepartmentsImported == uniqueDepartments.length - numberOfDepartmentsWithoutFaculty && !doneSavingDepartment)
+													{
+														doneSavingDepartment = true;
+														self.pushOutput("<span style='color:green'>Import of Departments successful!</span>");
+														// Ember.$("#btnContinue").removeClass("disabled");
+														// Ember.$("#admissionComments").addClass("completed");														
+													}
+												}
+											});
+
+										});
+									}
+								}
+							}
 						}
 						break;
 						case ImportState.PROGRAMADMIN:
 						{
+							var PACheckerArray = ['NAME', 'POSITION', 'DEPARTMENT'];
+							var PAArray = [worksheet['A1'].v.toUpperCase(), worksheet['A2'].v.toUpperCase(), worksheet['A3'].v.toUpperCase()];
+							if (VerificationFunction(PACheckerArray, PAArray)) {
+								self.setOutput("Importing program administration information");
+								var rollBackImport = false;
+								var doneImporting = false;
+								var PAsToImport = [];
+								for (var i = 2; !doneImporting; i++) {
+									var name = worksheet['A' + i];
+									var position = worksheet['B' + i];
+									var department = worksheet['C' + i];
+									if (name && position && department) {
+										var adminName = faculty.v;
+										var positionName = position.v;
+										var departmentName = department.v;
+										PAsToImport.push({"name": adminName, "position": positionName, "department": departmentName});
+									} else {
+										if (name || position || department)
+										{
+											this.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains improperly formatted data on row " + i + "</span>");
+											rollBackImport = true;
+										}
+										else if (i == 2) {
+											rollBackImport = true;
+											this.pushOutput("<span style='color:red'>File does not contain any values...</span>")
+										}																				
+										doneImporting = true;																				
+									}
+								}
 
+								if (!rollBackImport) {
+									// var importRes = self.get('importBasic');
+									// Ember.set(importRes.objectAt(1), "total", residenciesToImport.length*2);
+									// Ember.set(importRes.objectAt(1), "progress", residenciesToImport.length);
+									//self.set('importBasic', importRes); 
+									var numberOfPAsImported = 0;
+									var numberOfPAsWithoutDepartment = 0;
+									var doneSavingPAs = false;
+									var inPAMutexIndex = 0;
+									var PAMutex = Mutex.create();
+									self.pushOutput("Successful read of file has completed. Beginning import of " + PAsToImport.length + " departments.");
+									for (var i = 0; i < PAsToImport.length; i++) {
+										PAMutex.lock(function() {
+											var inPAMutexCount = inPAMutexIndex++;
+											var PAName = PAsToImport[inPAMutexCount].name;
+											var PAPosition = PAsToImport[inPAMutexCount].position;
+											var PADepartment = PAsToImport[inPAMutexCount].department;
+											self.get('store').queryRecord('department', {name: PADepartment}).then(function(departmentOBJ) {
+												if (departmentOBJ){
+													var newPA = self.get('store').createRecord('program-administration', {
+														name: PAName,
+														position: PAPosition
+													});
+													newPA.set('department', departmentOBJ);
+													newPA.save().then(function() {
+														numberOfPAsImported++;
+														if (numberOfPAsImported == PAsToImport.length - numberOfPAsWithoutDepartment && !doneSavingPAs)
+														{
+															doneSavingPAs = true;
+															self.pushOutput("<span style='color:green'>Import of program administration information successful!</span>");
+															// Ember.$("#btnContinue").removeClass("disabled");
+															// Ember.$("#admissionComments").addClass("completed");														
+														}
+													});
+												}
+												else{
+													numberOfPAsWithoutDepartment++;
+													if (numberOfPAsImported == PAsToImport.length - numberOfPAsWithoutDepartment && !doneSavingPAs)
+													{
+														doneSavingPAs = true;
+														self.pushOutput("<span style='color:green'>Import of program administration information successful!</span>");
+														// Ember.$("#btnContinue").removeClass("disabled");
+														// Ember.$("#admissionComments").addClass("completed");														
+													}
+												}
+											});
+
+										});
+									}
+								}
+							}
 						}
 						break;
 						case ImportState.STUDENTADJUDICATION:
