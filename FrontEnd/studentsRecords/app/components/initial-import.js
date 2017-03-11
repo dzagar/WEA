@@ -1138,7 +1138,7 @@ export default Ember.Component.extend({
 																if (termValues.length === termsToimport.length && !startedSavingTerms)
 																{
 																	startedSavingTerms = true;
-																	self.pushOutput("<span style='color:green'>Successfully imported Term Codes!</span>");
+																	self.pushOutput("<span style='color:green'>Successfully imported Student Terms!</span>");
 																	//now we start saving programs
 
 																	var inProgramMutexIndex = 0;
@@ -1160,12 +1160,17 @@ export default Ember.Component.extend({
 																				studentNumber: programStudentNumber,
 																				name: programTerm
 																			}).then(function(termObj) {
+																				if (!termObj)
+																				{
+																					console.log(programStudentNumber);
+																					console.log(programTerm);
+																				}
 																				var newProgramToImport = self.get('store').createRecord('program-record', {
 																					name: programName,
 																					level: programLevel,
 																					load: programLoad
 																				});
-																				newProgramToImport.set('termCode', termObj);
+																				newProgramToImport.set('term', termObj);
 																				programsToImport[programsToImport.length] = newProgramToImport;
 																				programsToImport[programsToImport.length - 1].save().then(function() {
 																					savingProgramMutex.lock(function() {
@@ -1999,7 +2004,7 @@ export default Ember.Component.extend({
 								for (var i = 2; !doneReading; i++)
 								{
 									var termCode = worksheet['A' + i];
-									if (termCode.v)
+									if (termCode)
 									{
 										var termCodeName = termCode.v;
 										if (uniqueTermNames.includes(termCodeName)){
@@ -2061,7 +2066,7 @@ export default Ember.Component.extend({
 								var uniqueFacultyNames = [];
 								for (var i = 2; !doneImporting; i++) {
 									var faculty = worksheet['A' + i];
-									if (faculty.v) {
+									if (faculty) {
 										var facultyName = faculty.v;
 										if (uniqueFacultyNames.includes(facultyName)) {
 											this.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate faculty names '" + facultyName + "'</span>");
@@ -2120,7 +2125,7 @@ export default Ember.Component.extend({
 								for (var i = 2; !doneImporting; i++) {
 									var department = worksheet['A' + i];
 									var faculty = worksheet['B' + i];
-									if (department.v && faculty.v) {
+									if (department && faculty) {
 										var facultyName = faculty.v;
 										var departmentName = department.v;
 										if (uniqueDepartments.includes({"facultyName": facultyName, "departmentName": departmentName})) {
@@ -2131,7 +2136,7 @@ export default Ember.Component.extend({
 											uniqueDepartments.push({"facultyName": facultyName, "departmentName": departmentName});
 										}
 									} else {
-										if (faculty.v || department.v)
+										if (faculty || department)
 										{
 											this.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains improperly formatted data on row " + i + "</span>");
 											rollBackImport = true;
@@ -2210,13 +2215,13 @@ export default Ember.Component.extend({
 									var name = worksheet['A' + i];
 									var position = worksheet['B' + i];
 									var department = worksheet['C' + i];
-									if (name.v && position.v && department.v) {
+									if (name && position && department) {
 										var adminName = faculty.v;
 										var positionName = position.v;
 										var departmentName = department.v;
 										PAsToImport.push({"name": adminName, "position": positionName, "department": departmentName});
 									} else {
-										if (name.v || position.v || department.v)
+										if (name || position || department)
 										{
 											this.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains improperly formatted data on row " + i + "</span>");
 											rollBackImport = true;
@@ -2308,7 +2313,7 @@ export default Ember.Component.extend({
 									var cumUnitsPassed = worksheet['I' + i];
 									var cumUnitsTotal = worksheet['J' + i];
 
-									if (studentNumber.v && term.v && (termAVG.v || termAVG.v === 0) && (termUnitsPassed.v || termUnitsPassed.v === 0) && (termUnitsTotal.v || termUnitsTotal.v === 0) && (cumAVG.v || cumAVG.v === 0) && (cumUnitsPassed.v || cumUnitsPassed.v === 0) && (cumUnitsTotal.v || cumUnitsTotal.v === 0))
+									if (studentNumber && term && termAVG && termUnitsPassed && termUnitsTotal && cumAVG && cumUnitsPassed && cumUnitsTotal)
 									{
 										if (checkUniqueTerm(studentInformation, studentNumber.v, term.v))
 										{											
@@ -2330,7 +2335,7 @@ export default Ember.Component.extend({
 											currentCumUnitsTotal = currentCumUnitsTotal.v;
 										}
 									}
-									else if (studentNumber.v || term.v || (termAVG.v || termAVG.v === 0) || (termUnitsPassed.v || termUnitsPassed.v === 0) || (termUnitsTotal.v || termUnitsTotal.v === 0) || (cumAVG.v || cumAVG.v === 0) || (cumUnitsPassed.v || cumUnitsPassed.v === 0) || (cumUnitsTotal.v || cumUnitsTotal.v === 0))
+									else if (studentNumber || term || termAVG || termUnitsPassed || termUnitsTotal || cumAVG || cumUnitsPassed || cumUnitsTotal)
 									{
 										self.pushOutput("<span style='color:red'>Imporperly formated data on row " + i + "</span>");
 										rollbackImport = true;

@@ -57,6 +57,16 @@ router.route('/')
         //         }
         //     });
         // }
+        else if (request.query.name){
+            TermCode.findOne({name: request.query.name}, function(error, termCode) {
+                if (error) {
+                    response.send(error);
+                } else {
+                    response.json({termCode: termCode});
+                }               
+
+            });
+        }
         else { 
             TermCode.find(function(error, termCodes) {
                 if (error) {

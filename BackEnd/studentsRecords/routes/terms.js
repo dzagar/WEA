@@ -16,7 +16,7 @@ router.route('/')
             if (error) {
                 response.send(error);
             } else {
-                response.send();
+                response.send({term:term});
             }
         });
     })
@@ -206,5 +206,3 @@ router.route('/:term_id')
         });
     });
 module.exports = router;
-
-    //Expand later.

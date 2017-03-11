@@ -3,6 +3,7 @@ var router = express.Router();
 var ProgramRecord = require('../models/programRecord');
 var Student = require('../models/student');
 var Term = require('../models/term');
+var TermCode = require('../models/termCode');
 var PlanCode = require('../models/planCode');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
@@ -11,7 +12,6 @@ var parseJSON = bodyParser.json();
 router.route('/')
     .post(parseUrlencoded, parseJSON, function (request, response) {
         var programRecord = new ProgramRecord(request.body.programRecord);
-
         Term.findById(programRecord.term, function (error, term) {
             if(error) {
                 response.send(error);
@@ -62,17 +62,23 @@ router.route('/')
                 {
                     console.log("no student found");
                 }
-                TermCode.findOne({name: request.query.termName, student: student.id}, function(error, term) {
-                    if (!term)
+                TermCode.findOne({name: request.query.termName, student: student.id}, function(error, termCode) {
+                    if (!termCode)
                     {
-                        console.log("no term found");
+                        console.log("no term code found");
                     }
-                    ProgramRecord.findOne({termCode: term, name: request.query.programName, level: request.query.level, load: request.query.load}, function(error, programRecord) {
-                        if (error) {
-                            response.send(error);
-                        } else {
-                            response.send({programRecord: programRecord});
-                        }
+                    Term.findOne({termCode: termCode}, function(error, term) {
+                        if (!term)
+                        {
+                            console.log("no term found")
+                        }                        
+                        ProgramRecord.findOne({term: term, name: request.query.programName, level: request.query.level, load: request.query.load}, function(error, programRecord) {
+                            if (error) {
+                                response.send(error);
+                            } else {
+                                response.send({programRecord: programRecord});
+                            }
+                        });
                     });
                 });
             });
