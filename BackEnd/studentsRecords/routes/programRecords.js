@@ -62,12 +62,13 @@ router.route('/')
                 {
                     console.log("no student found");
                 }
-                TermCode.findOne({name: request.query.termName, student: student.id}, function(error, termCode) {
+                TermCode.findOne({name: request.query.termName}, function(error, termCode) {
                     if (!termCode)
                     {
-                        console.log("no term code found");
+                        console.log("no term code found for " + request.query.termName);
+
                     }
-                    Term.findOne({termCode: termCode}, function(error, term) {
+                    Term.findOne({termCode: termCode, student: student}, function(error, term) {
                         if (!term)
                         {
                             console.log("no term found")
@@ -76,6 +77,12 @@ router.route('/')
                             if (error) {
                                 response.send(error);
                             } else {
+                                if (!programRecord)
+                                {
+                                    console.log("no program record found for name: " + request.query.programName + " and level: " + request.query.level + " and load : " + request.query.load);
+                                    console.log("And term : ");
+                                    console.log(term);
+                                }
                                 response.send({programRecord: programRecord});
                             }
                         });

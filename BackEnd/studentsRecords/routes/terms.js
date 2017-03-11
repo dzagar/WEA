@@ -27,7 +27,7 @@ router.route('/')
                 if (error) {
                     response.send(error);
                 } else {
-                    Term.find(function(error, term) {
+                    Term.find(function(error, terms) {
                         if (error) {
                             response.send(error);
                         } else {

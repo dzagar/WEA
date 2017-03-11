@@ -1160,11 +1160,6 @@ export default Ember.Component.extend({
 																				studentNumber: programStudentNumber,
 																				name: programTerm
 																			}).then(function(termObj) {
-																				if (!termObj)
-																				{
-																					console.log(programStudentNumber);
-																					console.log(programTerm);
-																				}
 																				var newProgramToImport = self.get('store').createRecord('program-record', {
 																					name: programName,
 																					level: programLevel,
@@ -1368,7 +1363,7 @@ export default Ember.Component.extend({
 														var newGrade = self.get('store').createRecord('grade', {
 															mark: courseGrade
 														});
-														newGrade.set('termCode', termObj);
+														newGrade.set('term', termObj);
 														newGrade.set('courseCode', courseCodeObj);
 														if (courseNote)
 														{
