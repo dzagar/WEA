@@ -2342,8 +2342,104 @@ export default Ember.Component.extend({
 								}
 								if (!rollBackImport)
 								{
+									self.pushOutput("Successful read of file has completed. Beginning import of " + cumStudentInformation.length + " student's information and " + studentInformation.length + " student terms information");
 									//do the import here. Maybe iterate through the cumStudent array by student number then search the full array by student number to minimize hits to DB
-
+									for (var i = 0; i < cumStudentInformation; i++)
+									{
+										var numberOfCumStudentsImported = 0;
+										var numberOfCumStudentsWithoutStudent = 0;
+										var numberOfStudentTermsImported = 0;
+										var numberOfStudentTermsWithoutStudent = 0;
+										var doneImportingCumStudents = false;
+										var inCumStudentMutexIndex = 0;
+										var inCumStudentMutex = Mutex.create();
+										inCumStudentMutex.lock(function() {
+											var inCumStudentMutexCount = inCumStudentMutexIndex++;
+											var cumStudentNumber = cumStudentInformation[inCumStudentMutexCount].studentNumber;
+											var cumStudentAVG = cumStudentInformation[inCumStudentMutexCount].cumAVG
+											var cumStudentUnitsPassed = cumStudentInformation[inCumStudentMutexCount].cumUnitsPassed;
+											var cumStudentUnitsTotal = cumStudentInformation[inCumStudentMutexCount].cumUnitsTotal;
+											self.get('store').queryRecord('student', {
+												number: cumStudentNumber,
+												findOneStudent: true
+											}).then(function(studentOBJ) {
+												if (studentOBJ)
+												{
+													studentOBJ.set('cumAVG', cumStudentAVG);
+													studentOBJ.set('cumUnitsPassed', cumStudentUnitsPassed);
+													studentOBJ.set('cumUnitsTotal', cumStudentUnitsTotal);
+													studentOBJ.save().then(function() {
+														numberOfCumStudentsImported++;
+														var studentTermMutex = Mutext.create();
+														var inStudentTermMutextIndex = 0;
+														for (var k = 0; k < studentInformation.length; k++)
+														{
+															if (studentInformation[k].studentNumber = studentOBJ.get('studentNumber'))
+															{
+																//find term
+																studentTermMutex.lock(function() {
+																	var inStudentTermMutextCount = inStudentTermMutextIndex++;
+																	var inTermMutexStudentNumber = studentOBJ.get('studentNumber');
+																	var studentTermCode = studentInformation[inStudentTermMutextCount].termCode;
+																	var studentTermAVG = studentInformation[inStudentTermMutextCount].termAVG;
+																	var studentTermUnitsPassed = studentInformation[inStudentTermMutextCount].termUnitsPassed;
+																	var studentTermUnitsTotal = studentInformation[inStudentTermMutextCount].termUnitsTotal;
+																	self.get('store').queryRecord('term', {
+																		studentNumber: inTermMutexStudentNumber,
+																		termCode: studentTermCode
+																	}).then(function (termOBJ) {
+																		if (termOBJ)
+																		{																			
+																			termOBJ.set('termAVG', studentTermAVG);
+																			termOBJ.set('termUnitsPassed', studentTermUnitsPassed);
+																			termOBJ.set('termUnitsTotal', studentTermUnitsTotal);
+																			termOBJ.save().then(function() {
+																				numberOfStudentTermsImported++;																				
+																				if (cumStudentInformation.length + studentInformation.length == numberOfCumStudentsImported + numberOfCumStudentsWithoutStudent + numberOfStudentTermsImported + numberOfStudentTermsWithoutStudent && !doneImportingCumStudents)
+																				{
+																					doneImportingCumStudents = true;
+																					self.pushOutput("<span style='color:green'>Import of student adjudication information successful!</span>");
+																					// Ember.$("#btnContinue").removeClass("disabled");
+																					// Ember.$("#admissionComments").addClass("completed");	
+																				}
+																			});
+																		}
+																		else{
+																			numberOfStudentTermsWithoutStudent++;																			
+																			if (cumStudentInformation.length + studentInformation.length == numberOfCumStudentsImported + numberOfCumStudentsWithoutStudent + numberOfStudentTermsImported + numberOfStudentTermsWithoutStudent && !doneImportingCumStudents)
+																			{
+																				doneImportingCumStudents = true;
+																				self.pushOutput("<span style='color:green'>Import of student adjudication information successful!</span>");
+																				// Ember.$("#btnContinue").removeClass("disabled");
+																				// Ember.$("#admissionComments").addClass("completed");	
+																			}
+																		}
+																	});
+																});
+															}
+														}
+													});
+												}
+												else{
+													numberOfCumStudentsWithoutStudent++;
+													for (var j = 0; j < studentInformation.length; j++)
+													{
+														if (studentInformation[j].studentNumber = cumStudentNumber)
+														{
+															numberOfStudentTermsWithoutStudent++;
+														}
+													}
+													if (cumStudentInformation.length + studentInformation.length == numberOfCumStudentsImported + numberOfCumStudentsWithoutStudent + numberOfStudentTermsImported + numberOfStudentTermsWithoutStudent && !doneImportingCumStudents)
+													{
+														doneImportingCumStudents = true;
+														self.pushOutput("<span style='color:green'>Import of student adjudication information successful!</span>");
+														// Ember.$("#btnContinue").removeClass("disabled");
+														// Ember.$("#admissionComments").addClass("completed");	
+													}
+												}
+											});
+										});
+									}
 								}
 							}
 						}
