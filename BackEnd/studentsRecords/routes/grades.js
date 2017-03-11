@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Grade = require('../models/grade');
-var TermCode = require('../models/termCode');
+var Term = require('../models/term');
 var CourseCode = require('../models/courseCode');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
@@ -11,11 +11,11 @@ router.route('/')
 	.post(parseUrlencoded, parseJSON, function (request, response) {
         var grade = new Grade(request.body.grade);
 
-        TermCode.findById(grade.termCode, function (error, termCode) {
+        Term.findById(grade.term, function (error, term) {
             if (error) {
                 response.send(error);
             } else {
-                termCode.grades.push(grade._id);
+                term.grades.push(grade._id);
 
                 CourseCode.findById(grade.courseCode, function (error, course) {
                     if (error) {
@@ -27,7 +27,7 @@ router.route('/')
                             if (error) {
                                 response.send(error);
                             } else {
-                                termCode.save(function(error) {
+                                term.save(function(error) {
                                     if (error) {
                                         response.send(error);
                                     } else {
@@ -112,17 +112,17 @@ router.route('/:grade_id')
                 response.send(error);
             } else if (grade) {
 
-                TermCode.findById(grade.termCode, function(error, termCode) {
+                Term.findById(grade.term, function(error, term) {
                     if (error && !failed) {
                         failed = true;
                         response.send(error);
                     } else if (termCode) {
-                        let index = termCodes.grades.indexOf(grade._id);
+                        let index = term.grades.indexOf(grade._id);
                         if (index > -1) {
-                            termCode.grades.splice(index, 1);
+                            term.grades.splice(index, 1);
                         }
 
-                        termCode.save(function (error) {
+                        term.save(function (error) {
                             if (error && !failed) {
                                 failed = true;
                                 response.send(error);

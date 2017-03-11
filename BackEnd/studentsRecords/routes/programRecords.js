@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var ProgramRecord = require('../models/programRecord');
 var Student = require('../models/student');
+var Term = require('../models/term');
 var TermCode = require('../models/termCode');
 var PlanCode = require('../models/planCode');
 var bodyParser = require('body-parser');
@@ -11,18 +12,17 @@ var parseJSON = bodyParser.json();
 router.route('/')
     .post(parseUrlencoded, parseJSON, function (request, response) {
         var programRecord = new ProgramRecord(request.body.programRecord);
-
-        TermCode.findById(programRecord.termCode, function (error, termCode) {
+        Term.findById(programRecord.term, function (error, term) {
             if(error) {
                 response.send(error);
             } else {
-                termCode.programRecords.push(programRecord._id);
+                term.programRecords.push(programRecord._id);
 
                 programRecord.save(function(error) {
                     if (error) {
                         response.send(error);
                     } else {
-                        termCode.save(function (error) {
+                        term.save(function (error) {
                             if (error) {
                                 response.send(error);
                             } else {
@@ -53,6 +53,7 @@ router.route('/')
                 }
             });
         }
+        //FIX THIS
         else if (request.query.studentNumber &&request.query.termName &&request.query.programName &&request.query.level &&request.query.load)
         {
             //student.find
@@ -61,17 +62,30 @@ router.route('/')
                 {
                     console.log("no student found");
                 }
-                TermCode.findOne({name: request.query.termName, student: student.id}, function(error, term) {
-                    if (!term)
+                TermCode.findOne({name: request.query.termName}, function(error, termCode) {
+                    if (!termCode)
                     {
-                        console.log("no term found");
+                        console.log("no term code found for " + request.query.termName);
+
                     }
-                    ProgramRecord.findOne({termCode: term, name: request.query.programName, level: request.query.level, load: request.query.load}, function(error, programRecord) {
-                        if (error) {
-                            response.send(error);
-                        } else {
-                            response.send({programRecord: programRecord});
-                        }
+                    Term.findOne({termCode: termCode, student: student}, function(error, term) {
+                        if (!term)
+                        {
+                            console.log("no term found")
+                        }                        
+                        ProgramRecord.findOne({term: term, name: request.query.programName, level: request.query.level, load: request.query.load}, function(error, programRecord) {
+                            if (error) {
+                                response.send(error);
+                            } else {
+                                if (!programRecord)
+                                {
+                                    console.log("no program record found for name: " + request.query.programName + " and level: " + request.query.level + " and load : " + request.query.load);
+                                    console.log("And term : ");
+                                    console.log(term);
+                                }
+                                response.send({programRecord: programRecord});
+                            }
+                        });
                     });
                 });
             });

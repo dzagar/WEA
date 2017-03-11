@@ -2,9 +2,6 @@ import DS from 'ember-data';
 
 export default DS.Model.extend({
 	name: DS.attr(),
-	grades: DS.hasMany('grade'),
-	programRecords: DS.hasMany('program-record'),
-	student: DS.belongsTo('student')
-	//Program Record
-    // Adjudication
+	terms: DS.hasMany('term'),
+	adjudications: DS.hasMany('adjudication')
 });

@@ -4,7 +4,7 @@ var Student = require('../models/student');
 var Gender = require('../models/gender');
 var Residency = require('../models/residency');
 var Scholarship = require('../models/scholarship');
-var TermCode = require('../models/termCode');
+var Term = require('../models/termCode');
 var AdvancedStanding = require('../models/advancedStanding');
 var HighSchoolGrade = require('../models/highSchoolGrade');
 var bodyParser = require('body-parser');
@@ -171,7 +171,7 @@ router.route('/:student_id')
                 student.admissionAverage = request.body.student.admissionAverage;
                 student.admissionComments = request.body.student.admissionComments;
                 if (request.body.student.scholarships) student.scholarships = request.body.student.scholarships.slice();
-                if (request.body.student.termCodes) student.termCodes = request.body.student.termCodes.slice();
+                if (request.body.student.termCodes) student.terms = request.body.student.terms.slice();
 
                 student.save(function (error) {
                     if (error) {
@@ -287,19 +287,19 @@ router.route('/:student_id')
                     }
                 }
 
-                if (student.termCodes.length > 0) {
-                    let completedTermCodes = 0;
-                    for (let i = 0; i < student.termCodes.length && !failed; i++) {
-                        TermCode.findById(student.termCodes[i], function (error, termCode) {
+                if (student.terms.length > 0) {
+                    let completedTerms = 0;
+                    for (let i = 0; i < student.terms.length && !failed; i++) {
+                        Term.findById(student.terms[i], function (error, term) {
                             if (error && !failed) {
                                 failed = true;
                                 response.send(error);
-                            } else if (termCode) {
-                                termCode.student = null;
+                            } else if (term) {
+                                term.student = null;
 
-                                termCode.save(function (error) {
-                                    completedTermCodes++;
-                                    if (completedTermCodes === student.termCodes.length && !failed) {
+                                term.save(function (error) {
+                                    completedTerms++;
+                                    if (completedTerms === student.terms.length && !failed) {
                                         completed++;
                                         if (completed === 6 && !failed) {
                                             response.json({deleted: student});
@@ -307,8 +307,8 @@ router.route('/:student_id')
                                     }
                                 });
                             } else {
-                                completedTermCodes++;
-                                if (completedTermCodes === student.termCodes.length && !failed) {
+                                completedTerms++;
+                                if (completedTerms === student.terms.length && !failed) {
                                     completed++;
                                     if (completed === 6 && !failed) {
                                         response.json({deleted: student});
