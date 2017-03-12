@@ -4,7 +4,7 @@ var studentsSchema = mongoose.Schema(
     {
         DOB: String,
         firstName: String,
-        gender: {type: mongoose.Schema.ObjectId, ref: 'Gender'},
+        gender: {type: mongoose.Schema.ObjectId, ref: 'gender'},
         lastName: String,
         studentNumber: String,
         photo: String,
@@ -12,11 +12,11 @@ var studentsSchema = mongoose.Schema(
         basisOfAdmission: String,
         admissionAverage: String,
         admissionComments: String,
-        resInfo: {type: mongoose.Schema.ObjectId, ref: 'Residency'},
-        scholarships: [{type: mongoose.Schema.ObjectId, ref: 'Scholarship'}],
-        termCodes: [{type: mongoose.Schema.ObjectId, ref: 'TermCode'}],
-        advancedStandings: [{type: mongoose.Schema.ObjectId, ref: 'AdvancedStandings'}],
-        highSchoolGrades: [{type: mongoose.Schema.ObjectId, ref: 'HighSchoolGrades'}]
+        resInfo: {type: mongoose.Schema.ObjectId, ref: 'residency'},
+        scholarships: [{type: mongoose.Schema.ObjectId, ref: 'scholarship'}],
+        termCodes: [{type: mongoose.Schema.ObjectId, ref: 'termCode'}],
+        advancedStandings: [{type: mongoose.Schema.ObjectId, ref: 'advancedStanding'}],
+        highSchoolGrades: [{type: mongoose.Schema.ObjectId, ref: 'highSchoolGrade'}]
     },
     {
         versionKey: false
