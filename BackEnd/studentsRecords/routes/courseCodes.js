@@ -61,13 +61,13 @@ router.route('/')
             });
         }
         else{
-            CourseCode.find({}, null, {sort: 'courseLetter'}, function(error, courseCodes) {
+            CourseCode.find({}, null, {sort: 'courseLetter'}, function(error, courseCode) {
                 if (error)
                 {
                     response.send(error);
                 }
                 else{
-                    response.send({courseCodes: courseCodes});
+                    response.send({courseCodes: courseCode});
                 }
             });
         }

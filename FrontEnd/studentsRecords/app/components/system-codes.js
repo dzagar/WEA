@@ -12,6 +12,7 @@ export default Ember.Component.extend({
     genderOutput: "",
     highSchoolModel: null,
     highSchoolOutput: "",
+    highSchoolCourseModel:null,
     highSchoolSubjectModel: null,
     highSchoolSubjectOutput: "",
     newCourseCodeCourseLetter: "",
@@ -22,6 +23,7 @@ export default Ember.Component.extend({
     newGenderName: "",
     newGenderObj: null,
     newHighSchoolName: "",
+    newHighSchoolSubjectDescription: "",
     newHighSchoolSubjectName: "",
     newHighSchoolObj: null,
     newHighSchoolSubjectObj: null,
@@ -58,6 +60,10 @@ export default Ember.Component.extend({
 
     setHighSchoolOutput: function(newOutput) {
         this.set('highSchoolOutput',newOutput);
+    },
+    
+    setHighSchoolSubjectOutput: function(newOutput) {
+        this.set('highSchoolSubjectOutput', newOutput);
     },
 
     init() {
@@ -101,6 +107,7 @@ export default Ember.Component.extend({
         this.set('currentGender', null);
         this.set('currentResidency', null);
         this.set('currentHighSchool', null);
+        this.set('currentHighSchoolSubject', null);
     },
 
     courseCodeModel: Ember.observer('offset', function () {
@@ -333,13 +340,15 @@ export default Ember.Component.extend({
             if(isHighSchoolSubjectCreated)
             {
                 this.setHighSchoolSubjectOutput("");
-                if (this.get('newHighSchoolSubjectName').trim() != "")
+                if (this.get('newHighSchoolSubjectName').trim() != "" && this.get('newHighSchoolSubjectDescription').trim() !="")
                 {
                     this.set('newHighSchoolSubjectObj',this.get('store').createRecord('high-school-subject',{
-                        name: this.get('newHighSchoolSubjectName').trim()
+                        name: this.get('newHighSchoolSubjectName').trim(),
+                        description: this.get('newHighSchoolSubjectDescription').trim()
                     }));
                     this.get('newHighSchoolSubjectObj').save();
                     this.set('newHighSchoolSubjectName',"");
+                    this.set('newHighSchoolSubjectDescription',"");
                 }
             }
         },
