@@ -146,7 +146,22 @@ router.route('/:term_id')
                                 failed = true;
                                 response.send(error);
                             } else if (grade) {
+                                grade.term = null;
 
+                                grade.save(function (error) {
+                                    if (error && !failed) {
+                                        failed = true;
+                                        response.send(error);
+                                    } else {
+                                        completedGrades++;
+                                        if (completedGrades === term.grades.length && !failed) {
+                                            completed++;
+                                            if (completed === 4 && !failed) {
+                                                response.json({deleted: term});
+                                            }
+                                        }
+                                    }
+                                });
                             } else {
                                 completedGrades++;
                                 if (completedGrades === term.grades.length && !failed) {
@@ -212,7 +227,10 @@ router.route('/:term_id')
                         failed = true;
                         response.send(error);
                     } else if (termCode) {
-                        termCode.term = null;
+                        let index = termCode.term.indexOf(term._id);
+                        if (index > -1) {
+                            termCode.terms.splice(index, 1);
+                        }
 
                         termCode.save(function (error) {
                             if (error && !failed) {
