@@ -8,6 +8,7 @@ export default Ember.Component.extend({
     currentHighSchool: null,
     currentHighSchoolSubject: null,
     currentResidency: null,
+    currentTermCode: null,
     genderModel: null,
     genderOutput: "",
     highSchoolModel: null,
@@ -29,6 +30,8 @@ export default Ember.Component.extend({
     newHighSchoolSubjectObj: null,
     newResidencyName: "",
     newResidencyObj: null,
+    newTermCodeName: "",
+    newTermCodeObj: null,
     residencyModel: null,
     residencyOutput: "",
     showCourseCodeDeleteConfirmation: false,
@@ -36,6 +39,9 @@ export default Ember.Component.extend({
     showDeleteHighSchoolConfirmation: false,
     showDeleteHighSchoolSubjectConfirmation: false,
     showDeleteResidencyConfirmation: false,
+    showDeleteTermCodeConfirmation: false,
+    termCodeModel: null,
+    termCodeOutput: "",
     limit: null,
     offset: null,
     pageSize: null,
@@ -66,6 +72,10 @@ export default Ember.Component.extend({
         this.set('highSchoolSubjectOutput', newOutput);
     },
 
+    setTermCodeOutput: function(newOutput) {
+        this.set('termCodeOutput', newOutput);
+    },
+
     init() {
         this._super(...arguments);
         var self = this;
@@ -90,6 +100,10 @@ export default Ember.Component.extend({
 
         this.get('store').findAll('high-school-course').then(function (records){
             self.set('highSchoolCourseModel', records);
+        });
+
+        this.get('store').findAll('term-code').then(function (records) {
+            self.set('termCodeModel', records);
         });
 
         this.set('limit', 10);
@@ -187,6 +201,7 @@ export default Ember.Component.extend({
             this.set('showDeleteHighSchoolConfirmation',false);
             this.set('showDeleteHighSchoolSubjectConfirmation',false);
             this.set('showDeleteHighSchoolCourseConfirmation',false);
+            this.set('showDeleteTermCodeConfirmation', false);
         },
 
         addResidency()
@@ -232,6 +247,7 @@ export default Ember.Component.extend({
             this.set('showDeleteHighSchoolConfirmation',false);
             this.set('showDeleteHighSchoolSubjectConfirmation',false);
             this.set('showDeleteHighSchoolCourseConfirmation',false);
+            this.set('showDeleteTermCodeConfirmation', false);
         },
 
         addCourseCode()
@@ -269,6 +285,7 @@ export default Ember.Component.extend({
             this.set('showDeleteHighSchoolConfirmation',false);
             this.set('showDeleteHighSchoolSubjectConfirmation',false);
             this.set('showDeleteHighSchoolCourseConfirmation',false);
+            this.set('showDeleteTermCodeConfirmation', false);
 
         },
 
@@ -315,6 +332,7 @@ export default Ember.Component.extend({
             this.set('showDeleteHighSchoolConfirmation',true);
             this.set('showDeleteHighSchoolSubjectConfirmation',false);
             this.set('showDeleteHighSchoolCourseConfirmation',false);
+            this.set('showDeleteTermCodeConfirmation', false);
         },
 
         switchPage(pageNum)
@@ -362,6 +380,7 @@ export default Ember.Component.extend({
             this.set('showDeleteHighSchoolConfirmation',false);
             this.set('showDeleteHighSchoolCourseConfirmation',false);
             this.set('showDeleteHighSchoolSubjectConfirmation',true);
+            this.set('showDeleteTermCodeConfirmation', false);
 
         },
 
@@ -371,6 +390,52 @@ export default Ember.Component.extend({
             console.log(hsCourseArray);
             hsSubject.save();
         },
+
+        addTermCode()
+        {
+            var termCodeArray=this.get('termCodeModel');
+            var termCodeName=this.get('newTermCodeName');
+            var isTermCode=true;
+
+            for(var i=0;i<termCodeArray.length;i++)
+            {
+                if(termCodeName.toUpperCase()==termCodeArray.content[i]._data.name)
+                {
+                    this.setTermCodeOutput("The term code entered is already created! Please enter a new term code name!");
+                    isTermCode=false;
+                }
+            }
+
+            if(isTermCode)
+            {
+                this.setTermCodeOutput("");
+                if (this.get('newTermCodeName').trim() != "")
+                {
+                    this.set('newTermCodeObj',this.get('store').createRecord('term-code',{
+                        name: this.get('newTermCodeName').trim()
+                    }));
+                    this.get('newTermCodeObj').save();
+                    this.set('newTermCodeName',"");
+                }
+            }
+        },
+
+        deleteTermCode(termCode)
+        {
+            this.set('currentHighSchoolSubject',hsSubject);
+            this.set('showDeleteGenderConfirmation', false);
+            this.set('showDeleteResidencyConfirmation', false);
+            this.set('showCourseCodeConfirmation', false);
+            this.set('showDeleteHighSchoolConfirmation',false);
+            this.set('showDeleteHighSchoolCourseConfirmation',false);
+            this.set('showDeleteHighSchoolSubjectConfirmation',false);
+            this.set('showDeleteTermCodeConfirmation', true);
+        },
+
+        saveTermCode(termCode)
+        {
+            termCode.save();
+        }
 
     }
 

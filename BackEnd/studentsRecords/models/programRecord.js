@@ -5,7 +5,7 @@ var programRecordSchema = mongoose.Schema(
         name: String,
         level: String,
         load: String,
-        termCode: {type: mongoose.Schema.ObjectId, ref: 'termCode'},
+        term: {type: mongoose.Schema.ObjectId, ref: 'term'},
         planCodes: [{type: mongoose.Schema.ObjectId, ref: 'planCode'}]
     },
     {

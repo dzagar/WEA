@@ -4,8 +4,8 @@ var termCodeSchema = mongoose.Schema(
     {
         name: String,
         programRecords: [{type: mongoose.Schema.ObjectId, ref: 'programRecord'}],
-        grades: [{type: mongoose.Schema.ObjectId, ref: 'grade'}],
-        student: {type: mongoose.Schema.ObjectId, ref: 'student'}
+        ajudications: [{type: mongoose.Schema.ObjectId, ref: 'Adjudication'}],
+        terms: [{type: mongoose.Schema.ObjectId, ref:'Term'}]
         // Adjudication
     },
     {
