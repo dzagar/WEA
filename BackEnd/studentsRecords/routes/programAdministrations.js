@@ -15,54 +15,109 @@ router.route('/')
                 if (error) {
                     response.send(error);
                 } else if (department) {
-                    department.programAdministration = null;
+                    department.programAdministrations.push(progAdmin._id);
+
+                    department.save(function(error) {
+                        if (error) {
+                            response.send(error);
+                        } else {
+                            response.json({programAdministration: progAdmin});
+                        }
+                    });
+                } else {
+                    response.json({programAdministration: progAdmin});
                 }
             });
         } else {
-            response.json({ProgramAdministration: progAdmin});
+            response.json({programAdministration: progAdmin});
         }
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
         if (request.query.deleteAll) {
-            Department.remove({}, function (error) {
+            ProgramAdministration.remove({}, function (error) {
                 if (error) {
                     response.send(error);
                 } else {
-                    Department.find(function (error, departments) {
+                    ProgramAdministration.find(function (error, progAdmins) {
                         if (error) {
                             response.send(error);
                         } else {
-                            response.json({departments: departments});
+                            response.json({programAdministrations: progAdmins});
                         }
                     });
                 }
             });
         } else {
-            Department.find(function (error, departments) {
+            ProgramAdministration.find(function (error, progAdmins) {
                 if (error) {
                     response.send(error);
                 } else {
-                    response.json({departments: departments});
+                    response.json({programAdministrations: progAdmins});
                 }
             });
         }
     });
 
-router.route('/:department_id')
+router.route('/:progAdmin_id')
     .get(parseUrlencoded, parseJSON, function (request, response) {
-        Department.findById(request.params.department_id, function (error, department) {
+        ProgramAdministration.findById(request.params.progAdmin_id, function (error, progAdmin) {
             if (error) {
                 response.send(error);
             } else {
-                response.json({department: department});
+                response.json({programAdministration: progAdmin});
             }
         });
     })
     .put(parseUrlencoded, parseJSON, function (request, response) {
-        
+        ProgramAdministration.findById(request.params.progAdmin_id, function (error, progAdmin) {
+            if (progAdmin) {
+                progAdmin.name = request.body.programAdministration.name;
+                progAdmin.position = request.body.programAdministration.position;
+                progAdmin.department = request.body.programAdministration.department;
+
+                progAdmin.save(function (error) {
+                    if (error) {
+                        response.send(error);
+                    } else {
+                        response.json({programAdministration: progAdmin});
+                    }
+                });
+            } else {
+                response.json({programAdministration: progAdmin});
+            }
+        });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
-        
+        ProgramAdministration.findByIdAndRemove(request.params.progAdmin_id, function (error, progAdmin) {
+            if (progAdmin) {
+                if (progAdmin.department) {
+                    Department.findById(progAdmin.department, function (error, department) {
+                        if (error) {
+                            response.send(error);
+                        } else if (department) {
+                            let index = department.programAdministrations.indexOf(progAdmin._id);
+                            if (index > -1) {
+                                department.programAdministrations.splice(index, 1);
+                            }
+
+                            department.save(function (error) {
+                                if (error) {
+                                    response.send(error);
+                                } else {
+                                    response.json({programAdministration: progAdmin});
+                                }
+                            });
+                        } else {
+                            response.json({programAdministration: progAdmin});
+                        }
+                    });
+                } else {
+                    response.json({programAdministration: progAdmin});
+                }
+            } else {
+                response.json({programAdministration: progAdmin});
+            }
+        });
     });
 
 module.exports = router;
