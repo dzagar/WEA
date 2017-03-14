@@ -651,7 +651,7 @@ export default Ember.Component.extend({
 										var numberOfFacultiesImported = 0;
 										self.pushOutput("Successful read of file has completed. Beginning import of " + uniqueFacultyNames.length + " faculties.");
 										for (var i = 0; i < uniqueFacultyNames.length; i++) {
-											newFacultyName = uniqueFacultyNames[i];
+											var newFacultyName = uniqueFacultyNames[i];
 											var newFaculty = self.get('store').createRecord('faculty', {
 												name: newFacultyName
 											});
