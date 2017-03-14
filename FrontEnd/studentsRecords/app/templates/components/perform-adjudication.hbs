@@ -1,5 +1,6 @@
 <div class = "ui welcome container">
 	<div class = "ui text container">
+        <br><br><br>
 		<h2>
 			Please choose a term to ajudicate for:
 		</h2>
@@ -12,18 +13,30 @@
                 {{/each}}
             </select>
         </div>
-<br>
-<br>
-<br>
-<br>
-<br>
-		<div class = "ui padded centered grid container">
+
+        <br><br><br><br><br><br>
+
+        <div class = "ui padded centered grid container">
 			<div class = "five wide column">
 				<div class = "massive ui green button" {{action 'startStudentAdjudication'}}>
 					Start Adjudication Process
 				</div>
 			</div>
 		</div>
+
+        
+            <div class = "ui medium purple progress">
+                <div class="bar">
+                    <div class="progress"></div>
+                </div>
+            </div>
+
+        <br><br><br>
+
+		<div class="ui raised very padded text container segment">
+            <h2 class="ui header">Ajudication Status</h2>
+        </div>
+
 	</div>
 </div>
 
