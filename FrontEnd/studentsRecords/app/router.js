@@ -16,6 +16,7 @@ Router.map(function() {
   this.route('student-records');
   this.route('system-codes');
   this.route('import-files');
+  this.route('adjudication');
 });
 
 export default Router;
