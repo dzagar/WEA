@@ -28,6 +28,7 @@ var logins = require('./routes/logins');
 var roots = require('./routes/roots');
 var assessmentCodes = require('./routes/assessmentCodes');
 var terms = require('./routes/terms');
+var faculties = require('./routes/faculties');
 
 app.use(function (request, response, next) {
     response.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
@@ -61,6 +62,7 @@ app.use('/logins', logins);
 app.use('/roots', roots);
 app.use('/assessmentCodes', assessmentCodes);
 app.use('/terms', terms);
+app.use('/faculties', faculties);
 
 app.listen(3700, function () {
     console.log('Listening on port 3700');
