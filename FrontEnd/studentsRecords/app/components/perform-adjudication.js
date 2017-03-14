@@ -176,10 +176,13 @@ export default Ember.Component.extend({
 
     actions: {
     
-    adjudicate()
-    {
-        
-    }
-
+        adjudicate()
+        {
+            
+        },
+        selectTerm(termCodeID){
+            this.set('currentTerm', termCodeID);
+            console.log(termCodeID);
+        }
     }
 });

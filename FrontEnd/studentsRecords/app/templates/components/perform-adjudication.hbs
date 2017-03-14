@@ -6,19 +6,16 @@
 		</h2>
 
         <div class = "ui padded centered grid container">
-            <select class="ui selection dropdown">
-                <option value="">Term</option>
+            <select class="ui dropdown" onchange={{action 'selectTerm' value='target.value'}}>
                 {{#each termCodeModel as |termCode|}}
-                <option>{{termCode.name}}</option>
+                    <option value={{termCode.id}}>{{termCode.name}}</option>
                 {{/each}}
             </select>
         </div>
 
-        <br><br><br><br><br><br>
-
         <div class = "ui padded centered grid container">
 			<div class = "five wide column">
-				<div class = "massive ui green button" {{action 'startStudentAdjudication'}}>
+				<div class = "ui green button" {{action 'adjudicate'}}>
 					Start Adjudication Process
 				</div>
 			</div>
@@ -31,7 +28,6 @@
                 </div>
             </div>
 
-        <br><br><br>
 
 		<div class="ui raised very padded text container segment">
             <h2 class="ui header">Adjudication Status</h2>
