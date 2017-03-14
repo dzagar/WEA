@@ -7,6 +7,7 @@ export default Ember.Component.extend({
     currentGender: null,
     currentHighSchool: null,
     currentResidency: null,
+    currentTermCode: null,
     genderModel: null,
     genderOutput: "",
     highSchoolModel: null,
@@ -22,12 +23,17 @@ export default Ember.Component.extend({
     newHighSchoolObj: null,
     newResidencyName: "",
     newResidencyObj: null,
+    newTermCodeName: "",
+    newTermCodeObj: null,
     residencyModel: null,
     residencyOutput: "",
     showCourseCodeDeleteConfirmation: false,
     showDeleteGenderConfirmation: false,
     showDeleteHighSchoolConfirmation: false,
     showDeleteResidencyConfirmation: false,
+    showDeleteTermCodeConfirmation: false,
+    termCodeModel: null,
+    termCodeOutput: "",
     limit: null,
     offset: null,
     pageSize: null,
@@ -54,6 +60,10 @@ export default Ember.Component.extend({
         this.set('highSchoolOutput',newOutput);
     },
 
+    setTermCodeOutput: function(newOutput) {
+        this.set('termCodeOutput',newOutput);
+    },
+
     init() {
         this._super(...arguments);
         var self = this;
@@ -70,6 +80,10 @@ export default Ember.Component.extend({
 
         this.get('store').findAll('high-school').then(function (records) {
             self.set('highSchoolModel', records);
+        });
+        
+        this.get('store').findAll('term-code').then(function(records) {
+            self.set('termCodeModel', records);
         });
 
         this.set('limit', 10);
@@ -293,6 +307,8 @@ export default Ember.Component.extend({
         {
           this.changeOffset((pageNum - 1) * this.get('pageSize'), false);
         },
+
+        
     }
 
 
