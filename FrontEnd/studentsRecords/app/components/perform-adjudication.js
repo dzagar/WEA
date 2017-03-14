@@ -82,11 +82,36 @@ export default Ember.Component.extend({
         }
     },
     performAdjudication: function() {
-        var students = this.get('studentsToAdjudicate');
-        var categories = this.get('adjudicationCategories');
+        
+        var studentAdjudicationInfo = [];
+        var currentTerm = this.get('currentTerm');
         var self = this;
         //loop all students
-        students.forEach(function(student) {
+        this.get('studentsToAdjudicate').forEach(function(student, index) {
+            studentAdjudicationInfo.push({
+                "ObjID": student.get('id'), 
+                "cumAVG": student.get('cumAVG'),
+                "cumUnitsTotal": student.get('cumUnitsTotal'),
+                "cumUnitsPassed": student.get('cumUnitsPassed'),
+                "termAVG": "",
+                "termUnitsTotal": "",
+                "termUnitsPassed": "",
+                "coursesCompleted": []
+            });
+            self.get('store').queryRecord('term', {
+                student: student,
+                termCode: currentTerm
+            }).then(function(term) {
+                studentAdjudicationInfo[index].termAVG = term.get('termAVG');
+                studentAdjudicationInfo[index].termUnitsTotal = term.get('termUnitsTotal');
+                studentAdjudicationInfo[index].termUnitsPassed = term.get('termUnitsPassed');
+                self.get('store').query('grade', {
+                    term: term
+                }).then(function(grades) {
+                    
+
+                });
+            });
             //loop each category
             categories.forEach(function (category) {
                 //get all assessments for each category
