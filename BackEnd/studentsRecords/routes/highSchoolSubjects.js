@@ -55,7 +55,7 @@ router.route('/')
                 }
             });  
         } else {
-            HighSchoolSubject.find({}, null, {sort: 'name'}, function (error, subjects) {
+            HighSchoolSubject.find({}, null, {sort: 'name'},function (error, subjects) {
                 if (error) {
                     response.send(error);
                 } else {
@@ -76,7 +76,7 @@ router.route('/:highSchoolSubject_id')
         });
     })
     .put(parseUrlencoded, parseJSON, function (request, response) {
-        HighSchoolSubject.findById(request.params.highSchool_id, function(error, highSchoolSubject) {
+        HighSchoolSubject.findById(request.params.highSchoolSubject_id, function(error, highSchoolSubject) {
             if (error) {
                 response.send(error);
             } else {

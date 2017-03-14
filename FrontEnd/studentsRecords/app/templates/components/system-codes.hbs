@@ -546,12 +546,19 @@
                   {{input type="text" value = highSchoolSubject.description}}
                 </div>
             </td>
+
+            <td>
+              <th>Subject Level</th>
+                <div class="ui fluid input">
+                  {{input type="text" value = highSchoolSubject.courses.unit}}
+                </div>
+            </td>
           
             <td>
                 <div class="ui inverted buttons">
-                    <button class="ui blue inverted button" {{action "saveHighSchoolCourse" highSchoolSubject highSchoolCourse}}>Save</button>
+                    <button class="ui blue inverted button" {{action "saveHighSchoolSubject" highSchoolSubject}}>Save</button>
                     <div class="divider"/>
-                    <button class="ui red inverted button" {{action "deleteHighSchoolCourse" highSchoolSubject highSchoolCourse}}>Delete</button>
+                    <button class="ui red inverted button" {{action "deleteHighSchoolSubject" highSchoolSubject}}>Delete</button>
                 </div>
             </td>
         </tr>

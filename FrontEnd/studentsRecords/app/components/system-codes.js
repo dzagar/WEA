@@ -367,6 +367,8 @@ export default Ember.Component.extend({
 
         saveHighSchoolSubject(hsSubject)
         {
+            var hsCourseArray=this.get('highSchoolCourseModel');
+            console.log(hsCourseArray);
             hsSubject.save();
         },
 

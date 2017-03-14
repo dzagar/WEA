@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 var userRoleSchema = mongoose.Schema(
     {
         dateAssigned: Date,
-        user: {type: mongoose.Schema.ObjectId, ref: ('users')},
+        user: {type: mongoose.Schema.ObjectId, ref: ('user')},
         role: {type: mongoose.Schema.ObjectId, ref: ('roleCode')}
     }
 );
