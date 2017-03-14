@@ -308,6 +308,53 @@ export default Ember.Component.extend({
           this.changeOffset((pageNum - 1) * this.get('pageSize'), false);
         },
 
+        addTermCode()
+        {
+            var termCodeArray=this.get('termCodeModel');
+            var termCodeName=this.get('newTermCodeName');
+            var isTermCode=true;
+
+            for(var i=0;i<termCodeArray.length;i++)
+            {
+                if(termCodeName.toUpperCase()==termCodeArray.content[i]._data.name)
+                {
+                    this.setTermCodeOutput("The term code entered is already created! Please enter a new term code name!");
+                    isTermCode=false;
+                }
+            }
+
+            if(isTermCode)
+            {
+                this.setTermCodeOutput("");
+                if (this.get('newTermCodeName').trim() != "")
+                {
+                    this.set('newTermCodeObj',this.get('store').createRecord('term-code',{
+                        name: this.get('newTermCodeName').trim()
+                    }));
+                    this.get('newTermCodeObj').save();
+                    this.set('newTermCodeName',"");
+                }
+            }
+        },
+
+        deleteTermCode(termCode)
+        {
+            this.set('currentHighSchoolSubject',hsSubject);
+            this.set('showDeleteGenderConfirmation', false);
+            this.set('showDeleteResidencyConfirmation', false);
+            this.set('showCourseCodeConfirmation', false);
+            this.set('showDeleteHighSchoolConfirmation',false);
+            this.set('showDeleteHighSchoolCourseConfirmation',false);
+            this.set('showDeleteHighSchoolSubjectConfirmation',false);
+            this.set('showDeleteTermCodeConfirmation', true);
+        },
+
+        saveTermCode(termCode)
+        {
+            termCode.save();
+        }
+
+
         
     }
 
