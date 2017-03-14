@@ -4,7 +4,7 @@ var programAdministrationSchema = mongoose.Schema(
     {
         name: String,
         position: String,
-        department: {type: mongoose.Schema.ObjectId, ref: 'department'}
+        department: {type: mongoose.Schema.ObjectId, ref: 'departments'}
     },
     {
         versionKey: false

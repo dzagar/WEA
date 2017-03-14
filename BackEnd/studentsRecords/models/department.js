@@ -3,9 +3,9 @@ var mongoose = require('mongoose');
 var departmentSchema = mongoose.Schema(
     {
         name: String,
-        assessmentCodes: [{type: mongoose.Schema.ObjectId, ref: 'assessmentCode'}],
-        faculty: {type: mongoose.Schema.ObjectId, ref: 'faculty'},
-        programAdministrationss: {type: mongoose.Schema.ObjectId, ref: 'programAdministration'}
+        assessmentCodes: [{type: mongoose.Schema.ObjectId, ref: 'AssessmentCodes'}],
+        faculty: {type: mongoose.Schema.ObjectId, ref: 'Faculties'},
+        programAdministrationss: {type: mongoose.Schema.ObjectId, ref: 'ProgramAdministrationss'}
     },
     {
         
