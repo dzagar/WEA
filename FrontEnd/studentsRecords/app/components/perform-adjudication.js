@@ -161,6 +161,9 @@ export default Ember.Component.extend({
 
     init()
     {
+        this._super(...arguments);
+        var self=this;
+
         this.get('store').findAll('student').then(function (records) {
             self.set('studentModel', records);
         });    
@@ -173,19 +176,9 @@ export default Ember.Component.extend({
 
     actions: {
     
-    selectStudent()
+    adjudicate()
     {
-
-    },
-
-    selectTerm()
-    {
-
-    },
-
-    selectCategory()
-    {
-
+        
     }
 
     }

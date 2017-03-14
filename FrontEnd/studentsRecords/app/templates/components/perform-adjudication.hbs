@@ -1,21 +1,21 @@
-<div class="ui container">
-<div class="ui selection dropdown" onchange={{action 'selectStudent' value='target.value'}}>
-    <input type="hidden" name="Students">
-    <i class="dropdown icon"></i>
-    <div class="default text">Students</div>
-</div>
 
-<div class="ui selection dropdown" onchange={{action 'selectTerm' value='target.value'}}>
-    <input type="hidden" name="Term">
-    <i class="dropdown icon"></i>
-    <div class="default text">Term</div>
-</div>
+    <select class="ui selection dropdown">
+        <option value="">Student</option>
+        {{#each studentModel as |students|}}
+        <option>{{students.firstName}}{{students.lastName}}</option>
+        {{/each}}
+    </select>
 
-<div class="ui selection dropdown" onchange={{action 'selectCategory' value='target.value'}}>
-    <input type="hidden" name="Category">
-    <i class="dropdown icon"></i>
-    <div class="default text">Category</div>
-</div>
+    <select class="ui selection dropdown">
+        <option value="">Term</option>
+        {{#each termCodeModel as |termCode|}}
+        <option>{{termCode.name}}</option>
+        {{/each}}
+    </select>
+
+    <select class="ui selection dropdown">
+        <option value="">Category</option>
+    </select>
     
-<button class="ui inverted purple button">Ajudicate</button>
-</div>
+    <button class="ui inverted purple button" {{action "adjudicate"}}>Ajudicate</button>
+
