@@ -15,34 +15,44 @@ router.route('/')
                 if (error) {
                     response.send(error);
                 } else if (department) {
-                    department.programAdministration = null;
+                    department.programAdministrations.push(progAdmin._id);
+
+                    department.save(function(error) {
+                        if (error) {
+                            response.send(error);
+                        } else {
+                            response.json({programAdministration: progAdmin});
+                        }
+                    });
+                } else {
+                    response.json({programAdministration: progAdmin});
                 }
             });
         } else {
-            response.json({ProgramAdministration: progAdmin});
+            response.json({programAdministration: progAdmin});
         }
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
         if (request.query.deleteAll) {
-            Department.remove({}, function (error) {
+            ProgramAdministration.remove({}, function (error) {
                 if (error) {
                     response.send(error);
                 } else {
-                    Department.find(function (error, departments) {
+                    ProgramAdministration.find(function (error, progAdmins) {
                         if (error) {
                             response.send(error);
                         } else {
-                            response.json({departments: departments});
+                            response.json({programAdministrations: progAdmins});
                         }
                     });
                 }
             });
         } else {
-            Department.find(function (error, departments) {
+            ProgramAdministration.find(function (error, progAdmins) {
                 if (error) {
                     response.send(error);
                 } else {
-                    response.json({departments: departments});
+                    response.json({programAdministrations: progAdmins});
                 }
             });
         }
