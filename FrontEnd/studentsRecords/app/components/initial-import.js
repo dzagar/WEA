@@ -776,7 +776,7 @@ export default Ember.Component.extend({
 										var position = worksheet['B' + i];
 										var department = worksheet['C' + i];
 										if (name && position && department) {
-											var adminName = faculty.v;
+											var adminName = name.v;
 											var positionName = position.v;
 											var departmentName = department.v;
 											PAsToImport.push({"name": adminName, "position": positionName, "department": departmentName});
