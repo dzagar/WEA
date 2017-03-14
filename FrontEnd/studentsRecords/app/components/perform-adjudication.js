@@ -100,27 +100,29 @@ export default Ember.Component.extend({
                 "termUnitsPassed": "",
                 "coursesCompleted": []
             });
+            var studentID = student.get('id');
+            var termCodeID = currentTerm;
             self.get('store').queryRecord('term', {
-                student: student,
-                termCode: currentTerm
+                student: studentID,
+                termCode: termCodeID
             }).then(function(term) {
                 studentAdjudicationInfo[studentIndex].termAVG = term.get('termAVG');
                 studentAdjudicationInfo[studentIndex].termUnitsTotal = term.get('termUnitsTotal');
                 studentAdjudicationInfo[studentIndex].termUnitsPassed = term.get('termUnitsPassed');
+                var termID = term.get('id');
                 self.get('store').query('grade', {
-                    term: term
+                    term: termID
                 }).then(function(grades) {
                     grades.forEach(function(grade, gradeIndex) {
                         var mark = grade.get('mark');
+                        var courseCodeID = grade.get('courseCode').get('id');
                         studentAdjudicationInfo[studentIndex].coursesCompleted.push({
                             "courseNumber": "",
                             "courseLetter": "",
                             "unit": "",
                             "mark": mark                            
                         });
-                        self.get('store').queryRecord('courseCode', {
-                            grade: grade
-                        }).then(function (courseCode) {
+                        self.get('store').queryRecord('courseCode', {courseCodeID: courseCodeID}).then(function (courseCode) {
                             var courseLetter = courseCode.get('courseLetter');
                             var courseNumber = courseCode.get('courseNumber');
                             var unit = courseCode.get('unit');
@@ -130,32 +132,7 @@ export default Ember.Component.extend({
                         });
                     });
                 });
-            });
-            //loop each category
-            categories.forEach(function (category) {
-                //get all assessments for each category
-                self.get('store').query('assessment-code', {category: category}).then(function(assessments) {
-                    //loop through assessments until student qualifies for one of them.
-                    assessments.some(function(assessment, index) {
-                        //VERY ROUGH CODE THAT MIGHT EVENTUALLY WORK
-                        // if (self.send(evaluateStudent, student, assessment, currentTerm)){
-                        //     var currentDate = "15-03-2017";//CHANGE THIS YO PLEASE
-                        //     console.log("PLEASE REMEMBER TO CHANGE THIS I WILL BE SO SAD IF WE FORGET");
-                        //     var newAdjudication = self.createRecord('adjudication', {
-                        //         date: currentDate
-                        //     });
-                        //     newAdjudication.set('assessmentCode', assessment);
-                        //     newAdjudication.set('student', student);
-                        //     newAdjudication.set('term', currentTerm);
-                        //     newAdjudication.save();
-                        //     return true;
-                        // }
-                        // else{
-                        //     return false;
-                        // }
-                    });
-                });
-            });
+           });
         });
     },
 
@@ -164,8 +141,10 @@ export default Ember.Component.extend({
         this._super(...arguments);
         var self=this;
 
-        this.get('store').findAll('student').then(function (records) {
+        //CHANGE THIS SO FAST
+        this.get('store').query('student', {offest: 0, limit: 100}).then(function (records) {
             self.set('studentModel', records);
+            self.set('studentsToAdjudicate', records);
         });    
 
         this.get('store').findAll('term-code').then(function (records) {
@@ -178,7 +157,7 @@ export default Ember.Component.extend({
     
         adjudicate()
         {
-            
+            this.performAdjudication();           
         },
         selectTerm(termCodeID){
             this.set('currentTerm', termCodeID);

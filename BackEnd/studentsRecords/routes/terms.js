@@ -79,6 +79,17 @@ router.route('/')
                 }
             });
         }
+        else if (request.query.student && request.query.termCode)
+        {
+            Term.findOne({student: request.query.student, termCode: request.query.termCode}, function(error, term) {
+                if (error){
+                    response.send(error);
+                }
+                else{
+                    response.send({term:term});
+                }
+            });
+        }
         else {
             Term.find(function(error, term) {
                 if (error) {
