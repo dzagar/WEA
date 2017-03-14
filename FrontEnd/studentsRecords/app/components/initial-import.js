@@ -26,6 +26,7 @@ var ImportState = {
 	//undergraduate
 	RECORDPLANS : 17,
 	RECORDGRADES : 18,
+	STUDENTADJUDICATION : 19,
 };
 
 function DisplayErrorMessage(message)
@@ -274,14 +275,20 @@ export default Ember.Component.extend({
 			{
 				"progress": 0,
 				"total": 100,
-				"name": "Undergraduate Record Plans",
+				"name": "UndergraduateRecordPlans",
 				"description": "The file must have <b>6</b> headers with the titles <b>'studentNumber'</b>, <b>'term'</b>, <b>'program'</b>, <b>'level'</b>, <b>'load'</b>, <b>'plan'</b>."
 			},
 			{
 				"progress": 0,
 				"total": 100,
-				"name": "Undergraduate Record Courses",
+				"name": "UndergraduateRecordCourses",
 				"description": "The file must have <b>7</b> headers with the titles <b>'studentNumber'</b>, <b>'term'</b>, <b>'courseLetter'</b>, <b>'courseNumber'</b>, <b>'section'</b>, <b>'grade'</b>, <b>'note'</b>."
+			},
+			{
+				"progress": 0,
+				"total": 100,
+				"name": "UndergraduateRecordAdjudications",
+				"description": "The file must have <b>10</b> headers with the titles <b>'studentNumber'</b>, <b>'term'</b>, <b>'termAVG'</b>, <b>'termUnitsPassed'</b>, <b>'termUnitsTotals'</b>, <b>'termAdjudication'</b>, <b>'specialAVG'</b>, <b>'cumAVG'</b>, <b>'cumUnitsPassed'</b>, <b>'cumUnitsTotals'</b>."
 			}
 			
 		];
@@ -2521,7 +2528,7 @@ export default Ember.Component.extend({
   						self.set('importInProgress', false);
   						self.clearOutput();
   						break;
-  					case 12:
+  					case 15:
   						$("#highschool").addClass("active");
 						$("#highschool").removeClass("disabled");
   						$("#student").removeClass("active");
@@ -2530,7 +2537,7 @@ export default Ember.Component.extend({
   						self.set('importInProgress', false);
   						self.clearOutput();
   						break;
-  					case 14:
+  					case 17:
   						$("#undergraduate").addClass("active");
 						$("#undergraduate").removeClass("disabled");
   						$("#highschool").removeClass("active");
