@@ -10,15 +10,15 @@ var parseJSON = bodyParser.json();
 router.route('/')
     .post(parseUrlencoded, parseJSON, function (request, response) {
         var department = new Department(request.body.department);
-        if (faculty.departments && faculty.departments.length > 0) {
-            let completeDepts = 0;
+        if (department.assessmentCodes && department.assessmentCodes.length > 0) {
+            let completeAC = 0;
             let failed = false;
-            for (let i = 0; i < faculty.departments.length && !failed; i++) {
-                Department.findById(faculty.departments[i], function (error, department) {
+            for (let i = 0; i < department.assessmentCodes.length && !failed; i++) {
+                AssessmentCodes.findById(department.assessmentCodes[i], function (error, assessmentCode) {
                     if (error && !failed) {
                         failed = true;
                         response.send(error);
-                    } else if (department) {
+                    } else if (assessmentCode) {
                         department.faculty = faculty._id;
 
                         department.save(function(error) {
