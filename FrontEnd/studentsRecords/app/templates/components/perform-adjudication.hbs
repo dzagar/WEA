@@ -1,21 +1,40 @@
+<div class = "ui welcome container">
+	<div class = "ui text container">
+		<h2>
+			Please choose a term to ajudicate for:
+		</h2>
 
-    <select class="ui selection dropdown">
-        <option value="">Student</option>
-        {{#each studentModel as |students|}}
-        <option>{{students.firstName}}{{students.lastName}}</option>
-        {{/each}}
-    </select>
+        <div class = "ui padded centered grid container">
+            <select class="ui selection dropdown">
+                <option value="">Term</option>
+                {{#each termCodeModel as |termCode|}}
+                <option>{{termCode.name}}</option>
+                {{/each}}
+            </select>
+        </div>
+<br>
+<br>
+<br>
+<br>
+<br>
+		<div class = "ui padded centered grid container">
+			<div class = "five wide column">
+				<div class = "massive ui green button" {{action 'startStudentAdjudication'}}>
+					Start Adjudication Process
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
-    <select class="ui selection dropdown">
-        <option value="">Term</option>
-        {{#each termCodeModel as |termCode|}}
-        <option>{{termCode.name}}</option>
-        {{/each}}
-    </select>
-
-    <select class="ui selection dropdown">
-        <option value="">Category</option>
-    </select>
-    
-    <button class="ui inverted purple button" {{action "adjudicate"}}>Ajudicate</button>
-
+{{!--<div class="ui grid">
+    <div class="four wide column">
+        <select class="ui fluid search dropdown" multiple="">
+         <option value="">Student</option>
+            {{#each studentModel as |students|}}
+            <option>{{students.firstName}}{{students.lastName}}</option>
+            {{/each}}
+        </select>
+    </div>  
+</div>
+--}}
