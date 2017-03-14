@@ -11,6 +11,10 @@
     {{delete-course-code courseCode = currentCourseCode showWindow = showCourseCodeDeleteConfirmation}}
     {{else if showDeleteHighSchoolConfirmation}}
     {{delete-high-school highSchool = currentHighSchool showWindow = showDeleteHighSchoolConfirmation}}
+    {{else if showDeleteHighSchoolSubjectConfirmation}}
+    {{delete-high-school-subject highSchoolSubject = currentHighSchoolSubject showWindow = showDeleteHighSchoolSubjectConfirmation}}
+    {{else if showDeleteTermCodeConfirmation}}
+    {{delete-term-code termCode = currentTermCode showWindow = showDeleteTermCodeConfirmation}}
 {{/if}}
 
   <!-- Show data entry form -->
@@ -666,20 +670,20 @@
             </td>
         </tr> 
 
-        {{#each highSchoolSubjectModel as |termCode|}}
+        {{#each highSchoolSubjectModel as |highSchoolSubject|}}
           <tr>  
             <td>
               <th>Subject Name</th>
                 <div class="ui fluid input">
-                    {{input type="text" value = termCode.name}}
+                    {{input type="text" value = highSchooLSubject.name}}
                 </div>
             </td>
 
             <td>
                 <div class="ui inverted buttons">
-                    <button class="ui blue inverted button" {{action "saveTermCode" termCode}}>Save</button>
+                    <button class="ui blue inverted button" {{action "saveHighSchoolSubject" highSchoolSubject}}>Save</button>
                     <div class="divider"/>
-                    <button class="ui red inverted button" {{action "deleteTermCode" termCode}}>Delete</button>
+                    <button class="ui red inverted button" {{action "deleteHighSchoolSubject" highSchoolSubject}}>Delete</button>
                 </div>
             </td>
         </tr>
@@ -688,12 +692,12 @@
         <tr>
              <td>
                 <div class="ui fluid input">
-                    {{input type="text" value = newTermCodeName}}
+                    {{input type="text" value = newHighSchoolSubjectName}}
                 </div>
             </td>
 
             <td>
-                <button class="ui inverted green button" {{action "addHighSchoolCourse"}}> 
+                <button class="ui inverted green button" {{action "addHighSchoolSubject"}}> 
                 Add &nbsp; <i class="add square icon"></i>
                 </button>
             </td>
@@ -701,7 +705,7 @@
         <tr>
             <td>
                 <div>
-			        <label>{{{termCodeOutput}}}</label>
+			        <label>{{{highSchoolSubjectOutput}}}</label>
 		        </div>
             </td>
         </tr>
