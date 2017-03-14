@@ -30,7 +30,7 @@ var ImportState = {
 
 function DisplayErrorMessage(message)
 {
-	console.log(message);
+	self.pushOutput(message);
 }
 function checkUniqueSubject(sourceArray, newName, newDescription)
 {
@@ -38,7 +38,7 @@ function checkUniqueSubject(sourceArray, newName, newDescription)
 	{
 		if (sourceArray[i] && sourceArray[i].name === newName && sourceArray[i].description === newDescription)
 		{
-			console.log("found duplicate value of " + newName + " and " + newDescription);
+			self.pushOutput("found duplicate value of " + newName + " and " + newDescription);
 			return false;
 		}
 	}
@@ -50,7 +50,7 @@ function checkUniqueHSCourse(sourceArray, newSchool, newLevel, newSource, newUni
 	{
 		if (sourceArray[i] && sourceArray[i].level == newLevel && sourceArray[i].source == newSource && sourceArray[i].unit == newUnit && sourceArray[i].name == newSubjectName && sourceArray[i].description == newSubjectDescription && sourceArray[i].schoolName == newSchool)
 		{
-			console.log("found duplicate field");
+			self.pushOutput("found duplicate field");
 			return false;
 		}
 	}
@@ -63,8 +63,8 @@ function checkUniqueTerm(sourceArray, newStudentNumber, newTermCode)
 	{
 		if (sourceArray[i] && sourceArray[i].studentNumber == newStudentNumber && sourceArray[i].termCode == newTermCode)
 		{
-			console.log("found duplicate field in Term Code");
-			console.log(newStudentNumber);
+			self.pushOutput("found duplicate field in Term Code");
+			self.pushOutput(newStudentNumber);
 			return false;
 		}
 	}
@@ -77,8 +77,8 @@ function checkUniqueProgram(sourceArray, newStudentNumber, newTermCode, newName,
 	{
 		if (sourceArray[i] && sourceArray[i].studentNumber == newStudentNumber && sourceArray[i].term == newTermCode && sourceArray[i].program == newName && sourceArray[i].level == newLevel && sourceArray[i].load == newLoad)
 		{
-			console.log("found duplicate field in Program Record");
-			console.log(newStudentNumber);
+			self.pushOutput("found duplicate field in Program Record");
+			self.pushOutput(newStudentNumber);
 			return false;
 		}
 	}
@@ -90,8 +90,8 @@ function checkUniquePlan(sourceArray, newStudentNumber, newTermCode, newProgramN
 	{
 		if (sourceArray[i] && sourceArray[i].studentNumber == newStudentNumber && sourceArray[i].term == newTermCode && sourceArray[i].program == newProgramName && sourceArray[i].level == newLevel && sourceArray[i].load == newLoad && sourceArray[i].plan == newPlanName)
 		{
-			console.log("found duplicate field in Plan Code");
-			console.log(newStudentNumber);
+			self.pushOutput("found duplicate field in Plan Code");
+			self.pushOutput(newStudentNumber);
 			return false;
 		}
 	}
@@ -103,13 +103,13 @@ function checkUniqueCourse(sourceArray, newLetter, newNumber, newUnit)
 	{
 		if (sourceArray[i] && sourceArray[i].letter == newLetter && sourceArray[i].number == newNumber)
 		{
-			console.log("found duplicate course" + newLetter + newNumber);
+			self.pushOutput("found duplicate course" + newLetter + newNumber);
 			
 			return false;
 		}
 		if (isNaN(newUnit))
 		{
-			console.log("ERROR: RECORD " + newLetter + newNumber + "cannot convert unit " + newUnit + " to a number");
+			self.pushOutput("ERROR: RECORD " + newLetter + newNumber + "cannot convert unit " + newUnit + " to a number");
 			return false;
 		}
 	}
@@ -121,7 +121,7 @@ function checkUniqueDepartment(sourceArray, newFaculty, newDepartment)
 	{
 		if (sourceArray[i] && sourceArray[i].facultyName == newFaculty && sourceArray[i].departmentName == newDepartment)
 		{
-			console.log("found duplicate department" + newLetter + newNumber);			
+			self.pushOutput("found duplicate department" + newLetter + newNumber);			
 			return false;
 		}
 	}
@@ -134,7 +134,7 @@ function VerificationFunction(sourceArray,newArray)
 	{
 		if(sourceArray[i]!=newArray[i])
 		{
-			console.log("There was an error in the '"+sourceArray[i]+"' header! Your current value is: '"+newArray[i]+"'. Please fix this before re-importing!");
+			self.pushOutput("There was an error in the '"+sourceArray[i]+"' header! Your current value is: '"+newArray[i]+"'. Please fix this before re-importing!");
 			return false;
 		}
 	}
