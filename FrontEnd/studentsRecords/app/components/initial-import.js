@@ -2313,7 +2313,7 @@ export default Ember.Component.extend({
 															doneSavingComments = true;
 															self.pushOutput("<span style='color:green'>Import of Admission Comments successful!</span>");
 															Ember.$("#btnContinue").removeClass("disabled");
-															Ember.$("#admissionComments").addClass("completed");															
+															Ember.$("#AdmissionComments").addClass("completed");															
 														}
 													}
 												});
@@ -2387,6 +2387,10 @@ export default Ember.Component.extend({
 								}
 								if (!rollBackImport)
 								{
+									var importUG = self.get('importUndergrad');
+									Ember.set(importUG.objectAt(2), "total", cumStudentInformation.length*2); 
+									Ember.set(importUG.objectAt(2), "progress", cumStudentInformation.length);
+									self.set('importUndergrad', importUG);
 									self.pushOutput("Successful read of file has completed. Beginning import of " + cumStudentInformation.length + " student's information and " + studentInformation.length + " student terms information");
 									//do the import here. Maybe iterate through the cumStudent array by student number then search the full array by student number to minimize hits to DB
 									for (var i = 0; i < cumStudentInformation; i++)
@@ -2439,6 +2443,8 @@ export default Ember.Component.extend({
 																			termOBJ.set('termUnitsPassed', studentTermUnitsPassed);
 																			termOBJ.set('termUnitsTotal', studentTermUnitsTotal);
 																			termOBJ.save().then(function() {
+																				Ember.set(importUG.objectAt(2), "progress", Ember.get(importUG.objectAt(2), "progress")+1);
+																				self.set('importUndergrad', importUG);
 																				numberOfStudentTermsImported++;																				
 																				if (cumStudentInformation.length + studentInformation.length == numberOfCumStudentsImported + numberOfCumStudentsWithoutStudent + numberOfStudentTermsImported + numberOfStudentTermsWithoutStudent && !doneImportingCumStudents)
 																				{
