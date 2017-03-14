@@ -121,8 +121,12 @@ export default Ember.Component.extend({
                         self.get('store').queryRecord('courseCode', {
                             grade: grade
                         }).then(function (courseCode) {
-                            var courseName = courseCode.get('')
-
+                            var courseLetter = courseCode.get('courseLetter');
+                            var courseNumber = courseCode.get('courseNumber');
+                            var unit = courseCode.get('unit');
+                            studentAdjudicationInfo[studentIndex].coursesCompleted[gradeIndex].courseNumber = courseNumber;
+                            studentAdjudicationInfo[studentIndex].coursesCompleted[gradeIndex].courseLetter = courseLetter;
+                            studentAdjudicationInfo[studentIndex].coursesCompleted[gradeIndex].unit = unit;
                         });
                     });
                 });
