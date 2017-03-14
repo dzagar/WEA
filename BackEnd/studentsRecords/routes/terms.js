@@ -12,11 +12,18 @@ var parseJSON = bodyParser.json();
 router.route('/')
 	.post(parseUrlencoded, parseJSON, function (request, response) {
         var term = new Term(request.body.term);
-        term.save(function (error) {
+        TermCode.findById(term.termCode, function(error, termCode){
             if (error) {
                 response.send(error);
             } else {
-                response.send({term:term});
+                termCode.terms.push(term._id);
+                term.save(function (error) {
+                    if (error) {
+                        response.send(error);
+                    } else {
+                        response.send({term:term});
+                    }
+                });
             }
         });
     })
@@ -101,105 +108,149 @@ router.route('/:term_id')
                 failed = true;
                 response.send(error);
             } 
-            // else if (termCode) {
-            //     Student.findById(termCode.student, function (error, student) {
-            //         if (error && !failed) {
-            //             failed = true;
-            //             response.send(error);
-            //         } else if (student) {
-            //             let index = student.termCodes.indexOf(termCode._id);
-            //             if (index > -1) {
-            //                 student.termCodes.splice(index, 1);
-            //             }
+            else if (term) {
+                Student.findById(term.student, function (error, student) {
+                    if (error && !failed) {
+                        failed = true;
+                        response.send(error);
+                    } else if (student) {
+                        let index = student.terms.indexOf(term._id);
+                        if (index > -1) {
+                            student.terms.splice(index, 1);
+                        }
 
-            //             student.save(function (error) {
-            //                 if (error && !failed) {
-            //                     failed = true;
-            //                     response.send(error);
-            //                 } else {
-            //                     completed++;
-            //                     if (completed === 3 && !failed) {
-            //                         response.json({deleted: termCode});
-            //                     }
-            //                 }
-            //             });
-            //         } else {
-            //             completed++;
-            //             if (completed === 3 && !failed) {
-            //                 response.json({deleted: termCode});
-            //             }
-            //         }
-            //     });
+                        student.save(function (error) {
+                            if (error && !failed) {
+                                failed = true;
+                                response.send(error);
+                            } else {
+                                completed++;
+                                if (completed === 4 && !failed) {
+                                    response.json({deleted: term});
+                                }
+                            }
+                        });
+                    } else {
+                        completed++;
+                        if (completed === 4 && !failed) {
+                            response.json({deleted: term});
+                        }
+                    }
+                });
 
-            //     if (termCode.grades.length > 0) {
-            //         let completedGrades = 0;
-            //         for (let i = 0; i < termCode.grades.length && !failed; i++) {
-            //             Grade.findById(termCode.grades[i], function (error, grade) {
-            //                 if (error && !failed) {
-            //                     failed = true;
-            //                     response.send(error);
-            //                 } else if (grade) {
+                if (term.grades.length > 0) {
+                    let completedGrades = 0;
+                    for (let i = 0; i < term.grades.length && !failed; i++) {
+                        Grade.findById(term.grades[i], function (error, grade) {
+                            if (error && !failed) {
+                                failed = true;
+                                response.send(error);
+                            } else if (grade) {
+                                grade.term = null;
 
-            //                 } else {
-            //                     completedGrades++;
-            //                     if (completedGrades === termCodes.grades.length && !failed) {
-            //                         completed++;
-            //                         if (completed === 3 && !failed) {
-            //                             response.json({deleted: termCode});
-            //                         }
-            //                     }
-            //                 }
-            //             });
-            //         }
-            //     } else {
-            //         completed++;
-            //         if (completed === 3 && !failed) {
-            //             response.json({deleted: termCode});
-            //         }
-            //     }
+                                grade.save(function (error) {
+                                    if (error && !failed) {
+                                        failed = true;
+                                        response.send(error);
+                                    } else {
+                                        completedGrades++;
+                                        if (completedGrades === term.grades.length && !failed) {
+                                            completed++;
+                                            if (completed === 4 && !failed) {
+                                                response.json({deleted: term});
+                                            }
+                                        }
+                                    }
+                                });
+                            } else {
+                                completedGrades++;
+                                if (completedGrades === term.grades.length && !failed) {
+                                    completed++;
+                                    if (completed === 4 && !failed) {
+                                        response.json({deleted: term});
+                                    }
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    completed++;
+                    if (completed === 4 && !failed) {
+                        response.json({deleted: term});
+                    }
+                }
 
-            //     if (termCode.programRecords.length > 0) {
-            //         let completedProgramRecords = 0;
-            //         for (let i = 0; i < termCode.programRecords.length && !failed; i++) {
-            //             ProgramRecord.findById(termCode.programRecords[i], function(error, programRecord) {
-            //                 if (error && !failed) {
-            //                     failed = true;
-            //                     response.send(error);
-            //                 } else if (programRecord) {
-            //                     programRecord.termCode = null;
+                if (term.programRecords.length > 0) {
+                    let completedProgramRecords = 0;
+                    for (let i = 0; i < term.programRecords.length && !failed; i++) {
+                        ProgramRecord.findById(term.programRecords[i], function(error, programRecord) {
+                            if (error && !failed) {
+                                failed = true;
+                                response.send(error);
+                            } else if (programRecord) {
+                                programRecord.term = null;
 
-            //                     programRecord.save(function (error) {
-            //                         if (error && !failed) {
-            //                             failed = true;
-            //                             response.send(error);
-            //                         } else {
-            //                             completedProgramRecords++;
-            //                             if (completedProgramRecords === termCode.programRecords.length && !failed) {
-            //                                 completed++;
-            //                                 if (completed === 3 && !failed) {
-            //                                     response.json({deleted: termCode});
-            //                                 }
-            //                             }
-            //                         }
-            //                     });
-            //                 } else {
-            //                     completedProgramRecords++;
-            //                     if (completedProgramRecords === termCode.programRecords.length && !failed) {
-            //                         completed++;
-            //                         if (completed === 3 && !failed) {
-            //                             response.json({deleted: termCode});
-            //                         }
-            //                     }
-            //                 }
-            //             });
-            //         }
-            //     } else {
-            //         completed++;
-            //         if (completed === 3 && !failed) {
-            //             response.json({deleted: termCode});
-            //         }
-            //     }
-            // } 
+                                programRecord.save(function (error) {
+                                    if (error && !failed) {
+                                        failed = true;
+                                        response.send(error);
+                                    } else {
+                                        completedProgramRecords++;
+                                        if (completedProgramRecords === term.programRecords.length && !failed) {
+                                            completed++;
+                                            if (completed === 4 && !failed) {
+                                                response.json({deleted: term});
+                                            }
+                                        }
+                                    }
+                                });
+                            } else {
+                                completedProgramRecords++;
+                                if (completedProgramRecords === term.programRecords.length && !failed) {
+                                    completed++;
+                                    if (completed === 4 && !failed) {
+                                        response.json({deleted: term});
+                                    }
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    completed++;
+                    if (completed === 4 && !failed) {
+                        response.json({deleted: term});
+                    }
+                }
+
+                TermCode.findById(term.termCode, function (error, termCode) {
+                    if (error && !failed) {
+                        failed = true;
+                        response.send(error);
+                    } else if (termCode) {
+                        let index = termCode.term.indexOf(term._id);
+                        if (index > -1) {
+                            termCode.terms.splice(index, 1);
+                        }
+
+                        termCode.save(function (error) {
+                            if (error && !failed) {
+                                failed = true;
+                                response.send(error);
+                            } else {
+                                completed++;
+                                if (completed === 4 && !failed) {
+                                    response.json({deleted: term});
+                                }
+                            }
+                        });
+                    } else {
+                        completed++;
+                        if (completed === 4 && !failed) {
+                            response.json({deleted: term});
+                        }
+                    }
+                });
+            } 
             else {
                 response.json({deleted: term});
             }
