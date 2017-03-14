@@ -4,7 +4,7 @@ var studentsSchema = mongoose.Schema(
     {
         DOB: String,
         firstName: String,
-        gender: {type: mongoose.Schema.ObjectId, ref: 'Gender'},
+        gender: {type: mongoose.Schema.ObjectId, ref: 'gender'},
         lastName: String,
         studentNumber: String,
         photo: String,
@@ -12,6 +12,7 @@ var studentsSchema = mongoose.Schema(
         basisOfAdmission: String,
         admissionAverage: String,
         admissionComments: String,
+<<<<<<< HEAD
         resInfo: {type: mongoose.Schema.ObjectId, ref: 'Residency'},
         scholarships: [{type: mongoose.Schema.ObjectId, ref: 'Scholarship'}],
         terms: [{type: mongoose.Schema.ObjectId, ref: 'Terms'}],
@@ -20,6 +21,13 @@ var studentsSchema = mongoose.Schema(
         cumAVG: String,
         cumUnitsPassed: String,
         cumUnitsTotal: String
+=======
+        resInfo: {type: mongoose.Schema.ObjectId, ref: 'residency'},
+        scholarships: [{type: mongoose.Schema.ObjectId, ref: 'scholarship'}],
+        termCodes: [{type: mongoose.Schema.ObjectId, ref: 'termCode'}],
+        advancedStandings: [{type: mongoose.Schema.ObjectId, ref: 'advancedStanding'}],
+        highSchoolGrades: [{type: mongoose.Schema.ObjectId, ref: 'highSchoolGrade'}]
+>>>>>>> FinishingLab3
     },
     {
         versionKey: false

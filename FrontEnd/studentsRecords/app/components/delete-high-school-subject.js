@@ -1,14 +1,14 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-    
-  highSchool: null,
+
+    highSchoolSubject: null,
 	showWindow: null,
 	store: Ember.inject.service(),
 
 	actions: {
-		deleteHighSchool: function(){
-			this.get('highSchool').destroyRecord();
+		deleteHighSchoolSubject: function(){
+			this.get('highSchoolSubject').destroyRecord();
 			this.set('showWindow', false);
 			Ember.$('.ui.modal').modal('hide');
       		Ember.$('.ui.modal').remove();
@@ -29,3 +29,4 @@ export default Ember.Component.extend({
       .modal('show');
   }
 });
+

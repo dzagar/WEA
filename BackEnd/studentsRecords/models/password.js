@@ -10,7 +10,7 @@ var passwordsSchema = mongoose.Schema(
         userAccountExpiryDate: Date,
         passwordMustChanged : Boolean,
         passwordReset: Boolean,
-        user: {type: mongoose.Schema.ObjectId, ref: ('Users')}
+        user: {type: mongoose.Schema.ObjectId, ref: ('user')}
     }
 );
 
