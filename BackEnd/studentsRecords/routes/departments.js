@@ -124,94 +124,176 @@ router.route('/')
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
         if (request.query.deleteAll) {
-            Faculty.remove({}, function (error) {
+            Department.remove({}, function (error) {
                 if (error) {
                     response.send(error);
                 } else {
-                    Faculty.find(function (error, faculties) {
+                    Department.find(function (error, departments) {
                         if (error) {
                             response.send(error);
                         } else {
-                            response.json({faculties: faculties});
+                            response.json({departments: departments});
                         }
                     });
                 }
             });
         } else {
-            Faculty.find(function (error, faculties) {
+            Department.find(function (error, departments) {
                 if (error) {
                     response.send(error);
                 } else {
-                    response.json({faculties: faculties});
+                    response.json({departments: departments});
                 }
             });
         }
     });
 
-router.route('/:faculty_id')
+router.route('/:department_id')
     .get(parseUrlencoded, parseJSON, function (request, response) {
-        Faculty.findById(request.params.faculty_id, function (error, faculty) {
+        Department.findById(request.params.department_id, function (error, department) {
             if (error) {
                 response.send(error);
             } else {
-                response.json({faculty: faculty});
+                response.json({department: department});
             }
         });
     })
     .put(parseUrlencoded, parseJSON, function (request, response) {
-        Faculty.findById(request.params.faculty_id, function(error, faculty) {
+        Department.findById(request.params.department_id, function(error, department) {
             if (error) {
                 response.send(error);
-            } else if (faculty) {
-                faculty.name = request.body.faculty.name;
-                faculty.departments = request.body.faculty.departments;
+            } else if (department) {
+                department.name = request.body.department.name;
+                department.assessmentCodes = request.body.department.assessmentCodes;
+                department.faculty = request.body.department.faculty;
+                department.programAdministration = request.body.department.programAdministration;
 
-                faculty.save(function (error) {
+                department.save(function (error) {
                     if (error) {
                         response.send(error);
                     } else {
-                        response.json({faculty: faculty});
+                        response.json({department: department});
                     }
                 });
             } else {
-                response.json({faculty: faculty});
+                response.json({department: department});
             }
         });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
-        Faculty.findByIdAndRemove(request.params.faculty_id, function (error, faculty) {
-            if (faculty && faculty.departments && faculty.departments.length > 0) {
-                let completeDepts = 0;
-                let failed = false;
-                for (let i = 0; i < faculty.departments.length && !failed; i++) {
-                    Department.findById(faculty.departments[i], function (error, department) {
+        let completed = 0;
+        let failed = false;
+
+        Department.findByIdAndRemove(request.params.department_id, function (error, department) {
+            if (department.assessmentCodes && department.assessmentCodes.length > 0) {
+                let completeAC = 0;
+                for (let i = 0; i < department.assessmentCodes.length && !failed; i++) {
+                    AssessmentCodes.findById(department.assessmentCodes[i], function(error, assessmentCode) {
                         if (error && !failed) {
                             failed = true;
                             response.send(error);
-                        } else if (department) {
-                            department.faculty = null;
+                        } else if (assessmentCode) {
+                            let index = assessmentCode.departments.indexOf(department._id);
+                            if (index > -1) {
+                                assessmentCode.departments.splice(index, 1);
+                            }
 
-                            department.save(function(error) {
+                            assessmentCode.save(function (error) {
                                 if (error && !failed) {
                                     failed = true;
                                     response.send(error);
                                 } else {
-                                    completeDepts++;
-                                    if (completeDepts === faculty.departments.length && !failed) {
-                                        response.json({deleted: faculty});
+                                    completeAC++;
+                                    if (completedAC === department.assessmentCode.length && !failed) {
+                                        completed++;
+                                        if (completed === 3 && !failed) {
+                                            response.json({deleted: department});
+                                        }
                                     }
                                 }
                             });
                         } else {
-                            completeDepts++;
-                            if (completeDepts === faculty.departments.length && !failed) {
-                                response.json({deleted: faculty});
+                            completeAC++;
+                            if (completedAC === department.assessmentCode.length && !failed) {
+                                completed++;
+                                if (completed === 3 && !failed) {
+                                    response.json({deleted: department});
+                                }
                             }
                         }
                     });
                 }
             } else {
-                response.json({deleted: faculty});
+                completed++;
+                if (completed === 3 && !failed) {
+                    response.json({deleted: department});
+                }
+            }
+
+            if (department.faculty) {
+                Faculty.findById(department.faculty, function (error, faculty) {
+                    if (error && !failed) {
+                        failed = true;
+                        response.send(error);
+                    } else if (faculty) {
+                        faculty.department = null;
+
+                        faculty.save(function (error) {
+                            if (error && !failed) {
+                                failed = true;
+                                response.send(error);
+                            } else {
+                                completed++;
+                                if (completed === 3 && !failed) {
+                                    response.json({deleted: department});
+                                }
+                            }
+                        });
+                    } else {
+                        completed++;
+                        if (completed === 3 && !failed) {
+                            response.json({deleted: department});
+                        }
+                    }
+                });
+            } else {
+                completed++;
+                if (completed === 3 && !failed) {
+                    response.json({deleted: department});
+                }
+            }
+
+            if (department.programAdministration) {
+                ProgramAdministration.findById(department.programAdministration, function (error, progAdmin) {
+                    if (error && !failed) {
+                        failed = true;
+                        response.send(error);
+                    } else if (progAdmin) {
+                        progAdmin.department = null;
+
+                        progAdmin.save(function(error){
+                            if (error && !failed) {
+                                failed = true;
+                                response.send(error);
+                            } else {
+                                completed++;
+                                if (completed === 3 && !failed) {
+                                    response.json({deleted: department});
+                                }
+                            }
+                        });
+                    } else {
+                        completed++;
+                        if (completed === 3 && !failed) {
+                            response.json({deleted: department});
+                        }
+                    }
+                });
+            } else {
+                completed++;
+                if (completed === 3 && !failed) {
+                    response.json({deleted: department});
+                }
             }
         });
     });
