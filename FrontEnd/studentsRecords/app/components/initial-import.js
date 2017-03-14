@@ -286,6 +286,7 @@ export default Ember.Component.extend({
 			
 		];
 		this.set('importBasic', basicCategory);
+		this.set('importFaculty', facultyCategory);
 		this.set('importStudent', studentCategory);
 		this.set('importHighSchool', highSchoolCategory);
 		this.set('importUndergrad', undergraduateCategory);
@@ -2510,6 +2511,7 @@ export default Ember.Component.extend({
   						self.set('importCount', 0);
   						self.set('importInProgress', false);
   						self.clearOutput();
+  						break;
 					case 8:
 						$("#student").addClass("active");
  						$("#student").removeClass("disabled");

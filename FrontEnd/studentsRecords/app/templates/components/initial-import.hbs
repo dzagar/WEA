@@ -5,7 +5,7 @@
 <div class="ui centered middle aligned grid">
 	<div class = "row">
 		<div class="column">
-			<div class="ui small steps">
+			<div class="ui tiny steps">
 				<a id="basic" class="active step item">
 					<i class="minus icon"></i>
 					<div class="content">
@@ -100,6 +100,32 @@
 				</div>
 			{{else if index3}}
 				{{#each importStudent as |feature index|}}
+					<div class = "ui segment step " id = {{feature.name}}>
+						<div class = "content">
+							<h3> {{feature.name}} </h3>
+							<p> {{{feature.description}}} {{index}}</p>
+							<input type = "file" id = {{concat "newFile" index}}>
+							<br>
+							<br>
+						</div>
+					</div>
+					<div class = "row">
+						{{#if importInProgress}}
+							{{#ui-progress value = feature.progress progress = feature.progress total = feature.total}}
+								<div class="bar">
+								  <div class="progress"></div>
+								</div>
+							{{/ui-progress}}
+						{{/if}}
+					</div>
+				{{/each}}
+				<div class = "ui basic centered middle aligned grid segment">
+					<button class="ui primary button" {{action 'import' }}>
+		  				Import Files
+					</button>
+				</div>
+			{{else if index4}}
+				{{#each importFaculty as |feature index|}}
 					<div class = "ui segment step " id = {{feature.name}}>
 						<div class = "content">
 							<h3> {{feature.name}} </h3>
