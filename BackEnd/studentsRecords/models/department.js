@@ -5,7 +5,7 @@ var departmentSchema = mongoose.Schema(
         name: String,
         assessmentCodes: [{type: mongoose.Schema.ObjectId, ref: 'AssessmentCodes'}],
         faculty: {type: mongoose.Schema.ObjectId, ref: 'Faculties'},
-        programAdministrationss: {type: mongoose.Schema.ObjectId, ref: 'ProgramAdministrationss'}
+        programAdministrations: [{type: mongoose.Schema.ObjectId, ref: 'ProgramAdministrations'}]
     },
     {
         versionKey: false
