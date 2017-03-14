@@ -191,9 +191,8 @@ export default Ember.Component.extend({
             this.set('currentGender', gender);
             this.set('showDeleteGenderConfirmation', true);
             this.set('showDeleteResidencyConfirmation', false);
-            this.set('showCourseCodeConfirmation', false);
+            this.set('showCourseCodeDeleteConfirmation', false);
             this.set('showDeleteHighSchoolConfirmation',false);
-            this.set('showDeleteHighSchoolCourseConfirmation',false);
             this.set('showDeleteHighSchoolSubjectConfirmation',false);
             this.set('showDeleteTermCodeConfirmation', false);
        
@@ -238,9 +237,8 @@ export default Ember.Component.extend({
             this.set('currentResidency',residency);
             this.set('showDeleteGenderConfirmation', false);
             this.set('showDeleteResidencyConfirmation', true);
-            this.set('showCourseCodeConfirmation', false);
+            this.set('showCourseCodeDeleteConfirmation', false);
             this.set('showDeleteHighSchoolConfirmation',false);
-            this.set('showDeleteHighSchoolCourseConfirmation',false);
             this.set('showDeleteHighSchoolSubjectConfirmation',false);
             this.set('showDeleteTermCodeConfirmation', false);
         },
@@ -277,9 +275,8 @@ export default Ember.Component.extend({
             this.set('currentCourseCode',courseCode);
             this.set('showDeleteGenderConfirmation', false);
             this.set('showDeleteResidencyConfirmation', false);
-            this.set('showCourseCodeConfirmation', true);
+            this.set('showCourseCodeDeleteConfirmation', true);
             this.set('showDeleteHighSchoolConfirmation',false);
-            this.set('showDeleteHighSchoolCourseConfirmation',false);
             this.set('showDeleteHighSchoolSubjectConfirmation',false);
             this.set('showDeleteTermCodeConfirmation', false);
         },
@@ -324,9 +321,8 @@ export default Ember.Component.extend({
             this.set('currentHighSchool',highSchool);
             this.set('showDeleteGenderConfirmation', false);
             this.set('showDeleteResidencyConfirmation', false);
-            this.set('showCourseCodeConfirmation', false);
+            this.set('showCourseCodeDeleteConfirmation', false);
             this.set('showDeleteHighSchoolConfirmation',true);
-            this.set('showDeleteHighSchoolCourseConfirmation',false);
             this.set('showDeleteHighSchoolSubjectConfirmation',false);
             this.set('showDeleteTermCodeConfirmation', false);
         },
@@ -370,9 +366,8 @@ export default Ember.Component.extend({
             this.set('currentTermCode',termCode);
             this.set('showDeleteGenderConfirmation', false);
             this.set('showDeleteResidencyConfirmation', false);
-            this.set('showCourseCodeConfirmation', false);
+            this.set('showCourseCodeDeleteConfirmation', false);
             this.set('showDeleteHighSchoolConfirmation',false);
-            this.set('showDeleteHighSchoolCourseConfirmation',false);
             this.set('showDeleteHighSchoolSubjectConfirmation',false);
             this.set('showDeleteTermCodeConfirmation', true);
         },
@@ -380,11 +375,34 @@ export default Ember.Component.extend({
         saveTermCode(termCode)
         {
             termCode.save();
-        }
+        },
 
+        addHighSchoolSubject()
+        {
+                if (this.get('newHighSchoolSubjectName').trim() != "")
+                {
+                    this.set('newHighSchoolSubjectObj',this.get('store').createRecord('high-school-subject',{
+                        name: this.get('newHighSchoolSubjectName').trim()
+                    }));
+                    this.get('newHighSchoolSubjectObj').save();
+                    this.set('newHighSchoolSubjectName',"");
+                }
+            }
+        },
 
-        
-    }
+        deleteHighSchoolSubject(hsSubject)
+        {
+            this.set('currentHighSchoolSubject',hsSubject);
+            this.set('showDeleteGenderConfirmation', false);
+            this.set('showDeleteResidencyConfirmation', false);
+            this.set('showCourseCodeDeleteConfirmation', false);
+            this.set('showDeleteHighSchoolConfirmation',false);
+            this.set('showDeleteHighSchoolSubjectConfirmation',true);
+            this.set('showDeleteTermCodeConfirmation', false);
+        },
 
-
+        saveHighSchoolSubject(hsSubject)
+        {
+            hsSubject.save();
+        }  
 });
