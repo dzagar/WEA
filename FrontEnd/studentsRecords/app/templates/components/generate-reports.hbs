@@ -10,7 +10,22 @@
 			</select>
 			<div class="ui button" {{action " "}}>Generate Report</div>
 		</div>
+		
+		
+	</div>
 
-		{{ember-chart type='pie' data=chartData options= options height=100}}<br>
+	<div class="ui relaxed grid">
+		<div class="two column row">
+			<div class="column">
+				{{ember-chart type='pie' data=graduateChartData options= options height=300}}
+				<h3>Graduates</h3>
+			</div>
+			<div class="column">
+				{{ember-chart type='pie' data=nonGraduateChartData options= options height=300}}
+				<h3>Non-Graduates</h3>
+			</div>
+
+		</div>
 	</div>
 </div>
+
