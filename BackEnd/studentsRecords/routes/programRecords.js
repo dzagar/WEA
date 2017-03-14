@@ -148,17 +148,17 @@ router.route('/:programRecord_id')
                 failed = true;
                 response.send(error);
             } else if (programRecord) {
-                TermCode.findById(programRecord.termCode, function (error, termCode) {
+                Term.findById(programRecord.term, function (error, term) {
                     if (error && !failed) {
                         failed = true;
                         response.send(error);
-                    } else if (termCode) {
-                        let index = termCode.programCodes.indexOf(programRecord._id);
+                    } else if (term) {
+                        let index = term.programCodes.indexOf(programRecord._id);
                         if (index > -1) {
-                            termCode.programCodes.splice(index, 1);
+                            term.programCodes.splice(index, 1);
                         }
 
-                        termCode.save(function (error) {
+                        term.save(function (error) {
                             if (error && !failed) {
                                 failed = true;
                                 response.send(error);
