@@ -8,8 +8,8 @@ var usersSchema = mongoose.Schema(
         lastName: String,
         email: String,
         enabled: Boolean,
-        userShadow: {type: mongoose.Schema.ObjectId, ref: ('password')},
-        userRoles: [{type: mongoose.Schema.ObjectId, ref: 'userRole'}]
+        userShadow: {type: mongoose.Schema.ObjectId, ref: ('Passwords')},
+        userRoles: [{type: mongoose.Schema.ObjectId, ref: 'UserRoles'}]
     }
 );
 
