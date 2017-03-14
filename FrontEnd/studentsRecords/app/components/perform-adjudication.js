@@ -2,8 +2,10 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
     studentsToAdjudicate: null,
+    studentModel: null,
     adjudicationCategories: null,
     currentTerm: null,
+    termCodeModel: null,
     store: Ember.inject.service(),
     evaluateStudent: function(student, assessment, currentTerm)
     {
@@ -151,5 +153,36 @@ export default Ember.Component.extend({
                 });
             });
         });
+    },
+
+    init()
+    {
+        this.get('store').findAll('student').then(function (records) {
+            self.set('studentModel', records);
+        });    
+
+        this.get('store').findAll('term-code').then(function (records) {
+            self.set('termCodeModel', records);
+        });    
+ 
+    },
+
+    actions: {
+    
+    selectStudent()
+    {
+
+    },
+
+    selectTerm()
+    {
+
+    },
+
+    selectCategory()
+    {
+
+    }
+
     }
 });
