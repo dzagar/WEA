@@ -68,7 +68,7 @@ router.route('/')
             });
         }
         else { 
-            TermCode.find(function(error, termCodes) {
+            TermCode.find({}, null, {sort: 'name'},function(error, termCodes) {
                 if (error) {
                     response.send(error);
                 } else {
