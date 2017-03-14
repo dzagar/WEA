@@ -89,32 +89,42 @@ router.route('/')
             }
         }
 
-        if (department.programAdministration) {
-            ProgramAdministration.findById(department.programAdministration, function (error, progAdmin) {
-                if (error && !failed) {
-                    failed = true;
-                    response.send(error);
-                } else if (progAdmin) {
-                    progAdmin.department = department._id;
+        if (department.programAdministrations && department.programAdministrations.length > 0) {
+            let completePA = 0;
 
-                    progAdmin.save(function (error) {
-                        if (error && !failed) {
-                            failed = true;
-                            response.send(error);
-                        } else {
+            for (let i = 0; i < department.programAdministrations.length && !failed; i++) {
+                ProgramAdministration.findById(department.programAdministrations[i], function (error, progAdmin) {
+                    if (error && !failed) {
+                        failed = true;
+                        response.send(error);
+                    } else if (progAdmin) {
+                        progAdmin.department = department._id;
+
+                        progAdmin.save(function (error) {
+                            if (error && !failed) {
+                                failed = true;
+                                response.send(error);
+                            } else {
+                                completePA++;
+                                if (completePA === department.programAdministrations.length && !failed) {
+                                    completed++;
+                                    if (completed === 3 && !failed) {
+                                        response.json({department: department});
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        completedPA++;
+                        if (completePA === department.programAdministrations.length && !failed) {
                             completed++;
                             if (completed === 3 && !failed) {
                                 response.json({department: department});
                             }
                         }
-                    });
-                } else {
-                    completed++;
-                    if (completed === 3 && !failed) {
-                        response.json({department: department});
                     }
-                }
-            });
+                });
+            }
         } else {
             completed++;
             if (completed === 3 && !failed) {
@@ -263,32 +273,42 @@ router.route('/:department_id')
                 }
             }
 
-            if (department.programAdministration) {
-                ProgramAdministration.findById(department.programAdministration, function (error, progAdmin) {
-                    if (error && !failed) {
-                        failed = true;
-                        response.send(error);
-                    } else if (progAdmin) {
-                        progAdmin.department = null;
+            if (department.programAdministrations && department.programAdministrations.length > 0) {
+                let completePA = 0;
 
-                        progAdmin.save(function(error){
-                            if (error && !failed) {
-                                failed = true;
-                                response.send(error);
-                            } else {
+                for (let i = 0; i < department.programAdministrations.length && !failed; i++) {
+                    ProgramAdministration.findById(department.programAdministrations[i], function (error, progAdmin) {
+                        if (error && !failed) {
+                            failed = true;
+                            response.send(error);
+                        } else if (progAdmin) {
+                            progAdmin.department = null;
+
+                            progAdmin.save(function(error){
+                                if (error && !failed) {
+                                    failed = true;
+                                    response.send(error);
+                                } else {
+                                    completePA++;
+                                    if (completePA === department.programAdministrations.length && !failed) {
+                                        completed++;
+                                        if (completed === 3 && !failed) {
+                                            response.json({deleted: department});
+                                        }
+                                    }
+                                }
+                            });
+                        } else {
+                            completePA++;
+                            if (completePA === department.programAdministrations.length && !failed) {
                                 completed++;
                                 if (completed === 3 && !failed) {
                                     response.json({deleted: department});
                                 }
                             }
-                        });
-                    } else {
-                        completed++;
-                        if (completed === 3 && !failed) {
-                            response.json({deleted: department});
                         }
-                    }
-                });
+                    });
+                }
             } else {
                 completed++;
                 if (completed === 3 && !failed) {
