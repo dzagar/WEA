@@ -87,7 +87,7 @@ export default Ember.Component.extend({
         var currentTerm = this.get('currentTerm');
         var self = this;
         //loop all students
-        this.get('studentsToAdjudicate').forEach(function(student, index) {
+        this.get('studentsToAdjudicate').forEach(function(student, studentIndex) {
             studentAdjudicationInfo.push({
                 "ObjID": student.get('id'), 
                 "cumAVG": student.get('cumAVG'),
@@ -102,14 +102,27 @@ export default Ember.Component.extend({
                 student: student,
                 termCode: currentTerm
             }).then(function(term) {
-                studentAdjudicationInfo[index].termAVG = term.get('termAVG');
-                studentAdjudicationInfo[index].termUnitsTotal = term.get('termUnitsTotal');
-                studentAdjudicationInfo[index].termUnitsPassed = term.get('termUnitsPassed');
+                studentAdjudicationInfo[studentIndex].termAVG = term.get('termAVG');
+                studentAdjudicationInfo[studentIndex].termUnitsTotal = term.get('termUnitsTotal');
+                studentAdjudicationInfo[studentIndex].termUnitsPassed = term.get('termUnitsPassed');
                 self.get('store').query('grade', {
                     term: term
                 }).then(function(grades) {
-                    
+                    grades.forEach(function(grade, gradeIndex) {
+                        var mark = grade.get('mark');
+                        studentAdjudicationInfo[studentIndex].coursesCompleted.push({
+                            "courseNumber": "",
+                            "courseLetter": "",
+                            "unit": "",
+                            "mark": mark                            
+                        });
+                        self.get('store').queryRecord('courseCode', {
+                            grade: grade
+                        }).then(function (courseCode) {
+                            var courseName = courseCode.get('')
 
+                        });
+                    });
                 });
             });
             //loop each category
