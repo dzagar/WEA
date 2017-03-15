@@ -31,7 +31,7 @@ var ImportState = {
 
 function DisplayErrorMessage(message)
 {
-	self.pushOutput(message);
+	console.log(message);
 }
 function checkUniqueSubject(sourceArray, newName, newDescription)
 {
@@ -39,7 +39,7 @@ function checkUniqueSubject(sourceArray, newName, newDescription)
 	{
 		if (sourceArray[i] && sourceArray[i].name === newName && sourceArray[i].description === newDescription)
 		{
-			self.pushOutput("found duplicate value of " + newName + " and " + newDescription);
+			console.log("found duplicate value of " + newName + " and " + newDescription);
 			return false;
 		}
 	}
@@ -51,7 +51,7 @@ function checkUniqueHSCourse(sourceArray, newSchool, newLevel, newSource, newUni
 	{
 		if (sourceArray[i] && sourceArray[i].level == newLevel && sourceArray[i].source == newSource && sourceArray[i].unit == newUnit && sourceArray[i].name == newSubjectName && sourceArray[i].description == newSubjectDescription && sourceArray[i].schoolName == newSchool)
 		{
-			self.pushOutput("found duplicate field");
+			console.log("found duplicate field");
 			return false;
 		}
 	}
@@ -64,8 +64,8 @@ function checkUniqueTerm(sourceArray, newStudentNumber, newTermCode)
 	{
 		if (sourceArray[i] && sourceArray[i].studentNumber == newStudentNumber && sourceArray[i].termCode == newTermCode)
 		{
-			self.pushOutput("found duplicate field in Term Code");
-			self.pushOutput(newStudentNumber);
+			console.log("found duplicate field in Term Code");
+			console.log(newStudentNumber);
 			return false;
 		}
 	}
@@ -78,8 +78,8 @@ function checkUniqueProgram(sourceArray, newStudentNumber, newTermCode, newName,
 	{
 		if (sourceArray[i] && sourceArray[i].studentNumber == newStudentNumber && sourceArray[i].term == newTermCode && sourceArray[i].program == newName && sourceArray[i].level == newLevel && sourceArray[i].load == newLoad)
 		{
-			self.pushOutput("found duplicate field in Program Record");
-			self.pushOutput(newStudentNumber);
+			console.log("found duplicate field in Program Record");
+			console.log(newStudentNumber);
 			return false;
 		}
 	}
@@ -91,8 +91,8 @@ function checkUniquePlan(sourceArray, newStudentNumber, newTermCode, newProgramN
 	{
 		if (sourceArray[i] && sourceArray[i].studentNumber == newStudentNumber && sourceArray[i].term == newTermCode && sourceArray[i].program == newProgramName && sourceArray[i].level == newLevel && sourceArray[i].load == newLoad && sourceArray[i].plan == newPlanName)
 		{
-			self.pushOutput("found duplicate field in Plan Code");
-			self.pushOutput(newStudentNumber);
+			console.log("found duplicate field in Plan Code");
+			console.log(newStudentNumber);
 			return false;
 		}
 	}
@@ -104,13 +104,13 @@ function checkUniqueCourse(sourceArray, newLetter, newNumber, newUnit)
 	{
 		if (sourceArray[i] && sourceArray[i].letter == newLetter && sourceArray[i].number == newNumber)
 		{
-			self.pushOutput("found duplicate course" + newLetter + newNumber);
+			console.log("found duplicate course" + newLetter + newNumber);
 			
 			return false;
 		}
 		if (isNaN(newUnit))
 		{
-			self.pushOutput("ERROR: RECORD " + newLetter + newNumber + "cannot convert unit " + newUnit + " to a number");
+			console.log("ERROR: RECORD " + newLetter + newNumber + "cannot convert unit " + newUnit + " to a number");
 			return false;
 		}
 	}
@@ -122,7 +122,7 @@ function checkUniqueDepartment(sourceArray, newFaculty, newDepartment)
 	{
 		if (sourceArray[i] && sourceArray[i].facultyName == newFaculty && sourceArray[i].departmentName == newDepartment)
 		{
-			self.pushOutput("found duplicate department" + newLetter + newNumber);			
+			console.log("found duplicate department" + newLetter + newNumber);			
 			return false;
 		}
 	}
@@ -135,7 +135,7 @@ function VerificationFunction(sourceArray,newArray)
 	{
 		if(sourceArray[i]!=newArray[i])
 		{
-			self.pushOutput("There was an error in the '"+sourceArray[i]+"' header! Your current value is: '"+newArray[i]+"'. Please fix this before re-importing!");
+			console.log("There was an error in the '"+sourceArray[i]+"' header! Your current value is: '"+newArray[i]+"'. Please fix this before re-importing!");
 			return false;
 		}
 	}
@@ -2355,7 +2355,7 @@ export default Ember.Component.extend({
 
 									if (studentNumber && term && termAVG && termUnitsPassed && termUnitsTotal && cumAVG && cumUnitsPassed && cumUnitsTotal)
 									{
-										if (checkUniqueTerm(studentInformation, studentNumber.v, term.v))
+										if (!checkUniqueTerm(studentInformation, studentNumber.v, term.v))
 										{											
 											self.pushOutput("<span style='color:red'>Import Cancelled. Duplicate values found on row " + i + " for student number " + studentNumber.v + " and term " + term.v + "</span>");
 											rollbackImport = true;
@@ -2364,15 +2364,16 @@ export default Ember.Component.extend({
 										else{
 											studentInformation.push({"studentNumber": studentNumber.v, "termCode": term.v, "termAVG": termAVG, "termUnitsPassed": termUnitsPassed, "termUnitsTotal": termUnitsTotal});
 											//if we are transitioning students
+											
 											if (currentStudentNumber != studentNumber.v && currentStudentNumber !== -1)
 											{
-												cumStudentInformation.push({"studentNumber": studentNumber.v, "cumAVG": cumAVG, "cumUnitsPassed": cumUnitsPassed.v, "cumUnitsTotal": cumUnitsTotal.v});
+												cumStudentInformation.push({"studentNumber": studentNumber.v, "cumAVG": cumAVG.v, "cumUnitsPassed": cumUnitsPassed.v, "cumUnitsTotal": cumUnitsTotal.v});
 
 											}											
 											currentStudentNumber = studentNumber.v;
 											currentCumAvg = cumAVG.v;
 											currentCumUnitsPassed = cumUnitsPassed.v;
-											currentCumUnitsTotal = currentCumUnitsTotal.v;
+											currentCumUnitsTotal = cumUnitsTotal.v;
 										}
 									}
 									else if (studentNumber || term || termAVG || termUnitsPassed || termUnitsTotal || cumAVG || cumUnitsPassed || cumUnitsTotal)
