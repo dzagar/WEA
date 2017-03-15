@@ -55,7 +55,7 @@ router.route('/')
                 }
             });  
         } else {
-            HighSchoolSubject.find(function (error, subjects) {
+            HighSchoolSubject.find({}, null, {sort: 'name'},function (error, subjects) {
                 if (error) {
                     response.send(error);
                 } else {

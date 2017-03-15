@@ -2,6 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
     
+    courseArray: [],
     courseCodeRecords: null,
     currentCourseCode: null,
     currentGender: null,
@@ -11,6 +12,7 @@ export default Ember.Component.extend({
     currentTermCode: null,
     genderModel: null,
     genderOutput: "",
+    highSchoolCourseModel: null,
     highSchoolModel: null,
     highSchoolOutput: "",
     highSchoolSubjectModel: null,
@@ -23,6 +25,7 @@ export default Ember.Component.extend({
     newGenderObj: null,
     newHighSchoolName: "",
     newHighSchoolObj: null,
+    newHighSchoolSubjectName: "",
     newHighSchoolSubjectDescriptionName: "",
     newHighSchoolSubjectObj: null,
     newResidencyName: "",
@@ -68,6 +71,22 @@ export default Ember.Component.extend({
         this.set('termCodeOutput', newOutput);
     },
 
+    setHighSchoolSubjectOutput: function(newOutput) {
+        this.set('highSchoolSubjectOutput', newOutput);
+    },
+
+     checkUniqueCourseInfo: function (sourceArray, newName, newDescription, newSource, newLevel, newUnit) {
+        for (var i = 0; i < sourceArray.length; i++)
+	    {
+		    if (sourceArray[i] && sourceArray[i].name === newName && sourceArray[i].description === newDescription && sourceArray[i].source === newSource && sourceArray[i].level === newLevel && sourceArray[i].unit === newUnit)
+		    {
+			    return true;
+		    }
+	    }
+            
+	        return false;
+    },
+
     init() {
         this._super(...arguments);
         var self = this;
@@ -86,12 +105,19 @@ export default Ember.Component.extend({
             self.set('highSchoolModel', records);
         });
 
-        this.get('store').findAll('high-school-subject').then(function (records){
-            self.set('highSchoolSubjectModel', records);
-        });
-
-        this.get('store').findAll('high-school-course').then(function (records){
-            self.set('highSchoolCourseModel', records);
+        this.get('store').findAll('high-school-subject').then(function (records) {
+            records.forEach(function(subject,index) {
+                var subjectID=subject.get('id')
+                self.get('store').query('high-school-course', 
+                {subject: subjectID}).then(function(courses) {
+                    courses.forEach(function(course,index) {    
+                    if (!self.checkUniqueCourseInfo(self.get('courseArray'), subject.get('name'), subject.get('description'),course.get('source'), course.get('level'), course.get('unit')))
+                    {
+                        self.get('courseArray').push({"name": subject.get('name') , "description": subject.get('description')  , "source": course.get('source')  , "level": course.get('level') , "unit": course.get('unit')});
+                    }
+                    });
+                });
+            });
         });
 
         this.get('store').findAll('term-code').then(function (records) {
@@ -113,6 +139,7 @@ export default Ember.Component.extend({
         this.set('currentGender', null);
         this.set('currentResidency', null);
         this.set('currentHighSchool', null);
+        this.set('currentHighSchoolSubject', null);
     },
 
     courseCodeModel: Ember.observer('offset', function () {
@@ -264,6 +291,7 @@ export default Ember.Component.extend({
 
         saveCourseCode(courseCode)
         {
+            console.log(this.courseArray);
             courseCode.save();
         },
 
@@ -334,6 +362,9 @@ export default Ember.Component.extend({
         addHighSchoolSubject()
         {
             var hsSubjectArray=this.get('highSchoolSubjectModel');
+            var hsCourseArray=this.get('highSchoolCourseModel');
+            console.log(hsSubjectArray);
+            console.log(hsSubjectArray.courses);
             var highSchoolSubjectName=this.get('newHighSchoolSubjectName');
             var isHighSchoolSubjectCreated=true;
 

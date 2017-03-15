@@ -527,23 +527,44 @@
                   </div>
             </td>
         </tr> 
+        {{#each courseArray as |highSchoolSubject|}}
+          <tr>
 
-        {{#each highSchoolSubjectModel as |highSchoolSubject|}}
-          <tr>  
             <td>
-              <th>Subject Name</th>
+              <a>Name</a>
                 <div class="ui fluid input">
                     {{input type="text" value = highSchoolSubject.name}}
                 </div>
             </td>
 
             <td>
-              <th>Subject Description</th>
+              <a>Description</a>
                 <div class="ui fluid input">
                   {{input type="text" value = highSchoolSubject.description}}
                 </div>
             </td>
-          
+           
+            <td>
+              <a>Level</a>
+                <div class="ui fluid input">
+                  {{input type="text" value = highSchoolSubject.level}}
+                </div>
+            </td>
+
+            <td>
+              <a>Source</a>
+                <div class="ui fluid input">
+                  {{input type="text" value = highSchoolSubject.source}}
+                </div>
+            </td>
+
+            <td>
+              <a>Unit</a>
+              <div class="ui fluid input">
+                  {{input type="text" value = highSchoolSubject.unit}}
+              </div>
+            </td>
+
             <td>
                 <div class="ui inverted buttons">
                     <button class="ui blue inverted button" {{action "saveHighSchoolSubject" highSchoolSubject}}>Save</button>
@@ -551,8 +572,8 @@
                     <button class="ui red inverted button" {{action "deleteHighSchoolSubject" highSchoolSubject}}>Delete</button>
                 </div>
             </td>
-        </tr>
-    {{/each}}
+        </tr> 
+        {{/each}}
 
         <tr>
              <td>
@@ -568,11 +589,12 @@
             </td>
 
             <td>
-                <button class="ui inverted green button" {{action "addHighSchoolCourse"}}> 
+                <button class="ui inverted green button" {{action "addHighSchoolSubject"}}> 
                 Add &nbsp; <i class="add square icon"></i>
                 </button>
             </td>
         </tr>
+
         <tr>
             <td>
                 <div>
