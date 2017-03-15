@@ -62,21 +62,7 @@ router.route('/')
                     });
                 } console.log('removed grades');
             });
-        } 
-        else if (request.query.term)
-        {
-            Grade.find({term: request.query.term}, function(error, grades) {
-                if (error)
-                {
-                    response.send(error);
-                }
-                else{
-                    response.send({grades:grades});
-                }
-
-            });
-        }
-        else {
+        } else {
             Grade.find(function(error, grades) {
                 if (error) {
                     response.send(error);

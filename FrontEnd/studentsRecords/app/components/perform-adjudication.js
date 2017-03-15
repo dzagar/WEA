@@ -2,10 +2,8 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
     studentsToAdjudicate: null,
-    studentModel: null,
     adjudicationCategories: null,
     currentTerm: null,
-    termCodeModel: null,
     store: Ember.inject.service(),
     evaluateStudent: function(student, assessment, currentTerm)
     {
@@ -84,84 +82,36 @@ export default Ember.Component.extend({
         }
     },
     performAdjudication: function() {
-        
-        var studentAdjudicationInfo = [];
-        var currentTerm = this.get('currentTerm');
+        var students = this.get('studentsToAdjudicate');
+        var categories = this.get('adjudicationCategories');
         var self = this;
         //loop all students
-        this.get('studentsToAdjudicate').forEach(function(student, studentIndex) {
-            studentAdjudicationInfo.push({
-                "ObjID": student.get('id'), 
-                "cumAVG": student.get('cumAVG'),
-                "cumUnitsTotal": student.get('cumUnitsTotal'),
-                "cumUnitsPassed": student.get('cumUnitsPassed'),
-                "termAVG": "",
-                "termUnitsTotal": "",
-                "termUnitsPassed": "",
-                "coursesCompleted": []
-            });
-            var studentID = student.get('id');
-            var termCodeID = currentTerm;
-            self.get('store').queryRecord('term', {
-                student: studentID,
-                termCode: termCodeID
-            }).then(function(term) {
-                studentAdjudicationInfo[studentIndex].termAVG = term.get('termAVG');
-                studentAdjudicationInfo[studentIndex].termUnitsTotal = term.get('termUnitsTotal');
-                studentAdjudicationInfo[studentIndex].termUnitsPassed = term.get('termUnitsPassed');
-                var termID = term.get('id');
-                self.get('store').query('grade', {
-                    term: termID
-                }).then(function(grades) {
-                    grades.forEach(function(grade, gradeIndex) {
-                        var mark = grade.get('mark');
-                        var courseCodeID = grade.get('courseCode').get('id');
-                        studentAdjudicationInfo[studentIndex].coursesCompleted.push({
-                            "courseNumber": "",
-                            "courseLetter": "",
-                            "unit": "",
-                            "mark": mark                            
-                        });
-                        self.get('store').queryRecord('courseCode', {courseCodeID: courseCodeID}).then(function (courseCode) {
-                            var courseLetter = courseCode.get('courseLetter');
-                            var courseNumber = courseCode.get('courseNumber');
-                            var unit = courseCode.get('unit');
-                            studentAdjudicationInfo[studentIndex].coursesCompleted[gradeIndex].courseNumber = courseNumber;
-                            studentAdjudicationInfo[studentIndex].coursesCompleted[gradeIndex].courseLetter = courseLetter;
-                            studentAdjudicationInfo[studentIndex].coursesCompleted[gradeIndex].unit = unit;
-                        });
+        students.forEach(function(student) {
+            //loop each category
+            categories.forEach(function (category) {
+                //get all assessments for each category
+                self.get('store').query('assessment-code', {category: category}).then(function(assessments) {
+                    //loop through assessments until student qualifies for one of them.
+                    assessments.some(function(assessment, index) {
+                        //VERY ROUGH CODE THAT MIGHT EVENTUALLY WORK
+                        // if (self.send(evaluateStudent, student, assessment, currentTerm)){
+                        //     var currentDate = "15-03-2017";//CHANGE THIS YO PLEASE
+                        //     console.log("PLEASE REMEMBER TO CHANGE THIS I WILL BE SO SAD IF WE FORGET");
+                        //     var newAdjudication = self.createRecord('adjudication', {
+                        //         date: currentDate
+                        //     });
+                        //     newAdjudication.set('assessmentCode', assessment);
+                        //     newAdjudication.set('student', student);
+                        //     newAdjudication.set('term', currentTerm);
+                        //     newAdjudication.save();
+                        //     return true;
+                        // }
+                        // else{
+                        //     return false;
+                        // }
                     });
                 });
-           });
+            });
         });
-    },
-
-    init()
-    {
-        this._super(...arguments);
-        var self=this;
-
-        //CHANGE THIS SO FAST
-        this.get('store').query('student', {offest: 0, limit: 100}).then(function (records) {
-            self.set('studentModel', records);
-            self.set('studentsToAdjudicate', records);
-        });    
-
-        this.get('store').findAll('term-code').then(function (records) {
-            self.set('termCodeModel', records);
-        });    
- 
-    },
-
-    actions: {
-    
-        adjudicate()
-        {
-            this.performAdjudication();           
-        },
-        selectTerm(termCodeID){
-            this.set('currentTerm', termCodeID);
-            console.log(termCodeID);
-        }
     }
 });

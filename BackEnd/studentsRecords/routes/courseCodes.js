@@ -60,15 +60,6 @@ router.route('/')
                 }
             });
         }
-        else if (request.query.courseCodeID) {
-            CourseCode.findById(request.query.courseCodeID, function(error, courseCode) {
-                if (error)
-                    response.send(error);
-                else{
-                    response.send({courseCode:courseCode});
-                }
-            });
-        }
         else{
             CourseCode.find({}, null, {sort: 'courseLetter'}, function(error, courseCodes) {
                 if (error)
@@ -88,7 +79,7 @@ router.route('/:courseCode_id')
             if (error) {
                 response.send(error);
             } else {
-                response.send({courseCode: courseCode});
+                response.json({courseCode: courseCode});
             }
         });
     })

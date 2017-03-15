@@ -1,8 +1,6 @@
 {{#if isEditing }}
     {{#if isAdding}}
-      <!--{{logical-expression}}-->
-      
-        <!--<div class="ui modal">
+        <div class="ui modal">
             <div class="header">Assign rule paramter for rule {{ruleCode}}</div>
             <div class="ui form">
                 {{#ui-dropdown class="fluid selection" selected=selectedParameterType onChange=(action 'selectParameterType')}}
@@ -38,7 +36,7 @@
                 <div class="ui button" {{action 'cancelRuleAdd'}}>Cancel</div>
                 <div class="ui button" {{action 'addParameter'}}>Add</div>
             </div>
-        </div>-->
+        </div>
     {{/if}}
     <h2>Add new adjudication rule</h2>
     <div class="ui form">
