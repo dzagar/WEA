@@ -5,12 +5,12 @@ export default Ember.Component.extend({
     operator: null,
     arg1: null,
     arg2: null,
-    arg1IsLogExp: Ember.computed('arg1', function() {
+    arg1IsLogExp: false, /*Ember.computed('arg1', function() {
         return (typeof(this.get('arg1')) === 'object') && (this.get('arg1') !== null);
-    }),
-    arg1IsLogExp: Ember.computed('arg2', function() {
+    }),*/
+    arg2IsLogExp: false, /*Ember.computed('arg2', function() {
         return (typeof(this.get('arg2')) === 'object') && (this.get('arg2') !== null);
-    }),
+    }),*/
 
     init() {
         this._super(...arguments);
@@ -37,7 +37,7 @@ export default Ember.Component.extend({
 
     actions: {
         splitArg(argname) {
-            console.log(argname);
+            this.set(argname + 'IsLogExp', !this.get(argname + 'IsLogExp'));
         }
     }
 });
