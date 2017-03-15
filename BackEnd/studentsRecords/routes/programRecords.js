@@ -134,17 +134,17 @@ router.route('/:programRecord_id')
                 failed = true;
                 response.send(error);
             } else if (programRecord) {
-                Term.findById(programRecord.term, function (error, term) {
+                TermCode.findById(programRecord.termCode, function (error, termCode) {
                     if (error && !failed) {
                         failed = true;
                         response.send(error);
-                    } else if (term) {
-                        let index = term.programCodes.indexOf(programRecord._id);
+                    } else if (termCode) {
+                        let index = termCode.programCodes.indexOf(programRecord._id);
                         if (index > -1) {
-                            term.programCodes.splice(index, 1);
+                            termCode.programCodes.splice(index, 1);
                         }
 
-                        term.save(function (error) {
+                        termCode.save(function (error) {
                             if (error && !failed) {
                                 failed = true;
                                 response.send(error);
