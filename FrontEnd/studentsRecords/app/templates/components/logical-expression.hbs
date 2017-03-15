@@ -1,4 +1,4 @@
-<div class="ui segments">
+<!--<div class="ui segments">
   <div class="ui {{if applyEmphasis "secondary"}} segment">
     {{#if deleteSelf}}
       <button class="mini ui secondary circular icon button" style="position: absolute; top: 0; right: 0;" {{action 'removeSelf'}}>
@@ -68,4 +68,110 @@
       </button>
     {{/if}}
   </div>
+</div>-->
+
+<div class = "ui basic modal">
+  <div class = "header">
+    For 
+    {{#ui-dropdown class = "selection" selected = "0" onChange = (action (mut logLink))}}
+    <div class = "default text">logical link</div>
+    <i class = "dropdown icon"></i>
+    <div class = "menu">
+      {{#each logLinks as |logLink|}}
+        <div class = "item" data-value = {{logLink.id}}>
+          {{logLink.text}}
+        </div>
+      {{/each}}
+    </div>
+    {{/ui-dropdown}}
+    of the following applying to
+    {{#ui-dropdown class = "selection" selected = "0" onChange = (action (mut department))}}
+    <div class = "default text">department</div>
+    <i class = "dropdown icon"></i>
+    <div class = "menu">
+      {{#each departments as |department|}}
+        <div class = "item" data-value = {{department.id}}>
+          {{department.name}}
+        </div>
+      {{/each}}
+    </div>
+    {{/ui-dropdown}}
+    :
+  </div>
+
+  <div class = "contents">
+    <div class = "ui form">
+      <div class = "ui inline fields">
+        {{#if deleteSelf}}
+          <button class="mini ui secondary circular icon button" style="position: absolute; top: 0; right: 0;" {{action 'removeSelf'}}>
+            <i class="delete icon"></i>
+          </button>
+        {{/if}}
+        {{#if arg1IsLogExp}}
+          {{logical-expression level = (inline-math level '+' 1) deleteSelf = (action 'removeArg' 'arg1') parent = test}}
+        {{else}}
+          <div class = "five wide inline field">
+            {{#ui-dropdown class = "selection" id = "fieldDropdown" onChange = (action (mut field))}}
+              <input name="arg" type="hidden">
+              <div class = "default text">Field</div>
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                {{#each fields as |field|}}
+                  <div class = "item" data-value = {{field.id}}>
+                    {{field.name}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}}
+          </div>
+        {{/if}}
+        <div class = "four wide inline field">
+          {{#ui-dropdown class = "selection" id = "opdropdown" onChange = (action (mut opr))}}
+            <input name = "op" type = "hidden">
+            <div class = "default text">Operand</div>
+            <i class = "dropdown icon"></i>
+            <div class = "menu">
+              {{#each operators as |opr|}}
+                <div class = "item" data-value = {{opr.id}}>
+                  {{opr.name}}
+                </div>
+              {{/each}}
+            </div>
+          {{/ui-dropdown}}
+        </div>
+        {{#if arg2IsLogExp}}
+          {{logical-expression level = (inline-math level '+' 1) deleteSelf = (action 'log')}}
+        {{else}}
+          <div class = "five wide inline field">
+            <div id = "arg2dropdown">
+              <input name="arg" type="hidden">
+              <input type = "text" name = "arg2" placeholder = "Value">
+            </div>
+          </div>
+        {{/if}}
+        <button class="ui inverted green icon button" {{action 'logchild'}}>
+          <i class="square add icon"></i>
+        </button>
+        <button class="ui inverted red icon button" {{action 'log'}}>
+          <i class="square add icon"></i>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
