@@ -1,15 +1,20 @@
 <div class="ui segments">
-  <div class="ui segment">
+  <div class="ui {{if applyEmphasis "secondary"}} segment">
+    {{#if deleteSelf}}
+      <button class="mini ui secondary circular icon button" style="position: absolute; top: 0; right: 0;" {{action 'removeSelf'}}>
+        <i class="delete icon"></i>
+      </button>
+    {{/if}}
     {{#if arg1IsLogExp}}
-      {{logical-expression}}
+      {{logical-expression level = (inline-math level '+' 1) deleteSelf = (action 'removeArg' 'arg1') parent = test}}
     {{else}}
       <div class="ui search selection dropdown" id="arg1dropdown">
         <input name="arg" type="hidden">
         <i class="dropdown icon"></i>
         <div class="defualt text">Value</div>
         <div class="menu">
-          <div class="item">Test Item</div>
-          <div class="item">Test Item</div>
+          <div class="item">{{level}}</div>
+          <div class="item">{{applyEmphasis}}</div>
           <div class="item">Test Item</div>
           <div class="item">Test Item</div>
           <div class="item">Test Item</div>
@@ -20,25 +25,28 @@
       </button>
     {{/if}}
   </div>
-  <div class="ui segment">
+  <div class="ui {{if applyEmphasis "secondary"}} segment">
     <div class="ui fluid search selection dropdown" id="opdropdown">
       <input name="op" type="hidden">
       <i class="dropdown icon"></i>
       <div class="defualt text">Logical Operand</div>
       <div class="menu">
-        <div class="item">And</div>
-        <div class="item">Or</div>
-        <div class="item">Is Greater Than</div>
-        <div class="item">Is Less Than</div>
-        <div class="item">Is Greater Than or Equal To</div>
-        <div class="item">Is Less Than or Equal To</div>
-        <div class="item">Is Equal To</div>
+        {{#if (inline-compare arg1IsLogExp '||' arg2IsLogExp)}}
+          <div class="item">And</div>
+          <div class="item">Or</div>
+        {{else}}
+          <div class="item">Is Greater Than</div>
+          <div class="item">Is Less Than</div>
+          <div class="item">Is Greater Than or Equal To</div>
+          <div class="item">Is Less Than or Equal To</div>
+          <div class="item">Is Equal To</div>
+        {{/if}}
       </div>
     </div>
   </div>
-  <div class="ui segment">
+  <div class="ui {{if applyEmphasis "secondary"}} segment">
     {{#if arg2IsLogExp}}
-      {{logical-expression}}
+      {{logical-expression level = (inline-math level '+' 1) deleteSelf = (action 'log')}}
     {{else}}
       <div class="ui search selection dropdown" id="arg2dropdown">
         <input name="arg" type="hidden">
@@ -52,7 +60,10 @@
           <div class="item">Test Item</div>
         </div>
       </div>
-      <button class="ui inverted green icon button" {{action 'splitArg' 'arg2'}}>
+      <button class="ui inverted green icon button" {{action 'logchild'}}>
+        <i class="square add icon"></i>
+      </button>
+      <button class="ui inverted red icon button" {{action 'log'}}>
         <i class="square add icon"></i>
       </button>
     {{/if}}
