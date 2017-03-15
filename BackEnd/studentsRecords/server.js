@@ -27,6 +27,12 @@ var rolePermissions = require('./routes/rolePermissions');
 var logins = require('./routes/logins');
 var roots = require('./routes/roots');
 var assessmentCodes = require('./routes/assessmentCodes');
+<<<<<<< HEAD
+=======
+var terms = require('./routes/terms');
+var faculties = require('./routes/faculties');
+var departments = require('./routes/departments');
+>>>>>>> master
 
 app.use(function (request, response, next) {
     response.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
@@ -59,6 +65,9 @@ app.use('/rolePermissions', rolePermissions);
 app.use('/logins', logins);
 app.use('/roots', roots);
 app.use('/assessmentCodes', assessmentCodes);
+app.use('/terms', terms);
+app.use('/faculties', faculties);
+app.use('/departments', departments);
 
 app.listen(3700, function () {
     console.log('Listening on port 3700');
