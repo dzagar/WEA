@@ -11,6 +11,10 @@
     {{delete-course-code courseCode = currentCourseCode showWindow = showCourseCodeDeleteConfirmation}}
     {{else if showDeleteHighSchoolConfirmation}}
     {{delete-high-school highSchool = currentHighSchool showWindow = showDeleteHighSchoolConfirmation}}
+    {{else if showDeleteHighSchoolSubjectConfirmation}}
+    {{delete-high-school-subject highSchoolSubject = currentHighSchoolSubject showWindow = showDeleteHighSchoolSubjectConfirmation}}
+    {{else if showDeleteTermCodeConfirmation}}
+    {{delete-term-code termCode = currentTermCode showWindow = showDeleteTermCodeConfirmation}}
 {{/if}}
 
   <!-- Show data entry form -->
@@ -20,6 +24,8 @@
     <div style="cursor: pointer;" class="item" data-tab="residency">Residency</div>
     <div style="cursor: pointer;" class="item" data-tab="coursecode">Course Codes</div>
     <div style="cursor: pointer;" class="item" data-tab="highschool">Secondary Schools</div>
+    <div style="cursor: pointer;" class="item" data-tab="hsSubject">High School Subjects</div>
+    <div style="cursor: pointer;" class="item" data-tab="termCode">Term Codes</div>
   </div>
 
   <div class="ui bottom attached active tab segment" data-tab="gender">
@@ -416,6 +422,303 @@
             <td>
                 <div>
 			        <label>{{{highSchoolOutput}}}</label>
+		        </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="ui bottom attached tab segment" data-tab="hsSubject">
+     <table class="ui table">
+        <thead>
+            <tr>
+            <th>High School Subjects</th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>
+            </tr>
+        </thead>
+
+        <tr>
+            <td colspan="12">
+                <div style="margin: auto; width: 50%;">
+                  <div class="ui fluid pagination nine item menu">
+                    {{#if (inline-compare pageNumber '<' 5)}}
+                      <div class="disabled item"></div>
+                    {{/if}}
+                    {{#if (inline-compare pageNumber '>' 3)}}
+                      <a class="item" {{action "switchPage" 1}}>
+                        1
+                      </a> 
+                    {{else}}
+                      <div class="disabled item"></div>
+                    {{/if}} 
+                    {{#if (inline-compare pageNumber '>' 5)}}
+                      <div class="disabled item">
+                        ...
+                      </div>
+                    {{else}} 
+                      {{#if (inline-compare pageNumber '===' 5)}}
+                      <a class="item" {{action "switchPage" 2}}>
+                        2
+                      </a> 
+                      {{/if}} 
+                    {{/if}}
+                    {{#if (inline-compare pageNumber '>' 2)}}
+                      <a class="item" {{action "switchPage" (inline-math pageNumber '-' 2)}}>
+                        {{inline-math pageNumber '-' 2}}
+                      </a> 
+                    {{else}}
+                      <div class="disabled item"></div>
+                    {{/if}}
+                    {{#if (inline-compare pageNumber '>' 1)}}
+                      <a class="item" {{action "switchPage" (inline-math pageNumber '-' 1)}}>
+                        {{inline-math pageNumber '-' 1}}
+                      </a>
+                    {{else}}
+                      <div class="disabled item"></div>
+                    {{/if}}
+
+                    <a class="active item">
+                      {{pageNumber}}
+                    </a> 
+
+                    {{#if (inline-compare pageNumber '<' totalPages)}}
+                      <a class="item" {{action "switchPage" (inline-math pageNumber '+ ' 1)}}>
+                        {{inline-math pageNumber '+ ' 1}}
+                      </a>
+                    {{else}}
+                      <div class="disabled item"></div>
+                    {{/if}}
+                    {{#if (inline-compare pageNumber '<' (inline-math totalPages '- ' 1))}}
+                      <a class="item" {{action "switchPage" (inline-math pageNumber '+ ' 2)}}>
+                        {{inline-math pageNumber '+ ' 2}}
+                      </a>
+                    {{else}}
+                      <div class="disabled item"></div>
+                    {{/if}}
+                    {{#if (inline-compare pageNumber '<' (inline-math totalPages '- ' 4))}}
+                      <div class="disabled item">
+                        ...
+                      </div>
+                    {{else}}
+                      {{#if (inline-compare pageNumber '===' (inline-math totalPages ' - ' 4))}}
+                        <a class="item" {{action "switchPage" (inline-math totalPages '- ' 1 )}}>
+                          {{inline-math totalPages '- ' 1 }}
+                        </a>
+                      {{/if}}
+                    {{/if}}
+                    {{#if (inline-compare pageNumber '<' (inline-math totalPages '- ' 2))}}
+                      <a class="item" {{action "switchPage" totalPages}}>
+                        {{totalPages}}
+                      </a>
+                    {{else}}
+                      <div class="disabled item"></div>
+                    {{/if}}
+                    {{#if (inline-compare pageNumber '>' (inline-math totalPages '-' 4))}}
+                        <div class="disabled item"></div>
+                    {{/if}}
+                  </div>
+                  </div>
+            </td>
+        </tr> 
+
+        {{#each highSchoolSubjectModel as |highSchoolSubject|}}
+          <tr>  
+            <td>
+              <th>Subject Name</th>
+                <div class="ui fluid input">
+                    {{input type="text" value = highSchoolSubject.name}}
+                </div>
+            </td>
+
+            <td>
+              <th>Subject Description</th>
+                <div class="ui fluid input">
+                  {{input type="text" value = highSchoolSubject.description}}
+                </div>
+            </td>
+          
+            <td>
+                <div class="ui inverted buttons">
+                    <button class="ui blue inverted button" {{action "saveHighSchoolSubject" highSchoolSubject}}>Save</button>
+                    <div class="divider"/>
+                    <button class="ui red inverted button" {{action "deleteHighSchoolSubject" highSchoolSubject}}>Delete</button>
+                </div>
+            </td>
+        </tr>
+    {{/each}}
+
+        <tr>
+             <td>
+                <div class="ui fluid input">
+                    {{input type="text" value = newHighSchoolSubjectName}}
+                </div>
+            </td>
+
+            <td>
+                <div class="ui fluid input">
+                  {{input type="text" value = newHighSchoolSubjectDescriptionName}}
+                </div>
+            </td>
+
+            <td>
+                <button class="ui inverted green button" {{action "addHighSchoolCourse"}}> 
+                Add &nbsp; <i class="add square icon"></i>
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div>
+			        <label>{{{highSchoolCourseOutput}}}</label>
+		        </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="ui bottom attached tab segment" data-tab="termCode">
+     <table class="ui table">
+        <thead>
+            <tr>
+            <th>Term Codes</th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>
+            <th><!--spacer--></th>
+            </tr>
+        </thead>
+
+        <tr>
+            <td colspan="12">
+                <div style="margin: auto; width: 50%;">
+                  <div class="ui fluid pagination nine item menu">
+                    {{#if (inline-compare pageNumber '<' 5)}}
+                      <div class="disabled item"></div>
+                    {{/if}}
+                    {{#if (inline-compare pageNumber '>' 3)}}
+                      <a class="item" {{action "switchPage" 1}}>
+                        1
+                      </a> 
+                    {{else}}
+                      <div class="disabled item"></div>
+                    {{/if}} 
+                    {{#if (inline-compare pageNumber '>' 5)}}
+                      <div class="disabled item">
+                        ...
+                      </div>
+                    {{else}} 
+                      {{#if (inline-compare pageNumber '===' 5)}}
+                      <a class="item" {{action "switchPage" 2}}>
+                        2
+                      </a> 
+                      {{/if}} 
+                    {{/if}}
+                    {{#if (inline-compare pageNumber '>' 2)}}
+                      <a class="item" {{action "switchPage" (inline-math pageNumber '-' 2)}}>
+                        {{inline-math pageNumber '-' 2}}
+                      </a> 
+                    {{else}}
+                      <div class="disabled item"></div>
+                    {{/if}}
+                    {{#if (inline-compare pageNumber '>' 1)}}
+                      <a class="item" {{action "switchPage" (inline-math pageNumber '-' 1)}}>
+                        {{inline-math pageNumber '-' 1}}
+                      </a>
+                    {{else}}
+                      <div class="disabled item"></div>
+                    {{/if}}
+
+                    <a class="active item">
+                      {{pageNumber}}
+                    </a> 
+
+                    {{#if (inline-compare pageNumber '<' totalPages)}}
+                      <a class="item" {{action "switchPage" (inline-math pageNumber '+ ' 1)}}>
+                        {{inline-math pageNumber '+ ' 1}}
+                      </a>
+                    {{else}}
+                      <div class="disabled item"></div>
+                    {{/if}}
+                    {{#if (inline-compare pageNumber '<' (inline-math totalPages '- ' 1))}}
+                      <a class="item" {{action "switchPage" (inline-math pageNumber '+ ' 2)}}>
+                        {{inline-math pageNumber '+ ' 2}}
+                      </a>
+                    {{else}}
+                      <div class="disabled item"></div>
+                    {{/if}}
+                    {{#if (inline-compare pageNumber '<' (inline-math totalPages '- ' 4))}}
+                      <div class="disabled item">
+                        ...
+                      </div>
+                    {{else}}
+                      {{#if (inline-compare pageNumber '===' (inline-math totalPages ' - ' 4))}}
+                        <a class="item" {{action "switchPage" (inline-math totalPages '- ' 1 )}}>
+                          {{inline-math totalPages '- ' 1 }}
+                        </a>
+                      {{/if}}
+                    {{/if}}
+                    {{#if (inline-compare pageNumber '<' (inline-math totalPages '- ' 2))}}
+                      <a class="item" {{action "switchPage" totalPages}}>
+                        {{totalPages}}
+                      </a>
+                    {{else}}
+                      <div class="disabled item"></div>
+                    {{/if}}
+                    {{#if (inline-compare pageNumber '>' (inline-math totalPages '-' 4))}}
+                        <div class="disabled item"></div>
+                    {{/if}}
+                  </div>
+                  </div>
+            </td>
+        </tr> 
+
+        {{#each termCodeModel as |termCode|}}
+          <tr>  
+            <td>
+              <th>Subject Name</th>
+                <div class="ui fluid input">
+                    {{input type="text" value = termCode.name}}
+                </div>
+            </td>
+
+            <td>
+                <div class="ui inverted buttons">
+                    <button class="ui blue inverted button" {{action "saveTermCode" termCode}}>Save</button>
+                    <div class="divider"/>
+                    <button class="ui red inverted button" {{action "deleteTermCode" termCode}}>Delete</button>
+                </div>
+            </td>
+        </tr>
+    {{/each}}
+
+        <tr>
+             <td>
+                <div class="ui fluid input">
+                    {{input type="text" value = newTermCodeName}}
+                </div>
+            </td>
+
+            <td>
+                <button class="ui inverted green button" {{action "addTermCode"}}> 
+                Add &nbsp; <i class="add square icon"></i>
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div>
+			        <label>{{{termCodeOutput}}}</label>
 		        </div>
             </td>
         </tr>
