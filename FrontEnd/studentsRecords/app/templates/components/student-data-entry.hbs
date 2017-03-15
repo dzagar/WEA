@@ -2,7 +2,7 @@
 
 {{#if showMenuBar}}
   <!-- Show the menu bar-->
-  <div class="ui stackable container inverted nine item menu">
+  <div class="ui stackable container inverted eight item menu">
     <a class="item" {{action 'saveStudent'}}>
       <i class="save icon"></i> Save
     </a>
@@ -24,9 +24,6 @@
     <a class="item" {{action 'allStudents'}}>
       <i class="content icon"></i> All Records
     </a>
-    <a class="item" {{action 'findStudent'}}>
-      <i class="search icon"></i> Find Record
-    </a>
     <a class="item" {{action 'createStudent'}}>
       <i class="add user icon"></i> Add Student
     </a>
@@ -42,14 +39,15 @@
   {{delete-scholarship scholarship = currentScholarship showWindow = showScholarshipDeleteConfirmation}}
 {{/if}}
 
+<!-- other popups -->
+{{#if showAddStudent}}
+  {{add-student INDEX = currentIndex student = currentStudent notDONE = showAddStudent total = totalStudents}}
+{{/if}}
+
 <!-- Other non-popup screens -->
 {{#if showAllStudents}}
 <!-- Note that offset is an "in" and "out" parameter !-->
   {{all-students currentIndex = currentIndex currentStudent = currentStudent showAllStudents = showAllStudents showMenuBar = showMenuBar offset = offset limit = limit studentsRecords = studentsRecords totalPages = totalPages pageNumber = pageNumber message = studentDataMessage totalStudents = totalStudents filter = filter changeOffset = (action 'changeOffset')}}
-{{else if showAddStudent}}
-  {{add-student INDEX = currentIndex student = currentStudent notDONE = showAddStudent total = totalStudents}}
-{{else if showFindStudent}}
-  {{find-student notDONE = showFindStudent gender = genderModel residency = residencyModel studentsRecords = studentsRecords limit = limit}}
 {{else}}
   <!-- Show data entry form -->
 

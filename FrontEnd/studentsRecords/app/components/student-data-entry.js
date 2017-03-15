@@ -404,12 +404,6 @@ export default Ember.Component.extend({
     undoSave(){
       this.get('undoManager').undo();
     },
-    findStudent(){
-      this.set("showAllStudents", false);
-      this.set("showDeleteConfirmation", false);
-      this.set("showHelp", false);
-      this.set("showFindStudent",true);
-    },
     deleteCurrentStudent(){
       //Spawn confirmation modal window
       this.set("showDeleteConfirmation", true);
