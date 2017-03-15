@@ -26,6 +26,7 @@ var ImportState = {
 	//undergraduate
 	RECORDPLANS : 17,
 	RECORDGRADES : 18,
+	STUDENTADJUDICATION : 19,
 };
 
 function DisplayErrorMessage(message)
@@ -274,14 +275,20 @@ export default Ember.Component.extend({
 			{
 				"progress": 0,
 				"total": 100,
-				"name": "Undergraduate Record Plans",
+				"name": "UndergraduateRecordPlans",
 				"description": "The file must have <b>6</b> headers with the titles <b>'studentNumber'</b>, <b>'term'</b>, <b>'program'</b>, <b>'level'</b>, <b>'load'</b>, <b>'plan'</b>."
 			},
 			{
 				"progress": 0,
 				"total": 100,
-				"name": "Undergraduate Record Courses",
+				"name": "UndergraduateRecordCourses",
 				"description": "The file must have <b>7</b> headers with the titles <b>'studentNumber'</b>, <b>'term'</b>, <b>'courseLetter'</b>, <b>'courseNumber'</b>, <b>'section'</b>, <b>'grade'</b>, <b>'note'</b>."
+			},
+			{
+				"progress": 0,
+				"total": 100,
+				"name": "UndergraduateRecordAdjudications",
+				"description": "The file must have <b>10</b> headers with the titles <b>'studentNumber'</b>, <b>'term'</b>, <b>'termAVG'</b>, <b>'termUnitsPassed'</b>, <b>'termUnitsTotals'</b>, <b>'termAdjudication'</b>, <b>'specialAVG'</b>, <b>'cumAVG'</b>, <b>'cumUnitsPassed'</b>, <b>'cumUnitsTotals'</b>."
 			}
 			
 		];
@@ -2306,7 +2313,7 @@ export default Ember.Component.extend({
 															doneSavingComments = true;
 															self.pushOutput("<span style='color:green'>Import of Admission Comments successful!</span>");
 															Ember.$("#btnContinue").removeClass("disabled");
-															Ember.$("#admissionComments").addClass("completed");															
+															Ember.$("#AdmissionComments").addClass("completed");															
 														}
 													}
 												});
@@ -2380,6 +2387,10 @@ export default Ember.Component.extend({
 								}
 								if (!rollBackImport)
 								{
+									var importUG = self.get('importUndergrad');
+									Ember.set(importUG.objectAt(2), "total", cumStudentInformation.length*2); 
+									Ember.set(importUG.objectAt(2), "progress", cumStudentInformation.length);
+									self.set('importUndergrad', importUG);
 									self.pushOutput("Successful read of file has completed. Beginning import of " + cumStudentInformation.length + " student's information and " + studentInformation.length + " student terms information");
 									//do the import here. Maybe iterate through the cumStudent array by student number then search the full array by student number to minimize hits to DB
 									for (var i = 0; i < cumStudentInformation; i++)
@@ -2432,6 +2443,8 @@ export default Ember.Component.extend({
 																			termOBJ.set('termUnitsPassed', studentTermUnitsPassed);
 																			termOBJ.set('termUnitsTotal', studentTermUnitsTotal);
 																			termOBJ.save().then(function() {
+																				Ember.set(importUG.objectAt(2), "progress", Ember.get(importUG.objectAt(2), "progress")+1);
+																				self.set('importUndergrad', importUG);
 																				numberOfStudentTermsImported++;																				
 																				if (cumStudentInformation.length + studentInformation.length == numberOfCumStudentsImported + numberOfCumStudentsWithoutStudent + numberOfStudentTermsImported + numberOfStudentTermsWithoutStudent && !doneImportingCumStudents)
 																				{
@@ -2521,7 +2534,7 @@ export default Ember.Component.extend({
   						self.set('importInProgress', false);
   						self.clearOutput();
   						break;
-  					case 12:
+  					case 15:
   						$("#highschool").addClass("active");
 						$("#highschool").removeClass("disabled");
   						$("#student").removeClass("active");
@@ -2530,7 +2543,7 @@ export default Ember.Component.extend({
   						self.set('importInProgress', false);
   						self.clearOutput();
   						break;
-  					case 14:
+  					case 17:
   						$("#undergraduate").addClass("active");
 						$("#undergraduate").removeClass("disabled");
   						$("#highschool").removeClass("active");
