@@ -2464,7 +2464,9 @@ export default Ember.Component.extend({
 																			});
 																		}
 																		else{
-																			numberOfStudentTermsWithoutStudent++;	
+																			numberOfStudentTermsWithoutStudent++;																			
+																			Ember.set(importUG.objectAt(2), "progress", Ember.get(importUG.objectAt(2), "progress")+1);
+																			self.set('importUndergrad', importUG);	
 																			if (cumStudentInformation.length + studentInformation.length == numberOfCumStudentsImported + numberOfCumStudentsWithoutStudent + numberOfStudentTermsImported + numberOfStudentTermsWithoutStudent && !doneImportingCumStudents)
 																			{
 																				doneImportingCumStudents = true;
@@ -2479,7 +2481,9 @@ export default Ember.Component.extend({
 														}
 													});
 												}
-												else{
+												else{													
+													Ember.set(importUG.objectAt(2), "progress", Ember.get(importUG.objectAt(2), "progress")+1);
+													self.set('importUndergrad', importUG);
 													numberOfCumStudentsWithoutStudent++;
 													for (var j = 0; j < studentInformation.length; j++)
 													{
