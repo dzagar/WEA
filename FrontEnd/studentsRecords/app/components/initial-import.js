@@ -687,7 +687,7 @@ export default Ember.Component.extend({
 										var numberOfFacultiesImported = 0;
 										self.pushOutput("Successful read of file has completed. Beginning import of " + uniqueFacultyNames.length + " faculties.");
 										for (var i = 0; i < uniqueFacultyNames.length; i++) {
-											newFacultyName = uniqueFacultyNames[i];
+											var newFacultyName = uniqueFacultyNames[i];
 											var newFaculty = self.get('store').createRecord('faculty', {
 												name: newFacultyName
 											});
@@ -710,7 +710,7 @@ export default Ember.Component.extend({
 							case ImportState.DEPARTMENT:
 							{
 								var departmentCheckerArray = ['NAME', 'FACULTY'];
-								var departmentArray = [worksheet['A1'].v.toUpperCase(), worksheet['A2'].v.toUpperCase()];
+								var departmentArray = [worksheet['A1'].v.toUpperCase(), worksheet['B1'].v.toUpperCase()];
 								if (VerificationFunction(departmentCheckerArray,departmentArray)) {
 									self.setOutput("Importing departments");
 									var rollBackImport = false;
@@ -801,7 +801,7 @@ export default Ember.Component.extend({
 							case ImportState.PROGRAMADMIN:
 							{
 								var PACheckerArray = ['NAME', 'POSITION', 'DEPARTMENT'];
-								var PAArray = [worksheet['A1'].v.toUpperCase(), worksheet['A2'].v.toUpperCase(), worksheet['A3'].v.toUpperCase()];
+								var PAArray = [worksheet['A1'].v.toUpperCase(), worksheet['B1'].v.toUpperCase(), worksheet['C1'].v.toUpperCase()];
 								if (VerificationFunction(PACheckerArray, PAArray)) {
 									self.setOutput("Importing program administration information");
 									var rollBackImport = false;
@@ -812,7 +812,7 @@ export default Ember.Component.extend({
 										var position = worksheet['B' + i];
 										var department = worksheet['C' + i];
 										if (name && position && department) {
-											var adminName = faculty.v;
+											var adminName = name.v;
 											var positionName = position.v;
 											var departmentName = department.v;
 											PAsToImport.push({"name": adminName, "position": positionName, "department": departmentName});
