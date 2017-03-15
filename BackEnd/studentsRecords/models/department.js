@@ -8,7 +8,6 @@ var departmentSchema = mongoose.Schema(
         programAdministrations: [{type: mongoose.Schema.ObjectId, ref: 'ProgramAdministrations'}]
     },
     {
-        
         versionKey: false
     }
 );
