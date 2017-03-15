@@ -66,7 +66,7 @@ export default Ember.Component.extend({
     var self = this;
     this.set('studentDataMessage', "Loading Student Data...");
     this.get('store').query('student', {
-      studentNumber: self.get('filter').studentNumber,
+      number: self.get('filter').studentNumber,
       firstName: self.get('filter').firstName,
       lastName: self.get('filter').lastName,
       limit: self.get('limit'),
@@ -130,7 +130,7 @@ export default Ember.Component.extend({
     this.set('studentDataMessage', "Loading Student Data...");
     var self = this;
     this.get('store').query('student', {
-      studentNumber: self.get('filter').studentNumber,
+      number: self.get('filter').studentNumber,
       firstName: self.get('filter').firstName,
       lastName: self.get('filter').lastName,
       limit: self.get('limit'),
