@@ -2392,8 +2392,6 @@ export default Ember.Component.extend({
 									Ember.set(importUG.objectAt(2), "progress", cumStudentInformation.length + studentInformation.length);
 									self.set('importUndergrad', importUG);
 									self.pushOutput("Successful read of file has completed. Beginning import of " + cumStudentInformation.length + " student's information and " + studentInformation.length + " student terms information");
-									console.log(cumStudentInformation.length);
-									console.log(studentInformation.length);
 									var numberOfCumStudentsImported = 0;
 									var numberOfCumStudentsWithoutStudent = 0;
 									var numberOfStudentTermsImported = 0;
@@ -2409,6 +2407,14 @@ export default Ember.Component.extend({
 											var cumStudentAVG = cumStudentInformation[inCumStudentMutexCount].cumAVG
 											var cumStudentUnitsPassed = cumStudentInformation[inCumStudentMutexCount].cumUnitsPassed;
 											var cumStudentUnitsTotal = cumStudentInformation[inCumStudentMutexCount].cumUnitsTotal;
+											var currentStudentInformationToImport = []
+											for (var k = 0; k < studentInformation.length; k++)
+											{
+												if (studentInformation[k].studentNumber == cumStudentNumber)
+												{
+													currentStudentInformationToImport.push(studentInformation[k]);
+												}
+											}
 											self.get('store').queryRecord('student', {
 												number: cumStudentNumber,
 												findOneStudent: true
@@ -2424,21 +2430,20 @@ export default Ember.Component.extend({
 														numberOfCumStudentsImported++;
 														var studentTermMutex = Mutex.create();
 														var inStudentTermMutexIndex = 0;
-														for (var k = 0; k < studentInformation.length; k++)
+														for (var n = 0; n < currentStudentInformationToImport.length; n++)
 														{
-															if (studentInformation[k].studentNumber == studentOBJ.get('studentNumber'))
+															if (currentStudentInformationToImport[n].studentNumber == studentOBJ.get('studentNumber'))
 															{	
-																console.log(studentInformation[k]);															
 																studentTermMutex.lock(function() {
 																	var inStudentTermMutexCount = inStudentTermMutexIndex++;
 																	var inTermMutexStudentNumber = studentOBJ.get('studentNumber');
-																	var studentTermCode = studentInformation[inStudentTermMutexCount].termCode;
-																	var studentTermAVG = studentInformation[inStudentTermMutexCount].termAVG;
-																	var studentTermUnitsPassed = studentInformation[inStudentTermMutexCount].termUnitsPassed;
-																	var studentTermUnitsTotal = studentInformation[inStudentTermMutexCount].termUnitsTotal;
+																	var studentTermCode = currentStudentInformationToImport[inStudentTermMutexCount].termCode;
+																	var studentTermAVG = currentStudentInformationToImport[inStudentTermMutexCount].termAVG;
+																	var studentTermUnitsPassed = currentStudentInformationToImport[inStudentTermMutexCount].termUnitsPassed;
+																	var studentTermUnitsTotal = currentStudentInformationToImport[inStudentTermMutexCount].termUnitsTotal;
 																	self.get('store').queryRecord('term', {
 																		studentNumber: inTermMutexStudentNumber,
-																		termCode: studentTermCode
+																		name: studentTermCode
 																	}).then(function (termOBJ) {
 																		if (termOBJ)
 																		{																	
@@ -2449,7 +2454,6 @@ export default Ember.Component.extend({
 																				Ember.set(importUG.objectAt(2), "progress", Ember.get(importUG.objectAt(2), "progress")+1);
 																				self.set('importUndergrad', importUG);
 																				numberOfStudentTermsImported++;		
-																				console.log("Still Need " + ((cumStudentInformation.length + studentInformation.length) - (numberOfCumStudentsImported + numberOfCumStudentsWithoutStudent + numberOfStudentTermsImported + numberOfStudentTermsWithoutStudent)));																		
 																				if (cumStudentInformation.length + studentInformation.length == numberOfCumStudentsImported + numberOfCumStudentsWithoutStudent + numberOfStudentTermsImported + numberOfStudentTermsWithoutStudent && !doneImportingCumStudents)
 																				{
 																					doneImportingCumStudents = true;
@@ -2461,7 +2465,6 @@ export default Ember.Component.extend({
 																		}
 																		else{
 																			numberOfStudentTermsWithoutStudent++;	
-																			console.log("Still Need " + ((cumStudentInformation.length + studentInformation.length) - (numberOfCumStudentsImported + numberOfCumStudentsWithoutStudent + numberOfStudentTermsImported + numberOfStudentTermsWithoutStudent)));																																				
 																			if (cumStudentInformation.length + studentInformation.length == numberOfCumStudentsImported + numberOfCumStudentsWithoutStudent + numberOfStudentTermsImported + numberOfStudentTermsWithoutStudent && !doneImportingCumStudents)
 																			{
 																				doneImportingCumStudents = true;
@@ -2477,16 +2480,14 @@ export default Ember.Component.extend({
 													});
 												}
 												else{
-													console.log("no student");
 													numberOfCumStudentsWithoutStudent++;
 													for (var j = 0; j < studentInformation.length; j++)
 													{
-														if (studentInformation[j].studentNumber = cumStudentNumber)
+														if (studentInformation[j].studentNumber == cumStudentNumber)
 														{
 															numberOfStudentTermsWithoutStudent++;
 														}
 													}
-													console.log("Still Need " + ((cumStudentInformation.length + studentInformation.length) - (numberOfCumStudentsImported + numberOfCumStudentsWithoutStudent + numberOfStudentTermsImported + numberOfStudentTermsWithoutStudent)));																		
 													if (cumStudentInformation.length + studentInformation.length == numberOfCumStudentsImported + numberOfCumStudentsWithoutStudent + numberOfStudentTermsImported + numberOfStudentTermsWithoutStudent && !doneImportingCumStudents)
 													{
 														doneImportingCumStudents = true;
