@@ -1,1 +1,49 @@
-<label>This is where we will do adjudication stuff.</label>
+<div class = "ui welcome container">
+	<div class = "ui text container">
+        <br><br><br>
+		<h2>
+			Please choose a term to adjudicate for:
+		</h2>
+
+        <div class = "ui padded centered grid container">
+            <select class="ui dropdown" onchange={{action 'selectTerm' value='target.value'}}>
+                {{#each termCodeModel as |termCode|}}
+                    <option value={{termCode.id}}>{{termCode.name}}</option>
+                {{/each}}
+            </select>
+        </div>
+
+        <div class = "ui padded centered grid container">
+			<div class = "five wide column">
+				<div class = "ui green button" {{action 'adjudicate'}}>
+					Start Adjudication Process
+				</div>
+			</div>
+		</div>
+
+        
+            <div class = "ui medium purple progress">
+                <div class="bar">
+                    <div class="progress"></div>
+                </div>
+            </div>
+
+
+		<div class="ui raised very padded text container segment">
+            <h2 class="ui header">Adjudication Status</h2>
+        </div>
+
+	</div>
+</div>
+
+{{!--<div class="ui grid">
+    <div class="four wide column">
+        <select class="ui fluid search dropdown" multiple="">
+         <option value="">Student</option>
+            {{#each studentModel as |students|}}
+            <option>{{students.firstName}}{{students.lastName}}</option>
+            {{/each}}
+        </select>
+    </div>  
+</div>
+--}}

@@ -26,6 +26,7 @@ var ImportState = {
 	//undergraduate
 	RECORDPLANS : 17,
 	RECORDGRADES : 18,
+	STUDENTADJUDICATION : 19,
 };
 
 function DisplayErrorMessage(message)
@@ -256,14 +257,20 @@ export default Ember.Component.extend({
 			{
 				"progress": 0,
 				"total": 100,
-				"name": "Undergraduate Record Plans",
+				"name": "UndergraduateRecordPlans",
 				"description": "The file must have <b>6</b> headers with the titles <b>'studentNumber'</b>, <b>'term'</b>, <b>'program'</b>, <b>'level'</b>, <b>'load'</b>, <b>'plan'</b>."
 			},
 			{
 				"progress": 0,
 				"total": 100,
-				"name": "Undergraduate Record Courses",
+				"name": "UndergraduateRecordCourses",
 				"description": "The file must have <b>7</b> headers with the titles <b>'studentNumber'</b>, <b>'term'</b>, <b>'courseLetter'</b>, <b>'courseNumber'</b>, <b>'section'</b>, <b>'grade'</b>, <b>'note'</b>."
+			},
+			{
+				"progress": 0,
+				"total": 100,
+				"name": "UndergraduateRecordAdjudications",
+				"description": "The file must have <b>10</b> headers with the titles <b>'studentNumber'</b>, <b>'term'</b>, <b>'termAVG'</b>, <b>'termUnitsPassed'</b>, <b>'termUnitsTotals'</b>, <b>'termAdjudication'</b>, <b>'specialAVG'</b>, <b>'cumAVG'</b>, <b>'cumUnitsPassed'</b>, <b>'cumUnitsTotals'</b>."
 			}
 			
 		];
@@ -2334,9 +2341,11 @@ export default Ember.Component.extend({
 														numberOfCommentsWithNoStudent++;
 														if (numberOfCommentsImported == uniqueStudents.length - numberOfCommentsWithNoStudent && !doneSavingComments)
 														{
-																self.pushOutput("<span style='color:green'>Import of Admission Comments successful!</span>");
-																Ember.$("#btnContinue").removeClass("disabled");
-																Ember.$("#admissionComments").addClass("completed");															
+
+															doneSavingComments = true;
+															self.pushOutput("<span style='color:green'>Import of Admission Comments successful!</span>");
+															Ember.$("#btnContinue").removeClass("disabled");
+															Ember.$("#AdmissionComments").addClass("completed");															
 														}
 													}
 												});
@@ -2376,7 +2385,7 @@ export default Ember.Component.extend({
 
 									if (studentNumber && term && termAVG && termUnitsPassed && termUnitsTotal && cumAVG && cumUnitsPassed && cumUnitsTotal)
 									{
-										if (checkUniqueTerm(studentInformation, studentNumber.v, term.v))
+										if (!checkUniqueTerm(studentInformation, studentNumber.v, term.v))
 										{											
 											self.pushOutput("<span style='color:red'>Import Cancelled. Duplicate values found on row " + i + " for student number " + studentNumber.v + " and term " + term.v + "</span>");
 											rollbackImport = true;
@@ -2385,15 +2394,16 @@ export default Ember.Component.extend({
 										else{
 											studentInformation.push({"studentNumber": studentNumber.v, "termCode": term.v, "termAVG": termAVG, "termUnitsPassed": termUnitsPassed, "termUnitsTotal": termUnitsTotal});
 											//if we are transitioning students
+											
 											if (currentStudentNumber != studentNumber.v && currentStudentNumber !== -1)
 											{
-												cumStudentInformation.push({"studentNumber": studentNumber.v, "cumAVG": cumAVG, "cumUnitsPassed": cumUnitsPassed.v, "cumUnitsTotal": cumUnitsTotal.v});
+												cumStudentInformation.push({"studentNumber": studentNumber.v, "cumAVG": cumAVG.v, "cumUnitsPassed": cumUnitsPassed.v, "cumUnitsTotal": cumUnitsTotal.v});
 
 											}											
 											currentStudentNumber = studentNumber.v;
 											currentCumAvg = cumAVG.v;
 											currentCumUnitsPassed = cumUnitsPassed.v;
-											currentCumUnitsTotal = currentCumUnitsTotal.v;
+											currentCumUnitsTotal = cumUnitsTotal.v;
 										}
 									}
 									else if (studentNumber || term || termAVG || termUnitsPassed || termUnitsTotal || cumAVG || cumUnitsPassed || cumUnitsTotal)
@@ -2408,6 +2418,10 @@ export default Ember.Component.extend({
 								}
 								if (!rollBackImport)
 								{
+									var importUG = self.get('importUndergrad');
+									Ember.set(importUG.objectAt(2), "total", cumStudentInformation.length*2); 
+									Ember.set(importUG.objectAt(2), "progress", cumStudentInformation.length);
+									self.set('importUndergrad', importUG);
 									self.pushOutput("Successful read of file has completed. Beginning import of " + cumStudentInformation.length + " student's information and " + studentInformation.length + " student terms information");
 									//do the import here. Maybe iterate through the cumStudent array by student number then search the full array by student number to minimize hits to DB
 									for (var i = 0; i < cumStudentInformation; i++)
@@ -2460,6 +2474,8 @@ export default Ember.Component.extend({
 																			termOBJ.set('termUnitsPassed', studentTermUnitsPassed);
 																			termOBJ.set('termUnitsTotal', studentTermUnitsTotal);
 																			termOBJ.save().then(function() {
+																				Ember.set(importUG.objectAt(2), "progress", Ember.get(importUG.objectAt(2), "progress")+1);
+																				self.set('importUndergrad', importUG);
 																				numberOfStudentTermsImported++;																				
 																				if (cumStudentInformation.length + studentInformation.length == numberOfCumStudentsImported + numberOfCumStudentsWithoutStudent + numberOfStudentTermsImported + numberOfStudentTermsWithoutStudent && !doneImportingCumStudents)
 																				{
@@ -2550,7 +2566,8 @@ export default Ember.Component.extend({
   						self.set('importInProgress', false);
   						self.clearOutput();
   						break;
-  					case 11:
+
+  					case 15:
   						$("#highschool").addClass("active");
 						$("#highschool").removeClass("disabled");
   						$("#student").removeClass("active");
@@ -2559,7 +2576,8 @@ export default Ember.Component.extend({
   						self.set('importInProgress', false);
   						self.clearOutput();
   						break;
-  					case 13:
+
+  					case 17:
   						$("#undergraduate").addClass("active");
 						$("#undergraduate").removeClass("disabled");
   						$("#highschool").removeClass("active");
