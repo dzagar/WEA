@@ -58,12 +58,12 @@
     <div class="two fields">
       <div class="field">
         <label>Gender</label>
-        {{#ui-dropdown class="selection"}}
+        {{#ui-dropdown class="selection" selected=val onChange=(action 'log' val) as |execute mapper|}}
           <div class="default text">Gender</div>
           <i class="dropdown icon"></i>
           <div class="menu">
             {{#each genderModel as |gender|}}
-              <div class="item" data-value="{{gender.id}}">{{gender.name}}</div>
+              <div class="item" data-value="{{map-value mapper gender.id}}">{{gender.name}}</div>
             {{/each}}
           </div>
         {{/ui-dropdown}}
