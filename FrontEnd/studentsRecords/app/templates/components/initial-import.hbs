@@ -5,19 +5,12 @@
 <div class="ui centered middle aligned grid">
 	<div class = "row">
 		<div class="column">
-			<div class="ui tiny steps">
+			<div class="ui small steps">
 				<a id="basic" class="active step item">
 					<i class="minus icon"></i>
 					<div class="content">
 		     			<div class="title" >Basic Information</div>
 		     			<!--Genders, Residencies, Course Codes-->
-		    		</div>
-				</a>
-				<a id="faculty" class="disabled step item">
-					<i class="minus icon"></i>
-					<div class="content">
-		     			<div class="title" >Faculty Information</div>
-		     			<!--Faculties, Departments, Program Admins-->
 		    		</div>
 				</a>
 				<a id="student" class="disabled step item">
@@ -27,6 +20,12 @@
 		     			<!--Students, Awards & Scholarships, Advanced Standings, RC, BA, AA, AC-->
 		    		</div>
 				</a>
+				<!--<a id="termCodes" class=" step item" {{action "setIndex" 3 }}>
+					<i class="minus icon"></i>
+					<div class="content">
+		     			<div class="title" >Term Codes</div>
+		    		</div>
+				</a>-->
 				<a id="highschool" class="disabled step item">
 					<i class="minus icon"></i>
 					<div class="content">
@@ -160,32 +159,6 @@
 				</div>
 			{{else if index3}}
 				{{#each importStudent as |feature index|}}
-					<div class = "ui segment step " id = {{feature.name}}>
-						<div class = "content">
-							<h3> {{feature.name}} </h3>
-							<p> {{{feature.description}}} {{index}}</p>
-							<input type = "file" id = {{concat "newFile" index}}>
-							<br>
-							<br>
-						</div>
-					</div>
-					<div class = "row">
-						{{#if importInProgress}}
-							{{#ui-progress value = feature.progress progress = feature.progress total = feature.total}}
-								<div class="bar">
-								  <div class="progress"></div>
-								</div>
-							{{/ui-progress}}
-						{{/if}}
-					</div>
-				{{/each}}
-				<div class = "ui basic centered middle aligned grid segment">
-					<button class="ui primary button" {{action 'import' }}>
-		  				Import Files
-					</button>
-				</div>
-			{{else if index4}}
-				{{#each importFaculty as |feature index|}}
 					<div class = "ui segment step " id = {{feature.name}}>
 						<div class = "content">
 							<h3> {{feature.name}} </h3>

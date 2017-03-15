@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var genderSchema = mongoose.Schema(
     {
         name: String,
-        students: [{type: mongoose.Schema.ObjectId, ref: ('Students')}]
+        students: [{type: mongoose.Schema.ObjectId, ref: ('student')}]
     },
     {
         versionKey: false

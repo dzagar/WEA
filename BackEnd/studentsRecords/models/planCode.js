@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var planCodeSchema = mongoose.Schema(
     {
         name: String,
-        programRecord: {type: mongoose.Schema.ObjectId, ref: 'ProgramRecord'}
+        programRecord: {type: mongoose.Schema.ObjectId, ref: 'programRecord'}
     },
     {
         versionKey: false

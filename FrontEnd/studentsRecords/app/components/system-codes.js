@@ -6,12 +6,16 @@ export default Ember.Component.extend({
     currentCourseCode: null,
     currentGender: null,
     currentHighSchool: null,
+    currentHighSchoolSubject: null,
     currentResidency: null,
     currentTermCode: null,
     genderModel: null,
     genderOutput: "",
     highSchoolModel: null,
     highSchoolOutput: "",
+    highSchoolCourseModel:null,
+    highSchoolSubjectModel: null,
+    highSchoolSubjectOutput: "",
     newCourseCodeCourseLetter: "",
     newCourseCodeCourseNumber: "",
     newCourseCodeName: "",
@@ -20,7 +24,10 @@ export default Ember.Component.extend({
     newGenderName: "",
     newGenderObj: null,
     newHighSchoolName: "",
+    newHighSchoolSubjectDescription: "",
+    newHighSchoolSubjectName: "",
     newHighSchoolObj: null,
+    newHighSchoolSubjectObj: null,
     newResidencyName: "",
     newResidencyObj: null,
     newTermCodeName: "",
@@ -30,6 +37,7 @@ export default Ember.Component.extend({
     showCourseCodeDeleteConfirmation: false,
     showDeleteGenderConfirmation: false,
     showDeleteHighSchoolConfirmation: false,
+    showDeleteHighSchoolSubjectConfirmation: false,
     showDeleteResidencyConfirmation: false,
     showDeleteTermCodeConfirmation: false,
     termCodeModel: null,
@@ -59,6 +67,10 @@ export default Ember.Component.extend({
     setHighSchoolOutput: function(newOutput) {
         this.set('highSchoolOutput',newOutput);
     },
+    
+    setHighSchoolSubjectOutput: function(newOutput) {
+        this.set('highSchoolSubjectOutput', newOutput);
+    },
 
     setTermCodeOutput: function(newOutput) {
         this.set('termCodeOutput', newOutput);
@@ -82,7 +94,6 @@ export default Ember.Component.extend({
             self.set('highSchoolModel', records);
         });
 
-<<<<<<< HEAD
         this.get('store').findAll('high-school-subject').then(function (records){
             self.set('highSchoolSubjectModel', records);
         });
@@ -95,8 +106,6 @@ export default Ember.Component.extend({
             self.set('termCodeModel', records);
         });
 
-=======
->>>>>>> master
         this.set('limit', 10);
         this.set('offset', 0);
         this.set('pageSize', 10);
@@ -112,6 +121,7 @@ export default Ember.Component.extend({
         this.set('currentGender', null);
         this.set('currentResidency', null);
         this.set('currentHighSchool', null);
+        this.set('currentHighSchoolSubject', null);
     },
 
     courseCodeModel: Ember.observer('offset', function () {
@@ -189,12 +199,9 @@ export default Ember.Component.extend({
             this.set('showDeleteResidencyConfirmation', false);
             this.set('showCourseCodeConfirmation', false);
             this.set('showDeleteHighSchoolConfirmation',false);
-<<<<<<< HEAD
             this.set('showDeleteHighSchoolSubjectConfirmation',false);
             this.set('showDeleteHighSchoolCourseConfirmation',false);
             this.set('showDeleteTermCodeConfirmation', false);
-=======
->>>>>>> master
         },
 
         addResidency()
@@ -238,12 +245,9 @@ export default Ember.Component.extend({
             this.set('showDeleteResidencyConfirmation', true);
             this.set('showCourseCodeConfirmation', false);
             this.set('showDeleteHighSchoolConfirmation',false);
-<<<<<<< HEAD
             this.set('showDeleteHighSchoolSubjectConfirmation',false);
             this.set('showDeleteHighSchoolCourseConfirmation',false);
             this.set('showDeleteTermCodeConfirmation', false);
-=======
->>>>>>> master
         },
 
         addCourseCode()
@@ -279,12 +283,9 @@ export default Ember.Component.extend({
             this.set('showDeleteResidencyConfirmation', false);
             this.set('showCourseCodeDeleteConfirmation', true);
             this.set('showDeleteHighSchoolConfirmation',false);
-<<<<<<< HEAD
             this.set('showDeleteHighSchoolSubjectConfirmation',false);
             this.set('showDeleteHighSchoolCourseConfirmation',false);
             this.set('showDeleteTermCodeConfirmation', false);
-=======
->>>>>>> master
 
         },
 
@@ -296,7 +297,6 @@ export default Ember.Component.extend({
 
              for(var i=0;i<highSchoolArray.content.length;i++)
             {
-                console.log(highSchoolArray);
                 if(highSchoolName.toUpperCase()==highSchoolArray.content[i]._data.schoolName.toUpperCase())
                 {
                     this.setHighSchoolOutput("The secondary school entered is already created! Please enter a new secondary school name!");
@@ -330,19 +330,15 @@ export default Ember.Component.extend({
             this.set('showDeleteResidencyConfirmation', false);
             this.set('showCourseCodeConfirmation', false);
             this.set('showDeleteHighSchoolConfirmation',true);
-<<<<<<< HEAD
             this.set('showDeleteHighSchoolSubjectConfirmation',false);
             this.set('showDeleteHighSchoolCourseConfirmation',false);
             this.set('showDeleteTermCodeConfirmation', false);
-=======
->>>>>>> master
         },
 
         switchPage(pageNum)
         {
           this.changeOffset((pageNum - 1) * this.get('pageSize'), false);
         },
-<<<<<<< HEAD
 
         addHighSchoolSubject()
         {
@@ -441,8 +437,6 @@ export default Ember.Component.extend({
             termCode.save();
         }
 
-=======
->>>>>>> master
     }
 
 

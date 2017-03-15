@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var advancedStandingsSchema = mongoose.Schema(
     {
-        student: {type: mongoose.Schema.ObjectId, ref: 'Students'},
+        student: {type: mongoose.Schema.ObjectId, ref: 'student'},
         course: String,
         description: String,
         units: Number,

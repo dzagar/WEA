@@ -6,7 +6,7 @@ var rolePermissionSchema = mongoose.Schema(
     {
         code: String,
         sysFeature: String,
-        roleCodes: [{type: mongoose.Schema.ObjectId, ref: ('RoleCode')}]
+        roleCodes: [{type: mongoose.Schema.ObjectId, ref: ('roleCode')}]
     }
 );
 
