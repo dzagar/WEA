@@ -25,8 +25,12 @@ export default Ember.Component.extend({
     newGenderObj: null,
     newHighSchoolName: "",
     newHighSchoolObj: null,
+    newHighSchoolCourseObj: null,
     newHighSchoolSubjectName: "",
     newHighSchoolSubjectDescriptionName: "",
+    newHighSchoolSubjectLevel: "",
+    newHighSchoolSubjectSource: "",
+    newHighSchoolSubjectUnit: "",
     newHighSchoolSubjectObj: null,
     newResidencyName: "",
     newResidencyObj: null,
@@ -361,32 +365,44 @@ export default Ember.Component.extend({
 
         addHighSchoolSubject()
         {
-            var hsSubjectArray=this.get('highSchoolSubjectModel');
-            var hsCourseArray=this.get('highSchoolCourseModel');
-            console.log(hsSubjectArray);
-            console.log(hsSubjectArray.courses);
             var highSchoolSubjectName=this.get('newHighSchoolSubjectName');
+            var highSchoolSubjectDescription=this.get('newHighSchoolSubjectDescriptionName');
+            var highSchoolSubjectLevel=this.get('newHighSchoolSubjectLevel');
+            var highSchoolSubjectSource=this.get('newHighSchoolSubjectSource');
+            var highSchoolSubjectUnit=this.get('newHighSchoolSubjectUnit');
             var isHighSchoolSubjectCreated=true;
 
-            for(var i=0;i<hsSubjectArray.content.length;i++)
+            for(var i=0;i<courseArray.length;i++)
             {
-                 if(highSchoolSubjectName.toUpperCase()==hsSubjectArray.content[i]._data.name.toUpperCase())
+                 if(highSchoolSubjectName.toUpperCase()==courseArray[i].name.toUpperCase() && highSchoolSubjectDescription.toUpperCase()==courseArray[i].description && highSchoolSubjectLevel.toUpperCase()==courseArray[i].level && highSchoolSubjectUnit == courseArray[i].unit && highSchoolSubjectSource.toUpperCase() == courseArray[i].source)
                 {
                     this.setHighSchoolSubjectOutput("The high school subject entered is already created! Please enter a new high school subject name!");
                     isHighSchoolSubjectCreated=false;
                 }
+
             }
 
             if(isHighSchoolSubjectCreated)
             {
                 this.setHighSchoolSubjectOutput("");
-                if (this.get('newHighSchoolSubjectName').trim() != "" && this.get('newHighSchoolSubjectDescriptionName').trim() !="")
+                if (this.get('newHighSchoolSubjectName').trim() != "" && this.get('newHighSchoolSubjectDescriptionName').trim() !="" && this.get('newHighSchoolSubjectLevel').trim() !="" && this.get('newHighSchoolSubjectSource').trim() !="" && this.get('newHighSchoolSubjectUnit').trim() !="")
                 {
                     this.set('newHighSchoolSubjectObj',this.get('store').createRecord('high-school-subject',{
                         name: this.get('newHighSchoolSubjectName').trim(),
                         description: this.get('newHighSchoolSubjectDescriptionName').trim()
                     }));
+
+                    this.set('newHighSchoolCourseObj', this.get('store').createRecord('high-school-course' ,{
+                        level:  this.get('newHighSchoolSubjectLevel').trim(),
+                        unit:   this.get('newHighSchoolSubjectUnit').trim(),
+                        source: this.get('newHighSchoolSubjectSource').trim()
+                    }));
+                    
+                    this.set('newHighSchoolCourseObj').save();
                     this.get('newHighSchoolSubjectObj').save();
+                    this.set('newHighSchoolSubjectSource',"");
+                    this.set('newHighSchoolSubjectLevel', "");
+                    this.set('newHighSchoolSubjectUnit', "");
                     this.set('newHighSchoolSubjectName',"");
                     this.set('newHighSchoolSubjectDescriptionName',"");
                 }
