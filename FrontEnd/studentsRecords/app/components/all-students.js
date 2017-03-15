@@ -9,6 +9,7 @@ export default Ember.Component.extend({
   message: null,
   offset: 0,
   pageNumber: 0,
+  showAddStudent: false,
   showAllStudents: true,
   showFilters: false,
   showMenuBar: false,
@@ -18,6 +19,10 @@ export default Ember.Component.extend({
   totalStudents: 0,
 
   actions: {
+
+    createStudent() {
+      this.set('showAddStudent', true);
+    },
 
     firstPage() {
       this.get('changeOffset')(0, false);
