@@ -59,7 +59,7 @@ router.route('/')
                                 let termCode = termCodes[0];
                                 if (termCode)
                                 {
-                                    Term.find({student: student, termCode: termCode}, function(error, term) {
+                                    Term.findOne({student: student, termCode: termCode}, function(error, term) {
                                         if (error){
                                             response.send(error);
                                         }
@@ -265,6 +265,33 @@ router.route('/:term_id')
             else {
                 response.json({deleted: term});
             }
+        });
+    })
+    .put(parseUrlencoded, parseJSON, function (request, response) {
+        Term.findById(request.params.term_id, function(error, term) {
+            if (error)
+            {
+                response.send(error);
+            }
+            else{
+                term.termAVG = request.body.term.termAVG;
+                term.termUnitsPassed = request.body.term.termUnitsPassed;
+                term.termUnitsTotal = request.body.term.termUnitsTotal;
+                term.termCode = request.body.term.termCode;
+                term.student = request.body.term.student;
+                if (request.body.term.programRecords) term.programRecords = request.body.term.programRecords.split();
+                if (request.body.term.grades) term.grades = request.body.term.grades.split();
+                term.save(function(error) {
+                    if (error)
+                    {
+                        response.send(error);
+                    }
+                    else{
+                        response.send({term:term});
+                    }
+                });
+            }
+
         });
     });
 module.exports = router;
