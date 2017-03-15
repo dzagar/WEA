@@ -1,7 +1,6 @@
-<div class="ui modal">
-  <div class="header">Add a new student:
-  </div>
-
+<div class="ui small basic modal">
+  <div class="header">Add Student</div>
+<!--
   <div class="ui form">
   	<div class="inline field">
             <label>Student Number</label>
@@ -34,6 +33,54 @@
               {{/each}}
             </select>
      </div>
+  </div>
+  -->
+  <div class="ui inverted form">
+    <div class="field">
+      <label>Student Number</label>
+      {{input size="10" type="number" placeholder="Student Number" value = number}}
+    </div>
+    <div class="field">
+      <label>Name</label>
+      <div class="two fields">
+        <div class="field">
+          {{input type="text" placeholder="First Name" value = firstName}}
+        </div>
+        <div class="field">
+          {{input type="text" placeholder="Last Name" value = lastName}}
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Date of Birth</label>
+      {{input type="date" placeholder="Date of Birth" value = DOB}}
+    </div>
+    <div class="two fields">
+      <div class="field">
+        <label>Gender</label>
+        {{#ui-dropdown class="selection"}}
+          <div class="default text">Gender</div>
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            {{#each genderModel as |gender|}}
+              <div class="item" data-value="{{gender.id}}">{{gender.name}}</div>
+            {{/each}}
+          </div>
+        {{/ui-dropdown}}
+      </div>
+      <div class="field">
+        <label>Residency</label>
+        {{#ui-dropdown class="selection"}}
+          <div class="default text">Residency</div>
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            {{#each residencyModel as |residency|}}
+              <div class="item" data-value="{{residency.id}}">{{residency.name}}</div>
+            {{/each}}
+          </div>
+        {{/ui-dropdown}}
+      </div>
+    </div>
   </div>
 
   <div class="actions">
