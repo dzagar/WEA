@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
+var Adjudication = require('../models/adjudication');
 var TermCode = require('../models/termCode');
+var Term = require('../models/term');
 var Student = require('../models/student');
 var Grade = require('../models/grade');
 var ProgramRecord = require('../models/programRecord');
@@ -11,24 +13,11 @@ var parseJSON = bodyParser.json();
 router.route('/')
 	.post(parseUrlencoded, parseJSON, function (request, response) {
         var termCode = new TermCode(request.body.termCode);
-        Student.findById(termCode.student, function (error, student) {
+        termCode.save(function (error) {
             if (error) {
                 response.send(error);
             } else {
-                student.termCodes.push(termCode._id);
-                termCode.save(function (error) {
-                    if (error) {
-                        response.send(error);
-                    } else {
-                        student.save(function(error) {
-                            if (error) {
-                                response.send(error);
-                            } else {
-                                response.json({termCode: termCode});
-                            }
-                        });
-                    }
-                });
+                response.send({termCode: termCode});
             }
         });
     })
@@ -50,24 +39,34 @@ router.route('/')
                 }
             });
         }
-        else if (request.query.studentNumber && request.query.name) {
-            Student.find({studentNumber: request.query.studentNumber}, function(error, students) {
+        // else if (request.query.studentNumber && request.query.name) {
+        //     Student.find({studentNumber: request.query.studentNumber}, function(error, students) {
+        //         if (error) {
+        //             response.send(error);
+        //         } else {                    
+        //             let student = students[0];    //should only return one record anyway
+        //             if(student) {
+        //                 TermCode.find({name: request.query.name, student: student.id}, function (error, termCode) {
+        //                     if (error) {
+        //                         response.send(error);
+        //                     } else {
+        //                         response.json({termCode: termCode});
+        //                     }
+        //                 });
+        //             } else {
+        //                 response.json({error: "No student was found"});
+        //             }
+        //         }
+        //     });
+        // }
+        else if (request.query.name){
+            TermCode.findOne({name: request.query.name}, function(error, termCode) {
                 if (error) {
                     response.send(error);
-                } else {                    
-                    let student = students[0];    //should only return one record anyway
-                    if(student) {
-                        TermCode.find({name: request.query.name, student: student.id}, function (error, termCode) {
-                            if (error) {
-                                response.send(error);
-                            } else {
-                                response.json({termCode: termCode});
-                            }
-                        });
-                    } else {
-                        response.json({error: "No student was found"});
-                    }
-                }
+                } else {
+                    response.json({termCode: termCode});
+                }               
+
             });
         }
         else { 
@@ -99,91 +98,36 @@ router.route('/:termCode_id')
                 failed = true;
                 response.send(error);
             } else if (termCode) {
-                Student.findById(termCode.student, function (error, student) {
-                    if (error && !failed) {
-                        failed = true;
-                        response.send(error);
-                    } else if (student) {
-                        let index = student.termCodes.indexOf(termCode._id);
-                        if (index > -1) {
-                            student.termCodes.splice(index, 1);
-                        }
 
-                        student.save(function (error) {
+                if (termCode.terms.length > 0) {
+                    let completedTerms = 0;
+                    for (let i = 0; i < termCode.terms.length; i++) {
+                        Term.findById(termCode.terms[i], function (error, term) {
                             if (error && !failed) {
                                 failed = true;
                                 response.send(error);
-                            } else {
-                                completed++;
-                                if (completed === 3 && !failed) {
-                                    response.json({deleted: termCode});
-                                }
-                            }
-                        });
-                    } else {
-                        completed++;
-                        if (completed === 3 && !failed) {
-                            response.json({deleted: termCode});
-                        }
-                    }
-                });
+                            } else if (term) {
+                                term.termCode = null;
 
-                if (termCode.grades.length > 0) {
-                    let completedGrades = 0;
-                    for (let i = 0; i < termCode.grades.length && !failed; i++) {
-                        Grade.findById(termCode.grades[i], function (error, grade) {
-                            if (error && !failed) {
-                                failed = true;
-                                response.send(error);
-                            } else if (grade) {
-
-                            } else {
-                                completedGrades++;
-                                if (completedGrades === termCodes.grades.length && !failed) {
-                                    completed++;
-                                    if (completed === 3 && !failed) {
-                                        response.json({deleted: termCode});
-                                    }
-                                }
-                            }
-                        });
-                    }
-                } else {
-                    completed++;
-                    if (completed === 3 && !failed) {
-                        response.json({deleted: termCode});
-                    }
-                }
-
-                if (termCode.programRecords.length > 0) {
-                    let completedProgramRecords = 0;
-                    for (let i = 0; i < termCode.programRecords.length && !failed; i++) {
-                        ProgramRecord.findById(termCode.programRecords[i], function(error, programRecord) {
-                            if (error && !failed) {
-                                failed = true;
-                                response.send(error);
-                            } else if (programRecord) {
-                                programRecord.termCode = null;
-
-                                programRecord.save(function (error) {
+                                term.save(function (error) {
                                     if (error && !failed) {
                                         failed = true;
                                         response.send(error);
                                     } else {
-                                        completedProgramRecords++;
-                                        if (completedProgramRecords === termCode.programRecords.length && !failed) {
-                                            completed++;
-                                            if (completed === 3 && !failed) {
+                                        completedTerms++;
+                                        if (completedTerms === termCode.terms.length && !failed) {
+                                            competed++;
+                                            if (completed === 2 && !failed) {
                                                 response.json({deleted: termCode});
                                             }
                                         }
                                     }
                                 });
                             } else {
-                                completedProgramRecords++;
-                                if (completedProgramRecords === termCode.programRecords.length && !failed) {
-                                    completed++;
-                                    if (completed === 3 && !failed) {
+                                completedTerms++;
+                                if (completedTerms === termCode.terms.length && !failed) {
+                                    competed++;
+                                    if (completed === 2 && !failed) {
                                         response.json({deleted: termCode});
                                     }
                                 }
@@ -192,8 +136,46 @@ router.route('/:termCode_id')
                     }
                 } else {
                     completed++;
-                    if (completed === 3 && !failed) {
+                    if (completed === 2 && !failed){
                         response.json({deleted: termCode});
+                    }
+                }
+
+                if (termCode.adjudications.length > 0) {
+                    let completedAdjudications = 0;
+                    for (let i = 0; i < termCode.adjudications.length; i++)
+                    {
+                        Adjudication.findById(termCode.adjudications[i], function (error, adjudication) {
+                            if (error && !failed) {
+                                failed = true;
+                                response.send(error);
+                            } else if (adjudication) {
+                                adjudication.termCode = null;
+
+                                adjudication.save(function (error) {
+                                    if (error && !failed) {
+                                        failed = true;
+                                        response.send(error);
+                                    } else {
+                                        completedAdjudications++;
+                                        if (completedAdjudications === termCode.adjudications.length && !failed) {
+                                            completed++;
+                                            if (completed === 4 && !failed) {
+                                                response.json({deleted: termcode});
+                                            }
+                                        }
+                                    }
+                                });
+                            } else {
+                                completedAdjudications++;
+                                if (completedAdjudications === termCode.adjudications.length && !failed) {
+                                    completed++;
+                                    if (completed === 4 && !failed) {
+                                        response.json({deleted: termCode});
+                                    }
+                                }
+                            }
+                        });
                     }
                 }
             } else {

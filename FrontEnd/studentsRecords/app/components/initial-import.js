@@ -3,20 +3,30 @@ import XLSX from 'npm:xlsx-browserify-shim';
 import Mutex from 'ember-mutex';
 
 var ImportState = {
+	//basic
 	GENDER : 1,
 	RESIDENCY : 2,
 	COURSECODE : 3,
-	STUDENT : 4,
-	SCHOLARSHIPS : 5,
-	ADVANCEDSTANDINGS : 6,
-	REGISTRATIONCOMMENTS : 7,
-	BASISOFADMISSION : 8,
-	ADMISSIONAVERAGE : 9,
-	ADMISSIONCOMMENTS : 10,
-	HIGHSCHOOL : 11,
-	HSCOURSEINFO : 12,
-	RECORDPLANS : 13,
-	RECORDGRADES : 14,
+	TERMCODE : 4,
+	//faculty
+	FACULTY: 5,
+	DEPARTMENT: 6,
+	PROGRAMADMIN: 7,
+	//student
+	STUDENT : 8,
+	SCHOLARSHIPS : 9,
+	ADVANCEDSTANDINGS : 10,
+	REGISTRATIONCOMMENTS : 11,
+	BASISOFADMISSION : 12,
+	ADMISSIONAVERAGE : 13,
+	ADMISSIONCOMMENTS : 14,
+	//highschool
+	HIGHSCHOOL : 15,
+	HSCOURSEINFO : 16,
+	//undergraduate
+	RECORDPLANS : 17,
+	RECORDGRADES : 18,
+	STUDENTADJUDICATION : 19,
 };
 
 function DisplayErrorMessage(message)
@@ -92,7 +102,7 @@ function checkUniqueCourse(sourceArray, newLetter, newNumber, newUnit)
 {
 	for (var i = 0; i < sourceArray.length; i++)
 	{
-		if (sourceArray[i] && sourceArray[i].letter == newLetter && sourceArray[i] == newNumber)
+		if (sourceArray[i] && sourceArray[i].letter == newLetter && sourceArray[i].number == newNumber)
 		{
 			console.log("found duplicate course" + newLetter + newNumber);
 			
@@ -101,6 +111,18 @@ function checkUniqueCourse(sourceArray, newLetter, newNumber, newUnit)
 		if (isNaN(newUnit))
 		{
 			console.log("ERROR: RECORD " + newLetter + newNumber + "cannot convert unit " + newUnit + " to a number");
+			return false;
+		}
+	}
+	return true;
+}
+function checkUniqueDepartment(sourceArray, newFaculty, newDepartment)
+{
+	for (var i = 0; i < sourceArray.length; i++)
+	{
+		if (sourceArray[i] && sourceArray[i].facultyName == newFaculty && sourceArray[i].departmentName == newDepartment)
+		{
+			console.log("found duplicate department" + newLetter + newNumber);			
 			return false;
 		}
 	}
@@ -133,6 +155,7 @@ export default Ember.Component.extend({
 	fileFormat: "The file must have one header with the title <b>'name'</b>.",
 	fileOutput: "",
 	importBasic: null,
+	importFaculty: null,
 	importStudent: null,
 	importHighSchool: null,
 	importUndergrad: null,
@@ -140,6 +163,7 @@ export default Ember.Component.extend({
 	index1: false,
 	index2: false,
 	index3: false,
+	index4: false,
 
 	init(){
 		this._super(...arguments);
@@ -162,6 +186,32 @@ export default Ember.Component.extend({
 				"name": "CourseCodes",
 				"description": "The file must have <b>4</b> headers with the titles <b>'courseLetter'</b>, <b>'courseNumber'</b>, <b>'name'</b>, <b>'unit'</b>."
 			},
+			{
+				"progress": 0,
+				"total": 100,
+				"name": "TermCodes",
+				"description": "The file must have <b>1</b> header with the title <b>'name'</b>."
+			}
+		];
+		var facultyCategory = [
+			{
+				"progress": 0,
+				"total": 100,
+				"name": "Faculties",
+				"description": "The file must have one header with the title <b>'name'</b>."
+			},
+			{
+				"progress": 0,
+				"total": 100,
+				"name": "Departments",
+				"description": "The file must have two headers with the titles <b>'name'</b> and <b>'faculty'</b>."
+			},
+			{
+				"progress": 0,
+				"total": 100,
+				"name": "ProgramAdministrations",
+				"description": "The file must have two headers with the titles <b>'name'</b> and <b>'position'</b>."
+			}
 		];
 		var studentCategory = [
 			{
@@ -225,27 +275,35 @@ export default Ember.Component.extend({
 			{
 				"progress": 0,
 				"total": 100,
-				"name": "Undergraduate Record Plans",
+				"name": "UndergraduateRecordPlans",
 				"description": "The file must have <b>6</b> headers with the titles <b>'studentNumber'</b>, <b>'term'</b>, <b>'program'</b>, <b>'level'</b>, <b>'load'</b>, <b>'plan'</b>."
 			},
 			{
 				"progress": 0,
 				"total": 100,
-				"name": "Undergraduate Record Courses",
+				"name": "UndergraduateRecordCourses",
 				"description": "The file must have <b>7</b> headers with the titles <b>'studentNumber'</b>, <b>'term'</b>, <b>'courseLetter'</b>, <b>'courseNumber'</b>, <b>'section'</b>, <b>'grade'</b>, <b>'note'</b>."
+			},
+			{
+				"progress": 0,
+				"total": 100,
+				"name": "UndergraduateRecordAdjudications",
+				"description": "The file must have <b>10</b> headers with the titles <b>'studentNumber'</b>, <b>'term'</b>, <b>'termAVG'</b>, <b>'termUnitsPassed'</b>, <b>'termUnitsTotals'</b>, <b>'termAdjudication'</b>, <b>'specialAVG'</b>, <b>'cumAVG'</b>, <b>'cumUnitsPassed'</b>, <b>'cumUnitsTotals'</b>."
 			}
 			
 		];
 		this.set('importBasic', basicCategory);
+		this.set('importFaculty', facultyCategory);
 		this.set('importStudent', studentCategory);
 		this.set('importHighSchool', highSchoolCategory);
 		this.set('importUndergrad', undergraduateCategory);
 	},
 
 	indexChange: Ember.observer('changingIndex', function(){
-		this.set('index1', this.get('changingIndex') > 12);
-		this.set('index2', this.get('changingIndex') > 10);
-		this.set('index3', this.get('changingIndex') > 3);
+		this.set('index1', this.get('changingIndex') > 16); //show undergraduate
+		this.set('index2', this.get('changingIndex') > 14); //show high school
+		this.set('index3', this.get('changingIndex') > 7); //show student
+		this.set('index4', this.get('changingIndex') > 4); //show faculty
 	}),
 
 	clearOutput: function() {
@@ -425,58 +483,6 @@ export default Ember.Component.extend({
 								}
 							}
 							break;
-							/*case ImportState.TERMCODE:
-							var termcodeCheckerArray = ['NAME'];
-							var termcodeArray = [worksheet['A1'].v.toUpperCase()];
-							if (VerificationFunction(termcodeCheckerArray,termcodeArray)) {
-								var rollBackImport = false;
-								var doneImporting = false;
-								var termCodesToImport = [];
-								var uniqueTermCodeNames = [];
-								for (var i = 2; !doneImporting; i++) {
-									//get the next term code name
-									var termCode = worksheet['A' + i];
-									//if the term code exists
-									if (termCode) {
-										//gets the termCodeNameString
-										var termCodeName = termCode.v;
-										//if the term code has already been added
-										if (uniqueTermCodeNames.includes(termCodeName)) {
-											DisplayErrorMessage("Import cancelled. Your excel sheet contains duplicate term code names '" + termCodeName + "'");
-											rollBackImport = true;
-											doneImporting = true;
-										} else { //create new term code object
-											termCodesToImport[i - 2] = self.get('store').createRecord('term-code', 
-											{
-												name: termCodeName
-											});
-											uniqueTermCodeNames[i-2] = termCodeName;
-										}
-									} else {
-										doneImporting = true;
-										//if no term code was imported
-										if (i == 2) {
-											rollBackImport = true;
-											DisplayErrorMessage("File does not contain any Values...")
-										}
-									}
-								}
-								//delete term codes from the store
-								if (rollBackImport) {
-									for (var i = 0; i < termCodesToImport.length; i++) {
-										termCodesToImport[i].deleteRecord();
-									}
-								} else {
-									self.set('totalProgressVal', termCodesToImport.length*2);
-									self.set('progressVal', termCodesToImport);
-									for (var i = 0; i < termCodesToImport.length; i++) {
-										termCodesToImport[i].save().then(function(){
-											self.set('progressVal', self.get('progressVal')+1);
-										});
-									}
-								}
-							}
-							break;*/
 							case ImportState.COURSECODE:
 							var coursecodeCheckerArray = ['COURSELETTER','COURSENUMBER','NAME','UNIT'];
 							var coursecodeArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase()];
@@ -543,7 +549,6 @@ export default Ember.Component.extend({
 											if (numberOfCodesImported === courseCodesToImport.length)
 											{
 												self.pushOutput("<span style='color:green'>Import Successful!</span>");
-												Ember.$("#btnContinue").removeClass("disabled");
   												Ember.$("#CourseCodes").addClass("completed");
   												self.send("continue");
 											}
@@ -552,7 +557,305 @@ export default Ember.Component.extend({
 								}
 							}
 							break;
+							case ImportState.TERMCODE:
+							{
+								var termCodeCheckerArray = ['NAME'];
+								var termCodeArray = [worksheet['A1'].v.toUpperCase()];
+								if (VerificationFunction(termCodeCheckerArray,termCodeArray)) {
+									var rollBackImport = false;
+									var doneReading = false;
+									var uniqueTermNames = [];
+									var termCodesToImport = [];
+									for (var i = 2; !doneReading; i++)
+									{
+										var termCode = worksheet['A' + i];
+										if (termCode)
+										{
+											var termCodeName = termCode.v;
+											if (uniqueTermNames.includes(termCodeName)){
+												self.pushOutput("Import cancelled. Your excel sheet contains duplicate term code names '" + termCodeName + "'");
+												rollBackImport = true;
+												doneImporting = true;
+											}
+											else{
+												uniqueTermNames.push(termCodeName);
+												var newTermCode = self.get('store').createRecord('term-code', {
+													name: termCodeName
+												});
+												termCodesToImport.push(newTermCode);
+											}
+										}
+										else{
+											doneReading = true;
+										}
+									}
+									//done reading start import
+									if (!rollBackImport)
+									{
+										var importBasic = self.get('importBasic');
+										Ember.set(importBasic.objectAt(3), "total", termCodesToImport.length*2); 
+										Ember.set(importBasic.objectAt(3), "progress", termCodesToImport.length);
+										self.set('importBasic', importBasic);
 
+										self.pushOutput("Successful read of file has completed. Beginning import of " + termCodesToImport.length + " termCodes.");
+										var numberOfTermsImported = 0;
+										var doneSaving = false;
+										for (var i = 0; i < termCodesToImport.length; i++)
+										{
+											termCodesToImport[i].save().then(function() {
+												Ember.set(importBasic.objectAt(3), "progress", Ember.get(importBasic.objectAt(3), "progress")+1);
+												self.set('importBasic', importBasic);
+												numberOfTermsImported++;
+												if (numberOfTermsImported === termCodesToImport.length && !doneSaving)
+												{
+													doneSaving = true;
+													self.pushOutput("<span style='color:green'>Import Successful!</span>");
+													Ember.$("#btnContinue").removeClass("disabled");
+													Ember.$("#TermCodes").addClass("completed");
+													self.send("continue");
+												}
+											});
+										}
+									}
+								}
+							}
+							break;
+							case ImportState.FACULTY:
+							{
+								var facultyCheckerArray = ['NAME'];
+								var facultyArray = [worksheet['A1'].v.toUpperCase()];
+								if (VerificationFunction(facultyCheckerArray,facultyArray)) {
+									self.setOutput("Importing Faculties");
+									var rollBackImport = false;
+									var doneImporting = false;
+									var uniqueFacultyNames = [];
+									for (var i = 2; !doneImporting; i++) {
+										var faculty = worksheet['A' + i];
+										if (faculty) {
+											var facultyName = faculty.v;
+											if (uniqueFacultyNames.includes(facultyName)) {
+												self.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate faculty names '" + facultyName + "'</span>");
+												rollBackImport = true;
+												doneImporting = true;
+											} else {
+												uniqueFacultyNames.push(facultyName);
+											}
+										} else {
+											doneImporting = true;
+											//if no faculty was imported
+											if (i == 2) {
+												rollBackImport = true;
+												self.pushOutput("<span style='color:red'>File does not contain any values...</span>")
+											}
+										}
+									}
+
+									if (!rollBackImport) {
+										var importFaculty = self.get('importFaculty');
+										Ember.set(importFaculty.objectAt(0), "total", uniqueFacultyNames.length*2);
+										Ember.set(importFaculty.objectAt(0), "progress", uniqueFacultyNames.length);
+										self.set('importFaculty', importFaculty); 
+										var numberOfFacultiesImported = 0;
+										self.pushOutput("Successful read of file has completed. Beginning import of " + uniqueFacultyNames.length + " faculties.");
+										for (var i = 0; i < uniqueFacultyNames.length; i++) {
+											var newFacultyName = uniqueFacultyNames[i];
+											var newFaculty = self.get('store').createRecord('faculty', {
+												name: newFacultyName
+											});
+											newFaculty.save().then(function() {
+												Ember.set(importFaculty.objectAt(0), "progress", Ember.get(importFaculty.objectAt(0), "progress")+1);
+												self.set('importFaculty', importFaculty);
+												numberOfFacultiesImported++;
+												if (numberOfFacultiesImported === uniqueFacultyNames.length)
+												{
+													self.pushOutput("<span style='color:green'>Import Successful!</span>");
+													Ember.$("#Faculties").addClass("completed");
+													self.send("continue");
+												}
+											});
+										}
+									}
+								}
+							}
+							break;
+							case ImportState.DEPARTMENT:
+							{
+								var departmentCheckerArray = ['NAME', 'FACULTY'];
+								var departmentArray = [worksheet['A1'].v.toUpperCase(), worksheet['B1'].v.toUpperCase()];
+								if (VerificationFunction(departmentCheckerArray,departmentArray)) {
+									self.setOutput("Importing departments");
+									var rollBackImport = false;
+									var doneImporting = false;
+									var uniqueDepartments = [];
+									for (var i = 2; !doneImporting; i++) {
+										var department = worksheet['A' + i];
+										var faculty = worksheet['B' + i];
+										if (department && faculty) {
+											var facultyName = faculty.v;
+											var departmentName = department.v;
+											if (uniqueDepartments.includes({"facultyName": facultyName, "departmentName": departmentName})) {
+												this.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate department names on row " + i + "</span>");
+												rollBackImport = true;
+												doneImporting = true;
+											} else {
+												uniqueDepartments.push({"facultyName": facultyName, "departmentName": departmentName});
+											}
+										} else {
+											if (faculty || department)
+											{
+												this.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains improperly formatted data on row " + i + "</span>");
+												rollBackImport = true;
+											}
+											else{
+												if (i == 2) {
+													rollBackImport = true;
+													this.pushOutput("<span style='color:red'>File does not contain any values...</span>")
+												}
+											}										
+											doneImporting = true;																				
+										}
+									}
+
+									if (!rollBackImport) {
+										var importDept = self.get('importFaculty');
+										Ember.set(importDept.objectAt(1), "total", uniqueDepartments.length*2);
+										Ember.set(importDept.objectAt(1), "progress", uniqueDepartments.length);
+										self.set('importFaculty', importDept); 
+										var numberOfDepartmentsImported = 0;
+										var numberOfDepartmentsWithoutFaculty = 0;
+										var doneSavingDepartment = false;
+										var inDepartmentMutexIndex = 0;
+										var departmentMutex = Mutex.create();
+										self.pushOutput("Successful read of file has completed. Beginning import of " + uniqueDepartments.length + " departments.");
+										for (var i = 0; i < uniqueDepartments.length; i++) {
+											departmentMutex.lock(function() {
+												var inDepartmentMutexCount = inDepartmentMutexIndex++;
+												var departmentFaculty = uniqueDepartments[inDepartmentMutexCount].facultyName;
+												var departmentName = uniqueDepartments[inDepartmentMutexCount].departmentName;
+												self.get('store').queryRecord('faculty', {name: departmentFaculty}).then(function(facultyObj) {
+													if (facultyObj){
+														var newDepartment = self.get('store').createRecord('department', {
+															name: departmentName
+														});
+														newDepartment.set('faculty', facultyObj);
+														newDepartment.save().then(function() {
+															Ember.set(importDept.objectAt(1), "progress", Ember.get(importDept.objectAt(1), "progress")+1);
+															self.set('importFaculty', importDept);
+															numberOfDepartmentsImported++;
+															if (numberOfDepartmentsImported == uniqueDepartments.length - numberOfDepartmentsWithoutFaculty && !doneSavingDepartment)
+															{
+																doneSavingDepartment = true;
+																self.pushOutput("<span style='color:green'>Import of Departments successful!</span>");
+																Ember.$("#Departments").addClass("completed");
+																self.send("continue");														
+															}
+														});
+													}
+													else{
+														numberOfDepartmentsWithoutFaculty++;
+														if (numberOfDepartmentsImported == uniqueDepartments.length - numberOfDepartmentsWithoutFaculty && !doneSavingDepartment)
+														{
+															doneSavingDepartment = true;
+															self.pushOutput("<span style='color:green'>Import of Departments successful!</span>");
+															Ember.$("#Departments").addClass("completed");
+															self.send("continue");													
+														}
+													}
+												});
+
+											});
+										}
+									}
+								}
+							}
+							break;
+							case ImportState.PROGRAMADMIN:
+							{
+								var PACheckerArray = ['NAME', 'POSITION', 'DEPARTMENT'];
+								var PAArray = [worksheet['A1'].v.toUpperCase(), worksheet['B1'].v.toUpperCase(), worksheet['C1'].v.toUpperCase()];
+								if (VerificationFunction(PACheckerArray, PAArray)) {
+									self.setOutput("Importing program administration information");
+									var rollBackImport = false;
+									var doneImporting = false;
+									var PAsToImport = [];
+									for (var i = 2; !doneImporting; i++) {
+										var name = worksheet['A' + i];
+										var position = worksheet['B' + i];
+										var department = worksheet['C' + i];
+										if (name && position && department) {
+											var adminName = name.v;
+											var positionName = position.v;
+											var departmentName = department.v;
+											PAsToImport.push({"name": adminName, "position": positionName, "department": departmentName});
+										} else {
+											if (name || position || department)
+											{
+												this.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains improperly formatted data on row " + i + "</span>");
+												rollBackImport = true;
+											}
+											else if (i == 2) {
+												rollBackImport = true;
+												this.pushOutput("<span style='color:red'>File does not contain any values...</span>")
+											}																				
+											doneImporting = true;																				
+										}
+									}
+
+									if (!rollBackImport) {
+										var importPA = self.get('importFaculty');
+										Ember.set(importPA.objectAt(2), "total", PAsToImport.length*2);
+										Ember.set(importPA.objectAt(1), "progress", PAsToImport.length);
+										self.set('importFaculty', importPA); 
+										var numberOfPAsImported = 0;
+										var numberOfPAsWithoutDepartment = 0;
+										var doneSavingPAs = false;
+										var inPAMutexIndex = 0;
+										var PAMutex = Mutex.create();
+										self.pushOutput("Successful read of file has completed. Beginning import of " + PAsToImport.length + " departments.");
+										for (var i = 0; i < PAsToImport.length; i++) {
+											PAMutex.lock(function() {
+												var inPAMutexCount = inPAMutexIndex++;
+												var PAName = PAsToImport[inPAMutexCount].name;
+												var PAPosition = PAsToImport[inPAMutexCount].position;
+												var PADepartment = PAsToImport[inPAMutexCount].department;
+												self.get('store').queryRecord('department', {name: PADepartment}).then(function(departmentOBJ) {
+													if (departmentOBJ){
+														var newPA = self.get('store').createRecord('program-administration', {
+															name: PAName,
+															position: PAPosition
+														});
+														newPA.set('department', departmentOBJ);
+														newPA.save().then(function() {
+															Ember.set(importPA.objectAt(2), "progress", Ember.get(importPA.objectAt(2), "progress")+1);
+															self.set('importFaculty', importPA);
+															numberOfPAsImported++;
+															if (numberOfPAsImported == PAsToImport.length - numberOfPAsWithoutDepartment && !doneSavingPAs)
+															{
+																doneSavingPAs = true;
+																self.pushOutput("<span style='color:green'>Import of program administration information successful!</span>");
+																Ember.$("#ProgramAdministrations").addClass("completed");
+																self.send("continue");														
+															}
+														});
+													}
+													else{
+														numberOfPAsWithoutDepartment++;
+														if (numberOfPAsImported == PAsToImport.length - numberOfPAsWithoutDepartment && !doneSavingPAs)
+														{
+															doneSavingPAs = true;
+															self.pushOutput("<span style='color:green'>Import of program administration information successful!</span>");
+															Ember.$("#ProgramAdministrations").addClass("completed");
+															self.send("continue");														
+														}
+													}
+												});
+
+											});
+										}
+									}
+								}
+							}
+							break;
 							case ImportState.STUDENT:
 							var studentCheckerArray = ['STUDENTNUMBER','FIRSTNAME','LASTNAME','GENDER','DOB','RESIDENCY'];
 							var studentArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase()];
@@ -1155,107 +1458,111 @@ export default Ember.Component.extend({
 												self.get('store').queryRecord('student', {
 													number: termStudentNumber,
 													findOneStudent: true
-												}).then(function(studentObj) {	
-													var termName = termValues[inMutexCountIndex].termCode;										
-													var newTermToImport = self.get('store').createRecord('term-code', {
+												}).then(function(studentObj) {
+													var termName = termValues[inMutexCountIndex].termCode;
+													self.get('store').queryRecord('term-code', {
 														name: termName
-													});
-													newTermToImport.set('student', studentObj);
-													termsToimport[termsToimport.length] = newTermToImport;
-													newTermToImport.save().then(function() {
-														Ember.set(importUG.objectAt(0), "progress", Ember.get(importUG.objectAt(0), "progress")+1);
-														self.set('importUndergrad', importUG);
-														//wait until all terms have been uploaded
-														savingTermMutex.lock(function() {															
-															if (termValues.length === termsToimport.length && !startedSavingTerms)
-															{
-																startedSavingTerms = true;
-																self.pushOutput("<span style='color:green'>Successfully imported Term Codes!</span>");
-																//now we start saving programs
-
-																var inProgramMutexIndex = 0;
-																var programMutex = Mutex.create();
-																var savingProgramMutex = Mutex.create();
-																var startedSavingPrograms = false;
-																var programsToImport = [];
-																
-																for (var j = 0; j < programValues.length; j++)
+													}).then(function(termCodeObj) {
+														var newTermToImport = self.get('store').createRecord('term');
+														newTermToImport.set('student', studentObj);
+														newTermToImport.set('termCode', termCodeObj);
+														termsToimport[termsToimport.length] = newTermToImport;
+														newTermToImport.save().then(function() {
+															Ember.set(importUG.objectAt(0), "progress", Ember.get(importUG.objectAt(0), "progress")+1);
+															self.set('importUndergrad', importUG);
+															//wait until all terms have been uploaded
+															savingTermMutex.lock(function() {															
+																if (termValues.length === termsToimport.length && !startedSavingTerms)
 																{
-																	programMutex.lock(function() {
-																		var inProgramMutexCountIndex = inProgramMutexIndex++;
-																		var programStudentNumber = programValues[inProgramMutexCountIndex].studentNumber;
-																		var programTerm = programValues[inProgramMutexCountIndex].term;
-																		var programName = programValues[inProgramMutexCountIndex].program;
-																		var programLevel = programValues[inProgramMutexCountIndex].level;
-																		var programLoad = programValues[inProgramMutexCountIndex].load;
-																		self.get('store').queryRecord('term-code', {
-																			studentNumber: programStudentNumber,
-																			name: programTerm
-																		}).then(function(termNameObj) {
-																			var newProgramToImport = self.get('store').createRecord('program-record', {
-																				name: programName,
-																				level: programLevel,
-																				load: programLoad
-																			});
-																			newProgramToImport.set('termCode', termNameObj);
-																			programsToImport[programsToImport.length] = newProgramToImport;
-																			programsToImport[programsToImport.length - 1].save().then(function() {
-																				savingProgramMutex.lock(function() {
-																					if (programsToImport.length === programValues.length && !startedSavingPrograms)
-																					{
-																						startedSavingPrograms = true;
-																						self.pushOutput("<span style='color:green'>Successfully imported Program Records!</span>")
+																	startedSavingTerms = true;
+																	self.pushOutput("<span style='color:green'>Successfully imported Student Terms!</span>");
+																	//now we start saving programs
 
-																						var inPlanMutexIndex = 0;
-																						var planMutex = Mutex.create();
-																						var numberOfPlansSaved = 0;
-																						var donePlanImport = false;
-																						for (var k = 0; k < planValues.length; k++)
+																	var inProgramMutexIndex = 0;
+																	var programMutex = Mutex.create();
+																	var savingProgramMutex = Mutex.create();
+																	var startedSavingPrograms = false;
+																	var programsToImport = [];
+																	
+																	for (var j = 0; j < programValues.length; j++)
+																	{
+																		programMutex.lock(function() {
+																			var inProgramMutexCountIndex = inProgramMutexIndex++;
+																			var programStudentNumber = programValues[inProgramMutexCountIndex].studentNumber;
+																			var programTerm = programValues[inProgramMutexCountIndex].term;
+																			var programName = programValues[inProgramMutexCountIndex].program;
+																			var programLevel = programValues[inProgramMutexCountIndex].level;
+																			var programLoad = programValues[inProgramMutexCountIndex].load;
+																			self.get('store').queryRecord('term', {
+																				studentNumber: programStudentNumber,
+																				name: programTerm
+																			}).then(function(termObj) {
+																				var newProgramToImport = self.get('store').createRecord('program-record', {
+																					name: programName,
+																					level: programLevel,
+																					load: programLoad
+																				});
+																				newProgramToImport.set('term', termObj);
+																				programsToImport[programsToImport.length] = newProgramToImport;
+																				programsToImport[programsToImport.length - 1].save().then(function() {
+																					savingProgramMutex.lock(function() {
+																						if (programsToImport.length === programValues.length && !startedSavingPrograms)
 																						{
-																							planMutex.lock(function() {																											
-																								var inPlanMutexCountIndex = inPlanMutexIndex++;
-																								var planStudentNumber = planValues[inPlanMutexCountIndex].studentNumber;
-																								var planTerm = planValues[inPlanMutexCountIndex].term;
-																								var planProgramName = planValues[inPlanMutexCountIndex].program;
-																								var planLevel = planValues[inPlanMutexCountIndex].level;
-																								var planLoad = planValues[inPlanMutexCountIndex].load;
-																								var planName = planValues[inPlanMutexCountIndex].plan;
-																								self.get('store').queryRecord('program-record', {
-																									studentNumber: planStudentNumber,
-																									termName: planTerm,
-																									programName: planProgramName,
-																									level: planLevel,
-																									load: planLoad
-																								}).then(function(programRecordObj) {
-																									var newPlanToImport = self.get('store').createRecord('plan-code', {
-																										name: planName
-																									});
-																									newPlanToImport.set('programRecord', programRecordObj);
-																									newPlanToImport.save().then(function() {
-																										Ember.set(importUG.objectAt(0), "progress", Ember.get(importUG.objectAt(0), "progress")+1);
-																										self.set('importUndergrad', importUG);
-																										numberOfPlansSaved++;
-																										if (numberOfPlansSaved == planValues.length && !donePlanImport)
-																										{																											
-																											donePlanImport = true;
-																											self.pushOutput("<span style='color:green'>Successfully Imported Plan Codes!</span>");
-																											self.pushOutput("<span style='color:green'>All Imports successful!</span>");
-																											Ember.$("#UndergraduateRecordPlans").addClass("completed");
-																											self.send("continue");
-																										}
+																							startedSavingPrograms = true;
+																							self.pushOutput("<span style='color:green'>Successfully imported Program Records!</span>")
+
+																							var inPlanMutexIndex = 0;
+																							var planMutex = Mutex.create();
+																							var numberOfPlansSaved = 0;
+																							var donePlanImport = false;
+																							for (var k = 0; k < planValues.length; k++)
+																							{
+																								planMutex.lock(function() {																											
+																									var inPlanMutexCountIndex = inPlanMutexIndex++;
+																									var planStudentNumber = planValues[inPlanMutexCountIndex].studentNumber;
+																									var planTerm = planValues[inPlanMutexCountIndex].term;
+																									var planProgramName = planValues[inPlanMutexCountIndex].program;
+																									var planLevel = planValues[inPlanMutexCountIndex].level;
+																									var planLoad = planValues[inPlanMutexCountIndex].load;
+																									var planName = planValues[inPlanMutexCountIndex].plan;
+																									self.get('store').queryRecord('program-record', {
+																										studentNumber: planStudentNumber,
+																										termName: planTerm,
+																										programName: planProgramName,
+																										level: planLevel,
+																										load: planLoad
+																									}).then(function(programRecordObj) {
+																										var newPlanToImport = self.get('store').createRecord('plan-code', {
+																											name: planName
+																										});
+																										newPlanToImport.set('programRecord', programRecordObj);
+																										newPlanToImport.save().then(function() {
+																											Ember.set(importUG.objectAt(0), "progress", Ember.get(importUG.objectAt(0), "progress")+1);
+																											self.set('importUndergrad', importUG);
+																											numberOfPlansSaved++;
+																											if (numberOfPlansSaved == planValues.length && !donePlanImport)
+																											{																											
+																												donePlanImport = true;
+																												self.pushOutput("<span style='color:green'>Successfully Imported Plan Codes!</span>");
+																												self.pushOutput("<span style='color:green'>All Imports successful!</span>");
+																												Ember.$("#UndergraduateRecordPlans").addClass("completed");
+																												self.send("continue");
+																											}
+																										});
 																									});
 																								});
-																							});
+																							}
 																						}
-																					}
+																					});
 																				});
 																			});
 																		});
-																	});
+																	}
 																}
-															}
+															});
 														});
-													});
+
+													});		
 												});
 											});
 										
@@ -1382,10 +1689,10 @@ export default Ember.Component.extend({
 												var courseNumber = gradesToImport[inGradeMutexCount].courseNumber;
 												var courseGrade = gradesToImport[inGradeMutexCount].courseGrade;
 												var courseNote = gradesToImport[inGradeMutexCount].courseNote;
-												self.get('store').queryRecord('term-code', {
+												self.get('store').queryRecord('term', {
 													studentNumber: studentNumber,
 													name: termCode
-												}).then(function(termCodeObj) {
+												}).then(function(termObj) {
 													self.get('store').queryRecord('course-code', {
 														courseLetter: courseLetter,
 														courseNumber: courseNumber
@@ -1393,7 +1700,7 @@ export default Ember.Component.extend({
 														var newGrade = self.get('store').createRecord('grade', {
 															mark: courseGrade
 														});
-														newGrade.set('termCode', termCodeObj);
+														newGrade.set('term', termObj);
 														newGrade.set('courseCode', courseCodeObj);
 														if (courseNote)
 														{
@@ -1990,6 +2297,7 @@ export default Ember.Component.extend({
 															numberOfCommentsImported++;
 															if (numberOfCommentsImported == uniqueStudents.length - numberOfCommentsWithNoStudent && !doneSavingComments)
 															{
+																doneSavingComments = true;
 																self.pushOutput("<span style='color:green'>Import of Admission Comments successful!</span>");
 																Ember.$("#btnContinue").removeClass("disabled");
 																Ember.$("#AdmissionComments").addClass("completed");
@@ -2002,9 +2310,10 @@ export default Ember.Component.extend({
 														numberOfCommentsWithNoStudent++;
 														if (numberOfCommentsImported == uniqueStudents.length - numberOfCommentsWithNoStudent && !doneSavingComments)
 														{
-																self.pushOutput("<span style='color:green'>Import of Admission Comments successful!</span>");
-																Ember.$("#btnContinue").removeClass("disabled");
-																Ember.$("#admissionComments").addClass("completed");															
+															doneSavingComments = true;
+															self.pushOutput("<span style='color:green'>Import of Admission Comments successful!</span>");
+															Ember.$("#btnContinue").removeClass("disabled");
+															Ember.$("#AdmissionComments").addClass("completed");															
 														}
 													}
 												});
@@ -2015,8 +2324,179 @@ export default Ember.Component.extend({
 								}
 							}
 						break;
+						
+						
+						break;
+						case ImportState.STUDENTADJUDICATION:
+						{
+							var studentAdjudicationCheckerArray = ['STUDENTNUMBER','TERM','TERMAVG','TERMUNITSPASSED','TERMUNITSTOTALS','TERMADJUDICATION','SPECIALAVG','CUMAVG','CUMUNITSPASSED','CUMUNITSTOTALS'];
+							var studentAdjudicationArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase(),worksheet['G1'].v.toUpperCase(),worksheet['H1'].v.toUpperCase(),worksheet['I1'].v.toUpperCase(),worksheet['J1'].v.toUpperCase()];
+							if (VerificationFunction(studentAdjudicationCheckerArray, studentAdjudicationArray))
+							{
+								self.pushOutput("Importing student adjudication information");
+								var rollBackImport = false;
+								var doneReading = false;
+								var studentInformation = [];
+								var cumStudentInformation = [];
+								var currentStudentNumber = -1;
+								var currentCumAvg = "";
+								var currentCumUnitsPassed = "";
+								var currentCumUnitsTotal = "";
+								for (var i = 2; !doneReading; i++)
+								{
+									var studentNumber = worksheet['A' + i];
+									var term = worksheet['B' + i];
+									var termAVG = worksheet['C' + i];
+									var termUnitsPassed = worksheet['D' + i];
+									var termUnitsTotal = worksheet['E' + i];
+									var cumAVG = worksheet['H' + i];
+									var cumUnitsPassed = worksheet['I' + i];
+									var cumUnitsTotal = worksheet['J' + i];
+
+									if (studentNumber && term && termAVG && termUnitsPassed && termUnitsTotal && cumAVG && cumUnitsPassed && cumUnitsTotal)
+									{
+										if (!checkUniqueTerm(studentInformation, studentNumber.v, term.v))
+										{											
+											self.pushOutput("<span style='color:red'>Import Cancelled. Duplicate values found on row " + i + " for student number " + studentNumber.v + " and term " + term.v + "</span>");
+											rollbackImport = true;
+											doneReading = true;
+										}
+										else{
+											studentInformation.push({"studentNumber": studentNumber.v, "termCode": term.v, "termAVG": termAVG, "termUnitsPassed": termUnitsPassed, "termUnitsTotal": termUnitsTotal});
+											//if we are transitioning students
+											
+											if (currentStudentNumber != studentNumber.v && currentStudentNumber !== -1)
+											{
+												cumStudentInformation.push({"studentNumber": studentNumber.v, "cumAVG": cumAVG.v, "cumUnitsPassed": cumUnitsPassed.v, "cumUnitsTotal": cumUnitsTotal.v});
+
+											}											
+											currentStudentNumber = studentNumber.v;
+											currentCumAvg = cumAVG.v;
+											currentCumUnitsPassed = cumUnitsPassed.v;
+											currentCumUnitsTotal = cumUnitsTotal.v;
+										}
+									}
+									else if (studentNumber || term || termAVG || termUnitsPassed || termUnitsTotal || cumAVG || cumUnitsPassed || cumUnitsTotal)
+									{
+										self.pushOutput("<span style='color:red'>Imporperly formated data on row " + i + "</span>");
+										rollbackImport = true;
+										doneReading = true;
+									}
+									else{
+										doneReading = true;
+									}
+								}
+								if (!rollBackImport)
+								{
+									var importUG = self.get('importUndergrad');
+									Ember.set(importUG.objectAt(2), "total", cumStudentInformation.length*2); 
+									Ember.set(importUG.objectAt(2), "progress", cumStudentInformation.length);
+									self.set('importUndergrad', importUG);
+									self.pushOutput("Successful read of file has completed. Beginning import of " + cumStudentInformation.length + " student's information and " + studentInformation.length + " student terms information");
+									//do the import here. Maybe iterate through the cumStudent array by student number then search the full array by student number to minimize hits to DB
+									for (var i = 0; i < cumStudentInformation; i++)
+									{
+										var numberOfCumStudentsImported = 0;
+										var numberOfCumStudentsWithoutStudent = 0;
+										var numberOfStudentTermsImported = 0;
+										var numberOfStudentTermsWithoutStudent = 0;
+										var doneImportingCumStudents = false;
+										var inCumStudentMutexIndex = 0;
+										var inCumStudentMutex = Mutex.create();
+										inCumStudentMutex.lock(function() {
+											var inCumStudentMutexCount = inCumStudentMutexIndex++;
+											var cumStudentNumber = cumStudentInformation[inCumStudentMutexCount].studentNumber;
+											var cumStudentAVG = cumStudentInformation[inCumStudentMutexCount].cumAVG
+											var cumStudentUnitsPassed = cumStudentInformation[inCumStudentMutexCount].cumUnitsPassed;
+											var cumStudentUnitsTotal = cumStudentInformation[inCumStudentMutexCount].cumUnitsTotal;
+											self.get('store').queryRecord('student', {
+												number: cumStudentNumber,
+												findOneStudent: true
+											}).then(function(studentOBJ) {
+												if (studentOBJ)
+												{
+													studentOBJ.set('cumAVG', cumStudentAVG);
+													studentOBJ.set('cumUnitsPassed', cumStudentUnitsPassed);
+													studentOBJ.set('cumUnitsTotal', cumStudentUnitsTotal);
+													studentOBJ.save().then(function() {
+														numberOfCumStudentsImported++;
+														var studentTermMutex = Mutext.create();
+														var inStudentTermMutextIndex = 0;
+														for (var k = 0; k < studentInformation.length; k++)
+														{
+															if (studentInformation[k].studentNumber = studentOBJ.get('studentNumber'))
+															{
+																//find term
+																studentTermMutex.lock(function() {
+																	var inStudentTermMutextCount = inStudentTermMutextIndex++;
+																	var inTermMutexStudentNumber = studentOBJ.get('studentNumber');
+																	var studentTermCode = studentInformation[inStudentTermMutextCount].termCode;
+																	var studentTermAVG = studentInformation[inStudentTermMutextCount].termAVG;
+																	var studentTermUnitsPassed = studentInformation[inStudentTermMutextCount].termUnitsPassed;
+																	var studentTermUnitsTotal = studentInformation[inStudentTermMutextCount].termUnitsTotal;
+																	self.get('store').queryRecord('term', {
+																		studentNumber: inTermMutexStudentNumber,
+																		termCode: studentTermCode
+																	}).then(function (termOBJ) {
+																		if (termOBJ)
+																		{																			
+																			termOBJ.set('termAVG', studentTermAVG);
+																			termOBJ.set('termUnitsPassed', studentTermUnitsPassed);
+																			termOBJ.set('termUnitsTotal', studentTermUnitsTotal);
+																			termOBJ.save().then(function() {
+																				Ember.set(importUG.objectAt(2), "progress", Ember.get(importUG.objectAt(2), "progress")+1);
+																				self.set('importUndergrad', importUG);
+																				numberOfStudentTermsImported++;																				
+																				if (cumStudentInformation.length + studentInformation.length == numberOfCumStudentsImported + numberOfCumStudentsWithoutStudent + numberOfStudentTermsImported + numberOfStudentTermsWithoutStudent && !doneImportingCumStudents)
+																				{
+																					doneImportingCumStudents = true;
+																					self.pushOutput("<span style='color:green'>Import of student adjudication information successful!</span>");
+																					// Ember.$("#btnContinue").removeClass("disabled");
+																					// Ember.$("#admissionComments").addClass("completed");	
+																				}
+																			});
+																		}
+																		else{
+																			numberOfStudentTermsWithoutStudent++;																			
+																			if (cumStudentInformation.length + studentInformation.length == numberOfCumStudentsImported + numberOfCumStudentsWithoutStudent + numberOfStudentTermsImported + numberOfStudentTermsWithoutStudent && !doneImportingCumStudents)
+																			{
+																				doneImportingCumStudents = true;
+																				self.pushOutput("<span style='color:green'>Import of student adjudication information successful!</span>");
+																				// Ember.$("#btnContinue").removeClass("disabled");
+																				// Ember.$("#admissionComments").addClass("completed");	
+																			}
+																		}
+																	});
+																});
+															}
+														}
+													});
+												}
+												else{
+													numberOfCumStudentsWithoutStudent++;
+													for (var j = 0; j < studentInformation.length; j++)
+													{
+														if (studentInformation[j].studentNumber = cumStudentNumber)
+														{
+															numberOfStudentTermsWithoutStudent++;
+														}
+													}
+													if (cumStudentInformation.length + studentInformation.length == numberOfCumStudentsImported + numberOfCumStudentsWithoutStudent + numberOfStudentTermsImported + numberOfStudentTermsWithoutStudent && !doneImportingCumStudents)
+													{
+														doneImportingCumStudents = true;
+														self.pushOutput("<span style='color:green'>Import of student adjudication information successful!</span>");
+														// Ember.$("#btnContinue").removeClass("disabled");
+														// Ember.$("#admissionComments").addClass("completed");	
+													}
+												}
+											});
+										});
+									}
+								}
+							}
 						}
-						console.log(currentWorkSheet);
+						break;
+						}
 					};
 					reader.readAsBinaryString(f);
 				}
@@ -2037,16 +2517,25 @@ export default Ember.Component.extend({
 				console.log("changed Index to " + this.get('changingIndex'));
 				var self = this;
 				switch(this.get('changingIndex')){
-					case 4:
-						$("#student").addClass("active");
- 						$("#student").removeClass("disabled");
-  						$("#basic").removeClass("active");
+					case 5:
+						$("#faculty").addClass("active");
+ 						$("#faculty").removeClass("disabled");
+ 						$("#basic").removeClass("active");
   						$("#basic").addClass("completed");
   						self.set('importCount', 0);
   						self.set('importInProgress', false);
   						self.clearOutput();
   						break;
-  					case 11:
+					case 8:
+						$("#student").addClass("active");
+ 						$("#student").removeClass("disabled");
+  						$("#faculty").removeClass("active");
+  						$("#faculty").addClass("completed");
+  						self.set('importCount', 0);
+  						self.set('importInProgress', false);
+  						self.clearOutput();
+  						break;
+  					case 15:
   						$("#highschool").addClass("active");
 						$("#highschool").removeClass("disabled");
   						$("#student").removeClass("active");
@@ -2055,7 +2544,7 @@ export default Ember.Component.extend({
   						self.set('importInProgress', false);
   						self.clearOutput();
   						break;
-  					case 13:
+  					case 17:
   						$("#undergraduate").addClass("active");
 						$("#undergraduate").removeClass("disabled");
   						$("#highschool").removeClass("active");

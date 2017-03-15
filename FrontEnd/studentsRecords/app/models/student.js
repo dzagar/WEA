@@ -11,9 +11,12 @@ export default DS.Model.extend({
   scholarships: DS.hasMany('scholarship'),
   advancedStandings: DS.hasMany('advanced-standing'),
   highSchoolCourses: DS.hasMany('high-school-grade'),
-  termCodes: DS.hasMany('term-code'),
+  terms: DS.hasMany('term'),
   registrationComments: DS.attr(),
   basisOfAdmission: DS.attr(),
   admissionAverage: DS.attr(),
-  admissionComments: DS.attr()
+  admissionComments: DS.attr(),
+  cumAVG: DS.attr(),
+  cumUnitsPassed: DS.attr(),
+  cumUnitsTotal: DS.attr()
 });
