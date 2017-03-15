@@ -41,7 +41,7 @@
         </div>-->
     {{/if}}
     <h2>Add new adjudication rule</h2>
-    <div class="ui form">
+    <form class="ui form">
         <div class="inline field">
             <label>Rule name:</label>
             {{input value=ruleName type="text" placeholder="enter rule name" }}
@@ -55,7 +55,7 @@
             <br>
             <button id="addFirst" class="ui button" {{action 'addFirstRule'}}>Add rule parameter</button>
         </div>
-    </div>
+    </form>
     <br>
     <button class="ui button" {{action 'save'}}>Save</button>
     <button class="ui button" {{action 'cancel'}}>Cancel</button>
