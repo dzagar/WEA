@@ -6,12 +6,14 @@ export default Ember.Component.extend({
     currentCourseCode: null,
     currentGender: null,
     currentHighSchool: null,
+    currentHighSchoolSubject: null,
     currentResidency: null,
     currentTermCode: null,
     genderModel: null,
     genderOutput: "",
     highSchoolModel: null,
     highSchoolOutput: "",
+    highSchoolSubjectModel: null,
     newCourseCodeCourseLetter: "",
     newCourseCodeCourseNumber: "",
     newCourseCodeName: "",
@@ -21,6 +23,8 @@ export default Ember.Component.extend({
     newGenderObj: null,
     newHighSchoolName: "",
     newHighSchoolObj: null,
+    newHighSchoolSubjectDescriptionName: "",
+    newHighSchoolSubjectObj: null,
     newResidencyName: "",
     newResidencyObj: null,
     newTermCodeName: "",
@@ -82,7 +86,6 @@ export default Ember.Component.extend({
             self.set('highSchoolModel', records);
         });
 
-<<<<<<< HEAD
         this.get('store').findAll('high-school-subject').then(function (records){
             self.set('highSchoolSubjectModel', records);
         });
@@ -95,8 +98,6 @@ export default Ember.Component.extend({
             self.set('termCodeModel', records);
         });
 
-=======
->>>>>>> master
         this.set('limit', 10);
         this.set('offset', 0);
         this.set('pageSize', 10);
@@ -189,12 +190,9 @@ export default Ember.Component.extend({
             this.set('showDeleteResidencyConfirmation', false);
             this.set('showCourseCodeConfirmation', false);
             this.set('showDeleteHighSchoolConfirmation',false);
-<<<<<<< HEAD
             this.set('showDeleteHighSchoolSubjectConfirmation',false);
             this.set('showDeleteHighSchoolCourseConfirmation',false);
             this.set('showDeleteTermCodeConfirmation', false);
-=======
->>>>>>> master
         },
 
         addResidency()
@@ -238,12 +236,9 @@ export default Ember.Component.extend({
             this.set('showDeleteResidencyConfirmation', true);
             this.set('showCourseCodeConfirmation', false);
             this.set('showDeleteHighSchoolConfirmation',false);
-<<<<<<< HEAD
             this.set('showDeleteHighSchoolSubjectConfirmation',false);
             this.set('showDeleteHighSchoolCourseConfirmation',false);
             this.set('showDeleteTermCodeConfirmation', false);
-=======
->>>>>>> master
         },
 
         addCourseCode()
@@ -279,13 +274,9 @@ export default Ember.Component.extend({
             this.set('showDeleteResidencyConfirmation', false);
             this.set('showCourseCodeDeleteConfirmation', true);
             this.set('showDeleteHighSchoolConfirmation',false);
-<<<<<<< HEAD
             this.set('showDeleteHighSchoolSubjectConfirmation',false);
             this.set('showDeleteHighSchoolCourseConfirmation',false);
             this.set('showDeleteTermCodeConfirmation', false);
-=======
->>>>>>> master
-
         },
 
         addHighSchool()
@@ -330,19 +321,15 @@ export default Ember.Component.extend({
             this.set('showDeleteResidencyConfirmation', false);
             this.set('showCourseCodeConfirmation', false);
             this.set('showDeleteHighSchoolConfirmation',true);
-<<<<<<< HEAD
             this.set('showDeleteHighSchoolSubjectConfirmation',false);
             this.set('showDeleteHighSchoolCourseConfirmation',false);
             this.set('showDeleteTermCodeConfirmation', false);
-=======
->>>>>>> master
         },
 
         switchPage(pageNum)
         {
           this.changeOffset((pageNum - 1) * this.get('pageSize'), false);
         },
-<<<<<<< HEAD
 
         addHighSchoolSubject()
         {
@@ -362,15 +349,15 @@ export default Ember.Component.extend({
             if(isHighSchoolSubjectCreated)
             {
                 this.setHighSchoolSubjectOutput("");
-                if (this.get('newHighSchoolSubjectName').trim() != "" && this.get('newHighSchoolSubjectDescription').trim() !="")
+                if (this.get('newHighSchoolSubjectName').trim() != "" && this.get('newHighSchoolSubjectDescriptionName').trim() !="")
                 {
                     this.set('newHighSchoolSubjectObj',this.get('store').createRecord('high-school-subject',{
                         name: this.get('newHighSchoolSubjectName').trim(),
-                        description: this.get('newHighSchoolSubjectDescription').trim()
+                        description: this.get('newHighSchoolSubjectDescriptionName').trim()
                     }));
                     this.get('newHighSchoolSubjectObj').save();
                     this.set('newHighSchoolSubjectName',"");
-                    this.set('newHighSchoolSubjectDescription',"");
+                    this.set('newHighSchoolSubjectDescriptionName',"");
                 }
             }
         },
@@ -390,8 +377,6 @@ export default Ember.Component.extend({
 
         saveHighSchoolSubject(hsSubject)
         {
-            var hsCourseArray=this.get('highSchoolCourseModel');
-            console.log(hsCourseArray);
             hsSubject.save();
         },
 
@@ -441,8 +426,6 @@ export default Ember.Component.extend({
             termCode.save();
         }
 
-=======
->>>>>>> master
     }
 
 

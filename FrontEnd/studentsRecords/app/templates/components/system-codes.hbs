@@ -11,13 +11,10 @@
     {{delete-course-code courseCode = currentCourseCode showWindow = showCourseCodeDeleteConfirmation}}
     {{else if showDeleteHighSchoolConfirmation}}
     {{delete-high-school highSchool = currentHighSchool showWindow = showDeleteHighSchoolConfirmation}}
-<<<<<<< HEAD
     {{else if showDeleteHighSchoolSubjectConfirmation}}
     {{delete-high-school-subject highSchoolSubject = currentHighSchoolSubject showWindow = showDeleteHighSchoolSubjectConfirmation}}
     {{else if showDeleteTermCodeConfirmation}}
     {{delete-term-code termCode = currentTermCode showWindow = showDeleteTermCodeConfirmation}}
-=======
->>>>>>> master
 {{/if}}
 
   <!-- Show data entry form -->
@@ -27,11 +24,8 @@
     <div style="cursor: pointer;" class="item" data-tab="residency">Residency</div>
     <div style="cursor: pointer;" class="item" data-tab="coursecode">Course Codes</div>
     <div style="cursor: pointer;" class="item" data-tab="highschool">Secondary Schools</div>
-<<<<<<< HEAD
     <div style="cursor: pointer;" class="item" data-tab="hsSubject">High School Subjects</div>
     <div style="cursor: pointer;" class="item" data-tab="termCode">Term Codes</div>
-=======
->>>>>>> master
   </div>
 
   <div class="ui bottom attached active tab segment" data-tab="gender">
@@ -432,7 +426,6 @@
             </td>
         </tr>
     </table>
-<<<<<<< HEAD
 </div>
 
 <div class="ui bottom attached tab segment" data-tab="hsSubject">
@@ -550,13 +543,6 @@
                   {{input type="text" value = highSchoolSubject.description}}
                 </div>
             </td>
-
-            <td>
-              <th>Subject Level</th>
-                <div class="ui fluid input">
-                  {{input type="text" value = highSchoolSubject.courses.unit}}
-                </div>
-            </td>
           
             <td>
                 <div class="ui inverted buttons">
@@ -577,7 +563,7 @@
 
             <td>
                 <div class="ui fluid input">
-                  {{input type="text" value = newHighSchoolSubjectDescription}}
+                  {{input type="text" value = newHighSchoolSubjectDescriptionName}}
                 </div>
             </td>
 
@@ -724,7 +710,7 @@
             </td>
 
             <td>
-                <button class="ui inverted green button" {{action "addHighSchoolCourse"}}> 
+                <button class="ui inverted green button" {{action "addTermCode"}}> 
                 Add &nbsp; <i class="add square icon"></i>
                 </button>
             </td>
@@ -732,11 +718,9 @@
         <tr>
             <td>
                 <div>
-			        <label>{{{highSchoolCourseOutput}}}</label>
+			        <label>{{{termCodeOutput}}}</label>
 		        </div>
             </td>
         </tr>
     </table>
-=======
->>>>>>> master
 </div>
