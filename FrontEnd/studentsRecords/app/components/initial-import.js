@@ -2458,8 +2458,8 @@ export default Ember.Component.extend({
 																				{
 																					doneImportingCumStudents = true;
 																					self.pushOutput("<span style='color:green'>Import of student adjudication information successful!</span>");
-																					// Ember.$("#btnContinue").removeClass("disabled");
-																					// Ember.$("#admissionComments").addClass("completed");	
+																					Ember.$("#btnContinue").removeClass("disabled");
+																					Ember.$("#admissionComments").addClass("completed");	
 																				}
 																			});
 																		}
@@ -2471,8 +2471,8 @@ export default Ember.Component.extend({
 																			{
 																				doneImportingCumStudents = true;
 																				self.pushOutput("<span style='color:green'>Import of student adjudication information successful!</span>");
-																				// Ember.$("#btnContinue").removeClass("disabled");
-																				// Ember.$("#admissionComments").addClass("completed");	
+																				Ember.$("#btnContinue").removeClass("disabled");
+																				Ember.$("#admissionComments").addClass("completed");	
 																			}
 																		}
 																	});
@@ -2496,8 +2496,8 @@ export default Ember.Component.extend({
 													{
 														doneImportingCumStudents = true;
 														self.pushOutput("<span style='color:green'>Import of student adjudication information successful!</span>");
-														// Ember.$("#btnContinue").removeClass("disabled");
-														// Ember.$("#admissionComments").addClass("completed");	
+														Ember.$("#btnContinue").removeClass("disabled");
+														Ember.$("#admissionComments").addClass("completed");	
 													}
 												}
 											});
