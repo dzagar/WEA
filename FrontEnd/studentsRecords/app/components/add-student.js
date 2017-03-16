@@ -15,9 +15,14 @@ export default Ember.Component.extend({
 	resInfo: null,
 	store: Ember.inject.service(),
 	total: 0,
+	basisOfAdmission: null,
+	admissionAverage: null,
+	admissionComments: null,
+	registrationComments: null,
 
 	init() {
 		this._super(...arguments);
+		Ember.$('.ui.modal').remove();
 		var self = this;
 		this.get('store').findAll('residency').then(function (records) {
 	      self.set('residencyModel', records);
@@ -52,14 +57,18 @@ export default Ember.Component.extend({
 				gender: this.get('store').peekRecord('gender', this.get('gender')),
 				DOB: date,
 				photo: this.get('photo'),
-				resInfo: this.get('store').peekRecord('residency', this.get('resInfo'))
+				resInfo: this.get('store').peekRecord('residency', this.get('resInfo')),
+				basisOfAdmission: this.get('basisOfAdmission'),
+				admissionAverage: this.get('admissionAverage'),
+				admissionComments: this.get('admissionComments'),
+				registrationComments: this.get('registrationComments')
 			}));
 			this.get('newStudent').save();
 			this.set('total',this.get('total')+1);
 			this.set('notDONE', false);
 			//somehow jump to this student afterwards
 			Ember.$('.ui.modal').modal('hide');
-      		Ember.$('.ui.modal').remove();
+      		//Ember.$('.ui.modal').remove();
 
 		},
 		selectGender: function(gender){
@@ -74,10 +83,7 @@ export default Ember.Component.extend({
 		cancel: function(){
 			this.set('notDONE', false);
 			Ember.$('.ui.modal').modal('hide');
-      		Ember.$('.ui.modal').remove();
-		},
-		log: function (param) {
-			console.log(param);
+      		//Ember.$('.ui.modal').remove();
 		}
 	},
 
@@ -85,6 +91,7 @@ export default Ember.Component.extend({
     Ember.$('.ui.modal')
       .modal({
         closable: false,
+		autofocus: false
       })
       .modal('show');
   }
