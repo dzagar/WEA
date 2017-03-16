@@ -23,11 +23,25 @@ router.route('/')
                     }
                     else{
                         student.terms.push(term._id);
-                        term.save(function (error) {
+                        term.save(function (error) {                            
                             if (error) {
                                 response.send(error);
-                            } else {
-                                response.send({term:term});
+                            } else {                                
+                                termCode.save(function(error) {
+                                    if (error)
+                                        response.send(error);
+                                    else{                                        
+                                        student.save(function(error){
+                                            if (error)
+                                            {
+                                                response.send(error);
+                                            }
+                                            else{                                                
+                                                response.send({term:term});
+                                            }
+                                        });                                        
+                                    }
+                                });
                             }
                         });
                     }
@@ -95,6 +109,16 @@ router.route('/')
                 }
                 else{
                     response.send({term:term});
+                }
+            });
+        }
+        else if (request.query.student){
+            Term.find({student: request.query.student}, function(error, term) {
+                if (error){
+                    response.send(error);
+                }
+                else{
+                    response.send({term: term});
                 }
             });
         }
