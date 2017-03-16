@@ -4,6 +4,7 @@ export default Ember.Component.extend({
     
     courseArray: [],
     courseCodeRecords: null,
+    courseGroupingModel: null,
     currentCourseCode: null,
     currentGender: null,
     currentHighSchool: null,
@@ -126,6 +127,10 @@ export default Ember.Component.extend({
 
         this.get('store').findAll('term-code').then(function (records) {
             self.set('termCodeModel', records);
+        });
+
+        this.get('store').findAll('course-grouping').then(function(records) {
+            self.set('courseGroupingModel', records);
         });
 
         this.set('limit', 10);

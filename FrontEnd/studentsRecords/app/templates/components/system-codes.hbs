@@ -21,6 +21,7 @@
 
   <div class="ui top attached tabular menu">
     <div style="cursor: pointer;" class="active item" data-tab="coursecode">Course Codes</div>
+    <div style="cursor: pointer;" class="item" data-tab="courseGrouping">Course Groupings</div>
     <div style="cursor: pointer;" class="item" data-tab="gender">Gender</div>
     <div style="cursor: pointer;" class="item" data-tab="hsSubject">High School Subjects</div>
     <div style="cursor: pointer;" class="item" data-tab="residency">Residency</div>
@@ -337,90 +338,6 @@
 		        </div>
             </td>
         </tr>
-
-        <tr>
-            <td colspan="12">
-                <div style="margin: auto; width: 50%;">
-                  <div class="ui fluid pagination nine item menu">
-                    {{#if (inline-compare pageNumber '<' 5)}}
-                      <div class="disabled item"></div>
-                    {{/if}}
-                    {{#if (inline-compare pageNumber '>' 3)}}
-                      <a class="item" {{action "switchPage" 1}}>
-                        1
-                      </a> 
-                    {{else}}
-                      <div class="disabled item"></div>
-                    {{/if}} 
-                    {{#if (inline-compare pageNumber '>' 5)}}
-                      <div class="disabled item">
-                        ...
-                      </div>
-                    {{else}} 
-                      {{#if (inline-compare pageNumber '===' 5)}}
-                      <a class="item" {{action "switchPage" 2}}>
-                        2
-                      </a> 
-                      {{/if}} 
-                    {{/if}}
-                    {{#if (inline-compare pageNumber '>' 2)}}
-                      <a class="item" {{action "switchPage" (inline-math pageNumber '-' 2)}}>
-                        {{inline-math pageNumber '-' 2}}
-                      </a> 
-                    {{else}}
-                      <div class="disabled item"></div>
-                    {{/if}}
-                    {{#if (inline-compare pageNumber '>' 1)}}
-                      <a class="item" {{action "switchPage" (inline-math pageNumber '-' 1)}}>
-                        {{inline-math pageNumber '-' 1}}
-                      </a>
-                    {{else}}
-                      <div class="disabled item"></div>
-                    {{/if}}
-
-                    <a class="active item">
-                      {{pageNumber}}
-                    </a> 
-
-                    {{#if (inline-compare pageNumber '<' totalPages)}}
-                      <a class="item" {{action "switchPage" (inline-math pageNumber '+ ' 1)}}>
-                        {{inline-math pageNumber '+ ' 1}}
-                      </a>
-                    {{else}}
-                      <div class="disabled item"></div>
-                    {{/if}}
-                    {{#if (inline-compare pageNumber '<' (inline-math totalPages '- ' 1))}}
-                      <a class="item" {{action "switchPage" (inline-math pageNumber '+ ' 2)}}>
-                        {{inline-math pageNumber '+ ' 2}}
-                      </a>
-                    {{else}}
-                      <div class="disabled item"></div>
-                    {{/if}}
-                    {{#if (inline-compare pageNumber '<' (inline-math totalPages '- ' 4))}}
-                      <div class="disabled item">
-                        ...
-                      </div>
-                    {{else}}
-                      {{#if (inline-compare pageNumber '===' (inline-math totalPages ' - ' 4))}}
-                        <a class="item" {{action "switchPage" (inline-math totalPages '- ' 1 )}}>
-                          {{inline-math totalPages '- ' 1 }}
-                        </a>
-                      {{/if}}
-                    {{/if}}
-                    {{#if (inline-compare pageNumber '<' (inline-math totalPages '- ' 2))}}
-                      <a class="item" {{action "switchPage" totalPages}}>
-                        {{totalPages}}
-                      </a>
-                    {{else}}
-                      <div class="disabled item"></div>
-                    {{/if}}
-                    {{#if (inline-compare pageNumber '>' (inline-math totalPages '-' 4))}}
-                        <div class="disabled item"></div>
-                    {{/if}}
-                  </div>
-                  </div>
-            </td>
-        </tr> 
     </table>
 </div>
 
@@ -522,90 +439,6 @@
 		        </div>
             </td>
         </tr>
-
-        <tr>
-            <td colspan="12">
-                <div style="margin: auto; width: 50%;">
-                  <div class="ui fluid pagination nine item menu">
-                    {{#if (inline-compare pageNumber '<' 5)}}
-                      <div class="disabled item"></div>
-                    {{/if}}
-                    {{#if (inline-compare pageNumber '>' 3)}}
-                      <a class="item" {{action "switchPage" 1}}>
-                        1
-                      </a> 
-                    {{else}}
-                      <div class="disabled item"></div>
-                    {{/if}} 
-                    {{#if (inline-compare pageNumber '>' 5)}}
-                      <div class="disabled item">
-                        ...
-                      </div>
-                    {{else}} 
-                      {{#if (inline-compare pageNumber '===' 5)}}
-                      <a class="item" {{action "switchPage" 2}}>
-                        2
-                      </a> 
-                      {{/if}} 
-                    {{/if}}
-                    {{#if (inline-compare pageNumber '>' 2)}}
-                      <a class="item" {{action "switchPage" (inline-math pageNumber '-' 2)}}>
-                        {{inline-math pageNumber '-' 2}}
-                      </a> 
-                    {{else}}
-                      <div class="disabled item"></div>
-                    {{/if}}
-                    {{#if (inline-compare pageNumber '>' 1)}}
-                      <a class="item" {{action "switchPage" (inline-math pageNumber '-' 1)}}>
-                        {{inline-math pageNumber '-' 1}}
-                      </a>
-                    {{else}}
-                      <div class="disabled item"></div>
-                    {{/if}}
-
-                    <a class="active item">
-                      {{pageNumber}}
-                    </a> 
-
-                    {{#if (inline-compare pageNumber '<' totalPages)}}
-                      <a class="item" {{action "switchPage" (inline-math pageNumber '+ ' 1)}}>
-                        {{inline-math pageNumber '+ ' 1}}
-                      </a>
-                    {{else}}
-                      <div class="disabled item"></div>
-                    {{/if}}
-                    {{#if (inline-compare pageNumber '<' (inline-math totalPages '- ' 1))}}
-                      <a class="item" {{action "switchPage" (inline-math pageNumber '+ ' 2)}}>
-                        {{inline-math pageNumber '+ ' 2}}
-                      </a>
-                    {{else}}
-                      <div class="disabled item"></div>
-                    {{/if}}
-                    {{#if (inline-compare pageNumber '<' (inline-math totalPages '- ' 4))}}
-                      <div class="disabled item">
-                        ...
-                      </div>
-                    {{else}}
-                      {{#if (inline-compare pageNumber '===' (inline-math totalPages ' - ' 4))}}
-                        <a class="item" {{action "switchPage" (inline-math totalPages '- ' 1 )}}>
-                          {{inline-math totalPages '- ' 1 }}
-                        </a>
-                      {{/if}}
-                    {{/if}}
-                    {{#if (inline-compare pageNumber '<' (inline-math totalPages '- ' 2))}}
-                      <a class="item" {{action "switchPage" totalPages}}>
-                        {{totalPages}}
-                      </a>
-                    {{else}}
-                      <div class="disabled item"></div>
-                    {{/if}}
-                    {{#if (inline-compare pageNumber '>' (inline-math totalPages '-' 4))}}
-                        <div class="disabled item"></div>
-                    {{/if}}
-                  </div>
-                  </div>
-            </td>
-        </tr> 
     </table>
 </div>
 
@@ -742,4 +575,30 @@
         </tr> 
 
     </table>
+</div>
+
+<div class="ui bottom attached tab segment" data-tab="courseGrouping">
+  <div class="ui grid">
+    <div class="eight wide column right aligned">
+      {{add-new-course-grouping}}
+    </div>
+  </div>
+
+  <table class="ui table" style="margin-top: 25px;">
+    <thead>
+      <th>Grouping Name</th>
+      <th><!--spacer--></th>
+    </thead>
+
+      <tbody>
+        <tr>
+        {{#each courseGroupingModel as |courseGrouping|}}
+        <td>
+          {{courseGrouping.name}}
+        </td>
+        {{/each}}
+        </tr>
+      </tbody>
+  
+  </table>
 </div>
