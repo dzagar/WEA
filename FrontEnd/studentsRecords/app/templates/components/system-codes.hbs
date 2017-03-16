@@ -15,13 +15,18 @@
     {{delete-high-school-subject highSchoolSubject = currentHighSchoolSubject showWindow = showDeleteHighSchoolSubjectConfirmation}}
     {{else if showDeleteTermCodeConfirmation}}
     {{delete-term-code termCode = currentTermCode showWindow = showDeleteTermCodeConfirmation}}
+    {{else if showDeleteCourseGroupingConfirmation}}
+    {{delete-course-grouping courseGrouping = currentCourseGrouping showWindow = showDeleteCourseGroupingConfirmation}}
+    {{else if showAddCoursesModal}}
+    {{add-new-course-grouping courseGrouping = currentCourseGrouping showWindow = showAddCoursesModal}}
+
 {{/if}}
 
   <!-- Show data entry form -->
 
   <div class="ui top attached tabular menu">
     <div style="cursor: pointer;" class="active item" data-tab="coursecode">Course Codes</div>
-    <div style="cursor: pointer;" class="item" data-tab="courseGrouping">Course Groupings</div>
+    <div style="cursor: pointer;" class="item" data-tab="courseGroup">Course Groupings</div>
     <div style="cursor: pointer;" class="item" data-tab="gender">Gender</div>
     <div style="cursor: pointer;" class="item" data-tab="hsSubject">High School Subjects</div>
     <div style="cursor: pointer;" class="item" data-tab="residency">Residency</div>
@@ -33,8 +38,8 @@
     <table class="ui fixed table">
         <thead>
         <tr>
-            <th class="sixteen wide">Gender</th>
-            <th class="four wide"><!--spacer--></th>
+            <th class="eight wide">Gender</th>
+            <th class="eight wide"><!--spacer--></th>
         </tr>
         </thead>
         {{#each genderModel as |gender|}}
@@ -46,9 +51,13 @@
             </td>
             <td>
                 <div class="ui inverted buttons">
-                    <button class="ui blue inverted button" {{action "saveGender" gender}}>Save</button>
+                    <button class="ui blue inverted button" {{action "saveGender" gender}}>Save
+                        &nbsp; <i class="save icon"></i>
+                    </button>
                     <div class="divider"/>
-                    <button class="ui red inverted button" {{action "deleteGender" gender}}>Delete</button>
+                    <button class="ui red inverted button" {{action "deleteGender" gender}}>Delete
+                        &nbsp; <i class="trash icon"></i>
+                    </button>
                 </div>
             </td>
         </tr>
@@ -79,8 +88,8 @@
       <table class="ui fixed table">
         <thead>
             <tr>
-            <th class="sixteen wide">Residency</th>
-            <th class="four wide"><!--spacer--></th>
+            <th class="eight wide">Residency</th>
+            <th class="eight wide"><!--spacer--></th>
             
             </tr>
         </thead>
@@ -94,9 +103,13 @@
             </td>
             <td>
                 <div class="ui inverted buttons">
-                    <button class="ui blue inverted button" {{action "saveResidency" residency}}>Save</button>
+                    <button class="ui blue inverted button" {{action "saveResidency" residency}}>Save
+                        &nbsp; <i class="save icon"></i>
+                    </button>
                     <div class="divider"/>
-                    <button class="ui red inverted button" {{action "deleteResidency" residency}}>Delete</button>
+                    <button class="ui red inverted button" {{action "deleteResidency" residency}}>Delete
+                        &nbsp; <i class="trash icon"></i>
+                    </button>
                 </div>
             </td>
         </tr>
@@ -166,9 +179,13 @@
             </td>
             <td>
                 <div class="ui inverted buttons">
-                    <button class="ui blue inverted button" {{action "saveCourseCode" courseCode}}>Save</button>
+                    <button class="ui blue inverted button" {{action "saveCourseCode" courseCode}}>Save
+                        &nbsp; <i class="save icon"></i>
+                    </button>
                     <div class="divider"/>
-                    <button class="ui red inverted button" {{action "deleteCourseCode" courseCode}}>Delete</button>
+                    <button class="ui red inverted button" {{action "deleteCourseCode" courseCode}}>Delete
+                        &nbsp; <i class="trash icon"></i>
+                    </button>
                 </div>
             </td>
         </tr>
@@ -296,8 +313,8 @@
      <table class="ui table">
         <thead>
             <tr>
-            <th class="sixteen wide">Secondary Schools</th>
-            <th class="four wide"><!--spacer--></th>
+            <th class="eight wide">Secondary Schools</th>
+            <th class="eight wide"><!--spacer--></th>
             </tr>
         </thead>
 
@@ -311,9 +328,13 @@
 
             <td>
                 <div class="ui inverted buttons">
-                    <button class="ui blue inverted button" {{action "saveHighSchool" highSchool}}>Save</button>
+                    <button class="ui blue inverted button" {{action "saveHighSchool" highSchool}}>Save
+                        &nbsp; <i class="save icon"></i>
+                    </button>
                     <div class="divider"/>
-                    <button class="ui red inverted button" {{action "deleteHighSchool" highSchool}}>Delete</button>
+                    <button class="ui red inverted button" {{action "deleteHighSchool" highSchool}}>Delete
+                        &nbsp; <i class="trash icon"></i>
+                    </button>
                 </div>
             </td>
         </tr>
@@ -387,9 +408,13 @@
 
             <td>
                 <div class="ui inverted buttons">
-                    <button class="ui blue inverted button" {{action "saveHighSchoolSubject" highSchoolSubject}}>Save</button>
+                    <button class="ui blue inverted button" {{action "saveHighSchoolSubject" highSchoolSubject}}>Save
+                        &nbsp; <i class="save icon"></i>
+                    </button>
                     <div class="divider"/>
-                    <button class="ui red inverted button" {{action "deleteHighSchoolSubject" highSchoolSubject}}>Delete</button>
+                    <button class="ui red inverted button" {{action "deleteHighSchoolSubject" highSchoolSubject}}>Delete
+                        &nbsp; <i class="trash icon"></i>
+                    </button>
                 </div>
             </td>
         </tr> 
@@ -446,8 +471,8 @@
      <table class="ui table">
         <thead>
             <tr>
-            <th class="sixteen wide">Term Codes</th>
-            <th class="four wide"><!--spacer--></th>
+            <th class="eight wide">Term Codes</th>
+            <th class="eight wide"><!--spacer--></th>
             </tr>
         </thead>
 
@@ -461,9 +486,13 @@
 
             <td>
                 <div class="ui inverted buttons">
-                    <button class="ui blue inverted button" {{action "saveTermCode" termCode}}>Save</button>
+                    <button class="ui blue inverted button" {{action "saveTermCode" termCode}}>Save
+                        &nbsp; <i class="save icon"></i>
+                    </button>
                     <div class="divider"/>
-                    <button class="ui red inverted button" {{action "deleteTermCode" termCode}}>Delete</button>
+                    <button class="ui red inverted button" {{action "deleteTermCode" termCode}}>Delete
+                        &nbsp; <i class="trash icon"></i>
+                    </button>
                 </div>
             </td>
         </tr>
@@ -577,28 +606,50 @@
     </table>
 </div>
 
-<div class="ui bottom attached tab segment" data-tab="courseGrouping">
-  <div class="ui grid">
-    <div class="eight wide column right aligned">
-      {{add-new-course-grouping}}
-    </div>
-  </div>
-
-  <table class="ui table" style="margin-top: 25px;">
-    <thead>
-      <th>Grouping Name</th>
-      <th><!--spacer--></th>
-    </thead>
-
-      <tbody>
-        <tr>
+<div class="ui bottom attached tab segment" data-tab="courseGroup">
+    <table class="ui table">
+        <thead>
+            <tr>
+                <th class="six wide">Grouping Name</th>
+                <th class="ten wide"><!--spacer--></th>
+            </tr>
+        </thead>
+        
         {{#each courseGroupingModel as |courseGrouping|}}
-        <td>
-          {{courseGrouping.name}}
-        </td>
-        {{/each}}
+         <tr>   
+            <td>
+                <b>{{courseGrouping.name}}</b>
+            </td>
+
+            <td>
+                <div class="ui inverted buttons">
+                    <button class="ui inverted green button" {{action "modifyCourses" courseGrouping}}>Modify Courses
+                        &nbsp; <i class="add square icon"></i>
+                    </button>
+                    <div class="divider"/>
+                    <button class="ui inverted red button" {{action "deleteCourseGrouping" courseGrouping}}> Delete Grouping
+                        &nbsp; <i class="trash icon"></i>
+                    </button>
+
+                </div>
+            </td>
         </tr>
-      </tbody>
-  
-  </table>
+        {{/each}}
+            
+
+    </table>
+    
+    <br><br><br>
+
+    <div class="ui form">
+        <div>
+            <label>Grouping Name</label>
+            {{input type="text" value = newCourseGroupingName}}
+        </div>
+    </div>
+    <br>
+    <button class="ui button" {{action "addCourseGrouping"}}>Add</button>
+        <div>
+            <label>{{courseGroupingOutput}}</label>
+        </div>
 </div>

@@ -31,7 +31,14 @@ router.route('/')
                 {
                     CourseGrouping.find(function (error,courseGrouping)
                     {
-                        response.json({courseGrouping : courseGrouping});
+                        if(error)
+                        {
+                            response.send(error);
+                        }
+                        else
+                        {
+                            response.json({courseGrouping : courseGrouping});
+                        }
                     });
                 }
 

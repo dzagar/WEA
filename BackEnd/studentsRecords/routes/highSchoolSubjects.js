@@ -26,7 +26,7 @@ router.route('/')
                 if (error) {
                     response.send(error);
                 } else{
-                    HighSchoolSubject.find(function (error, highSchoolSubject){
+                    HighSchoolSubject.find({}, null, {sort: 'name'}, function (error, highSchoolSubject){
                         if (error) {
                             response.send(error);
                         } else {

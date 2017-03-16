@@ -1,1 +1,20 @@
-{{yield}}
+<div class="ui modal">
+      <div class="header">Create New User Account</div>
+      <div class="content">
+        <div class="ui form">
+          <div class="inline field">
+            <label>Courses</label>
+            {{input value=firstName type="text" placeholder="enter first name" }}
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <div class="ui button" {{action "saveCourseGrouping"}}>
+          Save
+        </div>
+        <div class="ui button" {{action "cancel"}}>
+          Cancel
+        </div>
+      </div>
+    </div>
