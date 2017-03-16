@@ -2355,7 +2355,7 @@ export default Ember.Component.extend({
 
 									if (studentNumber && term && termAVG && termUnitsPassed && termUnitsTotal && cumAVG && cumUnitsPassed && cumUnitsTotal)
 									{
-										if (checkUniqueTerm(studentInformation, studentNumber.v, term.v))
+										if (!checkUniqueTerm(studentInformation, studentNumber.v, term.v))
 										{											
 											self.pushOutput("<span style='color:red'>Import Cancelled. Duplicate values found on row " + i + " for student number " + studentNumber.v + " and term " + term.v + "</span>");
 											rollbackImport = true;
@@ -2364,15 +2364,16 @@ export default Ember.Component.extend({
 										else{
 											studentInformation.push({"studentNumber": studentNumber.v, "termCode": term.v, "termAVG": termAVG, "termUnitsPassed": termUnitsPassed, "termUnitsTotal": termUnitsTotal});
 											//if we are transitioning students
+											
 											if (currentStudentNumber != studentNumber.v && currentStudentNumber !== -1)
 											{
-												cumStudentInformation.push({"studentNumber": studentNumber.v, "cumAVG": cumAVG, "cumUnitsPassed": cumUnitsPassed.v, "cumUnitsTotal": cumUnitsTotal.v});
+												cumStudentInformation.push({"studentNumber": studentNumber.v, "cumAVG": cumAVG.v, "cumUnitsPassed": cumUnitsPassed.v, "cumUnitsTotal": cumUnitsTotal.v});
 
 											}											
 											currentStudentNumber = studentNumber.v;
 											currentCumAvg = cumAVG.v;
 											currentCumUnitsPassed = cumUnitsPassed.v;
-											currentCumUnitsTotal = currentCumUnitsTotal.v;
+											currentCumUnitsTotal = cumUnitsTotal.v;
 										}
 									}
 									else if (studentNumber || term || termAVG || termUnitsPassed || termUnitsTotal || cumAVG || cumUnitsPassed || cumUnitsTotal)
