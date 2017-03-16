@@ -1,6 +1,12 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
+	init(){
+		this._super(...arguments);
+	},
+	didRender(){
+		$(".open").hide();
+	},
 	graduateChartData: Ember.computed(function(){
   	return {
   		labels: ["Eligible", "Suppl. Exams", "Withdrew from courses", "Incomplete", "Granted special exam", "Repeat failed courses", "Repeat failed year", "Withdraw"],
@@ -50,16 +56,39 @@ export default Ember.Component.extend({
             	'rgba(75, 192, 112, 1)',
                 'rgba(54, 162, 235, 1)',
                 'rgba(255, 206, 86, 1)',
-                'rgba(255,99,132,1)',
-                'rgba(255,99,132,0)',
-                'rgba(255,99,132,0)',
-                'rgba(255,99,132,0)',
-                'rgba(255,99,132,0)'
+                'rgba(255, 99, 132, 1)',
+                'rgba(255, 99, 132, 0)',
+                'rgba(255, 99, 132, 0)',
+                'rgba(255, 99, 132, 0)',
+                'rgba(255, 99, 132, 0)'
             ]
   		}]
   	};
   }),
   options: {
-  	responsive:true
-  }
+  	responsive: true,
+  	legend: {
+  		onClick: function(event, legendItem){
+  			console.log("clicked "+legendItem.label);
+  		}
+  	}
+  },
+  actions: {
+   		generateReport(){
+   			$(".open").show();
+   			
+   			switch($("#criteria").val()){
+   				case 0:
+   					break;
+   				case 1:
+   					break;
+   				case 2:
+   					break;
+   				case 3:
+   					break;
+   			}
+
+   		}
+
+   }
 });

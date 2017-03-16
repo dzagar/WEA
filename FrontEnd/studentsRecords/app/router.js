@@ -16,11 +16,11 @@ Router.map(function() {
   this.route('student-records');
   this.route('system-codes');
   this.route('import-files');
-<<<<<<< HEAD
+
   this.route('generate-reports');
-=======
+
   this.route('adjudication');
->>>>>>> master
+
 });
 
 export default Router;
