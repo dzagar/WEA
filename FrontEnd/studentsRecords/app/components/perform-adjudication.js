@@ -149,7 +149,7 @@ export default Ember.Component.extend({
                                                     // });
                                                     if (self.determineProgress(currentProgress, currentTotal))
                                                     {
-                                                        self.set('studentInformation', studentInformation);
+                                                        self.set('studentInformation', studentAdjudicationInfo);
                                                         //do actual evaluation
                                                         console.log("done reading.... time to evaluate");
                                                     } 
