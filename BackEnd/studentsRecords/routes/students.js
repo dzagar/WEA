@@ -167,6 +167,9 @@ router.route('/:student_id')
                 student.DOB = request.body.student.DOB;
                 student.photo = request.body.student.photo;
                 student.resInfo = request.body.student.resInfo;
+                student.cumAVG = request.body.student.cumAVG;
+                student.cumUnitsTotal = request.body.student.cumUnitsTotal;
+                student.cumUnitsPassed = request.body.student.cumUnitsPassed;
                 student.registrationComments = request.body.student.registrationComments;
                 student.basisOfAdmission = request.body.student.basisOfAdmission;
                 student.admissionAverage = request.body.student.admissionAverage;
