@@ -5,12 +5,16 @@ export default Ember.Component.extend({
     studentsToAdjudicate: null,
     adjudicationCategories: null,
     nonCategoryAdjudications: null,
+    adjudicationCategoriesAssessmentCodes: null,
     currentTerm: null,
     termCodeModel: null,
     parsingProgress: 0,
     parsingTotal: 1000,
     evaluationProgress: 0,
     evaluationTotal: 1000,
+    savingProgress: 0,
+    savingTotal: 1000,
+    studentInformation: null,
     store: Ember.inject.service(),
 
 
@@ -42,23 +46,31 @@ export default Ember.Component.extend({
             return false;
         }
     },
-    performAdjudication(studentInformation){
+    performAdjudication(){
 
         var self = this;
+        var studentInformation = this.get('studentInformation');
         var totalSize = 0;
         //initialize total size
         this.get('adjudicationCategories').forEach(function(category, categoryIndex) {
             totalSize += category.get('assessmentCodes').get('length') * studentInformation.length;
         });
         totalSize += this.get('nonCategoryAdjudications').get('length') * studentInformation.length;
-        
-
-        //each category
-
-
-        //each non category based adjudication
-
-
+        self.set('evaluationTotal', totalSize);
+        this.get('nonCategoryAdjudications').forEach(function(assessmentCode, assessmentCodeIndex) {
+            evaluateNonCategoryAssessmentCode(assessmentCode);
+        });        
+        this.get('adjudicationCategories').forEach(function(category, categoryIndex) {
+            this.evaluateCategoryAssessmentCode(category.get('assessmentCodes').get('firstObject'), 0, categoryIndex);
+        });
+    },
+    evaluateCategoryAssessmentCode(assessmentCodeToEvaluate, indexOfCode, categoryIndex)
+    {
+        //blah blah blah evaluate student with assessmentCode if false
+        self.evaluateCategoryAssessmentCode(self.get('adjudicationCategories').objectAt(categoryIndex).get('assessmentCodes').objectAt(indexOfCode++), indexOfCode, categoryIndex);
+    },
+    evaluateNonCategoryAssessmentCode(assessmentCode)
+    {
 
     },
     actions: {    
@@ -137,12 +149,12 @@ export default Ember.Component.extend({
                                                     // });
                                                     if (self.determineProgress(currentProgress, currentTotal))
                                                     {
+                                                        self.set('studentInformation', studentInformation);
                                                         //do actual evaluation
                                                         console.log("done reading.... time to evaluate");
                                                     } 
                                                 });
                                             });
-
                                         });                                        
                                     });
                                 });
