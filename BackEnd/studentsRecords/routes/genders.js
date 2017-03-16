@@ -25,7 +25,7 @@ router.route('/')
                 if (err) response.send(err);
                 else
                 {
-                    Gender.find({}, function(error, genders) {
+                    Gender.find({}, null, {sort: 'name'}, function(error, genders) {
                         if (error)
                             response.send(error)
                         else
