@@ -23,10 +23,28 @@ export default Ember.Component.extend({
     deleteSelf: null,
     parent: null,
     test: null,
+    booleanExps: [],
+    oldBooleanExps: [],
+    count: 0,
+    extraBoolExp: [],
+    creatingNewLogExp: false,
 
     init() {
         this._super(...arguments);
         console.log('logical-expression init');
+        var boolexps = [    //TESTESTESTEST
+            {
+                "field": 0,
+                "opr": 2,
+                "val": 40
+            },
+            {
+                "field": 2,
+                "opr": 3,
+                "val": 20
+            }
+        ];
+
         var logLinks = [
             {
                 "id": 0,
@@ -47,54 +65,17 @@ export default Ember.Component.extend({
                 "name": "Software Engineering"
             }
         ];
-        var fields = [  //TESTER
-            {
-                "id": 0,
-                "name": "Yearly weighted average"
-            },
-            {
-                "id": 1,
-                "name": "Cumulatively weighted average"
-            },
-            {
-                "id": 2,
-                "name": "Number of failed credits"
-            }, 
-            {
-                "id": 3,
-                "name": "Number of credits"
-            }
-        ];
-        var operators = [
-            {
-                "id": 0,
-                "name": "is greater than"
-            },
-            {
-                "id": 1,
-                "name": "is less than"
-            },
-            {
-                "id": 2,
-                "name": "is greater than or equal to"
-            },
-            {
-                "id": 3,
-                "name": "is less than or equal to"
-            },
-            {
-                "id": 4,
-                "name": "is equal to"
-            },
-            {
-                "id": 5,
-                "name": "is not equal to"
-            }
-        ];
-        this.set('fields', fields);
-        this.set('operators', operators);
+        var extra = [{
+            "field": null,
+            "opr": null,
+            "val": null
+        }];
+        this.set('oldBooleanExps', boolexps);
+        this.set('booleanExps', boolexps);
         this.set('logLinks', logLinks);
         this.set('departments', departments);
+        this.set('extraBoolExp', extra);
+        this.set('count', this.get('booleanExps').length);
     },
 
     didInsertElement() {
@@ -116,36 +97,29 @@ export default Ember.Component.extend({
             this.set(argname, null);
         },
 
-        removeSelf() {
-            console.log('removing self');
-            if (this.get('deleteSelf')) {
-                this.get('deleteSelf')();
-            }
+        destroyBoolExp: function(item){
+            this.get('booleanExps').removeObject(item);
         },
-
-        log() {
-            console.log('Hello World! I am at level ' + this.get('level'));
+        addBoolExp: function(boolExp){
+            this.get('booleanExps').insertAt(this.get('count'), {
+                "field": boolExp.field,
+                "opr": boolExp.opr,
+                "val": boolExp.value
+            });
+            var extra = [{
+                "field": null,
+                "opr": null,
+                "val": null
+            }];
+            this.set('extraBoolExp', extra);
+            this.set('count', this.get('count')+1);
         },
-
-        logchild() {
+        toggleNewLogExp: function(){
+            this.toggleProperty('creatingNewLogExp');
+            console.log(this.get('creatingNewLogExp'));
         },
-
-        cancel: function(){
-            Ember.$('.ui.modal').modal('hide');
+        returnNewLevel: function(){
+            return (this.get('level')+1);
         }
-    },
-
-    didRender() {
-        var self = this;
-        Ember.$('.ui.modal')
-        .modal({
-            closable: false,
-            backdrop: 'static',
-            onHide: function() {
-                self.set('showWindow', false);
-                Ember.$(self).remove();
-            }
-        })
-        .modal('show');
     }
 });

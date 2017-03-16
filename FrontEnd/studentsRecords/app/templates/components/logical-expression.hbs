@@ -1,87 +1,62 @@
-<div class = "ui basic modal">
-  <div class = "header">
-    For 
-    {{#ui-dropdown class = "selection" selected = "0" onChange = (action (mut logLink))}}
-    <div class = "default text">logical link</div>
-    <i class = "dropdown icon"></i>
-    <div class = "menu">
-      {{#each logLinks as |logLink|}}
-        <div class = "item" data-value = {{logLink.id}}>
-          {{logLink.text}}
-        </div>
-      {{/each}}
-    </div>
-    {{/ui-dropdown}}
-    of the following applying to
-    {{#ui-dropdown class = "selection" selected = "0" onChange = (action (mut department))}}
-    <div class = "default text">department</div>
-    <i class = "dropdown icon"></i>
-    <div class = "menu">
-      {{#each departments as |department|}}
-        <div class = "item" data-value = {{department.id}}>
-          {{department.name}}
-        </div>
-      {{/each}}
-    </div>
-    {{/ui-dropdown}}
-    :
+<div class = "header">
+  For 
+  {{#ui-dropdown class = "selection" selected = "0" onChange = (action (mut logLink))}}
+  <div class = "default text">logical link</div>
+  <i class = "dropdown icon"></i>
+  <div class = "menu">
+    {{#each logLinks as |logLink|}}
+      <div class = "item" data-value = {{logLink.id}}>
+        {{logLink.text}}
+      </div>
+    {{/each}}
   </div>
+  {{/ui-dropdown}}
+  of the following applying to
+  {{#ui-dropdown class = "selection" selected = "0" onChange = (action (mut department))}}
+  <div class = "default text">department</div>
+  <i class = "dropdown icon"></i>
+  <div class = "menu">
+    {{#each departments as |department|}}
+      <div class = "item" data-value = {{department.id}}>
+        {{department.name}}
+      </div>
+    {{/each}}
+  </div>
+  {{/ui-dropdown}}
+  :
+</div>
 
-  <div class = "contents">
-    <div id = "logicalExp">
-      <div class = "ui form">
-        <div id = "booleanExp">
-          <div class = "ui inline fields">
-              <div class = "five wide inline field">
-                {{#ui-dropdown class = "selection" id = "fieldDropdown" onChange = (action (mut field))}}
-                  <input name="arg" type="hidden">
-                  <div class = "default text">Field</div>
-                  <i class="dropdown icon"></i>
-                  <div class="menu">
-                    {{#each fields as |field|}}
-                      <div class = "item" data-value = {{field.id}}>
-                        {{field.name}}
-                      </div>
-                    {{/each}}
-                  </div>
-                {{/ui-dropdown}}
-              </div>
-
-            <div class = "four wide inline field">
-              {{#ui-dropdown class = "selection" id = "opdropdown" onChange = (action (mut opr))}}
-                <input name = "op" type = "hidden">
-                <div class = "default text">Operand</div>
-                <i class = "dropdown icon"></i>
-                <div class = "menu">
-                  {{#each operators as |opr|}}
-                    <div class = "item" data-value = {{opr.id}}>
-                      {{opr.name}}
-                    </div>
-                  {{/each}}
-                </div>
-              {{/ui-dropdown}}
+<div class = "contents">
+  <div id = "logicalExp">
+    <div class = "ui form">
+        {{#each booleanExps as |boolExp index|}}
+            {{boolean-expression boolId = index currentField = boolExp.field currentOpr = boolExp.opr currentVal = boolExp.val}}
+            <div class = "two wide field">
+              <button class="ui inverted red icon button" {{action 'destroyBoolExp' boolExp}}>
+                <i class="square minus icon"></i>
+              </button>
             </div>
-
-              <div class = "five wide inline field">
-                <div id = "arg2dropdown">
-                  <input name="arg" type="hidden">
-                  <input type = "text" name = "arg2" placeholder = "Value">
-                </div>
-              </div>
-
-            <button class="ui inverted green icon button" {{action 'logchild'}}>
-              <i class="square add icon"></i>
-            </button>
-            <button class="ui inverted red icon button" {{action 'log'}}>
-              <i class="square minus icon"></i>
+        {{/each}}
+        {{#if creatingNewLogExp}}
+          <div class = "ui segment">
+          {{logical-expression level = (action "returnNewLevel")}}
+            <button class = "ui inverted blue icon button" {{action 'toggleNewLogExp'}}>
+              <i class = "browser icon"></i>
             </button>
           </div>
-        </div>
-      </div>
+        {{else}}
+          {{#each extraBoolExp as |newExp|}}
+            {{boolean-expression id = count currentField = newExp.field currentOpr = newExp.opr currentVal = newExp.val}}
+            <button class = "ui inverted green icon button" {{action 'addBoolExp' newExp}}>
+              <i class = "square add icon"></i>
+            </button>
+            <button class = "ui inverted blue icon button" {{action 'toggleNewLogExp'}}>
+              <i class = "browser icon"></i>
+            </button>
+          {{/each}}
+        {{/if}}
     </div>
   </div>
-  <div class = "ui green button">Add Parameter(s)</div>
-  <div class = "ui red button" {{action 'cancel'}}>Cancel</div>
 </div>
 
 
