@@ -1,6 +1,5 @@
 <div class = "ui welcome container">
 	<div class = "ui text container">
-        <br><br><br>
 		<h2>
 			Please choose a term to adjudicate for:
 		</h2>
@@ -20,30 +19,38 @@
 				</div>
 			</div>
 		</div>
-
-        
-            <div class = "ui medium purple progress">
+	</div>
+</div>
+<div class="ui centered middle aligned grid">
+	<div class = "row">        
+		<div class="ten wide stretchered column ui basic vertical ordered steps">
+            <br>
+            <label>Student Information Collection Progress</label>    
+            {{#ui-progress value = parsingProgress progress = parsingProgress total = parsingTotal}}
                 <div class="bar">
                     <div class="progress"></div>
                 </div>
+            {{/ui-progress}}
+            <br>
+            <label>Student Evaluation Progress</label>    
+            {{#ui-progress value = evaluationProgress progress = evaluationProgress total = evaluationTotal}}
+                <div class="bar">
+                    <div class="progress"></div>
+                </div>
+            {{/ui-progress}}
+            <br>
+            <label>Student Adjudication Saving Progress</label>    
+            {{#ui-progress value = savingProgress progress = savingProgress total = savingTotal}}
+                <div class="bar">
+                    <div class="progress"></div>
+                </div>
+            {{/ui-progress}}
+		</div>
+		<div class = "six wide column">
+            <div class="ui raised padded text container segment">
+                <h2 class="ui header">Adjudication Status</h2>
             </div>
-
-
-		<div class="ui raised very padded text container segment">
-            <h2 class="ui header">Adjudication Status</h2>
-        </div>
-
+		</div>
 	</div>
 </div>
-
-{{!--<div class="ui grid">
-    <div class="four wide column">
-        <select class="ui fluid search dropdown" multiple="">
-         <option value="">Student</option>
-            {{#each studentModel as |students|}}
-            <option>{{students.firstName}}{{students.lastName}}</option>
-            {{/each}}
-        </select>
-    </div>  
-</div>
---}}
+<br>
