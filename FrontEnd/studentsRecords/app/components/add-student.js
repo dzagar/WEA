@@ -19,6 +19,7 @@ export default Ember.Component.extend({
 	admissionAverage: null,
 	admissionComments: null,
 	registrationComments: null,
+	invalidStudentNumber: false,
 
 	init() {
 		this._super(...arguments);
@@ -40,35 +41,33 @@ export default Ember.Component.extend({
 				console.log('u fucked up');
 				return;
 			}
-			if (this.get('gender') == 1){
-				this.set('photo', "/assets/studentsPhotos/male.png");
-			} else if (this.get('gender') == 2) {
-				this.set('photo', "/assets/studentsPhotos/female.png");
+
+			if (this.get('number') == null || isNaN(this.get('number'))) {
+				invalidStudentNumber = true;
 			} else {
 				this.set('photo', "/assets/studentsPhotos/nonBinary.png");
+				var strDate = this.get('DOB').substring(0,10);
+				console.log(strDate);
+				this.set('newStudent', this.get('store').createRecord('student', {
+					number: this.get('number'),
+					firstName: this.get('firstName'),
+					lastName: this.get('lastName'),
+					gender: this.get('store').peekRecord('gender', this.get('gender')),
+					DOB: this.get('DOB'),
+					photo: this.get('photo'),
+					resInfo: this.get('store').peekRecord('residency', this.get('resInfo')),
+					basisOfAdmission: this.get('basisOfAdmission'),
+					admissionAverage: this.get('admissionAverage'),
+					admissionComments: this.get('admissionComments'),
+					registrationComments: this.get('registrationComments')
+				}));
+				this.get('newStudent').save();
+				this.set('total',this.get('total')+1);
+				this.set('notDONE', false);
+				//somehow jump to this student afterwards
+				Ember.$('.ui.modal').modal('hide');
+				//Ember.$('.ui.modal').remove();
 			}
-			var date = this.get('DOB');
-			var strDate = date.substring(0,10);
-			console.log(strDate);
-			this.set('newStudent', this.get('store').createRecord('student', {
-				number: this.get('number'),
-				firstName: this.get('firstName'),
-				lastName: this.get('lastName'),
-				gender: this.get('store').peekRecord('gender', this.get('gender')),
-				DOB: date,
-				photo: this.get('photo'),
-				resInfo: this.get('store').peekRecord('residency', this.get('resInfo')),
-				basisOfAdmission: this.get('basisOfAdmission'),
-				admissionAverage: this.get('admissionAverage'),
-				admissionComments: this.get('admissionComments'),
-				registrationComments: this.get('registrationComments')
-			}));
-			this.get('newStudent').save();
-			this.set('total',this.get('total')+1);
-			this.set('notDONE', false);
-			//somehow jump to this student afterwards
-			Ember.$('.ui.modal').modal('hide');
-      		//Ember.$('.ui.modal').remove();
 
 		},
 		selectGender: function(gender){
@@ -84,6 +83,12 @@ export default Ember.Component.extend({
 			this.set('notDONE', false);
 			Ember.$('.ui.modal').modal('hide');
       		//Ember.$('.ui.modal').remove();
+		},
+		testErrors: function() {
+			invalidStudentNumber = false;
+			if (this.get('number') == null || isNaN(this.get('number'))) {
+				invalidStudentNumber = true;
+			}
 		}
 	},
 

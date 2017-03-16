@@ -4,7 +4,7 @@
     <div class="ui inverted form">
       <div class="field">
         <label>Student Number</label>
-        {{input size="10" type="text" placeholder="Student Number" value = number}}
+        {{input maxlength="9" type="text" placeholder="Student Number" value = number}}
       </div>
       <div class="field">
         <label>Name</label>
@@ -69,11 +69,11 @@
   </div>
 
   <div class="actions">
-    <div class="ui positive left labeled icon button" {{action "addStudent"}}>
+    <div class="ui green left labeled icon button" {{action "testErrors"}}>
       <i class="square plus icon"></i>
     	Add
     </div>
-    <div class="ui negative button" {{action "cancel"}}>
+    <div class="ui red button" {{action "cancel"}}>
     	Cancel
     </div>
   </div>
