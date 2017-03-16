@@ -17,11 +17,19 @@ router.route('/')
                 response.send(error);
             } else {
                 termCode.terms.push(term._id);
-                term.save(function (error) {
-                    if (error) {
+                Student.findById(term.student, function(error, student) {
+                    if (error){
                         response.send(error);
-                    } else {
-                        response.send({term:term});
+                    }
+                    else{
+                        student.terms.push(term._id);
+                        term.save(function (error) {
+                            if (error) {
+                                response.send(error);
+                            } else {
+                                response.send({term:term});
+                            }
+                        });
                     }
                 });
             }
