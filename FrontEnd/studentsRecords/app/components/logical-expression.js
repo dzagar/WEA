@@ -128,13 +128,24 @@ export default Ember.Component.extend({
         },
 
         logchild() {
-            this.get('test').send('log');
         },
 
         cancel: function(){
-            this.set('showWindow', false);
             Ember.$('.ui.modal').modal('hide');
-            Ember.$('.ui.modal').remove();
         }
+    },
+
+    didRender() {
+        var self = this;
+        Ember.$('.ui.modal')
+        .modal({
+            closable: false,
+            backdrop: 'static',
+            onHide: function() {
+                self.set('showWindow', false);
+                Ember.$(self).remove();
+            }
+        })
+        .modal('show');
     }
 });
