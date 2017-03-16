@@ -4,11 +4,31 @@ import Mutex from 'ember-mutex';
 export default Ember.Component.extend({
     studentsToAdjudicate: null,
     adjudicationCategories: null,
+    nonCategoryAdjudications: null,
     currentTerm: null,
     termCodeModel: null,
     parsingProgress: 0,
     parsingTotal: 1000,
+    evaluationProgress: 0,
+    evaluationTotal: 1000,
     store: Ember.inject.service(),
+
+
+    init()
+    {
+        this._super(...arguments);
+        var self=this;
+
+        this.get('store').findAll('term-code').then(function (records) {
+            self.set('termCodeModel', records);
+        }); 
+        // this.get('store').findAll('adjudication-category').then(function(records) {
+        //     self.set('adjudicationCategories', records);
+        // });
+        // this.get('store').query('assessment-code', {noCategory: true}).then(function(records) {
+        //     self.set('nonCategoryAdjudications', records);
+        // });
+    },
 
     determineProgress(newProgress, newTotal)
     {
@@ -21,19 +41,26 @@ export default Ember.Component.extend({
         else{
             return false;
         }
+    },
+    performAdjudication(studentInformation){
+
+        var self = this;
+        var totalSize = 0;
+        //initialize total size
+        this.get('adjudicationCategories').forEach(function(category, categoryIndex) {
+            totalSize += category.get('assessmentCodes').get('length') * studentInformation.length;
+        });
+        totalSize += this.get('nonCategoryAdjudications').get('length') * studentInformation.length;
+        
+
+        //each category
+
+
+        //each non category based adjudication
+
+
 
     },
-    init()
-    {
-        this._super(...arguments);
-        var self=this;
-
-        this.get('store').findAll('term-code').then(function (records) {
-            self.set('termCodeModel', records);
-        });    
- 
-    },
-
     actions: {    
         adjudicate()
         {
@@ -82,9 +109,9 @@ export default Ember.Component.extend({
                                     var inGradeMutexIndex = 0;
                                     termInfo.get('grades').forEach(function(grade, index) {
                                         gradeMutex.lock(function() {
-                                            var gradeIndex = inGradeMutexIndex++;
                                             var gradeID = grade.get('id');
-                                            self.get('store').find('grade', gradeID).then(function(gradeInfo) {
+                                            self.get('store').find('grade', gradeID).then(function(gradeInfo) {                                                
+                                                var gradeIndex = inGradeMutexIndex++;
                                                 //push mark, gradeID                        
                                                 studentAdjudicationInfo[studentIndex].terms[termIndex].grades.push({
                                                     "gradeID": gradeInfo.get('id'),
