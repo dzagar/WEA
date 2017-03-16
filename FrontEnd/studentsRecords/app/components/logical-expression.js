@@ -5,6 +5,7 @@ export default Ember.Component.extend({
     applyEmphasis: Ember.computed('level', function() {
         return (this.get('level') % 2) === 1;
     }),
+    showWindow: null,
     logLinks: null,  //logical link (any or all)
     department: null,   //what department this rule applies to
     fields: null,    //fields (argument 1 of boolean)
@@ -128,6 +129,12 @@ export default Ember.Component.extend({
 
         logchild() {
             this.get('test').send('log');
+        },
+
+        cancel: function(){
+            this.set('showWindow', false);
+            Ember.$('.ui.modal').modal('hide');
+            Ember.$('.ui.modal').remove();
         }
     }
 });

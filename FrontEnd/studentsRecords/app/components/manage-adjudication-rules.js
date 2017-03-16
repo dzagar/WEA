@@ -50,7 +50,6 @@ export default Ember.Component.extend({
            rule.destroyRecord();
         },
         addFirstRule(){
-            Ember.$("#addFirst").hide();
             this.set('isAdding', true);
         },
         addParameter() {

@@ -140,7 +140,7 @@
           {{/ui-dropdown}}
         </div>
         {{#if arg2IsLogExp}}
-          {{logical-expression level = (inline-math level '+' 1) deleteSelf = (action 'log')}}
+          {{logical-expression level = (inline-math level '+' 1) deleteSelf = (action 'removeSelf')}}
         {{else}}
           <div class = "five wide inline field">
             <div id = "arg2dropdown">
@@ -153,11 +153,13 @@
           <i class="square add icon"></i>
         </button>
         <button class="ui inverted red icon button" {{action 'log'}}>
-          <i class="square add icon"></i>
+          <i class="square minus icon"></i>
         </button>
       </div>
     </div>
   </div>
+  <div class = "ui green button">Add Parameter(s)</div>
+  <div class = "ui red button" {{action 'cancel'}}>Cancel</div>
 </div>
 
 
