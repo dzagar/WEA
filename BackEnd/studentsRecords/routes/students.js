@@ -7,6 +7,7 @@ var Scholarship = require('../models/scholarship');
 var Term = require('../models/termCode');
 var AdvancedStanding = require('../models/advancedStanding');
 var HighSchoolGrade = require('../models/highSchoolGrade');
+var Adjudication = require('../models/adjudication');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
 var parseJSON = bodyParser.json();
@@ -191,66 +192,80 @@ router.route('/:student_id')
                 failed = true;
                 response.send(error);
             } else if (student) {
-                Gender.findById(student.gender, function (error, gender) {
-                    if (error && !failed) {
-                        failed = true;
-                        response.send(error);
-                    } else if (gender) {
-                        let index = gender.students.indexOf(student._id);
-                        if (index > -1) {
-                            gender.students.splice(index, 1);
-                        }
-
-                        gender.save(function (error) {
-                            if (error && !failed) {
-                                failed = true;
-                                response.send(error);
-                            } else {
-                                completed++;
-                                if (completed === 6 && !failed) {
-                                    response.json({deleted: student});
-                                }
+                if (student.gender) {
+                    Gender.findById(student.gender, function (error, gender) {
+                        if (error && !failed) {
+                            failed = true;
+                            response.send(error);
+                        } else if (gender) {
+                            let index = gender.students.indexOf(student._id);
+                            if (index > -1) {
+                                gender.students.splice(index, 1);
                             }
-                        });
 
-                    } else {
-                        completed++;
-                        if (completed === 6 && !failed) {
-                            response.json({deleted: student});
-                        }
-                    }
-                });
-
-                Residency.findById(student.resInfo, function (error, residency) {
-                    if (error && !failed) {
-                        failed = true;
-                        response.send(error);
-                    } else if (residency) {
-                        let index = residency.students.indexOf(student._id);
-                        if (index > -1) {
-                            residency.students.splice(index, 1);
-                        }
-
-                        residency.save(function (error) {
-                            if (error && !failed) {
-                                failed = true;
-                                response.send(error);
-                            } else {
-                                completed++;
-                                if (completed === 6 && !failed) {
-                                    response.json({deleted: student});
+                            gender.save(function (error) {
+                                if (error && !failed) {
+                                    failed = true;
+                                    response.send(error);
+                                } else {
+                                    completed++;
+                                    if (completed === 7 && !failed) {
+                                        response.json({deleted: student});
+                                    }
                                 }
-                            }
-                        });
-                    } else {
-                        completed++;
-                        if (completed === 6 && !failed) {
-                            response.json({deleted: student});
-                        }
-                    }
-                });
+                            });
 
-                if (student.scholarships.length > 0) {
+                        } else {
+                            completed++;
+                            if (completed === 7 && !failed) {
+                                response.json({deleted: student});
+                            }
+                        }
+                    });
+                } else {
+                    completed++;
+                    if (completed === 7 && !failed) {
+                        response.json({deleted: student});
+                    }
+                }
+
+                if (student.residency) {
+                    Residency.findById(student.resInfo, function (error, residency) {
+                        if (error && !failed) {
+                            failed = true;
+                            response.send(error);
+                        } else if (residency) {
+                            let index = residency.students.indexOf(student._id);
+                            if (index > -1) {
+                                residency.students.splice(index, 1);
+                            }
+
+                            residency.save(function (error) {
+                                if (error && !failed) {
+                                    failed = true;
+                                    response.send(error);
+                                } else {
+                                    completed++;
+                                    if (completed === 7 && !failed) {
+                                        response.json({deleted: student});
+                                    }
+                                }
+                            });
+                        } else {
+                            completed++;
+                            if (completed === 7 && !failed) {
+                                response.json({deleted: student});
+                            }
+                        }
+                    });
+                } else {
+                    completed++;
+                    if (completed === 7 && !failed) {
+                        response.json({deleted: student});
+                    }
+                }
+
+                if (student.scholarships && student.scholarships.length > 0) {
                     let completedScholarships = 0;
                     for (let i = 0; i < student.scholarships.length && !failed; i++) {
                         Scholarship.findById(student.scholarships[i], function (error, scholarship) {
@@ -264,7 +279,7 @@ router.route('/:student_id')
                                     completedScholarships++;
                                     if (completedScholarships === student.scholarships.length && !failed) {
                                         completed++;
-                                        if (completed === 6 && !failed) {
+                                        if (completed === 7 && !failed) {
                                             response.json({deleted: student});
                                         }
                                     }
@@ -273,7 +288,7 @@ router.route('/:student_id')
                                 completedScholarships++;
                                 if (completedScholarships === student.scholarships.length && !failed) {
                                     completed++;
-                                    if (completed === 6 && !failed) {
+                                    if (completed === 7 && !failed) {
                                         response.json({deleted: student});
                                     }
                                 }
@@ -282,12 +297,12 @@ router.route('/:student_id')
                     }
                 } else {
                     completed++;
-                    if (completed === 6 && !failed) {
+                    if (completed === 7 && !failed) {
                         response.json({deleted: student});
                     }
                 }
 
-                if (student.terms.length > 0) {
+                if (student.terms && student.terms.length > 0) {
                     let completedTerms = 0;
                     for (let i = 0; i < student.terms.length && !failed; i++) {
                         Term.findById(student.terms[i], function (error, term) {
@@ -301,7 +316,7 @@ router.route('/:student_id')
                                     completedTerms++;
                                     if (completedTerms === student.terms.length && !failed) {
                                         completed++;
-                                        if (completed === 6 && !failed) {
+                                        if (completed === 7 && !failed) {
                                             response.json({deleted: student});
                                         }
                                     }
@@ -310,7 +325,7 @@ router.route('/:student_id')
                                 completedTerms++;
                                 if (completedTerms === student.terms.length && !failed) {
                                     completed++;
-                                    if (completed === 6 && !failed) {
+                                    if (completed === 7 && !failed) {
                                         response.json({deleted: student});
                                     }
                                 }
@@ -319,12 +334,12 @@ router.route('/:student_id')
                     }
                 } else {
                     completed++;
-                    if (completed === 6 && !failed) {
+                    if (completed === 7 && !failed) {
                         response.json({deleted: student});
                     }
                 }
 
-                if (student.advancedStandings.length > 0) {
+                if (student.advancedStandings && student.advancedStandings.length > 0) {
                     let completedAdvancedStandings = 0;
                     for (let i = 0; i < student.advancedStandings.length && !failed; i++) {
                         AdvancedStanding.findById(student.advancedStandings[i], function (error, advancedStanding) {
@@ -338,7 +353,7 @@ router.route('/:student_id')
                                     completedAdvancedStandings++;
                                     if (completedAdvancedStandings === student.advancedStandings.length && !failed) {
                                         completed++;
-                                        if (completed === 6 && !failed) {
+                                        if (completed === 7 && !failed) {
                                             response.json({deleted: student});
                                         }
                                     }
@@ -347,7 +362,7 @@ router.route('/:student_id')
                                 completedAdvancedStandings++;
                                 if (completedAdvancedStandings === student.advancedStandings.length && !failed) {
                                     completed++;
-                                    if (completed === 6 && !failed) {
+                                    if (completed === 7 && !failed) {
                                         response.json({deleted: student});
                                     }
                                 }
@@ -356,12 +371,12 @@ router.route('/:student_id')
                     }
                 } else {
                     completed++;
-                    if (completed === 6 && !failed) {
+                    if (completed === 7 && !failed) {
                         response.json({deleted: student});
                     }
                 }
 
-                if (student.highSchoolGrades.length > 0) {
+                if (student.highSchoolGrades && student.highSchoolGrades.length > 0) {
                     let completedHighSchoolGrades = 0;
                     for (let i = 0; i < student.highSchoolGrades.length && !failed; i++) {
                         HighSchoolGrade.findById(student.highSchoolGrades[i], function (error, highSchoolGrade) {
@@ -375,7 +390,7 @@ router.route('/:student_id')
                                     completedHighSchoolGrades++;
                                     if (completedHighSchoolGrades === student.highSchoolGrades.length && !failed) {
                                         completed++;
-                                        if (completed === 6 && !failed) {
+                                        if (completed === 7 && !failed) {
                                             response.json({deleted: student});
                                         }
                                     }
@@ -384,7 +399,7 @@ router.route('/:student_id')
                                 completedHighSchoolGrades++;
                                 if (completedHighSchoolGrades === student.highSchoolGrades.length && !failed) {
                                     completed++;
-                                    if (completed === 6 && !failed) {
+                                    if (completed === 7 && !failed) {
                                         response.json({deleted: student});
                                     }
                                 }
@@ -393,7 +408,49 @@ router.route('/:student_id')
                     }
                 } else {
                     completed++;
-                    if (completed === 6 && !failed) {
+                    if (completed === 7 && !failed) {
+                        response.json({deleted: student});
+                    }
+                }
+
+                if (student.adjudications && student.adjudications.length > 0) {
+                    let completedAdj = 0;
+                    for (let i = 0; i < student.adjudications.length && !failed; i++) {
+                        Adjudication.findById(student.adjudications[i], function (error, adjudication) {
+                            if (error && !failed) {
+                                failed = true;
+                                response.send(error);
+                            } else if (adjudication) {
+                                adjudication.student = null;
+
+                                adjudication.save(function (error) {
+                                    if (error && !failed) {
+                                        failed = true;
+                                        response.send(error);
+                                    } else {
+                                        completedAdj++;
+                                        if (completedAdj === student.adjudications.length && !failed) {
+                                            completed++;
+                                            if (completed === 7 && !failed) {
+                                                response.json({deleted: student});
+                                            }
+                                        }
+                                    }
+                                });
+                            } else {
+                                completedAdj++;
+                                if (completedAdj === student.adjudications.length && !failed) {
+                                    completed++;
+                                    if (completed === 7 && !failed) {
+                                        response.json({deleted: student});
+                                    }
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    completed++;
+                    if (completed === 7 && !failed) {
                         response.json({deleted: student});
                     }
                 }
