@@ -9,7 +9,7 @@ export default Ember.Component.extend({
 	lastName: null,
 	newStudent: null,
 	notDONE: null,
-	number: null,
+	studentNumber: null,
 	photo: null,
 	residencyModel: null,
 	resInfo: null,
@@ -46,7 +46,7 @@ export default Ember.Component.extend({
 			this.set('invalidGender', false);
 			this.set('invalidResidency', false);
 
-			if (this.get('number') == null || isNaN(this.get('number'))) {
+			if (this.get('studentNumber') == null || isNaN(this.get('studentNumber'))) {
 				this.set('invalidStudentNumber', true);
 			}
 			if (this.get('firstName') == null || this.get('lastName') == null) {
@@ -65,7 +65,7 @@ export default Ember.Component.extend({
 			if (!(this.get('invalidStudentNumber') || this.get('invalidName') || this.get('invalidDOB') || this.get('invalidGender') || this.get('invalidResidency'))) {
 				this.set('photo', "/assets/studentsPhotos/nonBinary.png");
 				this.set('newStudent', this.get('store').createRecord('student', {
-					number: this.get('number'),
+					studentNumber: this.get('studentNumber'),
 					firstName: this.get('firstName'),
 					lastName: this.get('lastName'),
 					gender: this.get('store').peekRecord('gender', this.get('gender')),
@@ -85,7 +85,7 @@ export default Ember.Component.extend({
 					self.set('total',self.get('total') + 1);
 					console.log('new total: ' + self.get('total'));
 					console.log('page size: ' + self.get('pageSize'));
-					self.set('INDEX', self.get('total') % self.get('pageSize') - 1);
+					self.set('INDEX', self.get('total') % (self.get('pageSize') - 1));
 					console.log('New index: ' + self.get('INDEX'));
 					self.set('notDONE', false);
 					Ember.$('.ui.modal').modal('hide');
@@ -110,6 +110,9 @@ export default Ember.Component.extend({
 			this.set('notDONE', false);
 			Ember.$('.ui.modal').modal('hide');
       		//Ember.$('.ui.modal').remove();
+		},
+		test() {
+			console.log('Student number: ' + this.get('number'));
 		}
 	},
 
