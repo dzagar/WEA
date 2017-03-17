@@ -67,6 +67,7 @@ app.use('/terms', terms);
 app.use('/faculties', faculties);
 app.use('/departments', departments);
 app.use('/adjudicationCategories', adjudicationCategories);
+app.use('/programAdministrations', programAdministrations);
 
 app.listen(3700, function () {
     console.log('Listening on port 3700');
