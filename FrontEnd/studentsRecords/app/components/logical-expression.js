@@ -26,11 +26,13 @@ export default Ember.Component.extend({
     booleanExps: [],
     oldBooleanExps: [],
     count: 0,
-    extraBoolExp: [],
+    extraBoolExp: [],   //only one expression should ever be in here
+    store: Ember.inject.service(),
     creatingNewLogExp: false,
 
     init() {
         this._super(...arguments);
+        var self = this;
         console.log('logical-expression init');
         var boolexps = [    //TESTESTESTEST
             {
@@ -55,16 +57,19 @@ export default Ember.Component.extend({
                 "text": "any"
             },
         ];
-        var departments = [ //STRICTLY FOR TEST PURPOSES. WOULD LOAD IN DEPARTMENTS.
-            {
-                "id": 0,
-                "name": "all departments"
-            },
-            {
-                "id": 1,
-                "name": "Software Engineering"
-            }
-        ];
+        this.get('store').findAll('department').then(function(departments){
+            self.set('departments', departments);
+        });
+        // var departments = [ //STRICTLY FOR TEST PURPOSES. WOULD LOAD IN DEPARTMENTS.
+        //     {
+        //         "id": 0,
+        //         "name": "all departments"
+        //     },
+        //     {
+        //         "id": 1,
+        //         "name": "Software Engineering"
+        //     }
+        // ];
         var extra = [{
             "field": null,
             "opr": null,
@@ -73,9 +78,10 @@ export default Ember.Component.extend({
         this.set('oldBooleanExps', boolexps);
         this.set('booleanExps', boolexps);
         this.set('logLinks', logLinks);
-        this.set('departments', departments);
+        //this.set('departments', departments);
         this.set('extraBoolExp', extra);
         this.set('count', this.get('booleanExps').length);
+
     },
 
     didInsertElement() {
