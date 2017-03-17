@@ -21,15 +21,33 @@ router.route('/')
                         if (error) {
                             response.send(error);
                         } else {
-                            response.json({programAdministration: progAdmin});
+                            progAdmin.save(function (error) {
+                                if (error) {
+                                    response.send(error);
+                                } else {
+                                    response.json({programAdministration: progAdmin});
+                                }
+                            });
                         }
                     });
+                } else {
+                    progAdmin.save(function (error) {
+                        if (error) {
+                            response.send(error);
+                        } else {
+                            response.json({programAdministration: progAdmin});
+                        }
+                    }); 
+                }
+            });
+        } else {
+            progAdmin.save(function (error) {
+                if (error) {
+                    response.send(error);
                 } else {
                     response.json({programAdministration: progAdmin});
                 }
             });
-        } else {
-            response.json({programAdministration: progAdmin});
         }
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
