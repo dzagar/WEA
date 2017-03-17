@@ -5,7 +5,8 @@ var logicalExpressionSchema = mongoose.Schema(
         logicalExpression: String,
         logicalLink: String,
         logicalExpressions: [{type: mongoose.Schema.ObjectId, ref: 'logicalExpressions'}],
-        ownerExpression: {type: mongoose.Schema.ObjectId, ref: 'logicalExpressions'}
+        ownerExpression: {type: mongoose.Schema.ObjectId, ref: 'logicalExpressions'},
+        assessmentCode: {type: mongoose.Schema.ObjectId, ref: 'assessmentCodes'}
     },
     {
         versionKey: false

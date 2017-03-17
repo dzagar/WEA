@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var LogicalExpression = require('../models/logicalExpression');
+var AssessmentCode = require('../models/assessmentCode');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
 var parseJSON = bodyParser.json();
@@ -25,7 +26,7 @@ router.route('/')
                             response.send(error);
                         } else {
                             completed++;
-                            if (completed === 2 && !failed) {
+                            if (completed === 3 && !failed) {
                                 logExp.save(function(error) {
                                     if (error) {
                                         response.send(error);
@@ -38,7 +39,7 @@ router.route('/')
                     });
                 } else {
                     completed++;
-                    if (completed === 2 && !failed) {
+                    if (completed === 3 && !failed) {
                         logExp.save(function(error) {
                             if (error) {
                                 response.send(error);
@@ -51,7 +52,7 @@ router.route('/')
             });
         } else {
             completed++;
-            if (completed === 2 && !failed) {
+            if (completed === 3 && !failed) {
                 logExp.save(function(error) {
                     if (error) {
                         response.send(error);
@@ -80,7 +81,7 @@ router.route('/')
                                 completedLogExp++;
                                 if (completedLogExp === logExp.logicalExpressions.length && !failed) {
                                     completed++;
-                                    if (completed === 2 && !failed) {
+                                    if (completed === 3 && !failed) {
                                         logExp.save(function(error) {
                                             if (error) {
                                                 response.send(error);
@@ -96,7 +97,7 @@ router.route('/')
                         completedLogExp++;
                         if (completedLogExp === logExp.logicalExpressions.length && !failed) {
                             completed++;
-                            if (completed === 2 && !failed) {
+                            if (completed === 3 && !failed) {
                                 logExp.save(function(error) {
                                     if (error) {
                                         response.send(error);
@@ -111,7 +112,7 @@ router.route('/')
             }
         } else {
             completed++;
-            if (completed === 2 && !failed) {
+            if (completed === 3 && !failed) {
                 logExp.save(function(error) {
                     if (error) {
                         response.send(error);
@@ -120,6 +121,46 @@ router.route('/')
                     }
                 });
             }
+        }
+
+        if (logExp.assessmentCode) {
+            AssessmentCode.findById(logExp.assessmentCode, function (error, assessmentCode) {
+                if (error && ! failed) {
+                    failed = true;
+                    response.send(error);
+                } else if (assessmentCode) {
+                    assessmentCode.logicalExpressions.push(logExp._id);
+
+                    assessmentCode.save(function(error) {
+                        if (error && !failed) {
+                            failed = true;
+                            response.send(error);
+                        } else {
+                            completed++;
+                            if (completed === 3 && !failed) {
+                                logExp.save(function(error) {
+                                    if (error) {
+                                        response.send(error);
+                                    } else {
+                                        response.json({logicalExpression: logExp});
+                                    }
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    completed++;
+                    if (completed === 3 && !failed) {
+                        logExp.save(function(error) {
+                            if (error) {
+                                response.send(error);
+                            } else {
+                                response.json({logicalExpression: logExp});
+                            }
+                        });
+                    }
+                }
+            });
         }
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
@@ -173,7 +214,7 @@ router.route('/:logicalExpression_id')
                                     response.send(error);
                                 } else {
                                     completed++;
-                                    if (completed === 2 && !failed) {
+                                    if (completed === 3 && !failed) {
                                         response.json({logicalExpression: logicalExpression});
                                     }
                                 }
@@ -181,14 +222,14 @@ router.route('/:logicalExpression_id')
 
                         } else {
                             completed++;
-                            if (completed === 2 && !failed) {
+                            if (completed === 3 && !failed) {
                                 response.json({logicalExpression: logicalExpression});
                             }
                         }
                     });
                 } else {
                     completed++;
-                    if (completed === 2 && !failed) {
+                    if (completed === 3 && !failed) {
                         response.json({logicalExpression: logicalExpression});
                     }
                 }
@@ -211,7 +252,7 @@ router.route('/:logicalExpression_id')
                                         completedLogExp++;
                                         if (completedLogExp === logicalExpression.logicalExpressions.length && !failed) {
                                             completed++;
-                                            if (completed === 2 && !failed) {
+                                            if (completed === 3 && !failed) {
                                                 response.json({logicalExpression: logicalExpression});
                                             }
                                         }
@@ -221,7 +262,7 @@ router.route('/:logicalExpression_id')
                                 completedLogExp++;
                                 if (completedLogExp === logicalExpression.logicalExpressions.length && !failed) {
                                     completed++;
-                                    if (completed === 2 && !failed) {
+                                    if (completed === 3 && !failed) {
                                         response.json({logicalExpression: logicalExpression});
                                     }
                                 }
@@ -230,7 +271,42 @@ router.route('/:logicalExpression_id')
                     }
                 } else {
                     completed++;
-                    if (completed === 2 && !failed) {
+                    if (completed === 3 && !failed) {
+                        response.json({logicalExpression: logicalExpression});
+                    }
+                }
+
+                if (logicalExpression.assessmentCode) {
+                    AssessmentCode.findById(logicalExpression.assessmentCode, function (error, assessmentCode) {
+                        if (error && !failed) {
+                            failed = true;
+                            response.send(error);
+                        } else if (assessmentCode) {
+                            let index = assessmentCode.logicalExpressions.indexOf(logicalExpression._id);
+                            if (index > -1) {
+                                assessmentCode.logicalExpressions.splice(index, 1);
+                            }
+
+                            assessmentCode.save(function (error) {
+                                if (error) {
+                                    response.send(error);
+                                } else {
+                                    completed++;
+                                    if (completed === 3 && !failed) {
+                                        response.json({logicalExpression: logicalExpression});
+                                    }
+                                }
+                            });
+                        } else {
+                            completed++;
+                            if (completed === 3 && !failed) {
+                                response.json({logicalExpression: logicalExpression});
+                            }
+                        }
+                    });
+                } else {
+                    completed++;
+                    if (completed === 3 && !failed) {
                         response.json({logicalExpression: logicalExpression});
                     }
                 }
