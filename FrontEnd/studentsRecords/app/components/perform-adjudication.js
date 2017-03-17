@@ -26,12 +26,12 @@ export default Ember.Component.extend({
         this.get('store').findAll('term-code').then(function (records) {
             self.set('termCodeModel', records);
         }); 
-        // this.get('store').findAll('adjudication-category').then(function(records) {
-        //     self.set('adjudicationCategories', records);
-        // });
-        // this.get('store').query('assessment-code', {noCategory: true}).then(function(records) {
-        //     self.set('nonCategoryAdjudications', records);
-        // });
+        this.get('store').findAll('adjudication-category').then(function(records) {
+            self.set('adjudicationCategories', records);
+        });
+        this.get('store').query('assessment-code', {noCategory: true}).then(function(records) {
+            self.set('nonCategoryAdjudications', records);
+        });
     },
 
     determineProgress(newProgress, newTotal)
