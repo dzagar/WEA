@@ -123,15 +123,121 @@ router.route('/')
         }
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
-        
+        if (request.query.deleteAll) {
+            LogicalExpression.remove({}, function (error) {
+                if (error) {
+                    response.send(error);
+                } else {
+                    LogicalExpression.find(function (error, logicalExpressions) {
+                        if (error) {
+                            response.send(error);
+                        } else {
+                            response.json({logicalExpressions: logicalExpressions});
+                        }
+                    });
+                }
+            });
+        }
     });
 
 router.route('/:logicalExpression_id')
     .get(parseUrlencoded, parseJSON, function (request, response) {
-       
+        LogicalExpression.findById(request.params.logicalExpression_id, function (error, logicalExpression) {
+            if (error) {
+                response.send(error);
+            } else {
+                response.json({logicalExpression: logicalExpression});
+            }
+        });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
-        
+        LogicalExpression.findByIdAndRemove(request.params.logicalExpression_id, function (error, logicalExpression) {
+            if (logicalExpression) {
+                let completed = 0;
+                let failed = false;
+
+                if (logicalExpression.ownerExpression) {
+                    LogicalExpression.findById(logicalExpression.ownerExpression, function (error, logExp) {
+                        if (error && !failed) {
+                            failed = true;
+                            response.send(error);
+                        } else if (logExp) {
+                            let index = logExp.logicalExpressions.indexOf(logExp._id);
+                            if (index > -1) {
+                                logExp.logicalExpressions.splice(index, 1);
+                            }
+
+                            logExp.save(function (error) {
+                                if (error && !failed) {
+                                    failed = true;
+                                    response.send(error);
+                                } else {
+                                    completed++;
+                                    if (completed === 2 && !failed) {
+                                        response.json({logicalExpression: logicalExpression});
+                                    }
+                                }
+                            });
+
+                        } else {
+                            completed++;
+                            if (completed === 2 && !failed) {
+                                response.json({logicalExpression: logicalExpression});
+                            }
+                        }
+                    });
+                } else {
+                    completed++;
+                    if (completed === 2 && !failed) {
+                        response.json({logicalExpression: logicalExpression});
+                    }
+                }
+
+                if (logicalExpression.logicalExpressions && logicalExpression.logicalExpressions.length > 0) {
+                    let completedLogExp = 0;
+                    for (let i = 0; i < logicalExpression.logicalExpressions.length && !failed; i++) {
+                        LogicalExpression.findById(logicalExpression.logicalExpressions[i], function (error, logExp) {
+                            if (error && !failed) {
+                                failed = true;
+                                response.send(error);
+                            } else if (logExp) {
+                                logExp.ownerExpression = null;
+
+                                logExp.save(function (error) {
+                                    if (error && !failed) {
+                                        failed = true;
+                                        response.send(error);
+                                    } else {
+                                        completedLogExp++;
+                                        if (completedLogExp === logicalExpression.logicalExpressions.length && !failed) {
+                                            completed++;
+                                            if (completed === 2 && !failed) {
+                                                response.json({logicalExpression: logicalExpression});
+                                            }
+                                        }
+                                    }
+                                });
+                            } else {
+                                completedLogExp++;
+                                if (completedLogExp === logicalExpression.logicalExpressions.length && !failed) {
+                                    completed++;
+                                    if (completed === 2 && !failed) {
+                                        response.json({logicalExpression: logicalExpression});
+                                    }
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    completed++;
+                    if (completed === 2 && !failed) {
+                        response.json({logicalExpression: logicalExpression});
+                    }
+                }
+            } else {
+                response.json({logicalExpression: logicalExpression});
+            }
+        });
     });
 module.exports = router;
 
