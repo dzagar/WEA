@@ -31,6 +31,7 @@ var terms = require('./routes/terms');
 var faculties = require('./routes/faculties');
 var departments = require('./routes/departments');
 var adjudicationCategories = require('./routes/adjudicationCategories');
+var programAdministrations = require('./routes/programAdministrations');
 
 app.use(function (request, response, next) {
     response.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
