@@ -83,6 +83,8 @@ export default Ember.Component.extend({
             var erroredValues = [];
             var currentProgress = 0;
             var currentTotal = 0;
+            var doneReading = false;
+            var doneReadingMutex = Mutex.create();
             
             this.get('store').query('student', {offset: 0, limit: 100}).then(function (records) {
                 currentTotal += records.get('length');                
@@ -135,22 +137,24 @@ export default Ember.Component.extend({
                                             var courseCodeID = gradeInfo.get('courseCode.id');
                                             self.get('store').find('course-code', courseCodeID).then(function(courseCode){
                                                 //push courseID, courseNumber, courseLetter, courseUnit
-                                                currentProgress++;
                                                 
                                                 studentAdjudicationInfo[studentIndex].terms[termIndex].grades[gradeIndex].courseNumber = courseCode.get('courseNumber');
                                                 studentAdjudicationInfo[studentIndex].terms[termIndex].grades[gradeIndex].courseLetter = courseCode.get('courseLetter');
                                                 studentAdjudicationInfo[studentIndex].terms[termIndex].grades[gradeIndex].unit = courseCode.get('unit');
-                                                
+                                                currentProgress++;                                                
                                                 //getgroupings
                                                 // courseCode.get('courseGroupings').forEach(function(courseGrouping, courseGroupingIndex) {
                                                 //     studentAdjudicationInfo[studentIndex].terms[termIndex].grades[gradeIndex].courseGroupings.push(courseGrouping.get('id'));
                                                 // });
-                                                if (self.determineProgress(currentProgress, currentTotal))
-                                                {
-                                                    self.set('studentInformation', studentAdjudicationInfo);
-                                                    //do actual evaluation
-                                                    console.log("done reading.... time to evaluate");
-                                                } 
+                                                doneReadingMutex.lock(function() {
+                                                    if (self.determineProgress(currentProgress, currentTotal) && !doneReading)
+                                                    {
+                                                        self.set('studentInformation', studentAdjudicationInfo);
+                                                        doneReading = true;
+                                                        //do actual evaluation
+                                                        console.log("done reading.... time to evaluate");
+                                                    }
+                                                })
                                             });
                                         });                                        
                                     });
