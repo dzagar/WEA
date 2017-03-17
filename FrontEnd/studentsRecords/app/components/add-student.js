@@ -20,6 +20,10 @@ export default Ember.Component.extend({
 	admissionComments: null,
 	registrationComments: null,
 	invalidStudentNumber: false,
+	invalidName: false,
+	invalidDOB: false,
+	invalidGender: false,
+	invalidResidency: false,
 
 	init() {
 		this._super(...arguments);
@@ -27,24 +31,36 @@ export default Ember.Component.extend({
 		var self = this;
 		this.get('store').findAll('residency').then(function (records) {
 	      self.set('residencyModel', records);
-	      self.set('resInfo', records.get('firstObject').get('id'));
 	    });
 		this.get('store').findAll('gender').then(function (records) {
 	      self.set('genderModel', records);
-	      self.set('gender', records.get('firstObject').get('id'));
 	    });
 	},
 	actions: {
 		addStudent: function(student){
-			console.log(this.get('DOB'));
-			if (this.get('number') == null || this.get('firstName') == null || this.get('lastName') == null || this.get('gender') == null || this.get('DOB') == null || this.get('resInfo') == null){
-				console.log('u fucked up');
-				return;
-			}
+			this.set('invalidStudentNumber', false);
+			this.set('invalidName', false);
+			this.set('invalidDOB', false);
+			this.set('invalidGender', false);
+			this.set('invalidResidency', false);
 
 			if (this.get('number') == null || isNaN(this.get('number'))) {
-				invalidStudentNumber = true;
-			} else {
+				this.set('invalidStudentNumber', true);
+			}
+			if (this.get('firstName') == null || this.get('lastName') == null) {
+				this.set('invalidName', true);
+			}
+			if (this.get('DOB') == null || isNaN(Date.parse(this.get('DOB')))) {
+				this.set('invalidDOB', true);
+			}
+			if (this.get('gender') == null) {
+				this.set('invalidGender', true);
+			}
+			if (this.get('resInfo') == null) {
+				this.set('invalidResidency', true);
+			}
+
+			if (!(this.get('invalidStudentNumber') || this.get('invalidName') || this.get('invalidDOB') || this.get('invalidGender') || this.get('invalidResidency'))) {
 				this.set('photo', "/assets/studentsPhotos/nonBinary.png");
 				var strDate = this.get('DOB').substring(0,10);
 				console.log(strDate);
@@ -53,7 +69,7 @@ export default Ember.Component.extend({
 					firstName: this.get('firstName'),
 					lastName: this.get('lastName'),
 					gender: this.get('store').peekRecord('gender', this.get('gender')),
-					DOB: this.get('DOB'),
+					DOB: new Date(Date.parse(this.get('DOB'))),
 					photo: this.get('photo'),
 					resInfo: this.get('store').peekRecord('residency', this.get('resInfo')),
 					basisOfAdmission: this.get('basisOfAdmission'),
@@ -83,12 +99,6 @@ export default Ember.Component.extend({
 			this.set('notDONE', false);
 			Ember.$('.ui.modal').modal('hide');
       		//Ember.$('.ui.modal').remove();
-		},
-		testErrors: function() {
-			invalidStudentNumber = false;
-			if (this.get('number') == null || isNaN(this.get('number'))) {
-				invalidStudentNumber = true;
-			}
 		}
 	},
 

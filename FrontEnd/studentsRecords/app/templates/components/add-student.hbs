@@ -1,12 +1,12 @@
-<div class="ui long basic modal">
+<div class="ui small long basic modal">
   <div class="header">Add Student</div>
   <div class="content">
     <div class="ui inverted form">
-      <div class="field">
+      <div class="field {{if invalidStudentNumber "error"}}">
         <label>Student Number</label>
         {{input maxlength="9" type="text" placeholder="Student Number" value = number}}
       </div>
-      <div class="field">
+      <div class="field {{if invalidName "error"}}">
         <label>Name</label>
         <div class="two fields">
           <div class="field">
@@ -17,12 +17,12 @@
           </div>
         </div>
       </div>
-      <div class="field">
+      <div class="field {{if invalidDOB "error"}}">
         <label>Date of Birth</label>
         {{input type="date" placeholder="Date of Birth" value = DOB}}
       </div>
       <div class="two fields">
-        <div class="field">
+        <div class="field {{if invalidGender "error"}}">
           <label>Gender</label>
           {{#ui-dropdown class="selection" onChange=(action (mut gender))}}
             <div class="default text">Gender</div>
@@ -34,7 +34,7 @@
             </div>
           {{/ui-dropdown}}
         </div>
-        <div class="field">
+        <div class="field {{if invalidResidency "error"}}">
           <label>Residency</label>
           {{#ui-dropdown class="selection" onChange=(action (mut resInfo))}}
             <div class="default text">Residency</div>
@@ -69,7 +69,7 @@
   </div>
 
   <div class="actions">
-    <div class="ui green left labeled icon button" {{action "testErrors"}}>
+    <div class="ui green left labeled icon button" {{action "addStudent"}}>
       <i class="square plus icon"></i>
     	Add
     </div>
