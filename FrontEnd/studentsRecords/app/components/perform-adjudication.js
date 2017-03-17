@@ -89,14 +89,14 @@ export default Ember.Component.extend({
                 records.forEach(function(student, studentIndex) {
                     //push objID, termID, cumAVG, CumUnitsTotal, cumUnitsPassed
                     readingMutex.lock(function() {
-                        studentAdjudicationInfo.push({
+                        studentAdjudicationInfo[studentIndex] = {
                             "studentID" : student.get('id'),
                             "termCodeID": currentTerm,
                             "cumAVG": student.get('cumAVG'),
                             "cumUnitsTotal": student.get('cumUnitsTotal'),
                             "cumUnitsPassed": student.get('cumUnitsPassed'),
                             "terms": []
-                        });
+                        };
                         currentProgress++; 
                         self.determineProgress(currentProgress, currentTotal);  
                         var studentOBJid = student.get('id');
@@ -106,54 +106,51 @@ export default Ember.Component.extend({
                                //push codeRef, termAVG, termUnitsTotal, termUnitsPassed
                                 var termID = term.get('id');
                                 self.get('store').find('term', termID).then(function(termInfo) {
-                                    studentAdjudicationInfo[studentIndex].terms.push({
+                                    studentAdjudicationInfo[studentIndex].terms[termIndex] = {
                                         "termCodeID": termInfo.get('id'),
                                         "termAVG": termInfo.get('termAVG'),
                                         "termUnitsTotal": termInfo.get('termUnitsTotal'),
                                         "termUnitsPassed": termInfo.get('termUnitsPassed'),
                                         "grades": []
-                                    });
+                                    };
                                     currentProgress++;  
                                     currentTotal += term.get('grades').get('length');
                                     self.determineProgress(currentProgress, currentTotal);
                                     //get grades
-                                    var gradeMutex = Mutex.create();
                                     var inGradeMutexIndex = 0;
                                     termInfo.get('grades').forEach(function(grade, index) {
-                                        gradeMutex.lock(function() {
-                                            var gradeID = grade.get('id');
-                                            self.get('store').find('grade', gradeID).then(function(gradeInfo) {                                                
-                                                var gradeIndex = inGradeMutexIndex++;
-                                                //push mark, gradeID                        
-                                                studentAdjudicationInfo[studentIndex].terms[termIndex].grades.push({
-                                                    "gradeID": gradeInfo.get('id'),
-                                                    "mark": gradeInfo.get('mark'),
-                                                    "courseNumber": "",
-                                                    "courseLetter": "",
-                                                    "unit": "",
-                                                    "courseGroupings": []
-                                                });
-                                                //get courseCode
-                                                var courseCodeID = gradeInfo.get('courseCode.id');
-                                                self.get('store').find('course-code', courseCodeID).then(function(courseCode){
-                                                    //push courseID, courseNumber, courseLetter, courseUnit
-                                                    currentProgress++;
-                                                    
-                                                    studentAdjudicationInfo[studentIndex].terms[termIndex].grades[gradeIndex].courseNumber = courseCode.get('courseNumber');
-                                                    studentAdjudicationInfo[studentIndex].terms[termIndex].grades[gradeIndex].courseLetter = courseCode.get('courseLetter');
-                                                    studentAdjudicationInfo[studentIndex].terms[termIndex].grades[gradeIndex].unit = courseCode.get('unit');
-                                                    
-                                                    //getgroupings
-                                                    // courseCode.get('courseGroupings').forEach(function(courseGrouping, courseGroupingIndex) {
-                                                    //     studentAdjudicationInfo[studentIndex].terms[termIndex].grades[gradeIndex].courseGroupings.push(courseGrouping.get('id'));
-                                                    // });
-                                                    if (self.determineProgress(currentProgress, currentTotal))
-                                                    {
-                                                        self.set('studentInformation', studentAdjudicationInfo);
-                                                        //do actual evaluation
-                                                        console.log("done reading.... time to evaluate");
-                                                    } 
-                                                });
+                                        var gradeID = grade.get('id');
+                                        self.get('store').find('grade', gradeID).then(function(gradeInfo) {                                                
+                                            var gradeIndex = inGradeMutexIndex++;
+                                            //push mark, gradeID                        
+                                            studentAdjudicationInfo[studentIndex].terms[termIndex].grades[gradeIndex] = {
+                                                "gradeID": gradeInfo.get('id'),
+                                                "mark": gradeInfo.get('mark'),
+                                                "courseNumber": "",
+                                                "courseLetter": "",
+                                                "unit": "",
+                                                "courseGroupings": []
+                                            };
+                                            //get courseCode
+                                            var courseCodeID = gradeInfo.get('courseCode.id');
+                                            self.get('store').find('course-code', courseCodeID).then(function(courseCode){
+                                                //push courseID, courseNumber, courseLetter, courseUnit
+                                                currentProgress++;
+                                                
+                                                studentAdjudicationInfo[studentIndex].terms[termIndex].grades[gradeIndex].courseNumber = courseCode.get('courseNumber');
+                                                studentAdjudicationInfo[studentIndex].terms[termIndex].grades[gradeIndex].courseLetter = courseCode.get('courseLetter');
+                                                studentAdjudicationInfo[studentIndex].terms[termIndex].grades[gradeIndex].unit = courseCode.get('unit');
+                                                
+                                                //getgroupings
+                                                // courseCode.get('courseGroupings').forEach(function(courseGrouping, courseGroupingIndex) {
+                                                //     studentAdjudicationInfo[studentIndex].terms[termIndex].grades[gradeIndex].courseGroupings.push(courseGrouping.get('id'));
+                                                // });
+                                                if (self.determineProgress(currentProgress, currentTotal))
+                                                {
+                                                    self.set('studentInformation', studentAdjudicationInfo);
+                                                    //do actual evaluation
+                                                    console.log("done reading.... time to evaluate");
+                                                } 
                                             });
                                         });                                        
                                     });
