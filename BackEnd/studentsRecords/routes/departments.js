@@ -33,7 +33,13 @@ router.route('/')
                                 if (completeAC === department.assessmentCodes.length && !failed) {
                                     completed++
                                     if (completed === 3 && !failed) {
-                                        response.json({department: department});
+                                        department.save(function (error) {
+                                            if (error) {
+                                                response.send(error);
+                                            } else {
+                                                response.json({department: department});
+                                            }
+                                        });
                                     }
                                 }
                             }
@@ -43,7 +49,13 @@ router.route('/')
                         if (completeAC === department.assessmentCodes.length && !failed) {
                             completed++;
                             if (completed === 3 && !failed) {
-                                response.json({department: department});
+                                department.save(function (error) {
+                                    if (error) {
+                                        response.send(error);
+                                    } else {
+                                        response.json({department: department});
+                                    }
+                                });
                             }
                         }
                     }
@@ -52,7 +64,13 @@ router.route('/')
         } else {
             completed++;
             if (completed === 3 && !failed) {
-                response.json({department: department});
+                department.save(function (error) {
+                    if (error) {
+                        response.send(error);
+                    } else {
+                        response.json({department: department});
+                    }
+                });
             }
         }
 
@@ -71,21 +89,39 @@ router.route('/')
                         } else {
                             completed++;
                             if (completed === 3 && !failed) {
-                                response.json({department: department});
+                                department.save(function (error) {
+                                    if (error) {
+                                        response.send(error);
+                                    } else {
+                                        response.json({department: department});
+                                    }
+                                });
                             }
                         }
                     });
                 } else {
                     completed++;
                     if (completed === 3 && !failed) {
-                        response.json({department: department});
+                        department.save(function (error) {
+                            if (error) {
+                                response.send(error);
+                            } else {
+                                response.json({department: department});
+                            }
+                        });
                     }
                 }
             });
         } else {
             completed++;
             if (completed === 3 && !failed) {
-                response.json({department: department});
+                department.save(function (error) {
+                    if (error) {
+                        response.send(error);
+                    } else {
+                        response.json({department: department});
+                    }
+                });
             }
         }
 
@@ -109,7 +145,13 @@ router.route('/')
                                 if (completePA === department.programAdministrations.length && !failed) {
                                     completed++;
                                     if (completed === 3 && !failed) {
-                                        response.json({department: department});
+                                        department.save(function (error) {
+                                            if (error) {
+                                                response.send(error);
+                                            } else {
+                                                response.json({department: department});
+                                            }
+                                        });
                                     }
                                 }
                             }
@@ -119,7 +161,13 @@ router.route('/')
                         if (completePA === department.programAdministrations.length && !failed) {
                             completed++;
                             if (completed === 3 && !failed) {
-                                response.json({department: department});
+                                department.save(function (error) {
+                                    if (error) {
+                                        response.send(error);
+                                    } else {
+                                        response.json({department: department});
+                                    }
+                                });
                             }
                         }
                     }
@@ -128,7 +176,13 @@ router.route('/')
         } else {
             completed++;
             if (completed === 3 && !failed) {
-                response.json({department: department});
+                department.save(function (error) {
+                    if (error) {
+                        response.send(error);
+                    } else {
+                        response.json({department: department});
+                    }
+                });
             }
         }
     })
