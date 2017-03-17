@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var logicalExpressionSchema = mongoose.Schema(
     {
-        logicalExpression: String,
+        booleanExpression: String,
         logicalLink: String,
         logicalExpressions: [{type: mongoose.Schema.ObjectId, ref: 'logicalExpressions'}],
         ownerExpression: {type: mongoose.Schema.ObjectId, ref: 'logicalExpressions'},

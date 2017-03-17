@@ -191,6 +191,29 @@ router.route('/:logicalExpression_id')
             }
         });
     })
+    .put(parseUrlencoded, parseJSON, function (request, response) {
+        LogicalExpression.findById(request.params.logicalExpression_id, function (error, logicalExpression) {
+            if (error) {
+                response.send(error);
+            } else if (logicalExpression) {
+                logicalExpression.booleanExpression = request.body.logicalExpression.booleanExpression;
+                logicalExpression.logicalLink = request.body.logicalExpression.logicalLink;
+                logicalExpression.logicalExpressions = request.body.logicalExpression.logicalExpressions;
+                logicalExpression.ownerExpression = request.body.logicalExpression.ownerExpression;
+                logicalExpression.assessmentCode = request.body.logicalExpression.assessmentCode;
+
+                logicalExpression.save(function (error) {
+                    if (error) {
+                        response.send(error);
+                    } else {
+                        response.json({logicalExpression: logicalExpression});
+                    }
+                });
+            } else {
+                response.json({logicalExpression: logicalExpression});
+            }
+        });
+    })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
         LogicalExpression.findByIdAndRemove(request.params.logicalExpression_id, function (error, logicalExpression) {
             if (logicalExpression) {
