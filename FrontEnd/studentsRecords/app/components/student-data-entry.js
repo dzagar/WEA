@@ -158,6 +158,7 @@ export default Ember.Component.extend({
   },
   setCurrentStudent: function (index) {
     var student = this.get('studentsRecords').objectAt(index);
+    console.log('setting current student. student exists? ' + (student != null))
     if (student != null)
       this.set('currentStudent', student);
   },

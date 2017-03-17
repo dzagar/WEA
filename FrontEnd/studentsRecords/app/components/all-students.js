@@ -87,6 +87,10 @@ export default Ember.Component.extend({
         self.set('studentsRecords', records);
         self.set('totalStudents', records.get('meta').total);
       });
+    },
+
+    changeOffset(offsetDelta, relative) {
+      this.get('changeOffset')(offsetDelta, relative);
     }
   },
 

@@ -24,6 +24,8 @@ export default Ember.Component.extend({
 	invalidDOB: false,
 	invalidGender: false,
 	invalidResidency: false,
+	pageSize: null,
+	totalPages: null,
 
 	init() {
 		this._super(...arguments);
@@ -62,8 +64,6 @@ export default Ember.Component.extend({
 
 			if (!(this.get('invalidStudentNumber') || this.get('invalidName') || this.get('invalidDOB') || this.get('invalidGender') || this.get('invalidResidency'))) {
 				this.set('photo', "/assets/studentsPhotos/nonBinary.png");
-				var strDate = this.get('DOB').substring(0,10);
-				console.log(strDate);
 				this.set('newStudent', this.get('store').createRecord('student', {
 					number: this.get('number'),
 					firstName: this.get('firstName'),
@@ -77,11 +77,22 @@ export default Ember.Component.extend({
 					admissionComments: this.get('admissionComments'),
 					registrationComments: this.get('registrationComments')
 				}));
-				this.get('newStudent').save();
-				this.set('total',this.get('total')+1);
-				this.set('notDONE', false);
+				var self = this;
+				console.log('Old index: ' + this.get('INDEX'));
+				this.get('newStudent').save().then(function() {
+					self.get('changeOffset')((self.get('totalPages') - 1) * self.get('pageSize'), false);
+					console.log('old total: ' + self.get('total'));
+					self.set('total',self.get('total') + 1);
+					console.log('new total: ' + self.get('total'));
+					console.log('page size: ' + self.get('pageSize'));
+					self.set('INDEX', self.get('total') % self.get('pageSize') - 1);
+					console.log('New index: ' + self.get('INDEX'));
+					self.set('notDONE', false);
+					Ember.$('.ui.modal').modal('hide');
+				});
+
 				//somehow jump to this student afterwards
-				Ember.$('.ui.modal').modal('hide');
+
 				//Ember.$('.ui.modal').remove();
 			}
 
