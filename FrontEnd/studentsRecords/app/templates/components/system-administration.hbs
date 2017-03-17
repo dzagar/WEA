@@ -27,6 +27,12 @@
             Adjudication Rules
           </a>
         </div>
+        <div class="adminMenu">
+          <a class="item " {{action "manageAdjudicationCategories"}}>
+            <i class="large lock icon"></i>
+            Adjudication Categories
+          </a>
+        </div>
       </div>
     </div>
     <div class="eleven wide column">
@@ -43,6 +49,9 @@
         {{/if}}
         {{#if isAdjudicationRulesEditing}}
           {{manage-adjudication-rules}}
+        {{/if}}
+        {{#if isAdjudicationCategoriesIsShowing}}
+          {{manage-adjudication-categories}}
         {{/if}}
       </div>
     </div>
