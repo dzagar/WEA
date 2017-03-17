@@ -69,9 +69,55 @@ export default Ember.Component.extend({
         //blah blah blah evaluate student with assessmentCode if false
         self.evaluateCategoryAssessmentCode(self.get('adjudicationCategories').objectAt(categoryIndex).get('assessmentCodes').objectAt(indexOfCode++), indexOfCode, categoryIndex);
     },
-    evaluateNonCategoryAssessmentCode(assessmentCode)
+    evaluateNonCategoryAssessmentCode(passedAssessmentCode)
     {
-
+        var assessmentCodeID = passedAssessmentCode.get('id');
+        var self = this;
+        //get the assessmentCode obj we are working with
+        this.get('store').find('assessmentCode', assessmentCodeID).then(function(assessmentCode){
+            //get the root logical expression
+            var logicalExpressionID = assessmentCode.get('logicalExpression').get('id');
+            self.get('store').find('logical-expression', logicalExpressionID).then(function(logicalExpression){
+                //get the boolean expression from the root and set an empty array if there are children
+                var expressionBoolean = logicalExpression.get('booleanExpression');
+                expressionBoolean.childBooleans = [];
+                //if there are children
+                if (logicalExpression.get('logicalExpressions').get('length') > 0)
+                {
+                    var rootExpressionChildrenCount = logicalExpression.get('logicalExpressions').get('length');
+                    var done = ()=>{
+                        rootExpressionChildrenCount--;
+                        if(rootExpressionChildrenCount){
+                            return;
+                        }
+                        self.evaluateStudents(expressionBoolean);
+                    }
+                    function fetchAssociated(parent,childID,callback){
+                        self.get('store').find('logicalExpression', childID).then(function(childLogicalExpressionOBJ){
+                            child = childLogicalExpressionOBJ.get('booleanExpression');
+                            child.childBooleans = [];
+                            parent.childBooleans.push(child);
+                            childLogicalExpressionOBJ.get('logicalExpressions').forEach((childLogicalExpression)=>{
+                                rootExpressionChildrenCount++;
+                                fetchAssociated(child,childLogicalExpression.get('id'),callback);
+                            })
+                            if(childLogicalExpressionOBJ.get('length') == 0){
+                                callback();
+                            }
+                        })
+                    }
+                    logicalExpression.get('logicalExpressions').forEach(function(childLogicalExpression, childIndex){
+                        fetchAssociated(expressionBoolean,childLogicalExpression.get('id'),done);
+                    });
+                } 
+                else{
+                    self.evaluateStudents(expressionBoolean);
+                }               
+            });
+        });
+    },
+    evaluateStudents(evaluationJSON){
+        
     },
     actions: {    
         adjudicate()
