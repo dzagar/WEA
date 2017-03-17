@@ -30,6 +30,7 @@ var assessmentCodes = require('./routes/assessmentCodes');
 var terms = require('./routes/terms');
 var faculties = require('./routes/faculties');
 var departments = require('./routes/departments');
+var adjudicationCategories = require('./routes/adjudicationCategories');
 
 app.use(function (request, response, next) {
     response.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
@@ -65,6 +66,7 @@ app.use('/assessmentCodes', assessmentCodes);
 app.use('/terms', terms);
 app.use('/faculties', faculties);
 app.use('/departments', departments);
+app.use('/adjudicationCategories', adjudicationCategories);
 
 app.listen(3700, function () {
     console.log('Listening on port 3700');
