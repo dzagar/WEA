@@ -75,6 +75,7 @@ export default Ember.Component.extend({
         self.set('evaluationTotal', totalSize);
 
         this.get('nonCategoryAdjudications').forEach(function(assessmentCode, assessmentCodeIndex) {
+            console.log("non category index" + assessmentCodeIndex);
             evaluateNonCategoryAssessmentCode(assessmentCode.get('id'));
         });   
 
@@ -83,6 +84,7 @@ export default Ember.Component.extend({
         //for each code we evaluate it and if it returns false we call a callback with the next object to evaluate
         //if it returns true or counter reaches 0 we just stop and don't evaluate anymore.
         this.get('adjudicationCategories').forEach(function(category, categoryIndex) {
+            console.log("category index" + categoryIndex);
             //this is used to track the assessment code we are evaluating and if we have checked all of them
             var numberOfPotentialAssessments = category.get('assessmentCodes').get('length');
             //if the assessment failed
@@ -91,11 +93,14 @@ export default Ember.Component.extend({
                 //if there are still assessments to evaluate
                 if (numberOfPotentialAssessments >= 0)
                 {
-                    self.evaluateCategoryAssessmentCode(category.get('assessmentCodes').objectAt(numberOfPotentialAssessments - 1), failedDone);
+                    self.evaluateCategoryAssessmentCode(category.get('assessmentCodes').objectAt(numberOfPotentialAssessments - 1).get('id'), failedDone);
                 }
                 return;             
             }
-            self.evaluateCategoryAssessmentCode(category.get('assessmentCodes').objectAt('lastObject'), failedDone);
+            if (category.get('assessmentCodes').get('length') > 0)
+            {
+                self.evaluateCategoryAssessmentCode(category.get('assessmentCodes').get('lastObject').get('id'), failedDone);
+            }
         });
     },
     evaluateCategoryAssessmentCode(assessmentCodeID, failCallback)
@@ -289,8 +294,32 @@ export default Ember.Component.extend({
     },
     //this function evaluates an individual boolean expression with a student record.
     evaluateBoolean(studentRecord, boolExpression){
-        //GIANT SWITCH CASE HERE
+        
+        var val = boolExpression.val;
+        var opr = boolExpression.opr;
+        switch (boolExpression.field){
+            case "YWA":{
+                if (opr == ">"){
+                    
+                }else{
 
+                }
+            }
+            break;
+            case "CWA":{
+
+            }
+            break;
+            case "FAILS":{
+
+            }
+            break;
+            case "COURSE":{
+
+            }
+            break;
+
+        }
     },
     actions: {
         adjudicate()
@@ -372,6 +401,7 @@ export default Ember.Component.extend({
                                                         doneReading = true;
                                                         //do actual evaluation
                                                         console.log("done reading.... time to evaluate");
+                                                        self.performAdjudication();
                                                     }
                                                 })
                                             });
