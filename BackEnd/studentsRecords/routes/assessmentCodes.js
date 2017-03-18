@@ -195,15 +195,29 @@ router.route('/')
         }
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
-        AssessmentCode.find({}, function(error, assessmentCodes){
-            if (error)
-            {
-                response.send({error:error});
-            }
-            else{
-                response.send({assessmentCodes:assessmentCodes});
-            }
-        });
+        if (request.query.deleteAll) {
+            AssessmentCode.remove({}, function (error) {
+                if (error) {
+                    response.send(error);
+                } else {
+                    AssessmentCode.find(function(error, assessmentCodes) {
+                        if (error) {
+                            response.send(error);
+                        } else {
+                            response.json({assessmentCodes: assessmentCodes});
+                        }
+                    });
+                }
+            });
+        } else {
+            AssessmentCode.find(function(error, assessmentCodes) {
+                if (error) {
+                    response.send(error);
+                } else {
+                    response.json({assessmentCodes: assessmentCodes});
+                }
+            });
+        }
     });
 
 router.route('/:assessmentCode_id')
