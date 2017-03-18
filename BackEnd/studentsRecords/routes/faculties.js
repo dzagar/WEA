@@ -27,20 +27,38 @@ router.route('/')
                             } else {
                                 completeDepts++;
                                 if (completeDepts === faculty.departments.length && !failed) {
-                                    response.json({faculty: faculty});
+                                    faculty.save(function (error) {
+                                        if (error) {
+                                            response.send(error);
+                                        } else {
+                                            response.json({faculty: faculty});
+                                        }
+                                    });
                                 }
                             }
                         });
                     } else {
                         completeDepts++;
                         if (completeDepts === faculty.departments.length && !failed) {
-                            response.json({faculty: faculty});
+                            faculty.save(function (error) {
+                                if (error) {
+                                    response.send(error);
+                                } else {
+                                    response.json({faculty: faculty});
+                                }
+                            });
                         }
                     }
                 });
             }
         } else {
-            response.json({faculty: faculty});
+            faculty.save(function (error) {
+                if (error) {
+                    response.send(error);
+                } else {
+                    response.json({faculty: faculty});
+                }
+            });
         }
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
