@@ -85,21 +85,72 @@ export default Ember.Component.extend({
         this.get('adjudicationCategories').forEach(function(category, categoryIndex) {
             //this is used to track the assessment code we are evaluating and if we have checked all of them
             var numberOfPotentialAssessments = category.get('assessmentCodes').get('length');
-            var done = ()=>{
-                
+            //if the assessment failed
+            var failedDone = ()=>{
+                numberOfPotentialAssessments--;
+                //if there are still assessments to evaluate
+                if (numberOfPotentialAssessments >= 0)
+                {
+                    self.evaluateCategoryAssessmentCode(category.get('assessmentCodes').objectAt(numberOfPotentialAssessments - 1), failedDone);
+                }
+                return;             
             }
-            this.evaluateCategoryAssessmentCode();
+            self.evaluateCategoryAssessmentCode(category.get('assessmentCodes').objectAt('lastObject'), failedDone);
         });
     },
-    evaluateCategoryAssessmentCode(assessmentCodeID)
+    evaluateCategoryAssessmentCode(assessmentCodeID, failCallback)
     {
-
-
-
-
-
-        //blah blah blah evaluate student with assessmentCode if false
-        //self.evaluateCategoryAssessmentCode(self.get('adjudicationCategories').objectAt(categoryIndex).get('assessmentCodes').objectAt(indexOfCode++), indexOfCode, categoryIndex);
+        var self = this;
+        //get the assessmentCode obj we are working with
+        this.get('store').find('assessmentCode', assessmentCodeID).then(function(assessmentCode){
+            //get the root logical expression
+            var logicalExpressionID = assessmentCode.get('logicalExpression').get('id');
+            self.get('store').find('logical-expression', logicalExpressionID).then(function(logicalExpression){
+                //get the boolean expression from the root and set an empty array if there are children
+                var expressionBoolean = logicalExpression.get('booleanExpression');
+                expressionBoolean.logicalLink = logicalExpression.get('logicalLink');
+                expressionBoolean.childBooleans = [];
+                //if there are children
+                if (logicalExpression.get('logicalExpressions').get('length') > 0)
+                {
+                    var rootExpressionChildrenCount = logicalExpression.get('logicalExpressions').get('length');
+                    var done = ()=>{
+                        rootExpressionChildrenCount--;
+                        if(rootExpressionChildrenCount){
+                            return;
+                        }
+                        if (!self.evaluateStudents(expressionBoolean, assessmentCodeID))
+                        {
+                            failCallback();
+                        }
+                    }
+                    function fetchAssociated(parent,childID,callback){
+                        self.get('store').find('logicalExpression', childID).then(function(childLogicalExpressionOBJ){
+                            child = childLogicalExpressionOBJ.get('booleanExpression');
+                            child.logicalLink = logicalExpression.get('logicalLink');
+                            child.childBooleans = [];
+                            parent.childBooleans.push(child);
+                            childLogicalExpressionOBJ.get('logicalExpressions').forEach((childLogicalExpression)=>{
+                                rootExpressionChildrenCount++;
+                                fetchAssociated(child,childLogicalExpression.get('id'),callback);
+                            })
+                            if(childLogicalExpressionOBJ.get('length') == 0){
+                                callback();
+                            }
+                        })
+                    }
+                    logicalExpression.get('logicalExpressions').forEach(function(childLogicalExpression, childIndex){
+                        fetchAssociated(expressionBoolean,childLogicalExpression.get('id'),done);
+                    });
+                } 
+                else{                    
+                    if (!self.evaluateStudents(expressionBoolean, assessmentCodeID))
+                    {
+                        failCallback();
+                    }
+                }               
+            });
+        });
     },
 
     //this funtion gets an assessment code object by id then builds the boolean expresion tree then passes the built boolean to evaluateStudents
@@ -167,8 +218,11 @@ export default Ember.Component.extend({
                 });
                 newAdjudicationObject.save().then(function(){
                     //do some increment thing
-                    //return
+                    //return true;
                 });
+            }
+            else{
+                return false;
             }
             //do some increment thing
         });        
