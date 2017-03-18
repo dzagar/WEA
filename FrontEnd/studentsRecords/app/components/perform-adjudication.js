@@ -69,9 +69,55 @@ export default Ember.Component.extend({
         //blah blah blah evaluate student with assessmentCode if false
         self.evaluateCategoryAssessmentCode(self.get('adjudicationCategories').objectAt(categoryIndex).get('assessmentCodes').objectAt(indexOfCode++), indexOfCode, categoryIndex);
     },
-    evaluateNonCategoryAssessmentCode(assessmentCode)
+    evaluateNonCategoryAssessmentCode(passedAssessmentCode)
     {
-
+        var assessmentCodeID = passedAssessmentCode.get('id');
+        var self = this;
+        //get the assessmentCode obj we are working with
+        this.get('store').find('assessmentCode', assessmentCodeID).then(function(assessmentCode){
+            //get the root logical expression
+            var logicalExpressionID = assessmentCode.get('logicalExpression').get('id');
+            self.get('store').find('logical-expression', logicalExpressionID).then(function(logicalExpression){
+                //get the boolean expression from the root and set an empty array if there are children
+                var expressionBoolean = logicalExpression.get('booleanExpression');
+                expressionBoolean.childBooleans = [];
+                //if there are children
+                if (logicalExpression.get('logicalExpressions').get('length') > 0)
+                {
+                    var rootExpressionChildrenCount = logicalExpression.get('logicalExpressions').get('length');
+                    var done = ()=>{
+                        rootExpressionChildrenCount--;
+                        if(rootExpressionChildrenCount){
+                            return;
+                        }
+                        self.evaluateStudents(expressionBoolean);
+                    }
+                    function fetchAssociated(parent,childID,callback){
+                        self.get('store').find('logicalExpression', childID).then(function(childLogicalExpressionOBJ){
+                            child = childLogicalExpressionOBJ.get('booleanExpression');
+                            child.childBooleans = [];
+                            parent.childBooleans.push(child);
+                            childLogicalExpressionOBJ.get('logicalExpressions').forEach((childLogicalExpression)=>{
+                                rootExpressionChildrenCount++;
+                                fetchAssociated(child,childLogicalExpression.get('id'),callback);
+                            })
+                            if(childLogicalExpressionOBJ.get('length') == 0){
+                                callback();
+                            }
+                        })
+                    }
+                    logicalExpression.get('logicalExpressions').forEach(function(childLogicalExpression, childIndex){
+                        fetchAssociated(expressionBoolean,childLogicalExpression.get('id'),done);
+                    });
+                } 
+                else{
+                    self.evaluateStudents(expressionBoolean);
+                }               
+            });
+        });
+    },
+    evaluateStudents(evaluationJSON){
+        
     },
     actions: {    
         adjudicate()
@@ -83,6 +129,8 @@ export default Ember.Component.extend({
             var erroredValues = [];
             var currentProgress = 0;
             var currentTotal = 0;
+            var doneReading = false;
+            var doneReadingMutex = Mutex.create();
             
             this.get('store').query('student', {offset: 0, limit: 100}).then(function (records) {
                 currentTotal += records.get('length');                
@@ -135,22 +183,24 @@ export default Ember.Component.extend({
                                             var courseCodeID = gradeInfo.get('courseCode.id');
                                             self.get('store').find('course-code', courseCodeID).then(function(courseCode){
                                                 //push courseID, courseNumber, courseLetter, courseUnit
-                                                currentProgress++;
                                                 
                                                 studentAdjudicationInfo[studentIndex].terms[termIndex].grades[gradeIndex].courseNumber = courseCode.get('courseNumber');
                                                 studentAdjudicationInfo[studentIndex].terms[termIndex].grades[gradeIndex].courseLetter = courseCode.get('courseLetter');
                                                 studentAdjudicationInfo[studentIndex].terms[termIndex].grades[gradeIndex].unit = courseCode.get('unit');
-                                                
+                                                currentProgress++;                                                
                                                 //getgroupings
                                                 // courseCode.get('courseGroupings').forEach(function(courseGrouping, courseGroupingIndex) {
                                                 //     studentAdjudicationInfo[studentIndex].terms[termIndex].grades[gradeIndex].courseGroupings.push(courseGrouping.get('id'));
                                                 // });
-                                                if (self.determineProgress(currentProgress, currentTotal))
-                                                {
-                                                    self.set('studentInformation', studentAdjudicationInfo);
-                                                    //do actual evaluation
-                                                    console.log("done reading.... time to evaluate");
-                                                } 
+                                                doneReadingMutex.lock(function() {
+                                                    if (self.determineProgress(currentProgress, currentTotal) && !doneReading)
+                                                    {
+                                                        self.set('studentInformation', studentAdjudicationInfo);
+                                                        doneReading = true;
+                                                        //do actual evaluation
+                                                        console.log("done reading.... time to evaluate");
+                                                    }
+                                                })
                                             });
                                         });                                        
                                     });

@@ -164,7 +164,7 @@
           <th></th>
         </tr>
       </thead>
-      {{#each currentStudent.termCodes as |term index|}}
+      {{#each currentStudent.terms as |term index|}}
       {{#if (eq index termIndex)}}
         {{#each term.grades as |grade|}}
           <tr>
