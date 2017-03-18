@@ -11,6 +11,10 @@ export default Ember.Route.extend({
       function (error) {
         console.log("error -->" + error);
       });
-
+  },
+  actions: {
+    willTransition(transition) {
+      Ember.$('.ui.modal').remove();
+    }
   }
 });
