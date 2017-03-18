@@ -30,6 +30,7 @@ export default Ember.Component.extend({
         });
         newRule.save().then(function(){
             self.set('ruleObj', newRule);
+            console.log(newRule);
         });
     },
 

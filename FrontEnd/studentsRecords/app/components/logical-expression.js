@@ -30,9 +30,14 @@ export default Ember.Component.extend({
     store: Ember.inject.service(),
     creatingNewLogExp: false,
     rule: null, //sent in from parameter builder
-    objectID: null,     //THIS logical expression ID
+    objectID: null,     //THIS logical expression ID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     currentChildID: null,   //children's logical expression ID
+    logLink: null,
+    addingNewRule: null,    //sent in from parameter builder
 
+    // logLinkObserve: Ember.observer('logLink', function(){
+    //     console.log(this.get('logLink'));
+    // }),
 
     init() {
         this._super(...arguments);
@@ -52,27 +57,18 @@ export default Ember.Component.extend({
 
         var logLinks = [
             {
-                "id": 0,
+                "id": "0",
                 "text": "all"
             },
             {
-                "id": 1,
+                "id": "1",
                 "text": "any"
             },
         ];
         this.get('store').findAll('department').then(function(departments){
             self.set('departments', departments);
         });
-        // var departments = [ //STRICTLY FOR TEST PURPOSES. WOULD LOAD IN DEPARTMENTS.
-        //     {
-        //         "id": 0,
-        //         "name": "all departments"
-        //     },
-        //     {
-        //         "id": 1,
-        //         "name": "Software Engineering"
-        //     }
-        // ];
+
         var extra = [{
             "field": null,
             "opr": null,
@@ -81,7 +77,6 @@ export default Ember.Component.extend({
         this.set('oldBooleanExps', boolexps);
         this.set('booleanExps', boolexps);
         this.set('logLinks', logLinks);
-        //this.set('departments', departments);
         this.set('extraBoolExp', extra);
         this.set('count', this.get('booleanExps').length);
 
@@ -93,19 +88,6 @@ export default Ember.Component.extend({
     },
 
     actions: {
-        // splitArg(argname) {
-        //     if (argname == 'arg1')
-        //     this.set(argname + 'IsLogExp', true);
-        //     else
-        //         this.get('test').log();
-        //     //set arg to object
-        // },
-
-        // removeArg(argname) {
-        //     this.set(argname + 'IsLogExp', false);
-        //     this.set(argname, null);
-        // },
-
         destroyBoolExp: function(item){
             this.get('booleanExps').removeObject(item);
         },
@@ -135,13 +117,14 @@ export default Ember.Component.extend({
         toggleNewLogExp: function(){
             var self = this;
             if (this.get('creatingNewLogExp')){ //destroy record if request is to HIDE
-                this.get('store').find('logical-expression', this.get('currentChildID')).then(function(obj){
-                    obj.destroyRecord().then(function(){
+                var child = this.get('store').peekRecord('logical-expression', this.get('currentChildID'));
+                if (child){
+                    child.destroyRecord().then(function(){
                         self.set('currentChildID', null);
-                        self.get('creatingNewLogExp', false);
+                        self.set('creatingNewLogExp', false);
                         console.log('entered destroy logexp');
                     });
-                });
+                }
             } else {    //create record if request is to SHOW
                 var newLogExp = this.get('store').createRecord('logical-expression', {
                     booleanExps: null,
@@ -149,6 +132,7 @@ export default Ember.Component.extend({
                     logicalExpressions: []
                 });
                 newLogExp.save().then(function(obj){
+                    console.log('child id is ' + obj.get('id'));
                     self.set('currentChildID', obj.get('id'));
                     self.set('creatingNewLogExp', true);
                     console.log('entered create/save logexp');
