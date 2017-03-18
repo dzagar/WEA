@@ -43,12 +43,25 @@
             </div>
           </div>
         {{/each}}
-
+        {{#each physicalLogExps as |logExp|}}
+        <div class = "fields">
+          <div class = "fourteen wide field">
+          <div class = "ui purple segment">
+          {{logical-expression level = (inline-math level '+' 1) objectID = logExp.id booleanExps = logExp.booleanExps logLink = logExp.logLink logicalExpressions = logExp.logicalExpressions physicalLogExps = logExp.physicalLogExps}}
+          </div>
+        </div>
+        <div class = "two wide field">
+            <button class = "ui inverted red icon button" {{action 'destroyLogExp' logExp}}>
+              <i class = "square minus icon"></i>
+            </button>
+        </div>
+        </div>
+        {{/each}}
         {{#if creatingNewLogExp}}
         <div class = "fields">
           <div class = "fourteen wide field">
           <div class = "ui purple segment">
-          {{logical-expression level = (inline-math level '+' 1) objectID = currentChildID}}
+          {{logical-expression level = (inline-math level '+' 1) objectID = currentChildID booleanExps = [] logLink = null logicalExpressions = [] physicalLogExps = []}}
           </div>
         </div>
         <div class = "two wide field">

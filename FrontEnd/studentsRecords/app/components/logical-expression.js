@@ -25,6 +25,7 @@ export default Ember.Component.extend({
     test: null,
     booleanExps: [],
     oldBooleanExps: [],
+    logicalExpressions: [],
     count: 0,
     extraBoolExp: [],   //only one expression should ever be in here
     store: Ember.inject.service(),
@@ -34,7 +35,7 @@ export default Ember.Component.extend({
     currentChildID: null,   //children's logical expression ID
     logLink: null,
     addingNewRule: null,    //sent in from parameter builder
-
+    physicalLogExps: [], //logical expressions objects to be displayed in modal window
     // logLinkObserve: Ember.observer('logLink', function(){
     //     console.log(this.get('logLink'));
     // }),
@@ -74,11 +75,18 @@ export default Ember.Component.extend({
             "opr": null,
             "val": null
         }];
-        this.set('oldBooleanExps', boolexps);
-        this.set('booleanExps', boolexps);
+        //this.set('oldBooleanExps', boolexps);
+        if (this.get('booleanExps') == null){
+            //this.set('booleanExps', []);
+        }
         this.set('logLinks', logLinks);
         this.set('extraBoolExp', extra);
-        this.set('count', this.get('booleanExps').length);
+        if (this.get('level') != 0){
+            this.set('count', 0);
+        } else {
+            this.set('count', 20)
+        }
+            
 
     },
 
@@ -93,7 +101,12 @@ export default Ember.Component.extend({
         },
 
         addBoolExp: function(boolExp){
-            this.get('booleanExps').insertAt(this.get('count'), {
+            // this.get('booleanExps').insertAt(this.get('count'), {
+            //     "field": boolExp.field,
+            //     "opr": boolExp.opr,
+            //     "val": boolExp.val
+            // });
+            this.get('booleanExps').pushObject({
                 "field": boolExp.field,
                 "opr": boolExp.opr,
                 "val": boolExp.val
@@ -107,9 +120,37 @@ export default Ember.Component.extend({
             this.set('count', this.get('count')+1);
         },
         createLogExp: function(){
-            // var newExp = this.get('store').createRecord('logical-expression', {
-            //     booleanExpression: 
-            // });
+            var self = this;
+            this.get('logicalExpressions').push(this.get('currentChildID'));
+            var child = this.get('store').peekRecord('logical-expression', this.get('currentChildID'));
+            if (child){
+                self.get('physicalLogExps').pushObject(child);
+            }
+            this.set('currentChildID', null);
+            this.set('creatingNewLogExp', false);
+        },
+        destroyLogExp: function(logExpObj){
+            var self = this;
+            //delete id from logicalexpressions
+            var index = this.get('logicalExpressions').indexOf(logExpObj.id);
+            this.get('logicalExpressions').splice(index, 1);
+            //update parent
+            var parent = this.get('store').peekRecord('logical-expression', this.get('objectID'));
+            if (parent){
+                parent.set('logicalExpressions', this.get('logicalExpressions'));
+                parent.save();
+            } else {
+                this.get('store').findRecord('logical-expression', this.get('objectID'), {reload: true})
+                .then(obj => {
+                    obj.set('logicalExpressions', self.get('logicalExpressions'));
+                    obj.save();
+                });
+            }
+            //delete obj from physical array
+            this.get('physicalLogExps').removeObject(logExpObj);
+            //destroy in backend
+            logExpObj.destroyRecord();
+            //assume Tom will create function in back end to delete all children of record
         },
         addLogExp: function(newID, expLevel){
 
