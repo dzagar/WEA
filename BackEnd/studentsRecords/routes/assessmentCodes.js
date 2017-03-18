@@ -209,6 +209,22 @@ router.route('/')
                     });
                 }
             });
+        } else if (request.query.adjudicationCategory) {
+            AssessmentCode.find({adjudicationCategory: request.query.adjudicationCategory}, function(error, assessmentCodes) {
+                if (error) {
+                    response.send(error);
+                } else {
+                    response.json({assessmentCodes: assessmentCodes});
+                }
+            });
+        } else if (request.query.noCategroy) {
+            AssessmentCode.find({adjudicationCategory: null}, function(error, assessmentCodes) {
+                if (error) {
+                    response.send(error);
+                } else {
+                    response.json({assessmentCodes: assessmentCodes});
+                }
+            });
         } else {
             AssessmentCode.find(function(error, assessmentCodes) {
                 if (error) {
