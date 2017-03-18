@@ -161,6 +161,17 @@ router.route('/')
                     }
                 }
             });
+        } else {
+            completed++;
+            if (completed === 3 && !failed) {
+                logExp.save(function(error) {
+                    if (error) {
+                        response.send(error);
+                    } else {
+                        response.json({logicalExpression: logExp});
+                    }
+                });
+            }
         }
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
