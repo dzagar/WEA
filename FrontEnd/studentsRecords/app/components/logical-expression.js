@@ -29,11 +29,14 @@ export default Ember.Component.extend({
     extraBoolExp: [],   //only one expression should ever be in here
     store: Ember.inject.service(),
     creatingNewLogExp: false,
+    rule: null, //sent in from parameter builder
+    objectID: null,     //THIS logical expression ID
+    currentChildID: null,   //children's logical expression ID
+
 
     init() {
         this._super(...arguments);
         var self = this;
-        console.log('logical-expression init');
         var boolexps = [    //TESTESTESTEST
             {
                 "field": 0,
@@ -90,27 +93,28 @@ export default Ember.Component.extend({
     },
 
     actions: {
-        splitArg(argname) {
-            if (argname == 'arg1')
-            this.set(argname + 'IsLogExp', true);
-            else
-                this.get('test').log();
-            //set arg to object
-        },
+        // splitArg(argname) {
+        //     if (argname == 'arg1')
+        //     this.set(argname + 'IsLogExp', true);
+        //     else
+        //         this.get('test').log();
+        //     //set arg to object
+        // },
 
-        removeArg(argname) {
-            this.set(argname + 'IsLogExp', false);
-            this.set(argname, null);
-        },
+        // removeArg(argname) {
+        //     this.set(argname + 'IsLogExp', false);
+        //     this.set(argname, null);
+        // },
 
         destroyBoolExp: function(item){
             this.get('booleanExps').removeObject(item);
         },
+
         addBoolExp: function(boolExp){
             this.get('booleanExps').insertAt(this.get('count'), {
                 "field": boolExp.field,
                 "opr": boolExp.opr,
-                "val": boolExp.value
+                "val": boolExp.val
             });
             var extra = [{
                 "field": null,
@@ -120,12 +124,36 @@ export default Ember.Component.extend({
             this.set('extraBoolExp', extra);
             this.set('count', this.get('count')+1);
         },
-        toggleNewLogExp: function(){
-            this.toggleProperty('creatingNewLogExp');
-            console.log(this.get('creatingNewLogExp'));
+        createLogExp: function(){
+            // var newExp = this.get('store').createRecord('logical-expression', {
+            //     booleanExpression: 
+            // });
         },
-        returnNewLevel: function(){
-            return (this.get('level')+1);
+        addLogExp: function(newID, expLevel){
+
+        },
+        toggleNewLogExp: function(){
+            var self = this;
+            if (this.get('creatingNewLogExp')){ //destroy record if request is to HIDE
+                this.get('store').find('logical-expression', this.get('currentChildID')).then(function(obj){
+                    obj.destroyRecord().then(function(){
+                        self.set('currentChildID', null);
+                        self.get('creatingNewLogExp', false);
+                        console.log('entered destroy logexp');
+                    });
+                });
+            } else {    //create record if request is to SHOW
+                var newLogExp = this.get('store').createRecord('logical-expression', {
+                    booleanExps: null,
+                    logicalLink: null,
+                    logicalExpressions: []
+                });
+                newLogExp.save().then(function(obj){
+                    self.set('currentChildID', obj.get('id'));
+                    self.set('creatingNewLogExp', true);
+                    console.log('entered create/save logexp');
+                })
+            }
         }
     }
 });

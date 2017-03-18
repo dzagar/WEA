@@ -10,6 +10,7 @@ export default Ember.Component.extend({
     selectedParameterType: null,
     coursesModel: null,
     selectedCourse: null,
+    ruleObj: null,
 
     init() {
         this._super(...arguments);
@@ -21,17 +22,19 @@ export default Ember.Component.extend({
             self.set('coursesModel', courses);
             console.log(courses);
         });
+        var ruleName = this.get('ruleName');
+        var ruleCode = this.get('ruleCode');
+        var newRule = this.get('store').createRecord('assessment-code', {
+            name: ruleName,
+            code: ruleCode
+        });
+        newRule.save().then(function(){
+            self.set('ruleObj', newRule);
+        });
     },
 
     actions: {
         save() {
-            var ruleName = this.get('ruleName');
-            var ruleCode = this.get('ruleCode');
-            var newRule = this.get('store').createRecord('assessment-code', {
-                name: ruleName,
-                code: ruleCode
-            });
-            newRule.save();
             this.set('isEditing', false);
 
         },
