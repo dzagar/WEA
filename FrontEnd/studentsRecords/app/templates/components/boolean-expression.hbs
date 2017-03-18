@@ -1,0 +1,40 @@
+<div id = "{{concat "booleanExp" boolId}}">
+	<div class = "ui inline fields">
+	  <div class = "six wide field">
+	    {{#ui-dropdown class = "selection" selected = currentField onChange = (action (mut currentField))}}
+	      <input name="arg" type="hidden">
+	      <div class = "default text">Field</div>
+	      <i class="dropdown icon"></i>
+	      <div class="menu">
+	        {{#each fields as |currentField|}}
+	          <div class = "item" data-value = {{currentField.id}}>
+	            {{currentField.name}}
+	          </div>
+	        {{/each}}
+	      </div>
+	    {{/ui-dropdown}}
+	  </div>
+
+	  <div class = "six wide field">
+	    {{#ui-dropdown class = "selection" selected = currentOpr onChange = (action (mut currentOpr))}}
+	      <input name = "op" type = "hidden">
+	      <div class = "default text">Operand</div>
+	      <i class = "dropdown icon"></i>
+	      <div class = "menu">
+	        {{#each operators as |currentOpr|}}
+	          <div class = "item" data-value = {{currentOpr.id}}>
+	            {{currentOpr.name}}
+	          </div>
+	        {{/each}}
+	      </div>
+	    {{/ui-dropdown}}
+	  </div>
+
+	  <div class = "four wide field">
+	    <div id = "arg2dropdown">
+	      <input name="arg" type="hidden">
+	      {{input type = "text" name = "arg2" placeholder = "Value" value = currentVal onChange = (action (mut currentVal))}}
+	    </div>
+	  </div>
+	</div>
+</div>
