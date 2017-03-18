@@ -184,6 +184,14 @@ router.route('/')
                     });
                 }
             });
+        } else if (request.query.assessmentCode && request.query.termCode) {
+            Adjudication.find({assessmentCode: request.query.assessmentCode, termCode: request.query.termCode}, function(error, adjudications) {
+                if (error) {
+                    response.send(error);
+                } else {
+                    response.json({adjudications: adjudications});
+                }
+            });
         } else {
             Adjudication.find(function(error, adjudications) {
                 if (error) {
@@ -191,7 +199,7 @@ router.route('/')
                 } else {
                     response.json({adjudications: adjudications});
                 }
-            })
+            });
         }
     });
 
