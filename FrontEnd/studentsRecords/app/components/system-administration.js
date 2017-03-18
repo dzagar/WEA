@@ -5,6 +5,7 @@ export default Ember.Component.extend({
   isFeatureEditing: false,
   isRolesEditing: false,
   isAdjudicationRulesEditing: false,
+  isAdjudicationCategoriesIsShowing: false,
   ADM01IsPermitted: Ember.computed(function(){ //Manage system roles
     var authentication = this.get('oudaAuth');
     if (authentication.getName === "Root") {
@@ -29,15 +30,14 @@ export default Ember.Component.extend({
       this.set('isFeaturesEditing', false);
       this.set('isRolesEditing', false);
       this.set('isAdjudicationRulesEditing', false);
-
-
+      this.set('isAdjudicationCategoriesIsShowing', false);
     },
     manageRoles (){
       this.set('isUsersShowing', false);
       this.set('isFeaturesEditing', false);
       this.set('isRolesEditing', true);
       this.set('isAdjudicationRulesEditing', false);
-
+      this.set('isAdjudicationCategoriesIsShowing', false);
     },
 
     manageFeatures (){
@@ -45,6 +45,7 @@ export default Ember.Component.extend({
       this.set('isFeaturesEditing', true);
       this.set('isRolesEditing', false);
       this.set('isAdjudicationRulesEditing', false);
+      this.set('isAdjudicationCategoriesIsShowing', false);
     },
 
     manageAdjudication (){
@@ -52,8 +53,14 @@ export default Ember.Component.extend({
       this.set('isFeaturesEditing', false);
       this.set('isRolesEditing', false);
       this.set('isAdjudicationRulesEditing', true);
+      this.set('isAdjudicationCategoriesIsShowing', false);
+    },
+    manageAdjudicationCategories() {      
+      this.set('isUsersShowing', false);
+      this.set('isFeaturesEditing', false);
+      this.set('isRolesEditing', false);
+      this.set('isAdjudicationRulesEditing', false);
+      this.set('isAdjudicationCategoriesIsShowing', true);
     }
-
-
   }
 });
