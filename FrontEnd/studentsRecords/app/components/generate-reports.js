@@ -1,9 +1,14 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
+	barChartLabels: null,
+	barChartVals: null,
 	categoryModel: null,
-	currentCategory: -1,
+	currentCategory: null,
+	currentCategoryIndex: -1,
 	currentTerm: null,
+	pieChartLabels: null,
+	pieChartVals: null,
 	store: Ember.inject.service(),
 	termModel: null,
 
@@ -24,11 +29,10 @@ export default Ember.Component.extend({
 		$(".open").hide();
 		$("#chart").hide();
 	},
-	graduateChartData: Ember.computed(function(){
+	barChartData: Ember.computed(function(){
   	return {
   		labels: ["Eligible", "Suppl. Exams", "Withdrew from courses", "Incomplete", "Granted special exam", "Repeat failed courses", "Repeat failed year", "Withdraw"],
   		datasets: [{
-  			label: "axisLabel",
   			data: [100,30,22,10,4,8,3,2],
   			backgroundColor: [
   				'rgba(75, 192, 112, 0.2)',
@@ -38,6 +42,7 @@ export default Ember.Component.extend({
                 'rgba(153, 102, 255, 0.2)',
                 'rgba(255, 159, 64, 0.2)',
                 'rgba(71, 23, 168, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
                 'rgba(255, 99, 132, 0.2)'
             ],
             borderColor: [
@@ -53,12 +58,12 @@ export default Ember.Component.extend({
   		}]
   	};
   }),
-	nonGraduateChartData: Ember.computed(function(){
+	pieChartData: Ember.computed(function(){
   	return {
-  		labels: ["Progress", "Conditional", "Failed-repeat","Withdraw     ","           ","                      ","                          ","                                 "],
+  		labels: this.get('pieChartLabels'),
   		datasets: [{
   			label: "axisLabel",
-  			data: [101,60,12,3,0,0,0,0],
+  			data: this.get('pieChartVals'),
   			backgroundColor: [
                 'rgba(75, 192, 112, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
@@ -110,40 +115,70 @@ export default Ember.Component.extend({
 
 			var currentTerm = this.get('currentTerm');
             var currentCategory = this.get('currentCategory');
-            //bar
-            if (currentCategory == -1)
+            var barChartLabels=this.get('barChartLabels');
+            var barChartVals=this.get('barChartVals');
+            var pieChartLabels=this.get('pieChartLabels');
+            var pieChartVals=this.get('barChartVals');
+            console.log("category is "+currentCategory);
+            console.log("currentTerm id is "+currentTerm.get('id'));
+            //category 'Other' makes bar chart
+            if (this.get('currentCategoryIndex') == -1)
             {
-                var barChartData = [];
+                barChartLabels = [];
+                barChartVals = [];
                 this.get('store').query('assessmentCode', {
                     adjudicationCategories: null
                 }).then(function(assessmentCodes){
                     assessmentCodes.forEach(function(assessmentCode, codeIndex){ 
                         var assessmentCodeID = assessmentCode.get('id');
+                        var termCodeID= currentTerm.get('id');
+                        console.log("assesment id "+assessmentCodeID+" term id "+termCodeID);
                         self.get('store').query('adjudication', {
-                            termCode: currentTerm,
+                            termCode: termCodeID,
                             assessmentCode: assessmentCodeID
                         }).then(function(adjudicationObjects){
-                            barChartData.push({
-                                "name": "name of assessment Code",
-                                "count": adjudicationObjects.get('length')
-                            });
+                            barChartLabels.push(assessmentCode.name);
+                            barChartVals.push(adjudicationObjects.get('length'));
                         });
                     });
                 });
 
             }
-            //pie
+            //other categories make pie chart
             else{
-
+            	pieChartLabels = [];
+                pieChartVals = [];
+                var currentCategoryID= currentCategory.get('id');
+                this.get('store').query('assessmentCode', {
+                    adjudicationCategories: currentCategoryID
+                }).then(function(assessmentCodes){
+                    assessmentCodes.forEach(function(assessmentCode, codeIndex){ 
+                        var assessmentCodeID = assessmentCode.get('id');
+                        var termCodeID= currentTerm.get('id');
+                        console.log("assesment id "+assessmentCodeID+" term id "+termCodeID);
+                        self.get('store').query('adjudication', {
+                            termCode: termCodeID,
+                            assessmentCode: assessmentCodeID
+                        }).then(function(adjudicationObjects){
+                            pieChartLabels.push(assessmentCode.name);
+                            pieChartVals.push(adjudicationObjects.get('length'));
+                        });
+                    });
+                });
             }
    		},
    		selectTerm(index){
 	      this.set('currentTerm', this.get('termModel').objectAt(Number(index)));
 	      console.log("new index " + this.get('currentTerm'));
+	      $(".open").hide();
+		  $("#chart").hide();
 	    },
 	    selectCategory(index){
-	      this.set('currentCategory', index);
-	      console.log("new index " + this.get('currentCategory'));
+	      this.set('currentCategoryIndex', index);
+	      this.set('currentCategory', this.get('categoryModel').objectAt(Number(index)));
+	      console.log("new index " + this.get('currentCategoryIndex'));
+	      $(".open").hide();
+		  $("#chart").hide();
 	    },
    }
 });
