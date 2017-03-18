@@ -192,14 +192,6 @@ router.route('/')
                     response.json({adjudications: adjudications});
                 }
             });
-        } else if (request.query.adjudicationCategory) {
-            Adjudication.find({adjudicationCategory: request.query.adjudicationCategory}, function(error, adjudications) {
-                if (error) {
-                    response.send(error);
-                } else {
-                    response.json({adjudications: adjudications});
-                }
-            });
         } else {
             Adjudication.find(function(error, adjudications) {
                 if (error) {
