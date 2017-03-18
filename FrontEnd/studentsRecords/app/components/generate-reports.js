@@ -1,11 +1,28 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
+	categoryModel: null,
+	currentCategory: -1,
+	currentTerm: null,
+	store: Ember.inject.service(),
+	termModel: null,
+
 	init(){
 		this._super(...arguments);
+		//load term data model
+		var self=this;
+	    this.get('store').findAll('termCode').then(function (records) {
+	      self.set('termModel', records);
+	      self.set('currentTerm', records.get('firstObject'));//initialize currentTerm to first dropdown item
+	    });
+	    //load adjudication categories
+	    this.get('store').findAll('adjudicationCategory').then(function (records) {
+	      self.set('categoryModel', records);
+	    });
 	},
 	didRender(){
 		$(".open").hide();
+		$("#chart").hide();
 	},
 	graduateChartData: Ember.computed(function(){
   	return {
@@ -75,20 +92,58 @@ export default Ember.Component.extend({
   },
   actions: {
    		generateReport(){
+   			var self=this;
    			$(".open").show();
+   			$("#chart").show();
    			
-   			switch($("#criteria").val()){
-   				case 0:
-   					break;
-   				case 1:
-   					break;
-   				case 2:
-   					break;
-   				case 3:
-   					break;
-   			}
+   			
+   			// this.set('adjudications',this.get('termModel').objectAt(this.get('termIndex')).adjudications);
+   			// console.log(this.get('termModel').objectAt(this.get('termIndex')).adjudications);
+			// console.log(this.get('adjudications'));
 
-   		}
+			// this.get('store').query('termCode', {
+			//       name: self.get('termIndex')
+			//     }).then(function (records) {
+			//     	self.set('currentTerm',records);
+			//     }
+			// });
 
+			var currentTerm = this.get('currentTerm');
+            var currentCategory = this.get('currentCategory');
+            //bar
+            if (currentCategory == -1)
+            {
+                var barChartData = [];
+                this.get('store').query('assessmentCode', {
+                    adjudicationCategories: null
+                }).then(function(assessmentCodes){
+                    assessmentCodes.forEach(function(assessmentCode, codeIndex){ 
+                        var assessmentCodeID = assessmentCode.get('id');
+                        self.get('store').query('adjudication', {
+                            termCode: currentTerm,
+                            assessmentCode: assessmentCodeID
+                        }).then(function(adjudicationObjects){
+                            barChartData.push({
+                                "name": "name of assessment Code",
+                                "count": adjudicationObjects.get('length')
+                            });
+                        });
+                    });
+                });
+
+            }
+            //pie
+            else{
+
+            }
+   		},
+   		selectTerm(index){
+	      this.set('currentTerm', this.get('termModel').objectAt(Number(index)));
+	      console.log("new index " + this.get('currentTerm'));
+	    },
+	    selectCategory(index){
+	      this.set('currentCategory', index);
+	      console.log("new index " + this.get('currentCategory'));
+	    },
    }
 });
