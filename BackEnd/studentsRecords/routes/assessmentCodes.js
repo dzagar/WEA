@@ -236,14 +236,137 @@ router.route('/:assessmentCode_id')
 
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
-        AssessmentCode.remove({_id: request.params.assessmentCode_id}, function(error, assessmentCode) {
-            if (error)
-            {
-                response.send({error:error});
+        AssessmentCode.findByIdAndRemove(request.params.assessmentCode_id, function(error, assessmentCode) {
+            let completed = 0;
+            let failed = false;
+
+            if (assessmentCode.adjudications && assessmentCode.adjudications.length > 0) {
+                let completedAdj = 0;
+                for (let i = 0; i < assessmentCode.adjudications.length && !failed; i++) {
+                    Adjudication.findById(assessmentCode.adjudications[i], function (error, adjudication) {
+                        if (error && !failed) {
+                            failed = true;
+                            response.send(error);
+                        } else if (adjudication) {
+                            adjudication.assessmentCode = null;
+
+                            adjudication.save(function (error) {
+                                if (error && !failed) {
+                                    failed = true;
+                                    response.send(error);
+                                } else {
+                                    completedAdj++;
+                                    if (completedAdj === assessmentCode.adjudications.length && !failed) {
+                                        completed++;
+                                        if (completed === 3 && !failed) {
+                                            response.json({assessmentCode: assessmentCode});
+                                        }
+                                    }
+                                }
+                            });
+                        } else {
+                            completedAdj++;
+                            if (completedAdj === assessmentCode.adjudications.length && !failed) {
+                                completed++;
+                                if (completed === 3 && !failed) {
+                                    response.json({assessmentCode: assessmentCode});
+                                }
+                            }
+                        }
+                    });
+                }
+            } else {
+                completed++;
+                if (completed === 3 && !failed) {
+                    response.json({assessmentCode: assessmentCode});
+                }
             }
-            else
-            {
-                response.send({});
+
+            if (assessmentCode.logicalExpressions && assessmentCode.logicalExpressions.length > 0) {
+                let completedLogExp = 0;
+                for (let i = 0; i < assessmentCode.logicalExpressions.length && !failed; i++) {
+                    LogicalExpression.findById(assessmentCode.logicalExpressions[i], function (error, logExp) {
+                        if (error && !failed) {
+                            failed = true;
+                            response.send(error);
+                        } else if (logExp) {
+                            logExp.assessmentCode = null;
+
+                            logExp.save(function(error) {
+                                if (error && !failed) {
+                                    failed = true;
+                                    response.send(error);
+                                } else {
+                                    completedLogExp++;
+                                    if (completedLogExp === assessmentCode.logicalExpressions.length && !failed) {
+                                        completed++;
+                                        if (completed === 3 && !failed) {
+                                            response.json({assessmentCode: assessmentCode});
+                                        }
+                                    }
+                                }
+                            });
+                        } else {
+                            completedLogExp++;
+                            if (completedLogExp === assessmentCode.logicalExpressions.length && !failed) {
+                                completed++;
+                                if (completed === 3 && !failed) {
+                                    response.json({assessmentCode: assessmentCode});
+                                }
+                            }
+                        }
+                    });
+                } 
+            } else {
+                completed++;
+                if (completed === 3 && !failed) {
+                    response.json({assessmentCode: assessmentCode});
+                }
+            }
+
+            if (assessmentCode.departments && assessmentCode.departments.length > 0) {
+                let completedDept = 0;
+                for (let i = 0; i < assessmentCode.departments.length && !failed; i++) {
+                    Department.findById(assessmentCode.departments[i], function (error, department) {
+                        if (error && !failed) {
+                            failed = true;
+                            response.send(error);
+                        } else if (department) {
+                            let index = department.assessmentCodes.indexOf(assessmentCode._id);
+                            if (index > -1) {
+                                department.assessmentCodes.splice(index, 1);
+                            }
+
+                            department.save(function (error) {
+                                if (error && !failed) {
+                                    failed = true;
+                                    response.send(error);
+                                } else {
+                                    completedDept++;
+                                    if (completedDept === assessmentCode.departments.length && !failed) {
+                                        completed++;
+                                        if (completed === 3 && !failed) {
+                                            response.json({assessmentCode: assessmentCode});
+                                        }
+                                    }
+                                }
+                            });
+                        } else {
+                            completedDept++;
+                            if (completedDept === assessmentCode.departments.length && !failed) {
+                                completed++;
+                                if (completed === 3 && !failed) {
+                                    response.json({assessmentCode: assessmentCode});
+                                }
+                            }
+                        }
+                    });
+                }
+            } else {
+                completed++;
+                if (completed === 3 && !failed) {
+                    response.json({assessmentCode: assessmentCode});
+                }
             }
         });
     });
