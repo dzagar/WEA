@@ -178,6 +178,14 @@ router.route('/')
                     });
                 }
             });
+        } else {
+            LogicalExpression.find(function (error, logicalExpressions) {
+                if (error) {
+                    response.send(error);
+                } else {
+                    response.json({logicalExpressions: logicalExpressions});
+                }
+            });
         }
     });
 
