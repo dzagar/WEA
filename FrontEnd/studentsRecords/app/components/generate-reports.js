@@ -21,7 +21,7 @@ export default Ember.Component.extend({
 	      self.set('termModel', records);
 	      self.set('currentTerm', records.get('firstObject'));//initialize currentTerm to first dropdown item
 	      
-   			self.generateRandomData();
+   			//self.generateRandomData();
 	    });
 	    //load adjudication categories
 	    this.get('store').findAll('adjudicationCategory').then(function (records) {
@@ -30,15 +30,19 @@ export default Ember.Component.extend({
 	    this.set('backgroundColours', [this.getRandomColor(),this.getRandomColor(),this.getRandomColor()]);
 	},
 	barChartData: Ember.computed('barChartLabels', 'barChartVals', function(){
-  	 return {
+	var returnObject=
+  	  {
   		labels: this.get('barChartLabels'),
+
   		datasets: [{
   			data: this.get('barChartVals'),
-  			borderWidth: 1,
+  			borderWidth: 0.5,
   			label: "Assessment Code",
   			backgroundColor: this.get('backgroundColours')
   		}]
   	};
+  	console.log(returnObject);
+  	return returnObject;
   }),
 	pieChartData: Ember.computed(function(){
   	return {
@@ -76,7 +80,13 @@ export default Ember.Component.extend({
   			console.log("clicked "+legendItem.label);
   		}
   	},
-  	scaleBeginAtZero : true
+  	scales:{
+  		yAxes:[{
+  			ticks:{
+  				beginAtZero:true
+  			}
+  		}]
+  	}
   },
   generateRandomData(){
         var currentTerm = this.get('currentTerm');
@@ -173,15 +183,16 @@ export default Ember.Component.extend({
                     adjudicationCategory: null
                 }).then(function(assessmentCodes){
                     assessmentCodes.forEach(function(assessmentCode, codeIndex){ 
+                    	barChartLabels.push(assessmentCode.get('name'));
+                        self.set('barChartLabels', barChartLabels);
                         var assessmentCodeID = assessmentCode.get('id');
                         self.get('store').query('adjudication', {
                             termCode: termCodeID,
                             assessmentCode: assessmentCodeID
                         }).then(function(adjudicationObjects){
-                            barChartLabels.push(assessmentCode.get('name'));
+                            
                             barChartVals.push(adjudicationObjects.get('length'));
                             self.set('barChartVals', barChartVals);
-                            self.set('barChartLabels', barChartLabels);
                             self.get('backgroundColours').push(self.getRandomColor());
                         });
                     });
