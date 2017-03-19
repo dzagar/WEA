@@ -19,9 +19,9 @@
 		</div>
 		<a class="open" href='/assets/test.pdf' target="_blank"><div class="ui button">Open as PDF</div></a>
 		<a class="open" href='/assets/test.pdf' download><div class="ui button">Open as Excel</div></a>
-
 		<div id="chart">
-			{{#if (eq currentCategoryIndex -1)}}
+		
+			{{#if (inline-compare currentCategoryIndex "==" -1)}}
 				{{ember-chart type='bar' data=barChartData options= options height=100}}
 			{{else}}
 				{{ember-chart type='pie' data=pieChartData options= options height=100}}
