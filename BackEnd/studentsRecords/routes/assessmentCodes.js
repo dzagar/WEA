@@ -188,6 +188,7 @@ router.route('/')
                     if (error) {
                         response.send(error);
                     } else {
+                        console.log('assessment code is ' + assessmentCode);
                         response.json({assessmentCode: assessmentCode});
                     }
                 });

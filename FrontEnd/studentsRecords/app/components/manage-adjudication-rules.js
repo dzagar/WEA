@@ -11,6 +11,7 @@ export default Ember.Component.extend({
     coursesModel: null,
     selectedCourse: null,
     ruleObj: null,
+    loadRuleObj: false,
 
     init() {
         this._super(...arguments);
@@ -31,6 +32,7 @@ export default Ember.Component.extend({
         newRule.save().then(function(){
             self.set('ruleObj', newRule);
             console.log(newRule);
+            self.set('loadRuleObj', true);
         });
     },
 

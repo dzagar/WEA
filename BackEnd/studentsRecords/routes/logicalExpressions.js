@@ -215,9 +215,14 @@ router.route('/:logicalExpression_id')
             if (error) {
                 response.send(error);
             } else if (logicalExpression) {
+                console.log('logical expression summary: ' + logicalExpression);
+                console.log('request logexp: ' + request.body.logicalExpression.booleanExpression);
                 logicalExpression.booleanExpression = request.body.logicalExpression.booleanExpression;
                 logicalExpression.logicalLink = request.body.logicalExpression.logicalLink;
-                logicalExpression.logicalExpressions = request.body.logicalExpression.logicalExpressions;
+                if (request.body.logicalExpression.logicalExpressions) logicalExpression.logicalExpressions = request.body.logicalExpression.logicalExpressions.slice();
+                console.log(request.body.logicalExpression.logicalExpressions);
+                console.log(logicalExpression.logicalExpressions);
+                //logicalExpression.logicalExpressions = request.body.logicalExpression.logicalExpressions;
                 logicalExpression.ownerExpression = request.body.logicalExpression.ownerExpression;
                 logicalExpression.assessmentCode = request.body.logicalExpression.assessmentCode;
 
@@ -225,7 +230,8 @@ router.route('/:logicalExpression_id')
                     if (error) {
                         response.send(error);
                     } else {
-                        response.json({logicalExpression: logicalExpression});
+                        console.log(logicalExpression);
+                        response.send({logicalExpression: logicalExpression});
                     }
                 });
             } else {
