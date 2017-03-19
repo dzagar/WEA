@@ -234,7 +234,7 @@ router.route('/:logicalExpression_id')
         });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
-        if (request.query.destoryChildren) {
+        if (request.query.destroyChildren) {
             let finishCallback = (logExp) => {
                 response.json({logicalExpression: logExp});
             }
