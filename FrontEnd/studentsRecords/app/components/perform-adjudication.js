@@ -34,6 +34,7 @@ export default Ember.Component.extend({
     nonCategoryAdjudications: null,
     adjudicationCategoriesAssessmentCodes: null,
     currentTerm: null,
+    courseGroupingsModel: null,
     termCodeModel: null,
     parsingProgress: 0,
     parsingTotal: 1000,
@@ -57,6 +58,9 @@ export default Ember.Component.extend({
         this.get('store').query('assessment-code', {noCategory: true}).then(function(records) {
             self.set('nonCategoryAdjudications', records);
         });
+        // this.get('store').findAll('course-grouping').then(function(records){
+        //     self.set('courseGroupingsModel', records);
+        // });
     },
     determineProgress(newProgress, newTotal)
     {
@@ -331,22 +335,325 @@ export default Ember.Component.extend({
         
         //Increment to match dropdown index
         var field = boolExpression.field + 1;
-        var opr = boolExpression.opr + 1;
+        var opr = boolExpression.opr;
         var val = boolExpression.val;
+        var boolResult = false;
         switch (field){
-            case "YWA":{
+            //student's YWA passes passed rule (ie: greater than, less than etc...)
+            case BoolValue.YWA:{
+                var currentTermID = studentRecord.termCodeID;
+                var termWA = [];
+                studentRecord.terms.forEach(function(term){
+                    if (term.termCodeID == currentTermID)
+                    {
+                        termWA.push(term.termAVG);
+                    }
+                });
+                boolResult = this.evaluateValue(opr + 1, terWA, val);
+            }
+            break;
+            //student's CWA passes passed rule (ie: greater than, less than etc...)
+            case BoolValue.CWA:{
+                var studentCWA = [];
+                studentCWA.push(studentRecord.cumAVG);
+                boolResult = this.evaluateValue(opr + 1, studentCWA, val);                
+            }
+            break;
+            //student's number of failed credits total passes passed rule (ie: greater than, less than etc...)
+            case BoolValue.FAILEDCREDITS:{
+                var studentNumberOfFailedCredits = [studentRecord.cumUnitsTotal - studentRecord.cumUnitsPassed];
+                boolResult = this.evaluateValue(opr + 1, studentNumberOfFailedCredits, val);                
+            }
+            break;
+            //student's grade in all failed credits passes passed rule (ie: greater than, less than etc...)
+            case BoolValue.GRADEINFAILED:{
+                var failingGrades = [];
+                var currentTermID = studentRecord.termCodeID;
+                studentRecord.terms.forEach(function(term){
+                    if (term.termCodeID == currentTermID){
+                        term.grades.forEach(function(grade){
+                            var gradeMark = grade.mark;
+                            //if the mark is a number then check is the grade is a failing value
+                            if (!isNAN(gradeMark)){
+                                var gradeMarkNumber = Number(gradeMark);
+                                if (gradeMarkNumber < 50)
+                                    failingGrades.push(gradeMarkNumber);                    
+                            }
+                        });
+                    }
+                });
+                boolResult = this.evaluateValue(opr + 1, failingGrades, val);                
+            }
+            break;
+            //Student has completed a minimum number of courses from a course grouping
+            case BoolValue.CREDITSIN:{
+                var coursesInGrouping = [];
+                var minimumNumberOfCredits = val;
+                this.get('courseGroupingsModel').forEach(function(courseGrouping){
+                    //if we have the right course grouping
+                    if (courseGrouping.get('id') == opr)
+                    {
+                        courseGrouping.get('courseCodes').forEach(function(courseCode){
+                            coursesInGrouping.push(courseCode.get('id'));
+                        });
+                    }
+                });
+                //check all grades
+                studentRecord.terms.forEach(function(term){
+                    term.grades.forEach(function(grade){
+                        if (coursesInGrouping.includes(grade.courseCodeID))
+                        {
+                            //check if the grade is a number
+                            if (!isNaN(grade.mark))
+                            {
+                                var gradeMarkNumber = Number(grade.mark);
+                                if (gradeMarkNumber >= 50)
+                                {
+                                    minimumNumberOfCredits -= grade.unit;                                    
+                                }
+                            }
+                        }
+                    });
+                });
+                //if minimumNumberOfCredits is 0 or less than the user has completed sufficient number of credits
+                boolResult = (minimumNumberOfCredits <= 0);        
+            }
+            break;
+            //student's average in courses from a specific course grouping is greater than or equal to the val
+            case BoolValue.AVGIN:{
+                var coursesInGrouping = [];
+                var gradeTotal = 0;
+                var courseUnitCount = 0;
+                this.get('courseGroupingsModel').forEach(function(courseGrouping){
+                    //if we have the right course grouping
+                    if (courseGrouping.get('id') == opr)
+                    {
+                        courseGrouping.get('courseCodes').forEach(function(courseCode){
+                            coursesInGrouping.push(courseCode.get('id'));
+                        });
+                    }
+                });
+                studentRecord.terms.forEach(function(term){
+                    term.grades.forEach(function(grade){
+                        if (coursesInGrouping.includes(grade.courseCodeID))
+                        {
+                            if (!isNaN(grade.mark))
+                            {
+                                var gradeMarkNumber = Number(grade.mark);
+                                gradeTotal += gradeMarkNumber * grade.unit;
+                                courseUnitCount += grade.unit;
+                            }
+                        }
+                    });
+                });
+                var studentGroupAVG = gradeTotal / courseUnitCount;
+                boolResult = (studentGroupAVG >= val);                
+            }
+            break;
+            //if the student withdraws from 1 or more course in a course grouping
+            case BoolValue.WDNFROM:{
+                var coursesInGrouping = [];
+                var foundCourse = false;                 
+                this.get('courseGroupingsModel').forEach(function(courseGrouping){
+                    //if we have the right course grouping
+                    if (courseGrouping.get('id') == opr)
+                    {
+                        courseGrouping.get('courseCodes').forEach(function(courseCode){
+                            coursesInGrouping.push(courseCode.get('id'));
+                        });
+                    }
+                });
+                studentRecord.terms.forEach(function(term){
+                    term.grades.forEach(function(grade){
+                        if (coursesInGrouping.includes(grade.courseCodeID))
+                        {
+                            if (isNaN(grade.mark) && grade.mark == "WDN")
+                            {
+                                foundCourse = true;                   
+                            }
+                        }
+                    });
+                });
+                if (val){                    
+                    boolResult = foundCourse;
+                }
+                else{
+                    boolResult = !foundCourse;
+                }                
+            }
+            break;
+            //if the student has incomplete in 1 or more course in a course grouping
+            case BoolValue.INCRFROM:{
+                var coursesInGrouping = [];   
+                var foundCourse = false;              
+                this.get('courseGroupingsModel').forEach(function(courseGrouping){
+                    //if we have the right course grouping
+                    if (courseGrouping.get('id') == opr)
+                    {
+                        courseGrouping.get('courseCodes').forEach(function(courseCode){
+                            coursesInGrouping.push(courseCode.get('id'));
+                        });
+                    }
+                });
+                studentRecord.terms.forEach(function(term){
+                    term.grades.forEach(function(grade){
+                        if (coursesInGrouping.includes(grade.courseCodeID))
+                        {
+                            if (isNaN(grade.mark) && grade.mark == "INC")
+                            {
+                                foundCourse = true;                                
+                            }
+                        }
+                    });
+                });                
+                if (val){                    
+                    boolResult = foundCourse;
+                }
+                else{
+                    boolResult = !foundCourse;
+                }                
+            }
+            break;
+            //if the student has SPC in 1 or more course in a course grouping
+            case BoolValue.SPCIN:{
+                var coursesInGrouping = [];  
+                var foundCourse = false;               
+                this.get('courseGroupingsModel').forEach(function(courseGrouping){
+                    //if we have the right course grouping
+                    if (courseGrouping.get('id') == opr)
+                    {
+                        courseGrouping.get('courseCodes').forEach(function(courseCode){
+                            coursesInGrouping.push(courseCode.get('id'));
+                        });
+                    }
+                });
+                studentRecord.terms.forEach(function(term){
+                    term.grades.forEach(function(grade){
+                        if (coursesInGrouping.includes(grade.courseCodeID))
+                        {
+                            if (isNaN(grade.mark) && grade.mark == "SPC")
+                            {
+                                foundCourse = true;                                
+                            }
+                        }
+                    });
+                });                
+                if (val){                    
+                    boolResult = foundCourse;
+                }
+                else{
+                    boolResult = !foundCourse;
+                }                  
+            }
+            break;
+            //if the student has a failed course in a course grouping
+            case BoolValue.FAILEDIN:{
+                var coursesInGrouping = []; 
+                var foundCourse = false;                
+                this.get('courseGroupingsModel').forEach(function(courseGrouping){
+                    //if we have the right course grouping
+                    if (courseGrouping.get('id') == opr)
+                    {
+                        courseGrouping.get('courseCodes').forEach(function(courseCode){
+                            coursesInGrouping.push(courseCode.get('id'));
+                        });
+                    }
+                });
+                studentRecord.terms.forEach(function(term){
+                    term.grades.forEach(function(grade){
+                        if (coursesInGrouping.includes(grade.courseCodeID))
+                        {
+                            if (!isNaN(grade.mark) && grade.mark < 50)
+                            {
+                                foundCourse = true;      
+                            }
+                        }
+                    });
+                });                
+                if (val){                    
+                    boolResult = foundCourse;
+                }
+                else{
+                    boolResult = !foundCourse;
+                }                
+            }
+            break;
+            //if this is the first time a YWA passes a rule (less than, in between, greater than etc...)
+            case BoolValue.FIRSTYWA:{
+                var currentTermPasses = false;
+                var otherTermPasses = false;
+                var currentTermID = studentRecord.termCodeID;
+                studentRecord.terms.forEach(function(term){
+                    if (term.termCodeID == currentTermID && this.evaluateValue(opr + 1, term.termAVG, val))
+                    {                        
+                        currentTermPasses = true;
+                    }
+                    else if (this.evaluateValue(opr + 1, term.termAVG, val)){
+                        otherTermPasses = true;
+                    }
+                });
+                boolResult = (currentTermPasses && !otherTermPasses);              
+            }
+            break;
+            //if this is the second time a YWA passes a rule (less than, in between, greater than etc...)
+            case BoolValue.SECONDYWA:{
+                var currentTermPasses = false;
+                var otherTermCount = 0;
+                var currentTermID = studentRecord.termCodeID;
+                studentRecord.terms.forEach(function(term){
+                    if (term.termCodeID == currentTermID && this.evaluateValue(opr + 1, term.termAVG, val))
+                    {                        
+                        currentTermPasses = true;
+                    }
+                    else if (this.evaluateValue(opr + 1, term.termAVG, val)){
+                        otherTermCount++;
+                    }
+                });
+                boolResult = (currentTermPasses && otherTermCount == 1); 
                 
             }
             break;
-            case "CWA":{
+            //if the number of credits completed in a specific term follows a specific rule
+            case BoolValue.CREDITSTHISTERM:{
+
+                
+            }
+            break;
+        }
+        return boolResult;
+    },
+    evaluateValue(operatorValue, studentValue, ruleValue){
+
+        switch (operatorValue){
+            case RegularOperators.EQUALS:{
 
             }
             break;
-            case "FAILS":{
+            case RegularOperators.NOTEQUAL:{
 
             }
             break;
-            case "COURSE":{
+            case RegularOperators.GREATERTHAN:{
+
+            }
+            break;
+            case RegularOperators.GREATEREQUAL:{
+
+            }
+            break;
+            case RegularOperators.LESSTHAN:{
+
+            }
+            break;
+            case RegularOperators.LESSEQUAL:{
+
+            }
+            break;
+            case RegularOperators.BETINC:{
+
+            }
+            break;
+            case RegularOperators.BETEXC:{
 
             }
             break;
@@ -399,7 +706,7 @@ export default Ember.Component.extend({
                                 var termID = term.get('id');
                                 self.get('store').find('term', termID).then(function(termInfo) {
                                     studentAdjudicationInfo[studentIndex].terms[termIndex] = {
-                                        "termCodeID": termInfo.get('id'),
+                                        "termCodeID": termInfo.get('termCode').get('id'),
                                         "termAVG": termInfo.get('termAVG'),
                                         "termUnitsTotal": termInfo.get('termUnitsTotal'),
                                         "termUnitsPassed": termInfo.get('termUnitsPassed'),
@@ -418,6 +725,7 @@ export default Ember.Component.extend({
                                             studentAdjudicationInfo[studentIndex].terms[termIndex].grades[gradeIndex] = {
                                                 "gradeID": gradeInfo.get('id'),
                                                 "mark": gradeInfo.get('mark'),
+                                                "courseCodeID": gradeInfo.get('courseCode.id'),
                                                 "courseNumber": "",
                                                 "courseLetter": "",
                                                 "unit": "",
