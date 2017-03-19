@@ -79,7 +79,13 @@ export default Ember.Component.extend({
         //for each code we evaluate it and if it returns false we call a callback with the next object to evaluate
         //if it returns true or counter reaches 0 we just stop and don't evaluate anymore.
         this.get('adjudicationCategories').forEach(function(category, categoryIndex) {
-            console.log("category index" + categoryIndex);
+
+            //if the category has no assessmentCode then continue to next category
+            if (!category.get('assessmentCodes'))
+            {
+                self.set('evaluationProgress', self.get('evaluationProgress') + studentInformation.length);
+                return;
+            }
             //this is used to track the assessment code we are evaluating and if we have checked all of them
             var numberOfPotentialAssessments = category.get('assessmentCodes').get('length');
             //if the assessment failed
