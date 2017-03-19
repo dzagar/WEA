@@ -1,6 +1,33 @@
 import Ember from 'ember';
 import Mutex from 'ember-mutex';
 
+
+var BoolValue = {
+    YWA: 1,
+    CWA: 2,
+    FAILEDCREDITS: 3,
+    GRADEINFAILED: 4,
+    CREDITSIN: 5,
+    AVGIN: 6,
+    WDNFROM: 7,
+    INCRFROM: 8,
+    SPCIN: 9,
+    FAILEDIN: 10,
+    FIRSTYWA: 11,
+    SECONDYWA: 12,
+    CREDITSTHISTERM: 13
+}
+var RegularOperators = {
+    EQUALS: 1,
+    NOTEQUAL: 2,
+    GREATERTHAN: 3,
+    GREATEREQUAL: 4,
+    LESSTHAN: 5,
+    LESSEQUAL: 6,
+    BETINC: 7,
+    BETEXC: 8
+}
+
 export default Ember.Component.extend({
     studentsToAdjudicate: null,
     adjudicationCategories: null,
@@ -302,15 +329,13 @@ export default Ember.Component.extend({
     //this function evaluates an individual boolean expression with a student record.
     evaluateBoolean(studentRecord, boolExpression){
         
+        //Increment to match dropdown index
+        var field = boolExpression.field + 1;
+        var opr = boolExpression.opr + 1;
         var val = boolExpression.val;
-        var opr = boolExpression.opr;
-        switch (boolExpression.field){
+        switch (field){
             case "YWA":{
-                if (opr == ">"){
-                    
-                }else{
-
-                }
+                
             }
             break;
             case "CWA":{
