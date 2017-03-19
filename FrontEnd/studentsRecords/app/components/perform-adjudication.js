@@ -12,8 +12,6 @@ export default Ember.Component.extend({
     parsingTotal: 1000,
     evaluationProgress: 0,
     evaluationTotal: 1000,
-    savingProgress: 0,
-    savingTotal: 1000,
     studentInformation: null,
     store: Ember.inject.service(),
 
@@ -33,7 +31,6 @@ export default Ember.Component.extend({
             self.set('nonCategoryAdjudications', records);
         });
     },
-
     determineProgress(newProgress, newTotal)
     {
         if (this.get('parsingProgress')/this.get('parsingTotal') <= newProgress/newTotal)
@@ -68,15 +65,13 @@ export default Ember.Component.extend({
         var studentInformation = this.get('studentInformation');
         var totalSize = 0;
         //initialize total size
-        this.get('adjudicationCategories').forEach(function(category, categoryIndex) {
-            totalSize += category.get('assessmentCodes').get('length') * studentInformation.length;
-        });
+        totalSize += this.get('adjudicationCategories').get('length') * studentInformation.length;
         totalSize += this.get('nonCategoryAdjudications').get('length') * studentInformation.length;
         self.set('evaluationTotal', totalSize);
 
         this.get('nonCategoryAdjudications').forEach(function(assessmentCode, assessmentCodeIndex) {
             console.log("non category index" + assessmentCodeIndex);
-            evaluateNonCategoryAssessmentCode(assessmentCode.get('id'));
+           self.evaluateNonCategoryAssessmentCode(assessmentCode.get('id'));
         });   
 
         //IDEA
@@ -95,11 +90,15 @@ export default Ember.Component.extend({
                 {
                     self.evaluateCategoryAssessmentCode(category.get('assessmentCodes').objectAt(numberOfPotentialAssessments - 1).get('id'), failedDone);
                 }
+                self.set('evaluationProgress', self.get('evaluationProgress') + studentInformation.length);
                 return;             
             }
             if (category.get('assessmentCodes').get('length') > 0)
             {
                 self.evaluateCategoryAssessmentCode(category.get('assessmentCodes').get('lastObject').get('id'), failedDone);
+            }
+            else{
+                self.set('evaluationProgress', self.get('evaluationProgress') + studentInformation.length);
             }
         });
     },
@@ -224,9 +223,11 @@ export default Ember.Component.extend({
                 newAdjudicationObject.save().then(function(){
                     //do some increment thing
                     //return true;
+                    self.set('evaluationProgress', self.get('evaluationProgress') + 1);
                 });
             }
             else{
+                self.set('evaluationProgress', self.get('evaluationProgress') + 1);
                 return false;
             }
             //do some increment thing
@@ -318,7 +319,6 @@ export default Ember.Component.extend({
 
             }
             break;
-
         }
     },
     actions: {
@@ -342,6 +342,7 @@ export default Ember.Component.extend({
                         studentAdjudicationInfo[studentIndex] = {
                             "studentID" : student.get('id'),
                             "termCodeID": currentTerm,
+                            "programLevels": [],
                             "cumAVG": student.get('cumAVG'),
                             "cumUnitsTotal": student.get('cumUnitsTotal'),
                             "cumUnitsPassed": student.get('cumUnitsPassed'),
@@ -352,7 +353,17 @@ export default Ember.Component.extend({
                         var studentOBJid = student.get('id');
                         self.get('store').query('term', {student: studentOBJid}).then(function(terms){
                             currentTotal += terms.get('length');
-                            terms.forEach(function(term, termIndex) {                
+                            terms.forEach(function(term, termIndex) {
+                                //get the program if the term = currentTerm
+                                if (term.get('termCode').get('id') == currentTerm)
+                                {
+                                    term.get('programRecords').forEach(function(programRecord, prIndex){
+                                        var programRecordID = programRecord.get('id');
+                                        self.get('store').find('program-record', programRecordID).then(function(programRecordOBJ){
+                                            studentAdjudicationInfo[studentIndex].programLevels.push(programRecordOBJ.get('level'));
+                                        });
+                                    });
+                                }
                                //push codeRef, termAVG, termUnitsTotal, termUnitsPassed
                                 var termID = term.get('id');
                                 self.get('store').find('term', termID).then(function(termInfo) {
@@ -401,6 +412,7 @@ export default Ember.Component.extend({
                                                         doneReading = true;
                                                         //do actual evaluation
                                                         console.log("done reading.... time to evaluate");
+                                                        console.log(studentAdjudicationInfo);
                                                         self.performAdjudication();
                                                     }
                                                 })
