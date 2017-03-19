@@ -17,9 +17,11 @@
     		</select>
 			<div class="ui primary button" {{action 'generateReport'}}>Generate Report</div>
 		</div>
-		<a class="open" href='/assets/test.pdf' target="_blank"><div class="ui button">Open as PDF</div></a>
-		<a class="open" href='/assets/test.pdf' download><div class="ui button">Open as Excel</div></a>
-		<div id="chart">
+		<div id="open" class="hideChart">
+		<a class="" href='/assets/test.pdf' target="_blank"><div class="ui button">Open as PDF</div></a>
+		<a class="" href='/assets/test.pdf' download><div class="ui button">Open as Excel</div></a>
+		</div>
+		<div id="chart" class="hideChart">
 		
 			{{#if (inline-compare currentCategoryIndex "==" -1)}}
 				{{ember-chart type='bar' data=barChartData options= options height=100}}

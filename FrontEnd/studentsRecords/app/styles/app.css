@@ -91,5 +91,8 @@ div>div>div> .ui.huge.button {
     margin: 10px;
     min-height: 75px;
 }
-
+/*generate chart*/
+.hideChart{
+  display: none;
+}
 
