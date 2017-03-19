@@ -234,129 +234,159 @@ router.route('/:logicalExpression_id')
         });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
-        LogicalExpression.findByIdAndRemove(request.params.logicalExpression_id, function (error, logicalExpression) {
-            if (logicalExpression) {
-                let completed = 0;
-                let failed = false;
-
-                if (logicalExpression.ownerExpression) {
-                    LogicalExpression.findById(logicalExpression.ownerExpression, function (error, logExp) {
-                        if (error && !failed) {
-                            failed = true;
-                            response.send(error);
-                        } else if (logExp) {
-                            let index = logExp.logicalExpressions.indexOf(logExp._id);
-                            if (index > -1) {
-                                logExp.logicalExpressions.splice(index, 1);
-                            }
-
-                            logExp.save(function (error) {
-                                if (error && !failed) {
-                                    failed = true;
-                                    response.send(error);
-                                } else {
-                                    completed++;
-                                    if (completed === 3 && !failed) {
-                                        response.json({logicalExpression: logicalExpression});
-                                    }
-                                }
-                            });
-
-                        } else {
-                            completed++;
-                            if (completed === 3 && !failed) {
-                                response.json({logicalExpression: logicalExpression});
-                            }
-                        }
-                    });
-                } else {
-                    completed++;
-                    if (completed === 3 && !failed) {
-                        response.json({logicalExpression: logicalExpression});
-                    }
-                }
-
-                if (logicalExpression.logicalExpressions && logicalExpression.logicalExpressions.length > 0) {
-                    let completedLogExp = 0;
-                    for (let i = 0; i < logicalExpression.logicalExpressions.length && !failed; i++) {
-                        LogicalExpression.findById(logicalExpression.logicalExpressions[i], function (error, logExp) {
-                            if (error && !failed) {
-                                failed = true;
-                                response.send(error);
-                            } else if (logExp) {
-                                logExp.ownerExpression = null;
-
-                                logExp.save(function (error) {
-                                    if (error && !failed) {
-                                        failed = true;
-                                        response.send(error);
-                                    } else {
-                                        completedLogExp++;
-                                        if (completedLogExp === logicalExpression.logicalExpressions.length && !failed) {
-                                            completed++;
-                                            if (completed === 3 && !failed) {
-                                                response.json({logicalExpression: logicalExpression});
-                                            }
-                                        }
-                                    }
-                                });
-                            } else {
-                                completedLogExp++;
-                                if (completedLogExp === logicalExpression.logicalExpressions.length && !failed) {
-                                    completed++;
-                                    if (completed === 3 && !failed) {
-                                        response.json({logicalExpression: logicalExpression});
-                                    }
-                                }
-                            }
-                        });
-                    }
-                } else {
-                    completed++;
-                    if (completed === 3 && !failed) {
-                        response.json({logicalExpression: logicalExpression});
-                    }
-                }
-
-                if (logicalExpression.assessmentCode) {
-                    AssessmentCode.findById(logicalExpression.assessmentCode, function (error, assessmentCode) {
-                        if (error && !failed) {
-                            failed = true;
-                            response.send(error);
-                        } else if (assessmentCode) {
-                            let index = assessmentCode.logicalExpressions.indexOf(logicalExpression._id);
-                            if (index > -1) {
-                                assessmentCode.logicalExpressions.splice(index, 1);
-                            }
-
-                            assessmentCode.save(function (error) {
-                                if (error) {
-                                    response.send(error);
-                                } else {
-                                    completed++;
-                                    if (completed === 3 && !failed) {
-                                        response.json({logicalExpression: logicalExpression});
-                                    }
-                                }
-                            });
-                        } else {
-                            completed++;
-                            if (completed === 3 && !failed) {
-                                response.json({logicalExpression: logicalExpression});
-                            }
-                        }
-                    });
-                } else {
-                    completed++;
-                    if (completed === 3 && !failed) {
-                        response.json({logicalExpression: logicalExpression});
-                    }
-                }
-            } else {
-                response.json({logicalExpression: logicalExpression});
+        // if (request.query.destroyChildren) {
+            let finishCallback = (logExp) => {
+                response.json({logicalExpression: logExp});
             }
-        });
+
+            DestroyLogExp(request.params.logicalExpression_id, finishCallback);
+        // } else {
+        //     LogicalExpression.findByIdAndRemove(request.params.logicalExpression_id, function (error, logicalExpression) {
+        //         if (logicalExpression) {
+        //             let completed = 0;
+        //             let failed = false;
+
+        //             if (logicalExpression.ownerExpression) {
+        //                 LogicalExpression.findById(logicalExpression.ownerExpression, function (error, logExp) {
+        //                     if (error && !failed) {
+        //                         failed = true;
+        //                         response.send(error);
+        //                     } else if (logExp) {
+        //                         let index = logExp.logicalExpressions.indexOf(logExp._id);
+        //                         if (index > -1) {
+        //                             logExp.logicalExpressions.splice(index, 1);
+        //                         }
+
+        //                         logExp.save(function (error) {
+        //                             if (error && !failed) {
+        //                                 failed = true;
+        //                                 response.send(error);
+        //                             } else {
+        //                                 completed++;
+        //                                 if (completed === 3 && !failed) {
+        //                                     response.json({logicalExpression: logicalExpression});
+        //                                 }
+        //                             }
+        //                         });
+
+        //                     } else {
+        //                         completed++;
+        //                         if (completed === 3 && !failed) {
+        //                             response.json({logicalExpression: logicalExpression});
+        //                         }
+        //                     }
+        //                 });
+        //             } else {
+        //                 completed++;
+        //                 if (completed === 3 && !failed) {
+        //                     response.json({logicalExpression: logicalExpression});
+        //                 }
+        //             }
+
+        //             if (logicalExpression.logicalExpressions && logicalExpression.logicalExpressions.length > 0) {
+        //                 let completedLogExp = 0;
+        //                 for (let i = 0; i < logicalExpression.logicalExpressions.length && !failed; i++) {
+        //                     LogicalExpression.findById(logicalExpression.logicalExpressions[i], function (error, logExp) {
+        //                         if (error && !failed) {
+        //                             failed = true;
+        //                             response.send(error);
+        //                         } else if (logExp) {
+        //                             logExp.ownerExpression = null;
+
+        //                             logExp.save(function (error) {
+        //                                 if (error && !failed) {
+        //                                     failed = true;
+        //                                     response.send(error);
+        //                                 } else {
+        //                                     completedLogExp++;
+        //                                     if (completedLogExp === logicalExpression.logicalExpressions.length && !failed) {
+        //                                         completed++;
+        //                                         if (completed === 3 && !failed) {
+        //                                             response.json({logicalExpression: logicalExpression});
+        //                                         }
+        //                                     }
+        //                                 }
+        //                             });
+        //                         } else {
+        //                             completedLogExp++;
+        //                             if (completedLogExp === logicalExpression.logicalExpressions.length && !failed) {
+        //                                 completed++;
+        //                                 if (completed === 3 && !failed) {
+        //                                     response.json({logicalExpression: logicalExpression});
+        //                                 }
+        //                             }
+        //                         }
+        //                     });
+        //                 }
+        //             } else {
+        //                 completed++;
+        //                 if (completed === 3 && !failed) {
+        //                     response.json({logicalExpression: logicalExpression});
+        //                 }
+        //             }
+
+        //             if (logicalExpression.assessmentCode) {
+        //                 AssessmentCode.findById(logicalExpression.assessmentCode, function (error, assessmentCode) {
+        //                     if (error && !failed) {
+        //                         failed = true;
+        //                         response.send(error);
+        //                     } else if (assessmentCode) {
+        //                         let index = assessmentCode.logicalExpressions.indexOf(logicalExpression._id);
+        //                         if (index > -1) {
+        //                             assessmentCode.logicalExpressions.splice(index, 1);
+        //                         }
+
+        //                         assessmentCode.save(function (error) {
+        //                             if (error) {
+        //                                 response.send(error);
+        //                             } else {
+        //                                 completed++;
+        //                                 if (completed === 3 && !failed) {
+        //                                     response.json({logicalExpression: logicalExpression});
+        //                                 }
+        //                             }
+        //                         });
+        //                     } else {
+        //                         completed++;
+        //                         if (completed === 3 && !failed) {
+        //                             response.json({logicalExpression: logicalExpression});
+        //                         }
+        //                     }
+        //                 });
+        //             } else {
+        //                 completed++;
+        //                 if (completed === 3 && !failed) {
+        //                     response.json({logicalExpression: logicalExpression});
+        //                 }
+        //             }
+        //         } else {
+        //             response.json({logicalExpression: logicalExpression});
+        //         }
+        //     });
+        // } 
     });
+
+function DestroyLogExp (id, callback) {
+    LogicalExpression.findByIdAndRemove(id, function (error, logExp) {
+        console.log('Deleteing LogExp ' + id);
+        if (logExp && logExp.logicalExpressions && logExp.logicalExpressions.length > 0) {
+            let childCount = logExp.logicalExpressions.length;
+            let finishCallback = () => {
+                childCount--;
+                if (childCount === 0) {
+                    callback(logExp);
+                }
+            }
+            for (let i = 0; i < logExp.logicalExpressions.length; i++) {
+                console.log('Deleteing child ' + i + '/' + logExp.logicalExpressions + ' (owned by ' + id + ')');
+                DestroyLogExp(logExp.logicalExpressions[i], finishCallback);
+            }
+        } else {
+            console.log('Could not find LogExp ' + id + ', or it had no children');
+            callback(logExp);
+        }
+    });
+}
 module.exports = router;
 
     //Expand later.
