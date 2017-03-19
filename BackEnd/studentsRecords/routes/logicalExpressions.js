@@ -368,6 +368,7 @@ router.route('/:logicalExpression_id')
 
 function DestroyLogExp (id, callback) {
     LogicalExpression.findByIdAndRemove(id, function (error, logExp) {
+        console.log('Deleteing LogExp ' + id);
         if (logExp && logExp.logicalExpressions && logExp.logicalExpressions.length > 0) {
             let childCount = logExp.logicalExpressions.length;
             let finishCallback = () => {
@@ -376,11 +377,12 @@ function DestroyLogExp (id, callback) {
                     callback(logExp);
                 }
             }
-
             for (let i = 0; i < logExp.logicalExpressions.length; i++) {
+                console.log('Deleteing child ' + i + '/' + logExp.logicalExpressions + ' (owned by ' + id + ')');
                 DestroyLogExp(logExp.logicalExpressions[i], finishCallback);
             }
         } else {
+            console.log('Could not find LogExp ' + id + ', or it had no children');
             callback(logExp);
         }
     });
