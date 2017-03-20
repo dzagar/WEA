@@ -1,9 +1,28 @@
 {{#if isEditing }}
     {{#if isAdding}}
+      {{#if loadRuleObj}}
       {{parameter-builder ruleEditing = ruleObj showWindow = isAdding}}
+      {{/if}}
     {{/if}}
     <h2>Add new adjudication rule</h2>
     <form class="ui form">
+        <div class="inline field">
+            <label>Adjudication Category:</label>
+              {{#ui-dropdown class = "selection" selected = ruleCategory onChange = (action (mut ruleCategory)) }}
+                <div class = "default text">Adjudication Category</div>
+                <i class = "dropdown icon"></i>
+                <div class = "menu">
+                    <div class = "item" data-value = 123>
+                        No category
+                    </div>
+                    {{#each categoryModel as |category|}}
+                    <div class = "item" data-value = {{category.id}}>
+                        {{category.name}}
+                    </div>
+                    {{/each}}
+                </div>
+            {{/ui-dropdown}}
+        </div>
         <div class="inline field">
             <label>Rule name:</label>
             {{input value=ruleName type="text" placeholder="enter rule name" }}
@@ -13,8 +32,25 @@
             {{input value=ruleCode type="text" placeholder="enter rule code" }}
         </div>
         <div class="inline field">
+            <label>Associated departments:</label>
+            {{#ui-dropdown class="fluid multiple selection" selected=[selectedDepartments] onChange=(action (mut selectedDepartments))}}
+                <input type = "hidden" name = "source" value = {{selectedDepartments}}>
+                <i class="dropdown icon"></i>
+                <div class="default text">Select Departments</div>
+                <div class="menu">                        
+                    {{#each departmentModel as |department|}}
+                    <div class="item"   data-value= "{{department.id}}" >
+                        {{department.name}}
+                    </div>
+                    {{/each}}
+                </div>
+            {{/ui-dropdown}}
+        </div>
+        <div class="inline field">
+            {{ui-checkbox label="Flag this rule for manual review" checked=ruleFlagged onChange=(action (mut ruleFlagged))}}
+        </div>
+        <div class="inline field">
             <label>Rule parameters:</label>
-            <br>
             <button id="addFirst" class="ui button" {{action 'addFirstRule'}}>Add rule parameter</button>
         </div>
     </form>
@@ -50,7 +86,7 @@
               {{oneRule.code}}
           </td>
           <td>
-              <label>Manage rule</label>
+              <button class = "ui button" {{action "setRuleFields" oneRule}}>Manage Rule</button>
           </td>
           <td class="right aligned">
                <button class="ui mini circular icon button" {{action 'deleteRule' oneRule}} title="Delete">

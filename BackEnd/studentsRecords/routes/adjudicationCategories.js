@@ -70,6 +70,7 @@ router.route('/:adjudicationCategory_id')
     .put(parseUrlencoded, parseJSON, function(request, response) {
         AdjudicationCategory.findById(request.params.adjudicationCategory_id, function(error, adjudicationCategory) {
             adjudicationCategory.name = request.body.adjudicationCategory.name;
+            adjudicationCategory.programYear = request.body.adjudicationCategory.programYear;
             if (request.body.adjudicationCategory.assessmentCodes) adjudicationCategory.assessmentCodes = request.body.adjudicationCategory.assessmentCodes.split();
             adjudicationCategory.save(function(error) {
                 if (error)

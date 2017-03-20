@@ -1,5 +1,6 @@
 <div class = "ui long wide basic modal">
-	{{logical-expression rule = ruleID objectID = logicalExpID level = 0}}
-	<div class = "ui green button">Save Parameter(s)</div>
-  	<div class = "ui red button" {{action 'cancel'}}>Cancel</div>
+	{{#if loadLogExp}}
+		{{logical-expression rule = ruleID objectID = logicalExpID level = 0}}
+	{{/if}}
+	<div class = "ui green button" {{action 'closeWindow'}}>Save</div>
 </div>

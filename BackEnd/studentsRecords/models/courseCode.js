@@ -7,7 +7,9 @@ var courseCodeSchema = mongoose.Schema(
         courseNumber: String,
         name: String,
         unit: Number,
-        grades: [{type: mongoose.Schema.ObjectId, ref: 'Grade'}]
+        grades: [{type: mongoose.Schema.ObjectId, ref: 'Grade'}],
+        courseGroupings: [{type: mongoose.Schema.ObjectId, ref: 'CourseGrouping'}]
+
     },
     {
         versionKey: false

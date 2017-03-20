@@ -6,5 +6,6 @@ export default DS.Model.extend({
 	courseNumber: DS.attr(),
 	name: DS.attr(),
 	unit: DS.attr(),
-	grades: DS.hasMany('grade')
+	grades: DS.hasMany('grade'),
+	courseGroupings: DS.hasMany('course-grouping')
 });

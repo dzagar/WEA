@@ -25,7 +25,7 @@ router.route('/')
                 if (err) response.send(err);
                 else 
                 {
-                    Residency.find({}, function(error, residencies){
+                    Residency.find({}, null, {sort: 'name'}, function(error, residencies){
                         if (error)
                             response.send(error);
                         else

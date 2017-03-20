@@ -1,13 +1,14 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  grade: null,
+
+    termCode: null,
 	showWindow: null,
 	store: Ember.inject.service(),
 
 	actions: {
-		deleteHSGrade: function(){
-			this.get('grade').destroyRecord();
+		deleteTermCode: function(){
+			this.get('termCode').destroyRecord();
 			this.set('showWindow', false);
 			Ember.$('.ui.modal').modal('hide');
       		Ember.$('.ui.modal').remove();
@@ -16,7 +17,7 @@ export default Ember.Component.extend({
 		cancel: function(){
 			this.set('showWindow', false);
 			Ember.$('.ui.modal').modal('hide');
-      Ember.$('.ui.modal').remove();
+      		Ember.$('.ui.modal').remove();
 		}
 	},
 
@@ -28,4 +29,3 @@ export default Ember.Component.extend({
       .modal('show');
   }
 });
-

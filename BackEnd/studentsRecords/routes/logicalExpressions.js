@@ -129,8 +129,9 @@ router.route('/')
                     failed = true;
                     response.send(error);
                 } else if (assessmentCode) {
-                    assessmentCode.logicalExpressions.push(logExp._id);
-
+                    assessmentCode.logicalExpression = logExp._id;
+                    console.log("logexp: " + logExp._id);
+                    console.log("code log exp " + assessmentCode.logicalExpression);
                     assessmentCode.save(function(error) {
                         if (error && !failed) {
                             failed = true;
@@ -210,36 +211,95 @@ router.route('/:logicalExpression_id')
             }
         });
     })
-    .put(parseUrlencoded, parseJSON, function (request, response) {
+.put(parseUrlencoded, parseJSON, function (request, response) {
         LogicalExpression.findById(request.params.logicalExpression_id, function (error, logicalExpression) {
             if (error) {
                 response.send(error);
             } else if (logicalExpression) {
-                logicalExpression.booleanExpression = request.body.logicalExpression.booleanExpression;
-                logicalExpression.logicalLink = request.body.logicalExpression.logicalLink;
-                logicalExpression.logicalExpressions = request.body.logicalExpression.logicalExpressions;
-                logicalExpression.ownerExpression = request.body.logicalExpression.ownerExpression;
-                logicalExpression.assessmentCode = request.body.logicalExpression.assessmentCode;
+                if (request.body.logicalExpression.ownerExpression)
+                {
+                    LogicalExpression.findById(request.body.logicalExpression.ownerExpression, function(error, parentLogExp){
+                        if (error)
+                        {
+                            response.send(error);
+                        }
+                        else{
+                            if (parentLogExp.logicalExpressions.indexOf(request.params.logicalExpression_id) < 0)
+                            {
+                                parentLogExp.logicalExpressions.push(request.params.logicalExpression_id);
+                                parentLogExp.save(function(error){
+                                    if (error)
+                                    {
+                                        response.send(error);
+                                    }
+                                    else{
+                                        logicalExpression.booleanExpression = request.body.logicalExpression.booleanExpression;
+                                        logicalExpression.logicalLink = request.body.logicalExpression.logicalLink;
+                                        if (request.body.logicalExpression.logicalExpressions) logicalExpression.logicalExpressions = request.body.logicalExpression.logicalExpressions.splice();
+                                        logicalExpression.ownerExpression = request.body.logicalExpression.ownerExpression;
+                                        logicalExpression.assessmentCode = request.body.logicalExpression.assessmentCode;
 
-                logicalExpression.save(function (error) {
-                    if (error) {
-                        response.send(error);
-                    } else {
-                        response.json({logicalExpression: logicalExpression});
-                    }
-                });
+                                        logicalExpression.save(function (error) {
+                                            if (error) {
+                                                response.send(error);
+                                            } else {
+                                                response.json({logicalExpression: logicalExpression});
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    })
+                } else {    //parent
+                    logicalExpression.booleanExpression = request.body.logicalExpression.booleanExpression;
+                    logicalExpression.logicalLink = request.body.logicalExpression.logicalLink;
+                    if (request.body.logicalExpression.logicalExpressions) logicalExpression.logicalExpressions = request.body.logicalExpression.logicalExpressions;
+                    logicalExpression.assessmentCode = request.body.logicalExpression.assessmentCode;
+
+                    logicalExpression.save(function (error) {
+                        if (error) {
+                            response.send(error);
+                        } else {
+                            response.json({logicalExpression: logicalExpression});
+                        }
+                    });
+                }
             } else {
                 response.json({logicalExpression: logicalExpression});
             }
         });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
-        // if (request.query.destroyChildren) {
             let finishCallback = (logExp) => {
+
                 response.json({logicalExpression: logExp});
             }
+            LogicalExpression.findById(request.params.logicalExpression_id, function(error, child){
+                    if (error) {
+                        response.send(error);
+                    } else {
+                        if (child.ownerExpression){
+                            LogicalExpression.findById(child.ownerExpression, function(error, parentLogExp){
+                                if (error) {
+                                    response.send(error);
+                                } else {
+                                    if (parentLogExp.logicalExpressions.indexOf(request.params.logicalExpression_id) > -1){
+                                        var index = parentLogExp.logicalExpressions.indexOf(request.params.logicalExpression_id);
+                                        if (index > -1){
+                                            parentLogExp.logicalExpressions.splice(index, 1);
+                                            parentLogExp.save().then(DestroyLogExp(request.params.logicalExpression_id, finishCallback));
+                                        }
+                                    }
+                                }
+                            });
+                        } else {
+                            DestroyLogExp(request.params.logicalExpression_id, finishCallback);
+                        }
+                    }
+            })
 
-            DestroyLogExp(request.params.logicalExpression_id, finishCallback);
+
         // } else {
         //     LogicalExpression.findByIdAndRemove(request.params.logicalExpression_id, function (error, logicalExpression) {
         //         if (logicalExpression) {

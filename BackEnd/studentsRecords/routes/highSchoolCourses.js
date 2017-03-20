@@ -155,7 +155,22 @@ router.route('/')
                     response.json({highSchoolCourses: courses});
                 }
             });
-        } else {
+        } 
+        else if(request.query.subject)
+        {
+            console.log("Entered this clause!");
+            HighSchoolCourse.find({subject: request.query.subject}, function (error, courses) {
+                if(error)
+                {
+                    response.send(error);
+                }
+                else {
+                    response.json({highSchoolCourses: courses});
+                }
+            });
+        }
+        
+        else {
             HighSchoolCourse.find(function (error, courses) {
                 if (error) {
                     response.send(error);

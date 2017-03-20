@@ -92,6 +92,29 @@ router.route('/:courseCode_id')
             }
         });
     })
+
+    .put(parseUrlencoded, parseJSON, function (request, response) {
+         CourseCode.findById(request.params.courseCode_id, function(error, courseCode) {
+            if (error) {
+                response.send(error);
+            } else {
+                courseCode.courseLetter = request.body.courseCode.courseLetter;
+                courseCode.courseNumber = request.body.courseCode.courseNumber;
+                courseCode.name = request.body.courseCode.name;
+                courseCode.unit = request.body.courseCode.unit;
+                courseCode.grades = request.body.courseCode.grades;
+
+                courseCode.save(function(error) {
+                    if (error) {
+                        response.send(error);
+                    } else {
+                        response.json({courseCode: courseCode});
+                    }
+                });
+            }
+        });
+    })
+
     .delete(parseUrlencoded, parseJSON, function (request, response) {
         let failed = false;
         let completed = 0;
