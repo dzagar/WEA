@@ -37,14 +37,12 @@ body > .ember-view {
 	padding-left: 0px !important;
 }
 
-/*.divider{
+.divider{
     width:5px;
     height:auto;
     display:inline-block;
 }
-div > div > div> .step{
-	height:35px;
-}*/
+
 
 /*Home Page*/
 .ui.menu .item img.logo {
