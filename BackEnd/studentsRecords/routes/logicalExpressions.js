@@ -31,6 +31,7 @@ router.route('/')
                                     if (error) {
                                         response.send(error);
                                     } else {
+                                        console.log("IN THE POST:" + logExp);
                                         response.json({logicalExpression: logExp});
                                     }
                                 });
@@ -44,6 +45,7 @@ router.route('/')
                             if (error) {
                                 response.send(error);
                             } else {
+                                console.log("IN THE POST:" + logExp);
                                 response.json({logicalExpression: logExp});
                             }
                         });
@@ -57,6 +59,7 @@ router.route('/')
                     if (error) {
                         response.send(error);
                     } else {
+                        console.log("IN THE POST:" + logExp);
                         response.json({logicalExpression: logExp});
                     }
                 });
@@ -86,6 +89,7 @@ router.route('/')
                                             if (error) {
                                                 response.send(error);
                                             } else {
+                                                console.log("IN THE POST:" + logExp);
                                                 response.json({logicalExpression: logExp});
                                             }
                                         });
@@ -102,6 +106,7 @@ router.route('/')
                                     if (error) {
                                         response.send(error);
                                     } else {
+                                        console.log("IN THE POST:" + logExp);
                                         response.json({logicalExpression: logExp});
                                     }
                                 });
@@ -117,6 +122,7 @@ router.route('/')
                     if (error) {
                         response.send(error);
                     } else {
+                        console.log("IN THE POST:" + logExp);
                         response.json({logicalExpression: logExp});
                     }
                 });
@@ -142,6 +148,7 @@ router.route('/')
                                     if (error) {
                                         response.send(error);
                                     } else {
+                                        console.log("IN THE POST:" + logExp);
                                         response.json({logicalExpression: logExp});
                                     }
                                 });
@@ -155,6 +162,7 @@ router.route('/')
                             if (error) {
                                 response.send(error);
                             } else {
+                                console.log("IN THE POST:" + logExp);
                                 response.json({logicalExpression: logExp});
                             }
                         });
@@ -168,6 +176,7 @@ router.route('/')
                     if (error) {
                         response.send(error);
                     } else {
+                        console.log("IN THE POST:" + logExp);
                         response.json({logicalExpression: logExp});
                     }
                 });
@@ -204,36 +213,68 @@ router.route('/:logicalExpression_id')
     .get(parseUrlencoded, parseJSON, function (request, response) {
         LogicalExpression.findById(request.params.logicalExpression_id, function (error, logicalExpression) {
             if (error) {
+                console.log('sending error back');
                 response.send(error);
             } else {
+                console.log('sending logexp back');
                 response.json({logicalExpression: logicalExpression});
             }
         });
     })
-    .put(parseUrlencoded, parseJSON, function (request, response) {
+.put(parseUrlencoded, parseJSON, function (request, response) {
         LogicalExpression.findById(request.params.logicalExpression_id, function (error, logicalExpression) {
             if (error) {
                 response.send(error);
             } else if (logicalExpression) {
-                console.log('logical expression summary: ' + logicalExpression);
-                console.log('request logexp: ' + request.body.logicalExpression.booleanExpression);
-                logicalExpression.booleanExpression = request.body.logicalExpression.booleanExpression;
-                logicalExpression.logicalLink = request.body.logicalExpression.logicalLink;
-                if (request.body.logicalExpression.logicalExpressions) logicalExpression.logicalExpressions = request.body.logicalExpression.logicalExpressions.slice();
-                console.log(request.body.logicalExpression.logicalExpressions);
-                console.log(logicalExpression.logicalExpressions);
-                //logicalExpression.logicalExpressions = request.body.logicalExpression.logicalExpressions;
-                logicalExpression.ownerExpression = request.body.logicalExpression.ownerExpression;
-                logicalExpression.assessmentCode = request.body.logicalExpression.assessmentCode;
+                if (request.body.logicalExpression.ownerExpression)
+                {
+                    LogicalExpression.findById(request.body.logicalExpression.ownerExpression, function(error, parentLogExp){
+                        if (error)
+                        {
+                            response.send(error);
+                        }
+                        else{
+                            if (!parentLogExp.logicalExpressions.includes(request.params.logicalExpression_id))
+                            {
+                                parentLogExp.logicalExpressions.push(request.params.logicalExpression_id);
+                                parentLogExp.save(function(error){
+                                    if (error)
+                                    {
+                                        response.send(error);
+                                    }
+                                    else{
+                                        logicalExpression.booleanExpression = request.body.logicalExpression.booleanExpression;
+                                        logicalExpression.logicalLink = request.body.logicalExpression.logicalLink;
+                                        if (request.body.logicalExpression.logicalExpressions) logicalExpression.logicalExpressions = request.body.logicalExpression.logicalExpressions;
+                                        logicalExpression.ownerExpression = request.body.logicalExpression.ownerExpression;
+                                        logicalExpression.assessmentCode = request.body.logicalExpression.assessmentCode;
 
-                logicalExpression.save(function (error) {
-                    if (error) {
-                        response.send(error);
-                    } else {
-                        console.log(logicalExpression);
-                        response.send({logicalExpression: logicalExpression});
-                    }
-                });
+                                        logicalExpression.save(function (error) {
+                                            if (error) {
+                                                response.send(error);
+                                            } else {
+                                                response.json({logicalExpression: logicalExpression});
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    })
+                } else {    //parent
+                    logicalExpression.booleanExpression = request.body.logicalExpression.booleanExpression;
+                    logicalExpression.logicalLink = request.body.logicalExpression.logicalLink;
+                    if (request.body.logicalExpression.logicalExpressions) logicalExpression.logicalExpressions = request.body.logicalExpression.logicalExpressions;
+                    logicalExpression.assessmentCode = request.body.logicalExpression.assessmentCode;
+
+                    logicalExpression.save(function (error) {
+                        if (error) {
+                            response.send(error);
+                        } else {
+                            response.json({logicalExpression: logicalExpression});
+                        }
+                    });
+                }
             } else {
                 response.json({logicalExpression: logicalExpression});
             }
@@ -242,10 +283,14 @@ router.route('/:logicalExpression_id')
     .delete(parseUrlencoded, parseJSON, function (request, response) {
         // if (request.query.destroyChildren) {
             let finishCallback = (logExp) => {
+                LogicalExpression.findById(request.body.logicalExpression.ownerExpression, function(error, parentLogExp){
+                    //FINISHING THIS NOW
+                });
                 response.json({logicalExpression: logExp});
             }
-
             DestroyLogExp(request.params.logicalExpression_id, finishCallback);
+
+
         // } else {
         //     LogicalExpression.findByIdAndRemove(request.params.logicalExpression_id, function (error, logicalExpression) {
         //         if (logicalExpression) {
