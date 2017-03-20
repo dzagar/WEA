@@ -1,6 +1,6 @@
 <div class = "ui {{if (eq level 0) 'medium inverted' 'small'}} header" style = "padding-bottom:2%;">
   For 
-  {{#ui-dropdown class = "selection" selected = "0" onChange = (action (mut logLink))}}
+  {{#ui-dropdown class = "selection" selected = logLink onChange = (action (mut logLink))}}
   <div class = "default text">logical link</div>
   <i class = "dropdown icon"></i>
   <div class = "menu">
@@ -43,12 +43,25 @@
             </div>
           </div>
         {{/each}}
-
+        {{#each logicalExpressionsArr as |logExp|}}
+        <div class = "fields">
+          <div class = "fourteen wide field">
+          <div class = "ui purple segment">
+          {{logical-expression rule = null level = (inline-math level '+' 1) objectID = logExp.id}}
+          </div>
+        </div>
+        <div class = "two wide field">
+            <button class = "ui inverted red icon button" {{action 'destroyLogExp' logExp}}>
+              <i class = "square minus icon"></i>
+            </button>
+        </div>
+        </div>
+        {{/each}}
         {{#if creatingNewLogExp}}
         <div class = "fields">
           <div class = "fourteen wide field">
           <div class = "ui purple segment">
-          {{logical-expression level = (inline-math level '+' 1)}}
+          {{logical-expression rule = null level = (inline-math level '+' 1) objectID = currentChildID }}
           </div>
         </div>
         <div class = "two wide field">

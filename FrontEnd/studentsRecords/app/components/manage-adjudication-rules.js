@@ -5,12 +5,18 @@ export default Ember.Component.extend({
 
     store: Ember.inject.service(),
     assessmentCodeModel: null,
+    departmentModel: null,
+    ruleFlagged: null,
     isAdding: false,
     isEditing: false,
     selectedParameterType: null,
     coursesModel: null,
+    categoryModel: null,
     selectedCourse: null,
     ruleObj: null,
+    ruleCategory: null,
+    loadRuleObj: false,
+
 
     init() {
         this._super(...arguments);
@@ -22,30 +28,51 @@ export default Ember.Component.extend({
             self.set('coursesModel', courses);
             console.log(courses);
         });
-        var ruleName = this.get('ruleName');
-        var ruleCode = this.get('ruleCode');
-        var newRule = this.get('store').createRecord('assessment-code', {
-            name: ruleName,
-            code: ruleCode
+        this.get('store').findAll('adjudication-category').then(function(categories){
+            self.set('categoryModel', categories);
         });
-        newRule.save().then(function(){
-            self.set('ruleObj', newRule);
+        this.get('store').findAll('department').then(function(departments){
+            self.set('departmentModel', departments);
         });
     },
 
     actions: {
         save() {
-            this.set('isEditing', false);
+            var self = this;
+            var ruleSaving = this.get('ruleObj');
+            ruleSaving.set('flagForReview', this.get('ruleFlagged'));
+            ruleSaving.set('name', this.get('ruleName'));
+            ruleSaving.set('code', this.get('ruleCode'));
+            ruleSaving.set('adjudicationCategory', this.get('store').peekRecord('adjudication-category', this.get('ruleCategory')));
+            this.get('selectedDepartments').forEach(function(departmentID){
+                ruleSaving.get('departments').pushObject(self.get('store').peekRecord('department', departmentID));
+            });
+            ruleSaving.save().then(function(){
+                self.set('isEditing', false);
+            });
 
         },
         cancel() {
             this.set('isEditing', false);
         },
-        addNewRule() {            
+        addNewRule() {  
+            var self = this;
             this.set('ruleName', "");
             this.set('ruleCode', "");
             this.set('ruleParameter', "");
-            this.set('isEditing', true);
+            this.set('isEditing', true);        
+            var ruleName = this.get('ruleName');
+            var ruleCode = this.get('ruleCode');
+            var newRule = this.get('store').createRecord('assessment-code', {
+                name: ruleName,
+                code: ruleCode,
+                logicalExpressions: []
+            });
+            newRule.save().then(function(){
+                self.set('ruleObj', newRule);
+                console.log(newRule);
+                self.set('loadRuleObj', true);
+            });         
         },
         deleteRule(rule) {
            rule.destroyRecord();

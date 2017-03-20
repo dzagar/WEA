@@ -141,6 +141,7 @@ export default Ember.Component.extend({
     },
     evaluateCategoryAssessmentCode(assessmentCodeID, failCallback)
     {
+        //ADD CHECK FOR IF THE CATEGORY HAS A REQUIRED YEAR
         var self = this;
         //get the assessmentCode obj we are working with
         this.get('store').find('assessmentCode', assessmentCodeID).then(function(assessmentCode){
