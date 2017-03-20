@@ -67,7 +67,7 @@ export default Ember.Component.extend({
     willDestroy() { //reset component window
         this.set('logLink', null);
         this.set('booleanExps', null);
-        this.set('logicalExpressionsArr', null);
+        this.set('logicalExpressionsArr', []);
         this.set('objectID', null);
         this.set('currentChildID', null);
         this.set('rule', null);

@@ -17,7 +17,7 @@ export default Ember.Component.extend({
         if (this.get('ruleEditing').get('logicalExpression').get('id') != null){	//if object passed
         	this.set('addingNew', false);	//you are just modifying not adding
         	this.set('newLogExp', this.get('ruleEditing').get('logicalExpression'));
-        	this.set('oldLogExp', 'newLogExp');
+        	this.set('oldLogExp', this.get('ruleEditing').get('logicalExpression'));
         	this.set('logicalExpID', this.get('newLogExp').get('id'));
         	this.set('loadLogExp', true);
         	console.log('set parent logexp to id ' +  this.get('newLogExp').get('id') + 'for existing rule with id ' + this.get('ruleEditing').get('id'));
@@ -62,19 +62,18 @@ export default Ember.Component.extend({
 				}
             } else {
         		self.get('store').findRecord('logical-expression', self.get('logicalExpID'), {reload: true}).then(function(obj){
-					obj.booleanExpression = self.get('oldLogExp').booleanExpression;
-					obj.logicalLink = self.get('oldLogExp').logicalLink;
-					obj.logicalExpressions = self.get('oldLogExp').logicalExpressions;
+					obj.booleanExpression = self.get('oldLogExp').get('booleanExpression');
+					obj.logicalLink = self.get('oldLogExp').get('logicalLink');
+					obj.logicalExpressions = self.get('oldLogExp').get('logicalExpressions');
 					obj.save().then(function(){
 						Ember.$('.ui.modal').modal('hide'); 
 						self.set('logicalExpID', null);
 					});
 				});
             }
-           
         },
         closeWindow: function(){
-        	this.set('showWindow', false);
+        	Ember.$('.ui.modal').modal('hide');
         }
 	},
 
