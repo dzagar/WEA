@@ -16,9 +16,6 @@
       			{{/each}}
     		</select>
 			<div class="ui primary button" {{action 'generateReport'}}>Generate Report</div>
-			<div class="ui button" {{action 'renderChart'}}>
-				Render Chart
-			</div>
 		</div>
 		<div id="open" class="hideChart">
 		<a class="" href='/assets/test.pdf' target="_blank"><div class="ui button">Open as PDF</div></a>
@@ -28,28 +25,14 @@
 		<div id="chart" class="hideChart">
 		
 			{{#if (inline-compare currentCategoryIndex "==" -1)}}
-				{{ember-chart type='bar' data=barChartData options= options height=100}}
+				{{ember-chart id='barchart' type='bar' data=barChartData options= options}}
 			{{else}}
-				{{ember-chart type='pie' data=pieChartData options= options height=100}}
+				{{ember-chart type='pie' data=pieChartData  height=100}}
 			{{/if}}
 
 		</div>
 		-->
 		<canvas id="myChart"></canvas>
 	</div>
-	
-	<!-- <div class="ui relaxed grid">
-		<div id="chart" class="two column row">
-			<div class="column">
-				{{ember-chart type='pie' data=graduateChartData options= options height=300}}
-				<h3>Graduates</h3>
-			</div>
-			<div class="column">
-				{{ember-chart type='pie' data=nonGraduateChartData options= options height=300}}
-				<h3>Non-Graduates</h3>
-			</div>
-
-		</div>
-	</div> -->
 </div>
 
