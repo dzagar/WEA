@@ -31,7 +31,10 @@ var terms = require('./routes/terms');
 var faculties = require('./routes/faculties');
 var departments = require('./routes/departments');
 var courseGroupings = require('./routes/courseGroupings');
-
+var adjudicationCategories = require('./routes/adjudicationCategories');
+var programAdministrations = require('./routes/programAdministrations');
+var logicalExpressions = require('./routes/logicalExpressions');
+var adjudications = require('./routes/adjudications');
 
 app.use(function (request, response, next) {
     response.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
@@ -68,6 +71,10 @@ app.use('/terms', terms);
 app.use('/faculties', faculties);
 app.use('/departments', departments);
 app.use('/courseGroupings', courseGroupings);
+app.use('/adjudicationCategories', adjudicationCategories);
+app.use('/programAdministrations', programAdministrations);
+app.use('/logicalExpressions', logicalExpressions);
+app.use('/adjudications', adjudications);
 
 app.listen(3700, function () {
     console.log('Listening on port 3700');

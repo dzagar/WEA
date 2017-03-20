@@ -1,46 +1,79 @@
-<div class="ui modal">
-  <div class="header">Add a new student:
-  </div>
-
-  <div class="ui form">
-  	<div class="inline field">
-            <label>Student Number</label>
-            {{input size="10" type="number" value = number}}
-     </div>
-     <div class="inline field">
-            <label>First Name</label>
-            {{input type="text" value = firstName}}
-     </div>
-     <div class="inline field">
-            <label>Last Name</label>
-            {{input type="text" value = lastName}}
-     </div>
-     <div class="inline field">
-            <label>Gender</label>
-            <select id="ddlGender" onchange={{action 'selectGender' value = "target.value"}}>
-              <option value=1 selected={{eq 1 gender}}>Male</option>
-              <option value=2 selected={{eq 2 gender}}>Female</option>
-            </select>
-     </div>
-     <div class="inline field">
-            <label>Date of Birth</label>
-            <input value= {{DOB}} type="date" onchange={{action 'selectDate' value = "target.value"}} >
-     </div>
-     <div class="inline field">
-            <label>Residency</label>
-            <select id="ddlResidency" onchange = {{action 'selectResidency' value = "target.value"}}>
-              {{#each residencyModel as |residencyChoice|}}
-                <option value={{residencyChoice.id}} selected={{eq resInfo.id residencyChoice.id}}>{{residencyChoice.name}} </option>
+<div class="ui long basic modal">
+  <div class="header">Add Student</div>
+  <div class="content">
+    <div class="ui inverted form">
+      <div class="field {{if invalidStudentNumber "error"}}">
+        <label>Student Number</label>
+        {{input maxlength="9" type="text" placeholder="Student Number" value = studentNumber}}
+      </div>
+      <div class="field {{if invalidName "error"}}">
+        <label>Name</label>
+        <div class="two fields">
+          <div class="field">
+            {{input type="text" placeholder="First Name" value = firstName}}
+          </div>
+          <div class="field">
+            {{input type="text" placeholder="Last Name" value = lastName}}
+          </div>
+        </div>
+      </div>
+      <div class="field {{if invalidDOB "error"}}">
+        <label>Date of Birth</label>
+        {{input type="date" placeholder="Date of Birth" value = DOB}}
+      </div>
+      <div class="two fields">
+        <div class="field {{if invalidGender "error"}}">
+          <label>Gender</label>
+          {{#ui-dropdown class="selection" onChange=(action (mut gender))}}
+            <div class="default text">Gender</div>
+            <i class="dropdown icon"></i>
+            <div class="menu">
+              {{#each genderModel as |gender|}}
+                <div class="item" data-value="{{gender.id}}">{{gender.name}}</div>
               {{/each}}
-            </select>
-     </div>
+            </div>
+          {{/ui-dropdown}}
+        </div>
+        <div class="field {{if invalidResidency "error"}}">
+          <label>Residency</label>
+          {{#ui-dropdown class="selection" onChange=(action (mut resInfo))}}
+            <div class="default text">Residency</div>
+            <i class="dropdown icon"></i>
+            <div class="menu">
+              {{#each residencyModel as |residency|}}
+                <div class="item" data-value="{{residency.id}}">{{residency.name}}</div>
+              {{/each}}
+            </div>
+          {{/ui-dropdown}}
+        </div>
+      </div>
+      <div class="two fields">
+        <div class="field">
+          <label>Basis of Admission</label>
+          {{input type="text" placeholder="Basis of Admission" value = basisOfAdmission}}
+        </div>
+        <div class="field">
+          <label>Admission Average</label>
+          {{input type="text" placeholder="Admission Average" value = admissionAverage}}
+        </div>
+      </div>
+      <div class="field">
+        <label>Admission Comments</label>
+        {{textarea rows="4" type="text" placeholder="Admission Comments" value = admissionComments}}
+      </div>
+      <div class="field">
+        <label>Registration Comments</label>
+        {{textarea rows="4" type="text" placeholder="Registration Comments" value = registrationComments}}
+      </div>
+    </div>
   </div>
 
   <div class="actions">
-    <div class="ui button" {{action "addStudent"}}>
+    <div class="ui green left labeled icon button" {{action "addStudent"}}>
+      <i class="square plus icon"></i>
     	Add
     </div>
-    <div class="ui button" {{action "cancel"}}>
+    <div class="ui red button" {{action "cancel"}}>
     	Cancel
     </div>
   </div>

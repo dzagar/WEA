@@ -6,7 +6,8 @@ var asessmentCodeSchema = mongoose.Schema(
         name: String,
         adjudications: [{type: mongoose.Schema.ObjectId, ref: 'adjudications'}],
         logicalExpressions: [{type: mongoose.Schema.ObjectId, ref: 'logicalExpressions'}],
-        departments: [{type: mongoose.Schema.ObjectId, ref: 'departments'}]
+        departments: [{type: mongoose.Schema.ObjectId, ref: 'departments'}],
+        adjudicationCategory: {type: mongoose.Schema.ObjectId, ref: 'adjudicationCategories'}
     },
     {
         versionKey: false

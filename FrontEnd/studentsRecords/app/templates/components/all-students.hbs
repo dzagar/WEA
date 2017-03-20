@@ -1,80 +1,84 @@
 <div class="ui stackable container inverted six item menu">
-    <a class="item" {{action 'firstPage'}}>
-      <i class="step backward icon"></i>
-      First
-    </a>
-    <a class="item" {{action 'previousPage'}}>
-      <i class="arrow left icon"></i>
-      Previous
-    </a>
-    <a class="item" {{action 'nextPage'}}>
-      <i class="arrow right icon"></i>
-      Next
-    </a>
-    <a class="item" {{action 'lastPage'}}>
-      <i class="step forward icon"></i>
-      Last
-    </a>
-    <a class="item" {{action 'toggleShowFilters'}}>
-      <i class="search icon"></i>
-      {{#if showFilters}}
-        Hide Filters
-      {{else}}
-        Show Filters
-      {{/if}}
-    </a>
-    <a class = "item" {{action 'createStudent'}}>
-      <i class="add user icon"></i>
-      Add Student
-    </a>
-  </div> 
+  <a class="item" {{action 'firstPage'}}>
+    <i class="step backward icon"></i>
+    First
+  </a>
+  <a class="item" {{action 'previousPage'}}>
+    <i class="arrow left icon"></i>
+    Previous
+  </a>
+  <a class="item" {{action 'nextPage'}}>
+    <i class="arrow right icon"></i>
+    Next
+  </a>
+  <a class="item" {{action 'lastPage'}}>
+    <i class="step forward icon"></i>
+    Last
+  </a>
+  <a class="item" {{action 'toggleShowFilters'}}>
+    <i class="search icon"></i>
+    {{#if showFilters}}
+      Hide Filters
+    {{else}}
+      Show Filters
+    {{/if}}
+  </a>
+  <a class = "item" {{action 'createStudent'}}>
+    <i class="add user icon"></i>
+    Add Student
+  </a>
+</div> 
 
-  {{#if showFilters}}
-    <div class="ui form">
-      <div class="three fields">
-        <div class="field">
-          <label>Student Number</label>
-          <input id="studentNumber" placeholder="Student Number" type="number" min="0">
-        </div>
-        <div class="field">
-          <label>First Name
-            <span data-tooltip="This field accepts RegEx expressions." data-position="right center">
-              <i class="help circle icon"></i>
-            </span>
-          </label>
-          <input id="firstName" placeholder="First Name" type="text">
-        </div>
-        <div class="field">
-          <label>Last Name
-            <span data-tooltip="This field accepts RegEx expressions." data-position="right center">
-              <i class="help circle icon"></i>
-            </span>
-          </label>
-          <input id="lastName" placeholder="Last Name" type="text">
-        </div>
+{{#if showAddStudent}}
+  {{add-student INDEX = currentIndex notDONE = showAddStudent total = totalStudents pageSize = limit totalPages = totalPages changeOffset = (action 'changeOffset')}}
+{{/if}}
+
+{{#if showFilters}}
+  <div class="ui form">
+    <div class="three fields">
+      <div class="field">
+        <label>Student Number</label>
+        <input id="studentNumber" placeholder="Student Number" type="number" min="0">
       </div>
-      <div class="ui button" {{action "applyFilters"}}>Apply</div>
-      <div class="ui button" {{action "clearFilters"}}>Clear</div>
+      <div class="field">
+        <label>First Name
+          <span data-tooltip="This field accepts RegEx expressions." data-position="right center">
+            <i class="help circle icon"></i>
+          </span>
+        </label>
+        <input id="firstName" placeholder="First Name" type="text">
+      </div>
+      <div class="field">
+        <label>Last Name
+          <span data-tooltip="This field accepts RegEx expressions." data-position="right center">
+            <i class="help circle icon"></i>
+          </span>
+        </label>
+        <input id="lastName" placeholder="Last Name" type="text">
+      </div>
+    </div>
+    <div class="ui button" {{action "applyFilters"}}>Apply</div>
+    <div class="ui button" {{action "clearFilters"}}>Clear</div>
+  </div>
+{{/if}}
+
+<div style="min-height: 300px;">
+  {{#if (inline-compare studentsRecords.length '>' 0)}}
+    <div class="ui vertically padded grid">
+      {{#each studentsRecords as |student index|}}
+        <div class="eight wide column">
+          <div class="ui fluid labeled icon button" {{action "selectStudent" student index}}>
+            <img class="ui avatar image icon" src={{student.photo}}>
+            {{student.firstName}} {{student.lastName}}
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  {{else}}
+    <div class="ui disabled header" style="text-align: center; line-height: 300px">
+      {{message}}
     </div>
   {{/if}}
-
-  <div style="min-height: 300px;">
-    {{#if (inline-compare studentsRecords.length '>' 0)}}
-      <div class="ui vertically padded grid">
-        {{#each studentsRecords as |student index|}}
-          <div class="eight wide column">
-            <div class="ui fluid labeled icon button" {{action "selectStudent" student index}}>
-              <img class="ui avatar image icon" src={{student.photo}}>
-              {{student.firstName}} {{student.lastName}}
-            </div>
-          </div>
-        {{/each}}
-      </div>
-    {{else}}
-      <div class="ui disabled header" style="text-align: center; line-height: 300px">
-        {{message}}
-      </div>
-    {{/if}}
-  </div>
+</div>
   
   

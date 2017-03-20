@@ -1,167 +1,421 @@
 import Ember from 'ember';
+import Mutex from 'ember-mutex';
 
 export default Ember.Component.extend({
     studentsToAdjudicate: null,
-    studentModel: null,
     adjudicationCategories: null,
+    nonCategoryAdjudications: null,
+    adjudicationCategoriesAssessmentCodes: null,
     currentTerm: null,
     termCodeModel: null,
+    parsingProgress: 0,
+    parsingTotal: 1000,
+    evaluationProgress: 0,
+    evaluationTotal: 1000,
+    savingProgress: 0,
+    savingTotal: 1000,
+    studentInformation: null,
     store: Ember.inject.service(),
-    evaluateStudent: function(student, assessment, currentTerm)
-    {
-        var self = this;
-        this.get('store').queryRecord('logical-expression', {
-            assessment: assessment
-        }).then(function(logicalExpression) {
-            return self.send(evalutateLogicalExpression, logicalExpression, student, currentTerm);
-        });
 
-    },
-    //this is the recursive function that'll go through each node
-    //Async stuff is gonna fuck this hard so we're gonna have to pretty much redo it all but this is the idea
-    //probs change the student and current term parameters to just be arrays or something so we don't constantly hit the DB
-    //info we need it YWA, CWA, credits passed and total for term and cumulative, grades for every course taken. Definitely get that info in evaluateStudent
-    evalutateLogicalExpression: function(logicalExpression, student, currentTerm)
-    {
-        if (logicalExpression.get('logicalLink') == "AND")
-        {
-            if (!evaluateBooleanExpression(logicalExpression.get('booleanExpression')))
-            {
-                return false;
-            }
-            else{
-                logicalExpression.get('logicalExpressions').forEach(function(expression, index) {
-                    if (!evaluateBooleanExpression(expression, student, currentTerm))
-                    {
-                        return false;
-                    }
-                });
-                return true;
-            }
-        }
-        else if (logicalExpression.get('logicalLink') == "OR"){
-            if (evaluateBooleanExpression(logicalExpression.get('booleanExpression')))
-            {
-                return true;
-            }
-            else{
-                logicalExpression.get('logicalExpressions').forEach(function(expression, index) {
-                    if (evaluateBooleanExpression(expression, student, currentTerm))
-                    {
-                        return true;
-                    }
-                });
-                return false;
-            }
-        }        
-    },
-    //this is the function that evaluates individual boolean expressions.
-    //booleaExpression is a json object
-    evaluateBooleanExpression: function(booleanExpression, student, currentTerm){
-        //do a switch case for each possible key to evaluate
-        switch (booleanExpression.key)
-        {
-            case "YWA":
-            {
-
-            }
-            break;
-            case "CWA":
-            {
-
-            }
-            break;
-            case "course":
-            {
-
-            }
-            break;
-            case "fails":
-            {
-
-            }
-            break;
-        }
-    },
-    performAdjudication: function() {
-        
-        var studentAdjudicationInfo = [];
-        var currentTerm = this.get('currentTerm');
-        var self = this;
-        //loop all students
-        this.get('studentsToAdjudicate').forEach(function(student, studentIndex) {
-            studentAdjudicationInfo.push({
-                "ObjID": student.get('id'), 
-                "cumAVG": student.get('cumAVG'),
-                "cumUnitsTotal": student.get('cumUnitsTotal'),
-                "cumUnitsPassed": student.get('cumUnitsPassed'),
-                "termAVG": "",
-                "termUnitsTotal": "",
-                "termUnitsPassed": "",
-                "coursesCompleted": []
-            });
-            var studentID = student.get('id');
-            var termCodeID = currentTerm;
-            self.get('store').queryRecord('term', {
-                student: studentID,
-                termCode: termCodeID
-            }).then(function(term) {
-                studentAdjudicationInfo[studentIndex].termAVG = term.get('termAVG');
-                studentAdjudicationInfo[studentIndex].termUnitsTotal = term.get('termUnitsTotal');
-                studentAdjudicationInfo[studentIndex].termUnitsPassed = term.get('termUnitsPassed');
-                var termID = term.get('id');
-                self.get('store').query('grade', {
-                    term: termID
-                }).then(function(grades) {
-                    grades.forEach(function(grade, gradeIndex) {
-                        var mark = grade.get('mark');
-                        var courseCodeID = grade.get('courseCode').get('id');
-                        studentAdjudicationInfo[studentIndex].coursesCompleted.push({
-                            "courseNumber": "",
-                            "courseLetter": "",
-                            "unit": "",
-                            "mark": mark                            
-                        });
-                        self.get('store').queryRecord('courseCode', {courseCodeID: courseCodeID}).then(function (courseCode) {
-                            var courseLetter = courseCode.get('courseLetter');
-                            var courseNumber = courseCode.get('courseNumber');
-                            var unit = courseCode.get('unit');
-                            studentAdjudicationInfo[studentIndex].coursesCompleted[gradeIndex].courseNumber = courseNumber;
-                            studentAdjudicationInfo[studentIndex].coursesCompleted[gradeIndex].courseLetter = courseLetter;
-                            studentAdjudicationInfo[studentIndex].coursesCompleted[gradeIndex].unit = unit;
-                        });
-                    });
-                });
-           });
-        });
-    },
 
     init()
     {
         this._super(...arguments);
         var self=this;
 
-        //CHANGE THIS SO FAST
-        this.get('store').query('student', {offest: 0, limit: 100}).then(function (records) {
-            self.set('studentModel', records);
-            self.set('studentsToAdjudicate', records);
-        });    
-
         this.get('store').findAll('term-code').then(function (records) {
             self.set('termCodeModel', records);
-        });    
- 
+        }); 
+        this.get('store').findAll('adjudication-category').then(function(records) {
+            self.set('adjudicationCategories', records);
+        });
+        this.get('store').query('assessment-code', {noCategory: true}).then(function(records) {
+            self.set('nonCategoryAdjudications', records);
+        });
     },
 
+    determineProgress(newProgress, newTotal)
+    {
+        if (this.get('parsingProgress')/this.get('parsingTotal') <= newProgress/newTotal)
+        {
+            this.set('parsingTotal', newTotal);
+            this.set('parsingProgress', newProgress);            
+            return (newTotal == newProgress);
+        }
+        else{
+            return false;
+        }
+    },
+    getCurrentDate()
+    {
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1;
+
+        var yyyy = today.getFullYear();
+        if(dd<10){
+            dd='0'+dd;
+        } 
+        if(mm<10){
+            mm='0'+mm;
+        } 
+        var today = dd+'/'+mm+'/'+yyyy;
+        return today;
+    },
+    performAdjudication(){
+
+        var self = this;
+        var studentInformation = this.get('studentInformation');
+        var totalSize = 0;
+        //initialize total size
+        this.get('adjudicationCategories').forEach(function(category, categoryIndex) {
+            totalSize += category.get('assessmentCodes').get('length') * studentInformation.length;
+        });
+        totalSize += this.get('nonCategoryAdjudications').get('length') * studentInformation.length;
+        self.set('evaluationTotal', totalSize);
+
+        this.get('nonCategoryAdjudications').forEach(function(assessmentCode, assessmentCodeIndex) {
+            console.log("non category index" + assessmentCodeIndex);
+            evaluateNonCategoryAssessmentCode(assessmentCode.get('id'));
+        });   
+
+        //IDEA
+        //for each category there are several assessment codes
+        //for each code we evaluate it and if it returns false we call a callback with the next object to evaluate
+        //if it returns true or counter reaches 0 we just stop and don't evaluate anymore.
+        this.get('adjudicationCategories').forEach(function(category, categoryIndex) {
+            console.log("category index" + categoryIndex);
+            //this is used to track the assessment code we are evaluating and if we have checked all of them
+            var numberOfPotentialAssessments = category.get('assessmentCodes').get('length');
+            //if the assessment failed
+            var failedDone = ()=>{
+                numberOfPotentialAssessments--;
+                //if there are still assessments to evaluate
+                if (numberOfPotentialAssessments >= 0)
+                {
+                    self.evaluateCategoryAssessmentCode(category.get('assessmentCodes').objectAt(numberOfPotentialAssessments - 1).get('id'), failedDone);
+                }
+                return;             
+            }
+            if (category.get('assessmentCodes').get('length') > 0)
+            {
+                self.evaluateCategoryAssessmentCode(category.get('assessmentCodes').get('lastObject').get('id'), failedDone);
+            }
+        });
+    },
+    evaluateCategoryAssessmentCode(assessmentCodeID, failCallback)
+    {
+        var self = this;
+        //get the assessmentCode obj we are working with
+        this.get('store').find('assessmentCode', assessmentCodeID).then(function(assessmentCode){
+            //get the root logical expression
+            var logicalExpressionID = assessmentCode.get('logicalExpression').get('id');
+            self.get('store').find('logical-expression', logicalExpressionID).then(function(logicalExpression){
+                //get the boolean expression from the root and set an empty array if there are children
+                var expressionBoolean = logicalExpression.get('booleanExpression');
+                expressionBoolean.logicalLink = logicalExpression.get('logicalLink');
+                expressionBoolean.childBooleans = [];
+                //if there are children
+                if (logicalExpression.get('logicalExpressions').get('length') > 0)
+                {
+                    var rootExpressionChildrenCount = logicalExpression.get('logicalExpressions').get('length');
+                    var done = ()=>{
+                        rootExpressionChildrenCount--;
+                        if(rootExpressionChildrenCount){
+                            return;
+                        }
+                        if (!self.evaluateStudents(expressionBoolean, assessmentCodeID))
+                        {
+                            failCallback();
+                        }
+                    }
+                    function fetchAssociated(parent,childID,callback){
+                        self.get('store').find('logicalExpression', childID).then(function(childLogicalExpressionOBJ){
+                            child = childLogicalExpressionOBJ.get('booleanExpression');
+                            child.logicalLink = logicalExpression.get('logicalLink');
+                            child.childBooleans = [];
+                            parent.childBooleans.push(child);
+                            childLogicalExpressionOBJ.get('logicalExpressions').forEach((childLogicalExpression)=>{
+                                rootExpressionChildrenCount++;
+                                fetchAssociated(child,childLogicalExpression.get('id'),callback);
+                            })
+                            if(childLogicalExpressionOBJ.get('length') == 0){
+                                callback();
+                            }
+                        })
+                    }
+                    logicalExpression.get('logicalExpressions').forEach(function(childLogicalExpression, childIndex){
+                        fetchAssociated(expressionBoolean,childLogicalExpression.get('id'),done);
+                    });
+                } 
+                else{                    
+                    if (!self.evaluateStudents(expressionBoolean, assessmentCodeID))
+                    {
+                        failCallback();
+                    }
+                }               
+            });
+        });
+    },
+
+    //this funtion gets an assessment code object by id then builds the boolean expresion tree then passes the built boolean to evaluateStudents
+    evaluateNonCategoryAssessmentCode(assessmentCodeID)
+    {
+        var self = this;
+        //get the assessmentCode obj we are working with
+        this.get('store').find('assessmentCode', assessmentCodeID).then(function(assessmentCode){
+            //get the root logical expression
+            var logicalExpressionID = assessmentCode.get('logicalExpression').get('id');
+            self.get('store').find('logical-expression', logicalExpressionID).then(function(logicalExpression){
+                //get the boolean expression from the root and set an empty array if there are children
+                var expressionBoolean = logicalExpression.get('booleanExpression');
+                expressionBoolean.logicalLink = logicalExpression.get('logicalLink');
+                expressionBoolean.childBooleans = [];
+                //if there are children
+                if (logicalExpression.get('logicalExpressions').get('length') > 0)
+                {
+                    var rootExpressionChildrenCount = logicalExpression.get('logicalExpressions').get('length');
+                    var done = ()=>{
+                        rootExpressionChildrenCount--;
+                        if(rootExpressionChildrenCount){
+                            return;
+                        }
+                        self.evaluateStudents(expressionBoolean, assessmentCodeID);
+                    }
+                    function fetchAssociated(parent,childID,callback){
+                        self.get('store').find('logicalExpression', childID).then(function(childLogicalExpressionOBJ){
+                            child = childLogicalExpressionOBJ.get('booleanExpression');
+                            child.logicalLink = logicalExpression.get('logicalLink');
+                            child.childBooleans = [];
+                            parent.childBooleans.push(child);
+                            childLogicalExpressionOBJ.get('logicalExpressions').forEach((childLogicalExpression)=>{
+                                rootExpressionChildrenCount++;
+                                fetchAssociated(child,childLogicalExpression.get('id'),callback);
+                            })
+                            if(childLogicalExpressionOBJ.get('length') == 0){
+                                callback();
+                            }
+                        })
+                    }
+                    logicalExpression.get('logicalExpressions').forEach(function(childLogicalExpression, childIndex){
+                        fetchAssociated(expressionBoolean,childLogicalExpression.get('id'),done);
+                    });
+                } 
+                else{
+                    self.evaluateStudents(expressionBoolean, assessmentCodeID);
+                }               
+            });
+        });
+    },
+    //this function evaluates all students according to a passed in assessmentCodeID
+    evaluateStudents(evaluationJSON, assessmentCodeID){
+        var self = this;
+        this.get('studentInformation').forEach(function(studentInfo, studentIndex){
+            if (evaluateStudentRecord(studentInfo, evaluationJSON))
+            {
+                var currentDate = getCurrentDate();
+                //may need to do a bunch of queries to get the actual object not the ID
+                var newAdjudicationObject = self.get('store').createRecord('adjudication', {
+                    student: studentInfo.studentID,
+                    termCode: self.get('currentTerm'),
+                    assessmentCode: assessmentCodeID,
+                    date: currentDate
+                });
+                newAdjudicationObject.save().then(function(){
+                    //do some increment thing
+                    //return true;
+                });
+            }
+            else{
+                return false;
+            }
+            //do some increment thing
+        });        
+    },
+    //this function recursively evaluates the student based on the evaluationJSON object
+    //depth first
+    evaluateStudentRecord(studentRecord, evaluationJson)
+    {
+        //if there are more children evaluation booleans
+        if (evaluationJson.childBooleans)
+        {
+            //1 is or 0 is and
+            //if it's an any (OR)
+            if (evaluationJson.logicalLink)
+            {
+                var success = false;
+                evaluationJson.childBooleans.forEach(function(childEvaluationBoolean, childIndex){
+                    //if any success just return true;
+                    if (!success && evaluateStudentRecord(studentRecord, childEvaluationBoolean))
+                    {
+                        success = true;
+                    }
+                });
+                return success;
+            }
+            //if it's an all (AND)
+            else{
+                var success = true;
+                //if any failure return false
+                evaluationJson.childBooleans.forEach(function(childEvaluationBoolean, childIndex){
+                    if (success && !evaluateStudentRecord(studentRecord, childEvaluationBoolean))
+                    {
+                        success = false;                        
+                    }
+                });
+                return success;
+            }
+        }
+        else{            
+            //if it's an any (OR)
+            if (evaluationJson.logicalLink)
+            {
+                var success = false;
+                evaluationJson.booleanExpressions.forEach(function(boolExpression, boolIndex){
+                    if (!success && evaluateBoolean(studentRecord, boolExpression))
+                    {
+                        success = true;
+                    }
+                });
+                return success;
+            }
+            //if it's an all (AND)
+            else{
+                var success = true;
+                evaluationJson.booleanExpressions.forEach(function(boolExpression, boolIndex){
+                    if (success && evaluateBoolean(studentRecord, boolExpression))
+                    {
+                        success = false;
+                    }
+                });
+                return success;
+            }
+        }
+    },
+    //this function evaluates an individual boolean expression with a student record.
+    evaluateBoolean(studentRecord, boolExpression){
+        
+        var val = boolExpression.val;
+        var opr = boolExpression.opr;
+        switch (boolExpression.field){
+            case "YWA":{
+                if (opr == ">"){
+                    
+                }else{
+
+                }
+            }
+            break;
+            case "CWA":{
+
+            }
+            break;
+            case "FAILS":{
+
+            }
+            break;
+            case "COURSE":{
+
+            }
+            break;
+
+        }
+    },
     actions: {
-    
         adjudicate()
         {
-            this.performAdjudication();           
+            var studentAdjudicationInfo = [];
+            var currentTerm = this.get('currentTerm');
+            var self = this;
+            var readingMutex = Mutex.create();
+            var erroredValues = [];
+            var currentProgress = 0;
+            var currentTotal = 0;
+            var doneReading = false;
+            var doneReadingMutex = Mutex.create();
+            
+            this.get('store').query('student', {offset: 0, limit: 100}).then(function (records) {
+                currentTotal += records.get('length');                
+                records.forEach(function(student, studentIndex) {
+                    //push objID, termID, cumAVG, CumUnitsTotal, cumUnitsPassed
+                    readingMutex.lock(function() {
+                        studentAdjudicationInfo[studentIndex] = {
+                            "studentID" : student.get('id'),
+                            "termCodeID": currentTerm,
+                            "cumAVG": student.get('cumAVG'),
+                            "cumUnitsTotal": student.get('cumUnitsTotal'),
+                            "cumUnitsPassed": student.get('cumUnitsPassed'),
+                            "terms": []
+                        };
+                        currentProgress++; 
+                        self.determineProgress(currentProgress, currentTotal);  
+                        var studentOBJid = student.get('id');
+                        self.get('store').query('term', {student: studentOBJid}).then(function(terms){
+                            currentTotal += terms.get('length');
+                            terms.forEach(function(term, termIndex) {                
+                               //push codeRef, termAVG, termUnitsTotal, termUnitsPassed
+                                var termID = term.get('id');
+                                self.get('store').find('term', termID).then(function(termInfo) {
+                                    studentAdjudicationInfo[studentIndex].terms[termIndex] = {
+                                        "termCodeID": termInfo.get('id'),
+                                        "termAVG": termInfo.get('termAVG'),
+                                        "termUnitsTotal": termInfo.get('termUnitsTotal'),
+                                        "termUnitsPassed": termInfo.get('termUnitsPassed'),
+                                        "grades": []
+                                    };
+                                    currentProgress++;  
+                                    currentTotal += term.get('grades').get('length');
+                                    self.determineProgress(currentProgress, currentTotal);
+                                    //get grades
+                                    var inGradeMutexIndex = 0;
+                                    termInfo.get('grades').forEach(function(grade, index) {
+                                        var gradeID = grade.get('id');
+                                        self.get('store').find('grade', gradeID).then(function(gradeInfo) {                                                
+                                            var gradeIndex = inGradeMutexIndex++;
+                                            //push mark, gradeID                        
+                                            studentAdjudicationInfo[studentIndex].terms[termIndex].grades[gradeIndex] = {
+                                                "gradeID": gradeInfo.get('id'),
+                                                "mark": gradeInfo.get('mark'),
+                                                "courseNumber": "",
+                                                "courseLetter": "",
+                                                "unit": "",
+                                                "courseGroupings": []
+                                            };
+                                            //get courseCode
+                                            var courseCodeID = gradeInfo.get('courseCode.id');
+                                            self.get('store').find('course-code', courseCodeID).then(function(courseCode){
+                                                //push courseID, courseNumber, courseLetter, courseUnit
+                                                
+                                                studentAdjudicationInfo[studentIndex].terms[termIndex].grades[gradeIndex].courseNumber = courseCode.get('courseNumber');
+                                                studentAdjudicationInfo[studentIndex].terms[termIndex].grades[gradeIndex].courseLetter = courseCode.get('courseLetter');
+                                                studentAdjudicationInfo[studentIndex].terms[termIndex].grades[gradeIndex].unit = courseCode.get('unit');
+                                                currentProgress++;                                                
+                                                //getgroupings
+                                                // courseCode.get('courseGroupings').forEach(function(courseGrouping, courseGroupingIndex) {
+                                                //     studentAdjudicationInfo[studentIndex].terms[termIndex].grades[gradeIndex].courseGroupings.push(courseGrouping.get('id'));
+                                                // });
+                                                doneReadingMutex.lock(function() {
+                                                    if (self.determineProgress(currentProgress, currentTotal) && !doneReading)
+                                                    {
+                                                        self.set('studentInformation', studentAdjudicationInfo);
+                                                        doneReading = true;
+                                                        //do actual evaluation
+                                                        console.log("done reading.... time to evaluate");
+                                                        self.performAdjudication();
+                                                    }
+                                                })
+                                            });
+                                        });                                        
+                                    });
+                                });
+                            });
+                        });
+                    });                                      
+                }); 
+            }); 
         },
         selectTerm(termCodeID){
             this.set('currentTerm', termCodeID);
-            console.log(termCodeID);
         }
     }
 });

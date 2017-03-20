@@ -17,6 +17,7 @@ var studentsSchema = mongoose.Schema(
         terms: [{type: mongoose.Schema.ObjectId, ref: 'Terms'}],
         advancedStandings: [{type: mongoose.Schema.ObjectId, ref: 'AdvancedStandings'}],
         highSchoolGrades: [{type: mongoose.Schema.ObjectId, ref: 'HighSchoolGrades'}],
+        adjudications: [{type: mongoose.Schema.ObjectId, ref: 'Adjudications'}],
         cumAVG: String,
         cumUnitsPassed: String,
         cumUnitsTotal: String
