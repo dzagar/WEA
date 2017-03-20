@@ -47,8 +47,7 @@
             {{/ui-dropdown}}
         </div>
         <div class="inline field">
-            <label>Flag rule for manual review:</label>
-            {{input checked=ruleFlagged type="checkbox" onChecked = ( action (mut ruleFlagged))}}
+            {{ui-checkbox label="Flag this rule for manual review" checked=ruleFlagged onChange=(action (mut ruleFlagged))}}
         </div>
         <div class="inline field">
             <label>Rule parameters:</label>

@@ -96,7 +96,7 @@ export default Ember.Component.extend({
                 boolExp.submit();
             }
             this.get('booleanExps').pushObject({
-                "field": boolExp.field,
+                "field": Number(boolExp.field),
                 "opr": boolExp.opr,
                 "val": boolExp.val
             });
