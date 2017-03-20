@@ -142,39 +142,42 @@ export default Ember.Component.extend({
             if (child){
                 console.log('there is a child');
                 this.get('logicalExpressionsArr').pushObject(child);
-                console.log('length iz ' + this.get('logicalExpressionsArr').get('length'));
-                this.get('store').find('logical-expression', this.get('objectID'))
-                .then(obj => {
-                    obj.get('logicalExpressions').then(function(exps){
-                        exps.pushObject(child);
-                        obj.save().then(function(){
-                            console.log(obj.get('logicalExpressions').get('firstObject'));
-                            self.set('currentChildID', null);
-                            self.set('creatingNewLogExp', false);
-                        });
-                    });
-                });
+                self.set('currentChildID', null);
+                self.set('creatingNewLogExp', false);
+                // console.log('length iz ' + this.get('logicalExpressionsArr').get('length'));
+                // this.get('store').find('logical-expression', this.get('objectID'))
+                // .then(obj => {
+                //     obj.get('logicalExpressions').then(function(exps){
+                //         exps.pushObject(child);
+                //         obj.save().then(function(){
+                //             console.log(obj.get('logicalExpressions').get('firstObject'));
+                //             self.set('currentChildID', null);
+                //             self.set('creatingNewLogExp', false);
+                //         });
+                //     });
+                // });
             }
             
         },
         destroyLogExp: function(logExpObj){
             var self = this;
             this.get('logicalExpressionsArr').removeObject(logExpObj);
-            this.get('store').find('logical-expression', this.get('objectID'))
-            .then(obj => {
-                obj.get('logicalExpressions').then(function(exps){
-                    exps.removeObject(logExpObj);
-                    console.log('removed child with id ' + logExpObj.get('id') + ' from parent');
-                    obj.save().then(function(){
-                        //console.log(obj.get('logicalExpressions').get('firstObject'));
-                        console.log('successful save');
-                        self.set('currentChildID', null);
-                        self.set('creatingNewLogExp', false);
-                        //destroy in backend
-                        logExpObj.destroyRecord();
-                    });
-                });
-            });
+            logExpObj.destroyRecord();
+            // this.get('store').find('logical-expression', this.get('objectID'))
+            // .then(obj => {
+            //     obj.get('logicalExpressions').then(function(exps){
+            //         exps.removeObject(logExpObj);
+            //         console.log('removed child with id ' + logExpObj.get('id') + ' from parent');
+            //         obj.save().then(function(){
+            //             //console.log(obj.get('logicalExpressions').get('firstObject'));
+            //             console.log('successful save');
+            //             self.set('currentChildID', null);
+            //             self.set('creatingNewLogExp', false);
+            //             //destroy in backend
+            //             logExpObj.destroyRecord();
+            //         });
+            //     });
+            // });
         },
         toggleNewLogExp: function(){
             var self = this;
@@ -198,7 +201,7 @@ export default Ember.Component.extend({
                 var parentID = this.get('objectID');
                 var newLogExp = this.get('store').createRecord('logical-expression', {
                     booleanExpression: null,
-                    logicalLink: "1",
+                    logicalLink: null,
                     logicalExpressions: [],
                     ownerExpression: null
                 });

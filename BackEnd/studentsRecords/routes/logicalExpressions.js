@@ -243,6 +243,7 @@ router.route('/:logicalExpression_id')
                                         response.send(error);
                                     }
                                     else{
+                                        console.log('logexp summary: ' + request.body.logicalExpression.logicalExpressions);
                                         logicalExpression.booleanExpression = request.body.logicalExpression.booleanExpression;
                                         logicalExpression.logicalLink = request.body.logicalExpression.logicalLink;
                                         if (request.body.logicalExpression.logicalExpressions) logicalExpression.logicalExpressions = request.body.logicalExpression.logicalExpressions;
@@ -262,6 +263,7 @@ router.route('/:logicalExpression_id')
                         }
                     })
                 } else {    //parent
+                    console.log('logexp summary parent: ' + request.body.logicalExpression.logicalExpressions);
                     logicalExpression.booleanExpression = request.body.logicalExpression.booleanExpression;
                     logicalExpression.logicalLink = request.body.logicalExpression.logicalLink;
                     if (request.body.logicalExpression.logicalExpressions) logicalExpression.logicalExpressions = request.body.logicalExpression.logicalExpressions;
@@ -282,13 +284,34 @@ router.route('/:logicalExpression_id')
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
         // if (request.query.destroyChildren) {
+            console.log('entered delete for logexp ' + request.params.logicalExpression_id);
             let finishCallback = (logExp) => {
-                LogicalExpression.findById(request.body.logicalExpression.ownerExpression, function(error, parentLogExp){
-                    //FINISHING THIS NOW
-                });
+
                 response.json({logicalExpression: logExp});
             }
-            DestroyLogExp(request.params.logicalExpression_id, finishCallback);
+            LogicalExpression.findById(request.params.logicalExpression_id, function(error, child){
+                    if (error) {
+                        response.send(error);
+                    } else {
+                        if (child.ownerExpression){
+                            LogicalExpression.findById(child.ownerExpression, function(error, parentLogExp){
+                                if (error) {
+                                    response.send(error);
+                                } else {
+                                    if (parentLogExp.logicalExpressions.includes(request.params.logicalExpression_id)){
+                                        var index = parentLogExp.logicalExpressions.indexOf(request.params.logicalExpression_id);
+                                        if (index > -1){
+                                            parentLogExp.logicalExpressions = parentLogExp.logicalExpressions.splice(index, 1);
+                                            parentLogExp.save().then(DestroyLogExp(request.params.logicalExpression_id, finishCallback));
+                                        }
+                                    }
+                                }
+                            });
+                        } else {
+                            DestroyLogExp(request.params.logicalExpression_id, finishCallback);
+                        }
+                    }
+            })
 
 
         // } else {
