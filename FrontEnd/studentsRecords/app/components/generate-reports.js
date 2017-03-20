@@ -29,8 +29,6 @@ export default Ember.Component.extend({
 	    this.get('store').findAll('adjudicationCategory').then(function (records) {
 	    	self.set('categoryModel', records);
 	    });
-
-    		this.renderBarChart(true);
 	},
 	barChartData: Ember.computed('barChartLabels', 'barChartVals', function(){
 		return{
@@ -141,6 +139,9 @@ export default Ember.Component.extend({
     		}
     	});
     },
+    destroyChart() {
+    	$('#chart').replaceWith('<div id="chart"><canvas id="barChart"></canvas></div>');
+    },
 
     actions: {
     	generateReport(){
@@ -177,7 +178,8 @@ export default Ember.Component.extend({
             				barChartVals.push(adjudicationObjects.get('length'));
             				self.set('barChartVals', barChartVals);
             				self.get('backgroundColours').push(self.getRandomColor());
-            				self.renderBarChart(false);
+            				self.destroyChart();
+            				self.renderBarChart();
             			});
             		});
             	});
@@ -206,6 +208,7 @@ export default Ember.Component.extend({
             				self.set('pieChartVals', pieChartVals);
             				self.get('backgroundColours').push(self.getRandomColor());
             				console.log("render pie chart called here");
+            				self.destroyChart();
             				self.renderPieChart();
             			});
             		});
