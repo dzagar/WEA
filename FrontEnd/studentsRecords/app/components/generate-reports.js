@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import Chart from 'npm:chart.js';
 
 export default Ember.Component.extend({
 	backgroundColours: [],
@@ -41,7 +42,7 @@ export default Ember.Component.extend({
   			backgroundColor: this.get('backgroundColours')
   		}]
   	};
-  	console.log(returnObject);
+    console.log(returnObject);
   	return returnObject;
   }),
 	pieChartData: Ember.computed(function(){
@@ -148,6 +149,23 @@ export default Ember.Component.extend({
 	    }
 	    return color;
 	},
+    didRender() {
+        // console.log('did render triggered');
+        // let ctx = Ember.$('#myChart');
+        // let myChart = new Chart(ctx, {
+        //     type: 'bar',
+        //     data: this.get('barChartData'),
+        //     options: {
+        //         scales: {
+        //             yAxes: [{
+        //                 ticks: {
+        //                     beginAtZero:true
+        //                 }
+        //             }]
+        //         }
+        //     }
+        // });
+    },
   actions: {
    		generateReport(){
    			var self=this;
@@ -197,7 +215,6 @@ export default Ember.Component.extend({
                         });
                     });
                 });
-
             }
             //other categories make pie chart
             else{
@@ -223,7 +240,6 @@ export default Ember.Component.extend({
                     });
                 });
             }
-            
    		},
    		selectTerm(index){
 	      this.set('currentTerm', this.get('termModel').objectAt(Number(index)));
@@ -238,5 +254,21 @@ export default Ember.Component.extend({
 	      $("#open").addClass('hideChart');
    		  $("#chart").addClass('hideChart');
 	    },
+        renderChart() {
+            let ctx = Ember.$('#myChart');
+                let myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: this.get('barChartData'),
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero:true
+                                }
+                            }]
+                        }
+                    }
+                });
+        }
    }
 });

@@ -16,11 +16,15 @@
       			{{/each}}
     		</select>
 			<div class="ui primary button" {{action 'generateReport'}}>Generate Report</div>
+			<div class="ui button" {{action 'renderChart'}}>
+				Render Chart
+			</div>
 		</div>
 		<div id="open" class="hideChart">
 		<a class="" href='/assets/test.pdf' target="_blank"><div class="ui button">Open as PDF</div></a>
 		<a class="" href='/assets/test.pdf' download><div class="ui button">Open as Excel</div></a>
 		</div>
+		<!--
 		<div id="chart" class="hideChart">
 		
 			{{#if (inline-compare currentCategoryIndex "==" -1)}}
@@ -30,6 +34,8 @@
 			{{/if}}
 
 		</div>
+		-->
+		<canvas id="myChart"></canvas>
 	</div>
 	
 	<!-- <div class="ui relaxed grid">
