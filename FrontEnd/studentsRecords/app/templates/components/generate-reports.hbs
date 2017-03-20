@@ -18,8 +18,8 @@
 			<div class="ui primary button" {{action 'generateReport'}}>Generate Report</div>
 		</div>
 		<div id="open" class="hideChart">
-		<a class="" href='/assets/test.pdf' target="_blank"><div class="ui button">Open as PDF</div></a>
-		<a class="" href='/assets/test.pdf' download><div class="ui button">Open as Excel</div></a>
+			<a class="" href='/assets/test.pdf' target="_blank"><div class="ui button">Open as PDF</div></a>
+			<a class="" href='/assets/test.pdf' download><div class="ui button">Open as Excel</div></a>
 		</div>
 		<!--
 		<div id="chart" class="hideChart">
@@ -32,7 +32,11 @@
 
 		</div>
 		-->
-		<canvas id="myChart"></canvas>
+		{{#if (inline-compare currentCategoryIndex "==" -1)}}
+		<div id="chart"><canvas id="barChart"></canvas></div>
+		{{else}}
+		<div id="chart"><canvas id="pieChart"></canvas></div>
+		{{/if}}
 	</div>
 </div>
 

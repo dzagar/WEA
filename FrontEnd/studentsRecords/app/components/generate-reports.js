@@ -4,8 +4,8 @@ import Chart from 'npm:chart.js';
 export default Ember.Component.extend({
 	backgroundColours: [],
 	barChart: null,
-	barChartLabels: [],
-	barChartVals: [],
+	barChartLabels: ["test"],
+	barChartVals: [2],
 	categoryModel: null,
 	currentCategory: null,
 	currentCategoryIndex: -1,
@@ -29,11 +29,11 @@ export default Ember.Component.extend({
 	    this.get('store').findAll('adjudicationCategory').then(function (records) {
 	    	self.set('categoryModel', records);
 	    });
+
+    		this.renderBarChart(true);
 	},
 	barChartData: Ember.computed('barChartLabels', 'barChartVals', function(){
-
-		var barData=
-		{
+		return{
 			labels: this.get('barChartLabels'),
 			datasets: [{
 				data: this.get('barChartVals'),
@@ -42,8 +42,6 @@ export default Ember.Component.extend({
 				backgroundColor: this.get('backgroundColours')
 			}]
 		};
-		console.log(barData);
-		return barData;
 	}),
 
 	pieChartData: Ember.computed(function(){
@@ -56,23 +54,6 @@ export default Ember.Component.extend({
 			}]
 		};
 	}),
-	options: {
-		legend: {
-			onClick: function(event, legendItem){
-				console.log("clicked "+legendItem.label);
-			}
-		},
-		scales:{
-			yAxes:[{
-				ticks:{
-					beginAtZero:true
-				}
-			}]
-		},
-		legend: {
-			display: false
-		}
-	},
 	generateRandomData(){
 		var currentTerm = this.get('currentTerm');
 		var self = this;
@@ -133,57 +114,39 @@ export default Ember.Component.extend({
 		}
 		return color;
 	},
+	renderBarChart() {
+		let ctx = Ember.$('#barChart');
+		let myChart = new Chart(ctx, {
+			type: 'bar',
+			data: this.get('barChartData'),
+			options: {
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero:true
+						}
+					}]
+				}
+			}
+		});
 
-	didRender() {
-        // console.log('did render triggered');
-        // let ctx = Ember.$('#myChart');
-        // let myChart = new Chart(ctx, {
-        //     type: 'bar',
-        //     data: this.get('barChartData'),
-        //     options: {
-        //         scales: {
-        //             yAxes: [{
-        //                 ticks: {
-        //                     beginAtZero:true
-        //                 }
-        //             }]
-        //         }
-        //     }
-        // });
+	},
+    renderPieChart() {
+    	let ctx = Ember.$('#pieChart');
+    	let myChart = new Chart(ctx, {
+    		type: 'pie',
+    		data: this.get('pieChartData'),
+    		options: {
+
+    		}
+    	});
     },
-    renderChart() {
-        	let ctx = Ember.$('#myChart');
-        	let myChart = new Chart(ctx, {
-        		type: 'bar',
-        		data: this.get('barChartData'),
-        		options: {
-        			scales: {
-        				yAxes: [{
-        					ticks: {
-        						beginAtZero:true
-        					}
-        				}]
-        			}
-        		}
-        	});
-    },
+
     actions: {
     	generateReport(){
     		var self=this;
     		$("#open").removeClass('hideChart');
     		$("#chart").removeClass('hideChart');
-    		
-
-   			// this.set('adjudications',this.get('termModel').objectAt(this.get('termIndex')).adjudications);
-   			// console.log(this.get('termModel').objectAt(this.get('termIndex')).adjudications);
-			// console.log(this.get('adjudications'));
-
-			// this.get('store').query('termCode', {
-			//       name: self.get('termIndex')
-			//     }).then(function (records) {
-			//     	self.set('currentTerm',records);
-			//     }
-			// });
 
 			var currentTerm = this.get('currentTerm');
 			var termCodeID= currentTerm.get('id');
@@ -214,7 +177,7 @@ export default Ember.Component.extend({
             				barChartVals.push(adjudicationObjects.get('length'));
             				self.set('barChartVals', barChartVals);
             				self.get('backgroundColours').push(self.getRandomColor());
-            				self.renderChart();
+            				self.renderBarChart(false);
             			});
             		});
             	});
@@ -223,6 +186,7 @@ export default Ember.Component.extend({
             }
             //other categories make pie chart
             else{
+            	this.renderPieChart();
             	pieChartLabels = [];
             	pieChartVals = [];
             	var currentCategoryID= currentCategory.get('id');
@@ -241,6 +205,8 @@ export default Ember.Component.extend({
             				pieChartVals.push(adjudicationObjects.get('length'));
             				self.set('pieChartVals', pieChartVals);
             				self.get('backgroundColours').push(self.getRandomColor());
+            				console.log("render pie chart called here");
+            				self.renderPieChart();
             			});
             		});
             	});
