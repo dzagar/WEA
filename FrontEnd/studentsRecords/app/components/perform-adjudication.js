@@ -615,6 +615,14 @@ export default Ember.Component.extend({
             break;
             //if the number of credits completed in a specific term follows a specific rule
             case BoolValue.CREDITSTHISTERM:{
+                var numberOfCredits = [];
+                studentRecord.terms.forEach(function(term){
+                    if (term.termCodeID == studentRecord.termCodeID)
+                    {
+                        numberOfCredits.push(term.grades.length);
+                    }
+                }); 
+                boolResult = this.evaluateValue(opr + 1, numberOfCredits, val);
 
                 
             }
@@ -624,40 +632,87 @@ export default Ember.Component.extend({
     },
     evaluateValue(operatorValue, studentValue, ruleValue){
 
+        var evaluationResult = true;
         switch (operatorValue){
             case RegularOperators.EQUALS:{
-
+                for (var i = 0; i < studentValue.length; i++)
+                {
+                    if (studentValue[i] != ruleValue)
+                        evaluationResult = false;
+                }
             }
             break;
             case RegularOperators.NOTEQUAL:{
+                for (var i = 0; i < studentValue.length; i++)
+                {
+                    if (studentValue[i] == ruleValue)
+                        evaluationResult = false;
+                }
 
             }
             break;
             case RegularOperators.GREATERTHAN:{
+                for (var i = 0; i < studentValue.length; i++)
+                {
+                    if (studentValue[i] <= ruleValue)
+                        evaluationResult = false;
+                }
 
             }
             break;
             case RegularOperators.GREATEREQUAL:{
+                for (var i = 0; i < studentValue.length; i++)
+                {
+                    if (studentValue[i] < ruleValue)
+                        evaluationResult = false;
+                }
 
             }
             break;
             case RegularOperators.LESSTHAN:{
+                for (var i = 0; i < studentValue.length; i++)
+                {
+                    if (studentValue[i] >= ruleValue)
+                        evaluationResult = false;
+                }
 
             }
             break;
             case RegularOperators.LESSEQUAL:{
+                for (var i = 0; i < studentValue.length; i++)
+                {
+                    if (studentValue[i] > ruleValue)
+                        evaluationResult = false;
+                }
 
             }
             break;
             case RegularOperators.BETINC:{
+                var betVals = ruleValue.split('-');
+                var lowerBound = betVals[0];
+                var upperBound = betVals[1];
+                for (var i = 0; i < studentValue.length; i++)
+                {
+                    if (studentValue[i] < lowerBound || studentValue[i] > upperBound)
+                        evaluationResult = false;
+                }
 
             }
             break;
             case RegularOperators.BETEXC:{
+                var betVals = ruleValue.split('-');
+                var lowerBound = betVals[0];
+                var upperBound = betVals[1];
+                for (var i = 0; i < studentValue.length; i++)
+                {
+                    if (studentValue[i] <= lowerBound || studentValue[i] >= upperBound)
+                        evaluationResult = false;
+                }
 
             }
             break;
         }
+        return evaluationResult;
     },
     actions: {
         adjudicate()
