@@ -101,7 +101,6 @@ export default Ember.Component.extend({
         self.set('evaluationTotal', totalSize);
 
         this.get('nonCategoryAdjudications').forEach(function(assessmentCode, assessmentCodeIndex) {
-            console.log("non category index" + assessmentCodeIndex);
            self.evaluateNonCategoryAssessmentCode(assessmentCode.get('id'));
         });   
 
@@ -123,7 +122,7 @@ export default Ember.Component.extend({
             var failedDone = ()=>{
                 numberOfPotentialAssessments--;
                 //if there are still assessments to evaluate
-                if (numberOfPotentialAssessments >= 0)
+                if (numberOfPotentialAssessments > 0)
                 {
                     self.evaluateCategoryAssessmentCode(category.get('assessmentCodes').objectAt(numberOfPotentialAssessments - 1).get('id'), failedDone);
                 }
@@ -141,7 +140,6 @@ export default Ember.Component.extend({
     },
     evaluateCategoryAssessmentCode(assessmentCodeID, failCallback, categoryYear)
     {
-        //ADD CHECK FOR IF THE CATEGORY HAS A REQUIRED YEAR
         var self = this;
         //get the assessmentCode obj we are working with
         this.get('store').find('assessmentCode', assessmentCodeID).then(function(assessmentCode){
@@ -149,7 +147,7 @@ export default Ember.Component.extend({
             var logicalExpressionID = assessmentCode.get('logicalExpression').get('id');
             self.get('store').find('logical-expression', logicalExpressionID).then(function(logicalExpression){
                 //get the boolean expression from the root and set an empty array if there are children
-                var expressionBoolean = logicalExpression.get('booleanExpression');
+                var expressionBoolean = JSON.parse(logicalExpression.get('booleanExpression'));
                 expressionBoolean.logicalLink = logicalExpression.get('logicalLink');
                 expressionBoolean.childBooleans = [];
                 //if there are children
@@ -205,7 +203,7 @@ export default Ember.Component.extend({
             var logicalExpressionID = assessmentCode.get('logicalExpression').get('id');
             self.get('store').find('logical-expression', logicalExpressionID).then(function(logicalExpression){
                 //get the boolean expression from the root and set an empty array if there are children
-                var expressionBoolean = logicalExpression.get('booleanExpression');
+                var expressionBoolean = JSON.parse(logicalExpression.get('booleanExpression'));
                 expressionBoolean.logicalLink = logicalExpression.get('logicalLink');
                 expressionBoolean.childBooleans = [];
                 //if there are children
@@ -239,6 +237,7 @@ export default Ember.Component.extend({
                     });
                 } 
                 else{
+                    console.log(expressionBoolean);
                     self.evaluateStudents(expressionBoolean, assessmentCodeID);
                 }               
             });
@@ -248,20 +247,19 @@ export default Ember.Component.extend({
     evaluateStudents(evaluationJSON, assessmentCodeID, requiredYear){
         var self = this;
         this.get('studentInformation').forEach(function(studentInfo, studentIndex){
-            if ((requiredYear && studentInfo.programYears.indexOf(requiredYear) > 0 || !requiredYear) &&evaluateStudentRecord(studentInfo, evaluationJSON))
+            if ((requiredYear && studentInfo.programLevels.indexOf(requiredYear) > 0 || !requiredYear) && self.evaluateStudentRecord(studentInfo, evaluationJSON))
             {
-                var currentDate = getCurrentDate();
+                var currentDate = self.getCurrentDate();
                 //may need to do a bunch of queries to get the actual object not the ID
                 var newAdjudicationObject = self.get('store').createRecord('adjudication', {
-                    student: studentInfo.studentID,
-                    termCode: self.get('currentTerm'),
-                    assessmentCode: assessmentCodeID,
                     date: currentDate
                 });
+                newAdjudicationObject.set('student', self.get('store').peekRecord('student', studentInfo.studentID));
+                newAdjudicationObject.set('termCode', self.get('store').peekRecord('term-code', self.get('currentTerm')));
+                newAdjudicationObject.set('assessmentCode', self.get('store').peekRecord('assessmentCode', assessmentCodeID));                
                 newAdjudicationObject.save().then(function(){
-                    //do some increment thing
-                    //return true;
                     self.set('evaluationProgress', self.get('evaluationProgress') + 1);
+                    return true;
                 });
             }
             else{
@@ -275,17 +273,18 @@ export default Ember.Component.extend({
     //depth first
     evaluateStudentRecord(studentRecord, evaluationJson)
     {
+        var self = this;
         //if there are more children evaluation booleans
-        if (evaluationJson.childBooleans)
+        if (evaluationJson.childBooleans.length > 0)
         {
             //1 is or 0 is and
             //if it's an any (OR)
-            if (evaluationJson.logicalLink)
+            if (evaluationJson.logicalLink == "1")
             {
                 var success = false;
                 evaluationJson.childBooleans.forEach(function(childEvaluationBoolean, childIndex){
                     //if any success just return true;
-                    if (!success && evaluateStudentRecord(studentRecord, childEvaluationBoolean))
+                    if (!success && self.evaluateStudentRecord(studentRecord, childEvaluationBoolean))
                     {
                         success = true;
                     }
@@ -297,7 +296,7 @@ export default Ember.Component.extend({
                 var success = true;
                 //if any failure return false
                 evaluationJson.childBooleans.forEach(function(childEvaluationBoolean, childIndex){
-                    if (success && !evaluateStudentRecord(studentRecord, childEvaluationBoolean))
+                    if (success && !self.evaluateStudentRecord(studentRecord, childEvaluationBoolean))
                     {
                         success = false;                        
                     }
@@ -305,13 +304,14 @@ export default Ember.Component.extend({
                 return success;
             }
         }
-        else{            
+        else{          
             //if it's an any (OR)
-            if (evaluationJson.logicalLink)
+            if (evaluationJson.logicalLink == "1")
             {
+                console.log("logical link was OR");
                 var success = false;
-                evaluationJson.booleanExpressions.forEach(function(boolExpression, boolIndex){
-                    if (!success && evaluateBoolean(studentRecord, boolExpression))
+                evaluationJson.forEach(function(boolExpression, boolIndex){
+                    if (!success && self.evaluateBoolean(studentRecord, boolExpression))
                     {
                         success = true;
                     }
@@ -320,9 +320,10 @@ export default Ember.Component.extend({
             }
             //if it's an all (AND)
             else{
+                console.log("logical link was AND");
                 var success = true;
-                evaluationJson.booleanExpressions.forEach(function(boolExpression, boolIndex){
-                    if (success && evaluateBoolean(studentRecord, boolExpression))
+                evaluationJson.forEach(function(boolExpression, boolIndex){
+                    if (success && self.evaluateBoolean(studentRecord, boolExpression))
                     {
                         success = false;
                     }
@@ -333,7 +334,7 @@ export default Ember.Component.extend({
     },
     //this function evaluates an individual boolean expression with a student record.
     evaluateBoolean(studentRecord, boolExpression){
-        
+    
         //Increment to match dropdown index
         var field = boolExpression.field + 1;
         var opr = boolExpression.opr;
@@ -728,7 +729,7 @@ export default Ember.Component.extend({
             var doneReading = false;
             var doneReadingMutex = Mutex.create();
             
-            this.get('store').query('student', {offset: 0, limit: 100}).then(function (records) {
+            this.get('store').query('student', {offset: 0, limit: 5}).then(function (records) {
                 currentTotal += records.get('length');                
                 records.forEach(function(student, studentIndex) {
                     //push objID, termID, cumAVG, CumUnitsTotal, cumUnitsPassed
