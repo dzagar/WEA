@@ -6,16 +6,19 @@ export default Ember.Component.extend({
     store: Ember.inject.service(),
     assessmentCodeModel: null,
     departmentModel: null,
-    ruleFlagged: null,
+    ruleFlagged: null,  //flag for review
     isAdding: false,
     isEditing: false,
     selectedParameterType: null,
     coursesModel: null,
     categoryModel: null,
     selectedCourse: null,
-    ruleObj: null,
-    ruleCategory: null,
+    ruleObj: null,  //current rule object
+    ruleCategory: null, //adjudication category
     loadRuleObj: false,
+    ruleName: null, //code
+    ruleCode: null, //name
+    selectedDepartments: [],  //departments
 
 
     init() {
@@ -43,30 +46,41 @@ export default Ember.Component.extend({
             ruleSaving.set('flagForReview', this.get('ruleFlagged'));
             ruleSaving.set('name', this.get('ruleName'));
             ruleSaving.set('code', this.get('ruleCode'));
-            ruleSaving.set('adjudicationCategory', this.get('store').peekRecord('adjudication-category', this.get('ruleCategory')));
+            if (this.get('store').peekRecord('adjudication-category', this.get('ruleCategory'))){
+                ruleSaving.set('adjudicationCategory', this.get('store').peekRecord('adjudication-category', this.get('ruleCategory')));
+            }
             this.get('selectedDepartments').forEach(function(departmentID){
                 ruleSaving.get('departments').pushObject(self.get('store').peekRecord('department', departmentID));
             });
             ruleSaving.save().then(function(){
                 self.set('isEditing', false);
+                self.set('ruleCategory', null);
+                self.set('selectedDepartments', []);
+                self.set('ruleName', "");
+                self.set('ruleCode', "");
+                self.set('ruleFlagged', false);
             });
 
         },
         cancel() {
             this.set('isEditing', false);
+            this.set('ruleCategory', null);
+            this.set('selectedDepartments', []);
+            this.set('ruleName', "");
+            this.set('ruleCode', "");
+            this.set('ruleFlagged', false);
+
         },
         addNewRule() {  
             var self = this;
             this.set('ruleName', "");
             this.set('ruleCode', "");
-            this.set('ruleParameter', "");
             this.set('isEditing', true);        
             var ruleName = this.get('ruleName');
             var ruleCode = this.get('ruleCode');
             var newRule = this.get('store').createRecord('assessment-code', {
                 name: ruleName,
-                code: ruleCode,
-                logicalExpressions: []
+                code: ruleCode
             });
             newRule.save().then(function(){
                 self.set('ruleObj', newRule);
@@ -74,6 +88,29 @@ export default Ember.Component.extend({
                 self.set('loadRuleObj', true);
             });         
         },
+
+        setRuleFields(ruleEditing){
+            var self = this;
+            this.set('loadRuleObj', true);
+            this.set('isEditing', true);
+            this.set('ruleObj', ruleEditing);
+            console.log(this.get('ruleObj'));
+            this.set('ruleCode', ruleEditing.get('code'));
+            this.set('ruleName', ruleEditing.get('name'));
+            console.log(ruleEditing.get('departments'));
+            console.log("depts length: " + ruleEditing.get('departments').get('length'));
+            ruleEditing.get('departments').forEach(function(dpt){
+                self.get('selectedDepartments').push(dpt.get('id'));
+            });
+            this.set('ruleFlagged', ruleEditing.get('flagForReview'));
+            if (ruleEditing.get('adjudicationCategory')){
+                this.set('ruleCategory', ruleEditing.get('adjudicationCategory').get('id'));
+            } else {
+                this.set('ruleCategory', "1");
+            }
+        },
+
+
         deleteRule(rule) {
            rule.destroyRecord();
         },
