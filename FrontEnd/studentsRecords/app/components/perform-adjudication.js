@@ -132,14 +132,14 @@ export default Ember.Component.extend({
             }
             if (category.get('assessmentCodes').get('length') > 0)
             {
-                self.evaluateCategoryAssessmentCode(category.get('assessmentCodes').get('lastObject').get('id'), failedDone);
+                self.evaluateCategoryAssessmentCode(category.get('assessmentCodes').get('lastObject').get('id'), failedDone, category.get('programYear'));
             }
             else{
                 self.set('evaluationProgress', self.get('evaluationProgress') + studentInformation.length);
             }
         });
     },
-    evaluateCategoryAssessmentCode(assessmentCodeID, failCallback)
+    evaluateCategoryAssessmentCode(assessmentCodeID, failCallback, categoryYear)
     {
         //ADD CHECK FOR IF THE CATEGORY HAS A REQUIRED YEAR
         var self = this;
@@ -161,7 +161,7 @@ export default Ember.Component.extend({
                         if(rootExpressionChildrenCount){
                             return;
                         }
-                        if (!self.evaluateStudents(expressionBoolean, assessmentCodeID))
+                        if (!self.evaluateStudents(expressionBoolean, assessmentCodeID, categoryYear))
                         {
                             failCallback();
                         }
@@ -186,7 +186,7 @@ export default Ember.Component.extend({
                     });
                 } 
                 else{                    
-                    if (!self.evaluateStudents(expressionBoolean, assessmentCodeID))
+                    if (!self.evaluateStudents(expressionBoolean, assessmentCodeID, categoryYear))
                     {
                         failCallback();
                     }
@@ -245,10 +245,10 @@ export default Ember.Component.extend({
         });
     },
     //this function evaluates all students according to a passed in assessmentCodeID
-    evaluateStudents(evaluationJSON, assessmentCodeID){
+    evaluateStudents(evaluationJSON, assessmentCodeID, requiredYear){
         var self = this;
         this.get('studentInformation').forEach(function(studentInfo, studentIndex){
-            if (evaluateStudentRecord(studentInfo, evaluationJSON))
+            if ((requiredYear && studentInfo.programYears.indexOf(requiredYear) > 0 || !requiredYear) &&evaluateStudentRecord(studentInfo, evaluationJSON))
             {
                 var currentDate = getCurrentDate();
                 //may need to do a bunch of queries to get the actual object not the ID
