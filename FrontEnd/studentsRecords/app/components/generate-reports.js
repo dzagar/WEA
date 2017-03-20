@@ -6,6 +6,7 @@ export default Ember.Component.extend({
 	barChart: null,
 	barChartLabels: ["test"],
 	barChartVals: [2],
+	borderColours: [],
 	categoryModel: null,
 	currentCategory: null,
 	currentCategoryIndex: -1,
@@ -29,6 +30,7 @@ export default Ember.Component.extend({
 	    this.get('store').findAll('adjudicationCategory').then(function (records) {
 	    	self.set('categoryModel', records);
 	    });
+
 	},
 	barChartData: Ember.computed('barChartLabels', 'barChartVals', function(){
 		return{
@@ -37,18 +39,20 @@ export default Ember.Component.extend({
 				data: this.get('barChartVals'),
 				borderWidth: 0.5,
 				label: "Students",
-				backgroundColor: this.get('backgroundColours')
+				backgroundColor: this.get('backgroundColours'),
+				borderColor: this.get('borderColours')
 			}]
 		};
 	}),
 
-	pieChartData: Ember.computed(function(){
+	pieChartData: Ember.computed('pieChartLabels', 'pieChartVals',function(){
 		return {
 			labels: this.get('pieChartLabels'),
 			datasets: [{
 				label: "axisLabel",
 				data: this.get('pieChartVals'),
-				backgroundColor: this.get('backgroundColours')
+				backgroundColor: this.get('backgroundColours'),
+				borderColor: this.get('borderColours')
 			}]
 		};
 	}),
@@ -104,13 +108,15 @@ export default Ember.Component.extend({
 
 
 	},
-	getRandomColor() {
-		var letters = '0123456789ABCDEF';
-		var color = '#';
-		for (var i = 0; i < 6; i++ ) {
-			color += letters[Math.floor(Math.random() * 16)];
-		}
-		return color;
+	getRandomColour() {
+		// var letters = '0123456789ABCDEF';
+		// var color = '#';
+		// for (var i = 0; i < 6; i++ ) {
+		// 	color += letters[Math.floor(Math.random() * 16)];
+		// }
+		// return color;
+		var hue = 'rgba(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256));
+		return hue;
 	},
 	renderBarChart() {
 		let ctx = Ember.$('#barChart');
@@ -118,12 +124,16 @@ export default Ember.Component.extend({
 			type: 'bar',
 			data: this.get('barChartData'),
 			options: {
+				scaleShowLabels: false,
 				scales: {
 					yAxes: [{
 						ticks: {
 							beginAtZero:true
 						}
 					}]
+				},
+				legend: {
+					display: false
 				}
 			}
 		});
@@ -135,7 +145,11 @@ export default Ember.Component.extend({
     		type: 'pie',
     		data: this.get('pieChartData'),
     		options: {
-
+				legend:{
+					onClick: function(e,legendItem){
+						console.log("Clicked " + legendItem.text);
+					}
+				}
     		}
     	});
     },
@@ -177,7 +191,9 @@ export default Ember.Component.extend({
             			}).then(function(adjudicationObjects){
             				barChartVals.push(adjudicationObjects.get('length'));
             				self.set('barChartVals', barChartVals);
-            				self.get('backgroundColours').push(self.getRandomColor());
+            				var colour=self.getRandomColour();
+            				self.get('backgroundColours').push(colour+',0.3)');
+            				self.get('borderColours').push(colour+',1)');
             				self.destroyChart();
             				self.renderBarChart();
             			});
@@ -206,8 +222,9 @@ export default Ember.Component.extend({
             			}).then(function(adjudicationObjects){
             				pieChartVals.push(adjudicationObjects.get('length'));
             				self.set('pieChartVals', pieChartVals);
-            				self.get('backgroundColours').push(self.getRandomColor());
-            				console.log("render pie chart called here");
+            				var colour=self.getRandomColour();
+            				self.get('backgroundColours').push(colour+',0.3)');
+            				self.get('borderColours').push(colour+',1)');
             				self.destroyChart();
             				self.renderPieChart();
             			});
