@@ -8,11 +8,51 @@ export default Ember.Component.extend({
 	currentOpr: null,
 	operators: null,
 	currentVal: null,
+    enforceBetweenVal: false,
+    regOprs: null,
+    courseGroupingOprs: null,
+    currentVal1: null,
+    currentVal2: null,
+    enforceBooleanValueField: false,
+
+    fieldObserver: Ember.observer('currentField', function(){
+        var oprs = [];
+        if (this.get('currentField') >= 4 && this.get('currentField') <= 9){
+            //add course groupings to operator
+            this.set('enforceBooleanValueField', true);
+        } else {
+            this.set('enforceBooleanValueField', false);
+            this.set('operators', this.get('regOprs'));
+        }
+    }),
+
+    oprObserver: Ember.observer('currentOpr', function(){
+        console.log(this.get('currentOpr'));
+        if (this.get('currentOpr') == 6 || this.get('currentOpr') == 7){  //between
+            this.set('enforceBetweenVal', true);
+        } else {
+            this.set('enforceBetweenVal', false);
+        }
+    }),
+
+    val1Observer: Ember.observer('currentVal1', function(){
+        var newCurrentVal = this.get('currentVal1') + "-" + this.get('currentVal2');
+        this.set('currentVal', newCurrentVal);
+    }),
+
+    val2Observer: Ember.observer('currentVal2', function(){
+        var newCurrentVal = this.get('currentVal1') + "-" + this.get('currentVal2');
+        this.set('currentVal', newCurrentVal);
+    }),
+
 
 	init(){
 		this._super(...arguments);
 		var self = this;
-		var fields = [  //TESTER
+
+        //this.get course groupings 
+
+		var fields = [ 
             {
                 "id": 0,
                 "name": "Yearly weighted average"
@@ -27,36 +67,83 @@ export default Ember.Component.extend({
             }, 
             {
                 "id": 3,
-                "name": "Number of credits"
-            }
-        ];
-        var operators = [
-            {
-                "id": 0,
-                "name": "is greater than"
-            },
-            {
-                "id": 1,
-                "name": "is less than"
-            },
-            {
-                "id": 2,
-                "name": "is greater than or equal to"
-            },
-            {
-                "id": 3,
-                "name": "is less than or equal to"
+                "name": "Each grade in failed credits"
             },
             {
                 "id": 4,
-                "name": "is equal to"
-            },
+                "name": "Number of credits completed in..."
+            }, 
             {
                 "id": 5,
-                "name": "is not equal to"
+                "name": "Overall average of courses in..."
+            },
+            {
+                "id": 6,
+                "name": "Withdrawn from course in..."
+            },
+            {
+                "id": 7,
+                "name": "Not completed course in..."
+            },
+            {
+                "id": 8,
+                "name": "Granted SPC in course in..."
+            },
+            {
+                "id": 9,
+                "name": "Failed credit in..."
+            },
+            {
+                "id": 10,
+                "name": "First occurrence of YWA"
+            },
+            {
+                "id": 11,
+                "name": "Second occurrence of YWA"
+            },
+            {
+                "id": 12,
+                "name": "Number of credits completed this term"
             }
         ];
        	this.set('fields', fields);
-       	this.set('operators', operators);
+        var regOprs = [
+            {
+                "id": 0,
+                "name": "is equal to"
+            },
+            {
+                "id": 1,
+                "name": "is not equal to"
+            },
+            {
+                "id": 2,
+                "name": "is greater than"
+            },
+            {
+                "id": 3,
+                "name": "is greater than or equal to"
+            },
+            {
+                "id": 4,
+                "name": "is less than"
+            },
+            {
+                "id": 5,
+                "name": "is less than or equal to"
+            },
+            {
+                "id": 6,
+                "name": "is between (inclusive)"
+            },
+            {
+                "id": 7,
+                "name": "is between (exclusive)"
+            }
+        ];
+        this.set('regOprs', regOprs);
+        this.set('operators', this.get('regOprs'));
 	}
+
+
 });

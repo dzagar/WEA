@@ -33,7 +33,25 @@
 	  <div class = "four wide field">
 	    <div id = "arg2dropdown">
 	      <input name="arg" type="hidden">
-	      {{input type = "text" name = "arg2" placeholder = "Value" value = currentVal onChange = (action (mut currentVal))}}
+	      {{#if enforceBetweenVal}}
+	      	{{input type = "text" placeholder = "First Value" value = currentVal1 onChange = (action (mut currentVal1))}}
+	      	{{input type = "text" placeholder = "Second Value" value = currentVal2 onChange = (action (mut currentVal2))}}
+	      {{else if enforceBooleanValueField}}
+	      	{{#ui-dropdown class = "selection" selected = currentVal onChange = (action (mut currentVal))}}
+	      		<div class = "default text">True/False</div>
+	      		<i class = "dropdown icon"></i>
+	      		<div class = "menu">
+	      			<div class = "item" data-value = "1">
+	      				True
+	      			</div>
+	      			<div class = "item" data-value = "0">
+	      				False
+	      			</div>
+	      		</div>
+	      	{{/ui-dropdown}}
+	      {{else}}
+	      	{{input type = "text" name = "arg2" placeholder = "Value" value = currentVal onChange = (action (mut currentVal))}}
+	      {{/if}}
 	    </div>
 	  </div>
 	</div>
