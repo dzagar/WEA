@@ -65,8 +65,7 @@ export default Ember.Component.extend({
             var ruleCode = this.get('ruleCode');
             var newRule = this.get('store').createRecord('assessment-code', {
                 name: ruleName,
-                code: ruleCode,
-                logicalExpressions: []
+                code: ruleCode
             });
             newRule.save().then(function(){
                 self.set('ruleObj', newRule);

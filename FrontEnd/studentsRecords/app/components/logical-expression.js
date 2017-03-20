@@ -6,7 +6,6 @@ export default Ember.Component.extend({
         return (this.get('level') % 2) === 1;
     }),
     logLinks: null,  //logical link (any or all)
-    department: null,   //what department this rule applies to
     level: 0,
     booleanExps: [],
     logicalExpressionsArr: [],
@@ -35,7 +34,6 @@ export default Ember.Component.extend({
     init() {
         this._super(...arguments);
         var self = this;
-
         var logLinks = [
             {
                 "id": "0",
@@ -52,32 +50,18 @@ export default Ember.Component.extend({
             "val": null
         }];
 
-        this.get('store').findAll('department').then(function(departments){
-            self.set('departments', departments);
-        });
-
         this.set('logLinks', logLinks);
         this.set('extraBoolExp', extra);
-        console.log(this.get('objectID'));
 
         var rec = this.get('store').find('logical-expression', this.get('objectID'));
         if (rec){
             rec.then(obj => {
-                console.log('entered find record init');
                 self.set('logicalExpressionsArr', obj.get('logicalExpressions'));
                 self.set('booleanExps', JSON.parse(obj.get('booleanExpression')));
                 self.set('logLink', obj.get('logicalLink'));
-                console.log('did rcv attrs ' + self.get('objectID'));
-                console.log(self.get('logicalExpressionsArr'));
             });
         }
         
-    },
-
-    didReceiveAttrs() {
-        this._super(...arguments);
-        var self = this;
-
     },
 
     willDestroy() { //reset component window
@@ -116,15 +100,11 @@ export default Ember.Component.extend({
             var parent = this.get('store').peekRecord('logical-expression', this.get('objectID'));
             if (parent){
                 parent.set('booleanExpression', JSON.stringify(this.get('booleanExps')));
-                console.log(parent);
-                console.log(this.get('booleanExps'));
                 parent.save();
             } else {
                 this.get('store').findRecord('logical-expression', this.get('objectID'), {reload: true})
                 .then(obj => {
                     obj.set('booleanExpression', JSON.stringify(self.get('booleanExps')));
-                    console.log(parent);
-                    console.log(self.get('booleanExps'));
                     obj.save();
                 });
             }

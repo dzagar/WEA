@@ -11,21 +11,7 @@
     {{/each}}
   </div>
   {{/ui-dropdown}}
-  of the following
-  {{#if (eq level 0)}} applying to
-  {{#ui-dropdown class = "selection" selected = "0" onChange = (action (mut department))}}
-  <div class = "default text">department</div>
-  <i class = "dropdown icon"></i>
-  <div class = "menu">
-    {{#each departments as |department|}}
-      <div class = "item" data-value = {{department.id}}>
-        {{department.name}}
-      </div>
-    {{/each}}
-  </div>
-  {{/ui-dropdown}}
-  {{/if}}
-  :
+  of the following:
 </div>
 
 <div class = "contents">

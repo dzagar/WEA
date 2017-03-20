@@ -129,8 +129,9 @@ router.route('/')
                     failed = true;
                     response.send(error);
                 } else if (assessmentCode) {
-                    assessmentCode.logicalExpressions.push(logExp._id);
-
+                    assessmentCode.logicalExpression = logExp._id;
+                    console.log("logexp: " + logExp._id);
+                    console.log("code log exp " + assessmentCode.logicalExpression);
                     assessmentCode.save(function(error) {
                         if (error && !failed) {
                             failed = true;

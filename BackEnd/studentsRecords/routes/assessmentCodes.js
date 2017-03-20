@@ -74,39 +74,19 @@ router.route('/')
             }
         }
 
-        if (assessmentCode.logicalExpressions && assessmentCode.logicalExpressions.length > 0) {
-            let completedLogExp = 0;
-            for (let i = 0; i < assessmentCode.logicalExpressions.length && !failed; i++) {
-                LogicalExpression.findById(assessmentCode.logicalExpressions[i], function (error, logExp) {
-                    if (error && !failed) {
-                        failed = true;
-                        response.send(error);
-                    } else if (logExp) {
-                        logExp.assessmentCode = assessmentCode._id;
+        if (assessmentCode.logicalExpression) {
+            LogicalExpression.findById(assessmentCode.logicalExpression, function (error, logExp) {
+                if (error && !failed) {
+                    failed = true;
+                    response.send(error);
+                } else if (logExp) {
+                    logExp.assessmentCode = assessmentCode._id;
 
-                        logExp.save(function(error) {
-                            if (error && !failed) {
-                                failed = true;
-                                response.send(error);
-                            } else {
-                                completedLogExp++;
-                                if (completedLogExp === assessmentCode.logicalExpressions.length && !failed) {
-                                    completed++;
-                                    if (completed === 3 && !failed) {
-                                        assessmentCode.save(function(error) {
-                                            if (error) {
-                                                response.send(error);
-                                            } else {
-                                                response.json({assessmentCode: assessmentCode});
-                                            }
-                                        });
-                                    }
-                                }
-                            }
-                        });
-                    } else {
-                        completedLogExp++;
-                        if (completedLogExp === assessmentCode.logicalExpressions.length && !failed) {
+                    logExp.save(function(error) {
+                        if (error && !failed) {
+                            failed = true;
+                            response.send(error);
+                        } else {
                             completed++;
                             if (completed === 3 && !failed) {
                                 assessmentCode.save(function(error) {
@@ -118,9 +98,20 @@ router.route('/')
                                 });
                             }
                         }
+                    });
+                } else {
+                    completed++;
+                    if (completed === 3 && !failed) {
+                        assessmentCode.save(function(error) {
+                            if (error) {
+                                response.send(error);
+                            } else {
+                                response.json({assessmentCode: assessmentCode});
+                            }
+                        });
                     }
-                });
-            } 
+                }
+            });
         } else {
             completed++;
             if (completed === 3 && !failed) {
@@ -304,41 +295,14 @@ router.route('/:assessmentCode_id')
                 }
             }
 
-            if (assessmentCode.logicalExpressions && assessmentCode.logicalExpressions.length > 0) {
-                let completedLogExp = 0;
-                for (let i = 0; i < assessmentCode.logicalExpressions.length && !failed; i++) {
-                    LogicalExpression.findById(assessmentCode.logicalExpressions[i], function (error, logExp) {
-                        if (error && !failed) {
-                            failed = true;
-                            response.send(error);
-                        } else if (logExp) {
-                            logExp.assessmentCode = null;
-
-                            logExp.save(function(error) {
-                                if (error && !failed) {
-                                    failed = true;
-                                    response.send(error);
-                                } else {
-                                    completedLogExp++;
-                                    if (completedLogExp === assessmentCode.logicalExpressions.length && !failed) {
-                                        completed++;
-                                        if (completed === 3 && !failed) {
-                                            response.json({assessmentCode: assessmentCode});
-                                        }
-                                    }
-                                }
-                            });
-                        } else {
-                            completedLogExp++;
-                            if (completedLogExp === assessmentCode.logicalExpressions.length && !failed) {
-                                completed++;
-                                if (completed === 3 && !failed) {
-                                    response.json({assessmentCode: assessmentCode});
-                                }
-                            }
-                        }
-                    });
-                } 
+            if (assessmentCode.logicalExpression) {
+                let finishCallback = (logExp) => {
+                    completed++;
+                    if (completed === 3 && !failed){
+                        response.json({assessmentCode: assessmentCode});
+                    }
+                }
+                DestroyLogExp(request.params.logicalExpression_id, finishCallback);
             } else {
                 completed++;
                 if (completed === 3 && !failed) {
@@ -392,5 +356,28 @@ router.route('/:assessmentCode_id')
             }
         });
     });
+
+function DestroyLogExp (id, callback) {
+    LogicalExpression.findByIdAndRemove(id, function (error, logExp) {
+        console.log('Deleteing LogExp in RULE ' + id);
+        if (logExp && logExp.logicalExpressions && logExp.logicalExpressions.length > 0) {
+            let childCount = logExp.logicalExpressions.length;
+            let finishCallback = () => {
+                childCount--;
+                if (childCount === 0) {
+                    callback(logExp);
+                }
+            }
+            for (let i = 0; i < logExp.logicalExpressions.length; i++) {
+                console.log('Deleteing child ' + i + '/' + logExp.logicalExpressions + ' (owned by ' + id + ')');
+                DestroyLogExp(logExp.logicalExpressions[i], finishCallback);
+            }
+        } else {
+            console.log('Could not find LogExp ' + id + ', or it had no children');
+            callback(logExp);
+        }
+    });
+}
+
 
 module.exports = router;
