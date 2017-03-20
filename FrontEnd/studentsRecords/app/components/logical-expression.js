@@ -92,6 +92,9 @@ export default Ember.Component.extend({
         addBoolExp: function(boolExp){
             var self = this;
             this.set('booleanExps', this.get('booleanExps') || []);
+            if ((boolExp.opr === 6 || boolExp.opr === 7)){
+                boolExp.submit();
+            }
             this.get('booleanExps').pushObject({
                 "field": boolExp.field,
                 "opr": boolExp.opr,
