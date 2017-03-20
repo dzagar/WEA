@@ -29,7 +29,6 @@ export default Ember.Component.extend({
         });
         this.get('store').findAll('course-code').then(function(courses) {
             self.set('coursesModel', courses);
-            console.log(courses);
         });
         this.get('store').findAll('adjudication-category').then(function(categories){
             self.set('categoryModel', categories);
@@ -48,6 +47,9 @@ export default Ember.Component.extend({
             ruleSaving.set('code', this.get('ruleCode'));
             if (this.get('store').peekRecord('adjudication-category', this.get('ruleCategory'))){
                 ruleSaving.set('adjudicationCategory', this.get('store').peekRecord('adjudication-category', this.get('ruleCategory')));
+            }
+            else{
+                ruleSaving.set('adjudicationCategory', null);
             }
             this.get('selectedDepartments').forEach(function(departmentID){
                 ruleSaving.get('departments').pushObject(self.get('store').peekRecord('department', departmentID));
@@ -84,30 +86,26 @@ export default Ember.Component.extend({
             });
             newRule.save().then(function(){
                 self.set('ruleObj', newRule);
-                console.log(newRule);
                 self.set('loadRuleObj', true);
             });         
         },
 
         setRuleFields(ruleEditing){
             var self = this;
-            this.set('loadRuleObj', true);
-            this.set('isEditing', true);
             this.set('ruleObj', ruleEditing);
-            console.log(this.get('ruleObj'));
             this.set('ruleCode', ruleEditing.get('code'));
             this.set('ruleName', ruleEditing.get('name'));
-            console.log(ruleEditing.get('departments'));
-            console.log("depts length: " + ruleEditing.get('departments').get('length'));
             ruleEditing.get('departments').forEach(function(dpt){
                 self.get('selectedDepartments').push(dpt.get('id'));
             });
             this.set('ruleFlagged', ruleEditing.get('flagForReview'));
-            if (ruleEditing.get('adjudicationCategory')){
+            if (ruleEditing.get('adjudicationCategory').get('id')){
                 this.set('ruleCategory', ruleEditing.get('adjudicationCategory').get('id'));
             } else {
-                this.set('ruleCategory', "1");
+                this.set('ruleCategory', 123);
             }
+            this.set('loadRuleObj', true);
+            this.set('isEditing', true);
         },
 
 
