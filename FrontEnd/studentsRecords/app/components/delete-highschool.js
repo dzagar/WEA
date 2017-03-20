@@ -16,7 +16,7 @@ export default Ember.Component.extend({
 		cancel: function(){
 			this.set('showWindow', false);
 			Ember.$('.ui.modal').modal('hide');
-      		Ember.$('.ui.modal').remove();
+      Ember.$('.ui.modal').remove();
 		}
 	},
 

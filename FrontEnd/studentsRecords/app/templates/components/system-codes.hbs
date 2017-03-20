@@ -19,6 +19,7 @@
     {{delete-course-grouping courseGrouping = currentCourseGrouping showWindow = showDeleteCourseGroupingConfirmation}}
     {{else if showAddCoursesModal}}
     {{add-new-course-grouping courseGrouping = currentCourseGrouping showWindow = showAddCoursesModal}}
+    {{else if }}
 
 {{/if}}
 
@@ -365,7 +366,7 @@
 <div class="ui bottom attached tab segment" data-tab="hsSubject">
      <table class="ui table">
         <thead>
-          <th class="four wide">Name</th>
+          <th class="three wide">Name</th>
           <th class="three wide">Description</th>
           <th class="two wide">Level</th>
           <th class="two wide">Source</th>
@@ -617,6 +618,7 @@
         
         {{#each courseGroupingModel as |courseGrouping|}}
          <tr>   
+             {{add-new-course-grouping groupingID = courseGrouping.id}}
             <td>
                 <b>{{courseGrouping.name}}</b>
             </td>

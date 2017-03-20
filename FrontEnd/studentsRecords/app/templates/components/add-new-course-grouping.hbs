@@ -1,20 +1,21 @@
+{{#if isAddGrouping}}
 <div class="ui modal">
-      <div class="header">Create New User Account</div>
-      <div class="content">
-        <div class="ui form">
-          <div class="inline field">
-            <label>Courses</label>
-            {{input value=firstName type="text" placeholder="enter first name" }}
-          </div>
-        </div>
-      </div>
+      <div class="header">Add Courses</div>
+      {{#ui-dropdown   class="fluid multiple selection" selected=[selectedCourses] onChange=(action 'selectCourses')}}
+       <i class="dropdown icon"></i>
+       <div class="default text">Select Courses</div>
+       <div class="menu">
+         {{#each coursesModel as |course|}}
+           <div class="item">
+             {{course.courseNumber}} {{course.name}}
+           </div>
+         {{/each}}
+       </div>
+     {{/ui-dropdown}}
+<br>
 
-      <div class="actions">
-        <div class="ui button" {{action "saveCourseGrouping"}}>
-          Save
-        </div>
-        <div class="ui button" {{action "cancel"}}>
-          Cancel
-        </div>
-      </div>
+    <div class="ui inverted green button" {{action "done"}}>
+      Done
     </div>
+</div>
+{{/if}}

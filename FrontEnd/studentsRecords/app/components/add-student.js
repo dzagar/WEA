@@ -32,7 +32,6 @@ export default Ember.Component.extend({
 		addStudent: function(student){
 			console.log(this.get('DOB'));
 			if (this.get('number') == null || this.get('firstName') == null || this.get('lastName') == null || this.get('gender') == null || this.get('DOB') == null || this.get('resInfo') == null){
-				console.log('u fucked up');
 				return;
 			}
 			if (this.get('gender') == 1){
