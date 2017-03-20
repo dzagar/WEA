@@ -18,19 +18,22 @@ export default Ember.Component.extend({
     fieldObserver: Ember.observer('currentField', function(){
         var oprs = [];
         if (this.get('currentField') >= 4 && this.get('currentField') <= 9){
+            this.set('currentOpr', null);
             //add course groupings to operator
             this.set('enforceBooleanValueField', true);
         } else {
+            this.set('currentOpr', null);
             this.set('enforceBooleanValueField', false);
             this.set('operators', this.get('regOprs'));
         }
     }),
 
     oprObserver: Ember.observer('currentOpr', function(){
-        console.log(this.get('currentOpr'));
         if (this.get('currentOpr') == 6 || this.get('currentOpr') == 7){  //between
+            this.set('currentVal', null);
             this.set('enforceBetweenVal', true);
         } else {
+            this.set('currentVal', null);
             this.set('enforceBetweenVal', false);
         }
     }),
@@ -142,7 +145,15 @@ export default Ember.Component.extend({
             }
         ];
         this.set('regOprs', regOprs);
-        this.set('operators', this.get('regOprs'));
+
+        if (this.get('currentField')){
+            if (this.get('currentField') >= 4 && this.get('currentField') <= 9){
+                //add course groupings to operator
+                this.set('enforceBooleanValueField', true);
+            } else {
+                this.set('operators', this.get('regOprs'));
+            }
+        }
 	}
 
 
