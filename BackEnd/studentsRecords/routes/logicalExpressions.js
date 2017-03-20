@@ -31,7 +31,6 @@ router.route('/')
                                     if (error) {
                                         response.send(error);
                                     } else {
-                                        console.log("IN THE POST:" + logExp);
                                         response.json({logicalExpression: logExp});
                                     }
                                 });
@@ -45,7 +44,6 @@ router.route('/')
                             if (error) {
                                 response.send(error);
                             } else {
-                                console.log("IN THE POST:" + logExp);
                                 response.json({logicalExpression: logExp});
                             }
                         });
@@ -59,7 +57,6 @@ router.route('/')
                     if (error) {
                         response.send(error);
                     } else {
-                        console.log("IN THE POST:" + logExp);
                         response.json({logicalExpression: logExp});
                     }
                 });
@@ -89,7 +86,6 @@ router.route('/')
                                             if (error) {
                                                 response.send(error);
                                             } else {
-                                                console.log("IN THE POST:" + logExp);
                                                 response.json({logicalExpression: logExp});
                                             }
                                         });
@@ -106,7 +102,6 @@ router.route('/')
                                     if (error) {
                                         response.send(error);
                                     } else {
-                                        console.log("IN THE POST:" + logExp);
                                         response.json({logicalExpression: logExp});
                                     }
                                 });
@@ -122,7 +117,6 @@ router.route('/')
                     if (error) {
                         response.send(error);
                     } else {
-                        console.log("IN THE POST:" + logExp);
                         response.json({logicalExpression: logExp});
                     }
                 });
@@ -148,7 +142,6 @@ router.route('/')
                                     if (error) {
                                         response.send(error);
                                     } else {
-                                        console.log("IN THE POST:" + logExp);
                                         response.json({logicalExpression: logExp});
                                     }
                                 });
@@ -162,7 +155,6 @@ router.route('/')
                             if (error) {
                                 response.send(error);
                             } else {
-                                console.log("IN THE POST:" + logExp);
                                 response.json({logicalExpression: logExp});
                             }
                         });
@@ -176,7 +168,6 @@ router.route('/')
                     if (error) {
                         response.send(error);
                     } else {
-                        console.log("IN THE POST:" + logExp);
                         response.json({logicalExpression: logExp});
                     }
                 });
@@ -213,10 +204,8 @@ router.route('/:logicalExpression_id')
     .get(parseUrlencoded, parseJSON, function (request, response) {
         LogicalExpression.findById(request.params.logicalExpression_id, function (error, logicalExpression) {
             if (error) {
-                console.log('sending error back');
                 response.send(error);
             } else {
-                console.log('sending logexp back');
                 response.json({logicalExpression: logicalExpression});
             }
         });
@@ -234,7 +223,7 @@ router.route('/:logicalExpression_id')
                             response.send(error);
                         }
                         else{
-                            if (!parentLogExp.logicalExpressions.includes(request.params.logicalExpression_id))
+                            if (parentLogExp.logicalExpressions.indexOf(request.params.logicalExpression_id) < 0)
                             {
                                 parentLogExp.logicalExpressions.push(request.params.logicalExpression_id);
                                 parentLogExp.save(function(error){
@@ -243,10 +232,9 @@ router.route('/:logicalExpression_id')
                                         response.send(error);
                                     }
                                     else{
-                                        console.log('logexp summary: ' + request.body.logicalExpression.logicalExpressions);
                                         logicalExpression.booleanExpression = request.body.logicalExpression.booleanExpression;
                                         logicalExpression.logicalLink = request.body.logicalExpression.logicalLink;
-                                        if (request.body.logicalExpression.logicalExpressions) logicalExpression.logicalExpressions = request.body.logicalExpression.logicalExpressions;
+                                        if (request.body.logicalExpression.logicalExpressions) logicalExpression.logicalExpressions = request.body.logicalExpression.logicalExpressions.splice();
                                         logicalExpression.ownerExpression = request.body.logicalExpression.ownerExpression;
                                         logicalExpression.assessmentCode = request.body.logicalExpression.assessmentCode;
 
@@ -263,7 +251,6 @@ router.route('/:logicalExpression_id')
                         }
                     })
                 } else {    //parent
-                    console.log('logexp summary parent: ' + request.body.logicalExpression.logicalExpressions);
                     logicalExpression.booleanExpression = request.body.logicalExpression.booleanExpression;
                     logicalExpression.logicalLink = request.body.logicalExpression.logicalLink;
                     if (request.body.logicalExpression.logicalExpressions) logicalExpression.logicalExpressions = request.body.logicalExpression.logicalExpressions;
@@ -283,8 +270,6 @@ router.route('/:logicalExpression_id')
         });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
-        // if (request.query.destroyChildren) {
-            console.log('entered delete for logexp ' + request.params.logicalExpression_id);
             let finishCallback = (logExp) => {
 
                 response.json({logicalExpression: logExp});
@@ -298,10 +283,10 @@ router.route('/:logicalExpression_id')
                                 if (error) {
                                     response.send(error);
                                 } else {
-                                    if (parentLogExp.logicalExpressions.includes(request.params.logicalExpression_id)){
+                                    if (parentLogExp.logicalExpressions.indexOf(request.params.logicalExpression_id) > -1){
                                         var index = parentLogExp.logicalExpressions.indexOf(request.params.logicalExpression_id);
                                         if (index > -1){
-                                            parentLogExp.logicalExpressions = parentLogExp.logicalExpressions.splice(index, 1);
+                                            parentLogExp.logicalExpressions.splice(index, 1);
                                             parentLogExp.save().then(DestroyLogExp(request.params.logicalExpression_id, finishCallback));
                                         }
                                     }
