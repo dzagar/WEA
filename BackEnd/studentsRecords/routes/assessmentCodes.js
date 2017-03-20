@@ -234,7 +234,28 @@ router.route('/:assessmentCode_id')
         });
     })
     .put(parseUrlencoded, parseJSON, function (request, response) {
-
+        AssessmentCode.findById(request.params.assessmentCode_id, function(error, assessmentCode){
+            if (error)
+            {
+                response.send(error);
+            }
+            else{
+                assessmentCode.code = request.body.assessmentCode.code;
+                assessmentCode.name = request.body.assessmentCode.name;
+                if (request.body.assessmentCode.adjudications) assessmentCode.adjudications = request.body.assessmentCode.adjudications.slice();
+                assessmentCode.logicalExpression = request.body.assessmentCode.logicalExpression;
+                if (request.body.assessmentCode.departments) assessmentCode.departments = request.body.assessmentCode.departments.slice();
+                assessmentCode.adjudicationCategory = request.body.assessmentCode.adjudicationCategory;
+                assessmentCode.flagForReview = request.body.assessmentCode.flagForReview;
+                assessmentCode.save(function(error){
+                    if (error)
+                        response.send(error);
+                    else{
+                        response.send({assessmentCode: assessmentCode});
+                    }
+                })
+            }
+        });
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
         AssessmentCode.findByIdAndRemove(request.params.assessmentCode_id, function(error, assessmentCode) {

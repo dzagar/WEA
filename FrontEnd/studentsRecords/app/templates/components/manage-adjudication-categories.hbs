@@ -3,6 +3,7 @@
     <tr>
         <th>Adjudication Catagories</th>
         <th><!--spacer--></th>
+        <th></th>
     </tr>
     </thead>
     {{#each adjudicationCategories as |adjudicationCategory|}}
@@ -11,6 +12,29 @@
             <div class="ui fluid input">
                 {{input type="text" value = adjudicationCategory.name}}
             </div>
+        </td>
+        <td style="overflow:visible;">
+            {{#ui-dropdown class = "selection" selected = adjudicationCategory.programYear onChange = ( action (mut adjudicationCategory.programYear))}}
+                <div class = "default text">Adjudication Level</div>
+                <i class = "dropdown icon"></i>
+                <div class = "menu">
+                    <div class = "item" data-value = "0">
+                        All Years
+                    </div>
+                    <div class = "item" data-value = "1">
+                        Year 1
+                    </div>
+                    <div class = "item" data-value = "2">
+                        Year 2
+                    </div>
+                    <div class = "item" data-value = "3">
+                        Year 3
+                    </div>
+                    <div class = "item" data-value = "4">
+                        Year 4
+                    </div>
+                </div>
+            {{/ui-dropdown}}
         </td>
         <td>
             <div class="ui inverted buttons">
@@ -26,6 +50,29 @@
             <div class="ui fluid input">
                 {{input type="text" value = newCategoryName}}
             </div>
+        </td>
+        <td style="overflow:visible;">
+            {{#ui-dropdown class = "selection" selected = newCategoryYear onChange = ( action (mut newCategoryYear))}}
+                <div class = "default text">Adjudication Level</div>
+                <i class = "dropdown icon"></i>
+                <div class = "menu">
+                    <div class = "item" data-value = "0">
+                        All Years
+                    </div>
+                    <div class = "item" data-value = "1">
+                        Year 1
+                    </div>
+                    <div class = "item" data-value = "2">
+                        Year 2
+                    </div>
+                    <div class = "item" data-value = "3">
+                        Year 3
+                    </div>
+                    <div class = "item" data-value = "4">
+                        Year 4
+                    </div>
+                </div>
+            {{/ui-dropdown}}
         </td>
         <td>
             <button class="ui inverted green button" {{action "addCategory"}}> 

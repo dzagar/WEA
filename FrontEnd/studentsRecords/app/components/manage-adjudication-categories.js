@@ -3,6 +3,7 @@ import Ember from 'ember';
 export default Ember.Component.extend({
     adjudicationCategories: null,
     newCategoryName: null,
+    newCategoryYear: null,
 	store: Ember.inject.service(),
 	init(){
 		this._super(...arguments);
@@ -19,8 +20,10 @@ export default Ember.Component.extend({
         addCategory(){
             var self = this;
             var newCategoryName = this.get('newCategoryName');
+            var newCategoryYear = this.get('newCategoryYear');
             var newCategory = this.get('store').createRecord('adjudication-category', {
-                name: newCategoryName
+                name: newCategoryName,
+                programYear: newCategoryYear
             });
             newCategory.save().then(function(){
                 self.set('newCategoryName', "");
