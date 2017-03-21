@@ -1,4 +1,3 @@
-{{#if isAddGrouping}}
 <div class="ui modal">
       <div class="header">Add Courses</div>
       {{#ui-dropdown   class="fluid multiple selection" selected=[selectedCourses] onChange=(action 'selectCourses')}}
@@ -6,7 +5,7 @@
        <div class="default text">Select Courses</div>
        <div class="menu">
          {{#each coursesModel as |course|}}
-           <div class="item">
+           <div class="item" data-value= "{{course.id}}">
              {{course.courseNumber}} {{course.name}}
            </div>
          {{/each}}
@@ -18,4 +17,3 @@
       Done
     </div>
 </div>
-{{/if}}

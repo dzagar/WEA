@@ -114,6 +114,7 @@ router.route('/')
     .get(parseUrlencoded, parseJSON, function (request, response) {
         CourseGrouping.findById(request.params.courseGrouping_id, function (error, courseGrouping) {
             if (error) {
+                console.log("In here!");
                 response.send(error);
             } else {
                 response.send({courseGrouping: courseGrouping});
