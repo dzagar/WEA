@@ -355,7 +355,8 @@ export default Ember.Component.extend({
 
         console.log(boolExpression);
         //Increment to match dropdown index
-        var field = boolExpression.field + 1;
+        var field = Number(boolExpression.field) + 1;
+        console.log(field);
         var opr = boolExpression.opr;
         var val = boolExpression.val;
         var boolResult = false;
@@ -370,7 +371,7 @@ export default Ember.Component.extend({
                         termWA.push(term.termAVG);
                     }
                 });
-                boolResult = this.evaluateValue(Number(opr) + 1, terWA, val);
+                boolResult = this.evaluateValue(Number(opr) + 1, termWA, val);
             }
             break;
             //student's CWA passes passed rule (ie: greater than, less than etc...)
