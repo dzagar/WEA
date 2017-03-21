@@ -358,7 +358,8 @@ export default Ember.Component.extend({
         				temp.push({
         					date: adjudication.get('date'),
         					name: assessmentCode.get('name'),
-        					code: assessmentCode.get('code')
+        					code: assessmentCode.get('code'),
+        					note: adjudication.get('note')
         				});
                 	});
         		});
@@ -374,7 +375,8 @@ export default Ember.Component.extend({
         				studentName: students[i].get('firstName')+' '+students[i].get('lastName'),
         				date: temp[i].date, 
         				assessmentCodeName: temp[i].name,
-        				assessmentCode: temp[i].code
+        				assessmentCode: temp[i].code,
+        				note: temp[i].note
         			});
     			}
         		
@@ -404,7 +406,7 @@ export default Ember.Component.extend({
 				    CSV += row + '\r\n';
 				}
 			    var uri = 'data:text/csv;charset=utf-8,' + encodeURI(CSV);
-			    console.log(uri);
+			    //console.log(uri);
 			    //generate filename
 			    var fileName = "";
 			    //make spaces to underscores
