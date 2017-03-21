@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var courseGroupingSchema = mongoose.Schema(
     {
         name: String,
-        courseCodes:[{type: mongoose.Schema.ObjectId, ref: 'CourseCode'}]
+        courseCodes: [{type: mongoose.Schema.ObjectId, ref: 'CourseCode'}]
     },
 
     {

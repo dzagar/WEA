@@ -18,7 +18,7 @@
     {{else if showDeleteCourseGroupingConfirmation}}
     {{delete-course-grouping courseGrouping = currentCourseGrouping showWindow = showDeleteCourseGroupingConfirmation}}
     {{else if showAddCoursesModal}}
-    {{add-new-course-grouping groupingID=currentCourseGrouping.id showWindow = showAddCoursesModal}}
+    {{add-new-course-grouping courseGroup=currentCourseGrouping showWindow = showAddCoursesModal}}
     {{else if }}
 
 {{/if}}
@@ -497,6 +497,18 @@
                 </div>
             </td>
         </tr>
+        <div class = "row">
+						{{#if isLoading}}
+							{{#ui-loader value = feature.progress progress = feature.progress total = feature.total}}
+								<div class="ui segment">
+                                    <p></p>
+                                        <div class="ui active dimmer">
+                                            <div class="ui loader"></div>
+                                        </div>
+                                </div>
+							{{/ui-loader}}
+						{{/if}}
+					</div>
         {{/each}}
 
         <tr>

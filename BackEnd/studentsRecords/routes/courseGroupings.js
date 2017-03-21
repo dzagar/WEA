@@ -78,7 +78,7 @@ router.route('/')
 
         else if(request.query.courseCodes)
         {
-            CourseGrouping.find({courseCodes: request.query.courseCodes}, function(error, courseGrouping)
+            CourseGrouping.findAll({courseCodes: request.query.courseCodes}, function(error, courseGrouping)
             {
                 if(error)
                 {
@@ -114,32 +114,53 @@ router.route('/')
     .get(parseUrlencoded, parseJSON, function (request, response) {
         CourseGrouping.findById(request.params.courseGrouping_id, function (error, courseGrouping) {
             if (error) {
-                console.log("In here!");
                 response.send(error);
             } else {
-                response.send({courseGrouping: courseGrouping});
+                response.json({courseGrouping: courseGrouping});
             }
         });
     })
 
     .put(parseUrlencoded, parseJSON, function (request, response) {
-        CourseGrouping.findById(request.params.courseGrouping_id, function (error, courseGrouping){
+        CourseGrouping.findById(request.params.courseGrouping_id, function (error, groups){
 
-            courseGrouping.name=request.body.courseGrouping.name;
-            courseGrouping.courseCodes=request.body.courseGrouping.courseCodes;
-
-            courseGrouping.save(function(error){
             if(error)
             {
                 response.send(error);
             }
 
-            else
-            {
-                response.send({courseGrouping: courseGrouping});
-            }
+            else {
+                if(request.body.groups.courseCodes)
+                {
+                    groups.courseCodes=request.body.groups.courseCodes.slice();
+                }
+                groups.name=request.body.groups.name;
 
-            });
+                for(var i=0; i<groups.courseCodes.length;i++)
+                {
+                    CourseCode.findById(groups.courseCodes[i],function(error,records){
+                        if (records.courseGroupings.indexOf(request.params.courseGrouping_id) < 0)
+                        {
+                            records.courseGroupings.push(request.params.courseGrouping_id);
+                            records.save();
+                        }
+                    });
+                }
+
+                groups.save(function(error){
+                    if(error)
+                    {
+                        response.send(error);
+                    }
+                    else
+                    {
+                        response.json({groups : groups});
+                    }
+            
+
+                 });
+            }
+        
         });
 
     })

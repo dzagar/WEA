@@ -103,6 +103,7 @@ export default Ember.Component.extend({
     },
 
     init() {
+        var isLoading = true;
         this._super(...arguments);
         var self = this;
         
@@ -161,6 +162,7 @@ export default Ember.Component.extend({
         this.set('currentResidency', null);
         this.set('currentHighSchool', null);
         this.set('currentHighSchoolSubject', null);
+        isLoading=false;
     },
 
     courseCodeModel: Ember.observer('offset', function () {
