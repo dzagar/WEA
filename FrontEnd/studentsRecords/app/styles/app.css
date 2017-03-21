@@ -110,4 +110,12 @@ div>div>div> .ui.huge.button {
   padding: 0;
 }
 
+/*generate chart*/
+.hideChart{
+  display: none;
+}
+#open{
+  padding-bottom: 20px;
+}
+
 
