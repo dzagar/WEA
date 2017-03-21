@@ -8,6 +8,7 @@ export default Ember.Component.extend({
 	barChart: null,
 	barChartLabels: ["test"],
 	barChartVals: [2],
+	barChartBars: [],
 	borderColours: [],
 	categoryModel: null,
 	currentCategory: null,
@@ -35,15 +36,27 @@ export default Ember.Component.extend({
 	    });
 
 	},
-	barChartData: Ember.computed('barChartLabels', 'barChartVals', function(){
-		return{
-			labels: this.get('barChartLabels'),
+	barChartData: Ember.computed('barChartBars', function(){
+		let labels = [];
+		let vals = [];
+		let backColours = [];
+		let borderColours = [];
+
+		this.get('barChartBars').forEach(function (bar, index) {
+			labels.push(bar.name);
+			vals.push(bar.length);
+			backColours.push(bar.backColour);
+			borderColours.push(bar.borderColour);
+		});
+
+		return {
+			labels: labels,
 			datasets: [{
-				data: this.get('barChartVals'),
+				data: vals,
 				borderWidth: 0.5,
 				label: "Students",
-				backgroundColor: this.get('backgroundColours'),
-				borderColor: this.get('borderColours')
+				backgroundColor: backColours,
+				borderColor: borderColours
 			}]
 		};
 	}),
@@ -59,58 +72,55 @@ export default Ember.Component.extend({
 			}]
 		};
 	}),
-	generateRandomData(){
-		var currentTerm = this.get('currentTerm');
-		var self = this;
-		var arrayOfTestAssessmentCodes = [];
-		arrayOfTestAssessmentCodes[0] = this.get('store').createRecord('assessment-code', {name: "First", code: "123"});
-		arrayOfTestAssessmentCodes[1] = this.get('store').createRecord('assessment-code', {name: "Second", code: "124"});
-		arrayOfTestAssessmentCodes[2] = this.get('store').createRecord('assessment-code', {name: "Third", code: "125"});
-		arrayOfTestAssessmentCodes[3] = this.get('store').createRecord('assessment-code', {name: "Fourth", code: "126"});
-		arrayOfTestAssessmentCodes[4] = this.get('store').createRecord('assessment-code', {name: "Fifth", code: "127"});
-		var numberToSave = 5;
-		for (var i = 0; i < arrayOfTestAssessmentCodes.length; i++)
-		{
-			arrayOfTestAssessmentCodes[i].save().then(function()
-			{
-				numberToSave--;
-				if (!numberToSave)
-				{
-					self.get('store').find('term-code', currentTerm.get('id')).then(function(currentTermCode){
-						self.get('store').query('student', {offset: 0, limit: 100}).then(function(students){
-							students.forEach(function(student, studentIndex){
-								var firstNumber = Math.floor(Math.random() * (5));
-								var secondNumber = Math.floor(Math.random() * (5));
-								while (secondNumber === firstNumber)
-								{
-									secondNumber = Math.floor(Math.random() * (5));
-								}
-								var firstAssessmentID = arrayOfTestAssessmentCodes[firstNumber].get('id');
-								var secondAssessmentID = arrayOfTestAssessmentCodes[secondNumber].get('id');
-								var firstNewAdjudication = self.get('store').createRecord('adjudication', {
-									date: "today"
-								});
-								firstNewAdjudication.set('termCode', currentTermCode);
-								firstNewAdjudication.set('student', student);
-								firstNewAdjudication.set('assessmentCode', arrayOfTestAssessmentCodes[firstNumber]);
-								var secondNewAdjudication = self.get('store').createRecord('adjudication', {
-									date: "today"
-								});
-								secondNewAdjudication.set('termCode', currentTermCode);
-								secondNewAdjudication.set('student', student);
-								secondNewAdjudication.set('assessmentCode', arrayOfTestAssessmentCodes[secondNumber]);
-								firstNewAdjudication.save();
-								secondNewAdjudication.save();
-							});
-						}); 
-					});                                      
-				}                
-			});
-		}
-
-
-
-	},
+	// generateRandomData(){
+	// 	var currentTerm = this.get('currentTerm');
+	// 	var self = this;
+	// 	var arrayOfTestAssessmentCodes = [];
+	// 	arrayOfTestAssessmentCodes[0] = this.get('store').createRecord('assessment-code', {name: "First", code: "123"});
+	// 	arrayOfTestAssessmentCodes[1] = this.get('store').createRecord('assessment-code', {name: "Second", code: "124"});
+	// 	arrayOfTestAssessmentCodes[2] = this.get('store').createRecord('assessment-code', {name: "Third", code: "125"});
+	// 	arrayOfTestAssessmentCodes[3] = this.get('store').createRecord('assessment-code', {name: "Fourth", code: "126"});
+	// 	arrayOfTestAssessmentCodes[4] = this.get('store').createRecord('assessment-code', {name: "Fifth", code: "127"});
+	// 	var numberToSave = 5;
+	// 	for (var i = 0; i < arrayOfTestAssessmentCodes.length; i++)
+	// 	{
+	// 		arrayOfTestAssessmentCodes[i].save().then(function()
+	// 		{
+	// 			numberToSave--;
+	// 			if (!numberToSave)
+	// 			{
+	// 				self.get('store').find('term-code', currentTerm.get('id')).then(function(currentTermCode){
+	// 					self.get('store').query('student', {offset: 0, limit: 100}).then(function(students){
+	// 						students.forEach(function(student, studentIndex){
+	// 							var firstNumber = Math.floor(Math.random() * (5));
+	// 							var secondNumber = Math.floor(Math.random() * (5));
+	// 							while (secondNumber === firstNumber)
+	// 							{
+	// 								secondNumber = Math.floor(Math.random() * (5));
+	// 							}
+	// 							var firstAssessmentID = arrayOfTestAssessmentCodes[firstNumber].get('id');
+	// 							var secondAssessmentID = arrayOfTestAssessmentCodes[secondNumber].get('id');
+	// 							var firstNewAdjudication = self.get('store').createRecord('adjudication', {
+	// 								date: "today"
+	// 							});
+	// 							firstNewAdjudication.set('termCode', currentTermCode);
+	// 							firstNewAdjudication.set('student', student);
+	// 							firstNewAdjudication.set('assessmentCode', arrayOfTestAssessmentCodes[firstNumber]);
+	// 							var secondNewAdjudication = self.get('store').createRecord('adjudication', {
+	// 								date: "today"
+	// 							});
+	// 							secondNewAdjudication.set('termCode', currentTermCode);
+	// 							secondNewAdjudication.set('student', student);
+	// 							secondNewAdjudication.set('assessmentCode', arrayOfTestAssessmentCodes[secondNumber]);
+	// 							firstNewAdjudication.save();
+	// 							secondNewAdjudication.save();
+	// 						});
+	// 					}); 
+	// 				});                                      
+	// 			}                
+	// 		});
+	// 	}
+	// },
 	getRandomColour() {
 		// var letters = '0123456789ABCDEF';
 		// var color = '#';
@@ -169,8 +179,9 @@ export default Ember.Component.extend({
 			var currentTerm = this.get('currentTerm');
 			var termCodeID= currentTerm.get('id');
 			var currentCategory = this.get('currentCategory');
-			var barChartLabels=this.get('barChartLabels');
-			var barChartVals=this.get('barChartVals');
+			//var barChartLabels=this.get('barChartLabels');
+			//var barChartVals=this.get('barChartVals');
+			let barChartBars = [];
 			var pieChartLabels=this.get('pieChartLabels');
 			var pieChartVals=this.get('barChartVals');
 			console.log("category is "+currentCategory);
@@ -178,34 +189,46 @@ export default Ember.Component.extend({
             //category 'Other' makes bar chart
             if (this.get('currentCategoryIndex') == -1)
             {
-            	barChartLabels = [];
-            	barChartVals = [];
 				console.log('getting assessment codes');
             	this.get('store').query('assessmentCode', {
             		adjudicationCategory: null
             	}).then(function(assessmentCodes){
 					console.log('found ' + assessmentCodes.get('length') + ' assessment codes');
+					let promiseArr = [];
             		assessmentCodes.forEach(function(assessmentCode, codeIndex){ 
-            			barChartLabels.push(assessmentCode.get('name'));
-            			self.set('barChartLabels', barChartLabels);
+            			barChartBars.push({
+							name: assessmentCode.get('name'),
+							length: 0,
+							backColour: "",
+							borderColour: ""
+						});
             			var assessmentCodeID = assessmentCode.get('id');
-						console.log('getting adjudications with termCodeID ' + termCodeID + ' and assessmentCodeID ' + assessmentCodeID);
-            			self.get('store').query('adjudication', {
+						
+            			promiseArr.push(self.get('store').query('adjudication', {
             				termCode: termCodeID,
             				assessmentCode: assessmentCodeID
-            			}).then(function(adjudicationObjects){
-							console.log('found ' + adjudicationObjects.get('length') + ' adjudications');
-            				barChartVals.push(adjudicationObjects.get('length'));
-            				self.set('barChartVals', barChartVals);
-            				var colour=self.getRandomColour();
-            				self.get('backgroundColours').push(colour+',0.3)');
-            				self.get('borderColours').push(colour+',1)');
-            				self.destroyChart();
-            				self.renderBarChart();
-            				
-            			});
+            			}));
             		});
-            	});
+					return promiseArr;
+            	}).then(function (promiseArr) {
+					console.log('Got promise array');
+					return Ember.RSVP.all(promiseArr);
+				}).then(function (adjudicationObjArrays) {
+					console.log('Promise array resolved');
+					if (barChartBars.length == adjudicationObjArrays.length) {
+						barChartBars.forEach(function (bar, index) {
+							bar.length = adjudicationObjArrays[index].get('length');
+
+							let colour = self.getRandomColour();
+							bar.backColour = colour + ',0.3)';
+							bar.borderColour = colour + ',1)';
+						});
+						console.log('done getting data, showing chart');
+						console.log(barChartBars);
+						self.set('barChartBars', barChartBars);
+						self.renderBarChart();
+					}
+				});
 
 
             }
@@ -339,7 +362,7 @@ export default Ember.Component.extend({
         					doc.setFont('helvetica', '');
         				}
         			}
-        			//doc.save(fileName);
+        			doc.save(fileName);
         		} else {
         			console.log('Something went wrong! students: ' + students.length + ' datStrs: ' + dataStrs.length);
         		}
