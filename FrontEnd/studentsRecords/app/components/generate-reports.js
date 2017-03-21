@@ -249,7 +249,6 @@ export default Ember.Component.extend({
         	$("#chart").addClass('hideChart');
         },
         generatePDF() {
-<<<<<<< HEAD
             console.log('Generating PDF document');
             let doc = new jsPDF("portrait", "mm", "letter");
             doc.setFontSize(11);
@@ -272,33 +271,6 @@ export default Ember.Component.extend({
                             name: assessmentCode.get('name'),
                             code: assessmentCode.get('code')
                         });
-=======
-        	console.log('Generating PDF document');
-        	let doc = new jsPDF("portrait", "mm", "letter");
-        	doc.setFontSize(11);
-        	let data = [];
-        	let filename;
-        	let assessmentCategory;
-        	if (this.get('currentCategoryIndex') === -1) {
-        		assessmentCategory = null;
-        		filename="Other"+'_'+this.get('currentTerm').get('name');
-        	} else {
-        		assessmentCategory=this.get('currentCategory').get('id');
-        		filename=this.get('currentCategory').get('name')+'_'+this.get('currentTerm').get('name');;
-        	}
-        	this.get('store').query('assessmentCode', {
-        		adjudicationCategory: assessmentCategory
-        	}).then(function (assessmentCodes) {
-        		let promiseArr = [];
-        		assessmentCodes.forEach(function (assessmentCode, index) {
-        			assessmentCode.get('adjudications').forEach(function (adjudication, index) {
-        				promiseArr.push(adjudication.get('student'));
-        				data.push({
-        					date: adjudication.get('date'),
-        					name: assessmentCode.get('name'),
-        					code: assessmentCode.get('code')
-        				});
->>>>>>> 989c59a318a00b380623de4c00a080f952fa5ec5
                         //.then(function (student) {
                             //let dataStr = student.get('firstName') + ' ' + student.get('lastName') + ' ' + student.get('studentNumber') + ' ' + adjudication.get('date') + ' ' + assessmentCode.get('name') + ' ' + assessmentCode.get('code');
                             //console.log(dataStr);
