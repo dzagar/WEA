@@ -37,7 +37,10 @@
 	</div>
 	<div class="ui padded centered grid container">
 		<div id="open" class="hideChart">
-			<a class="" href='/assets/test.pdf' target="_blank"><div class="ui button">Open as PDF</div></a>
+			<div class="ui button" {{action 'generatePDF'}}>
+				Generate PDF
+			</div>
+			<!--<a class="" href='/assets/test.pdf' target="_blank"><div class="ui button">Open as PDF</div></a>-->
 			<a class="" href='/assets/test.pdf' download><div class="ui button">Open as Excel</div></a>
 		</div>
 	</div>

@@ -1,5 +1,7 @@
 import Ember from 'ember';
 import Chart from 'npm:chart.js';
+import jsPDF from 'npm:jspdf';
+import XLSX from 'npm:xlsx-browserify-shim';
 
 export default Ember.Component.extend({
 	backgroundColours: [],
@@ -245,6 +247,51 @@ export default Ember.Component.extend({
         	console.log("new index " + this.get('currentCategoryIndex'));
         	$("#open").addClass('hideChart');
         	$("#chart").addClass('hideChart');
+        },
+        generatePDF() {
+            console.log('Generating PDF document');
+            let doc = new jsPDF("portrait", "mm", "letter");
+            doc.setFontSize(11);
+            let dataStrs = [];
+            let assessmentCategory;
+            if (this.get('currentCategoryIndex') === -1) {
+                assessmentCategory = null;
+            } else {
+                this.get('currentCategory').get('id');
+            }
+            this.get('store').query('assessmentCode', {
+                adjudicationCategory: null
+            }).then(function (assessmentCodes) {
+                let promiseArr = [];
+                assessmentCodes.forEach(function (assessmentCode, index) {
+                    assessmentCode.get('adjudications').forEach(function (adjudication, index) {
+                        promiseArr.push(adjudication.get('student'));
+                        dataStrs.push(adjudication.get('date') + ' ' + assessmentCode.get('name') + ' ' + assessmentCode.get('code'));
+                        //.then(function (student) {
+                            //let dataStr = student.get('firstName') + ' ' + student.get('lastName') + ' ' + student.get('studentNumber') + ' ' + adjudication.get('date') + ' ' + assessmentCode.get('name') + ' ' + assessmentCode.get('code');
+                            //console.log(dataStr);
+                        //});
+                    });
+                });
+                return promiseArr;
+            }).then(function(promiseArr) {
+                console.log('Done getting promise array');
+                return Ember.RSVP.all(promiseArr);
+            }).then(function(students) {
+                console.log('Done getting students');
+                if (students.length === dataStrs.length) {
+                    for (let i = 0; i < students.length; i++) {
+                        let dataStr = students[i].get('firstName') + ' ' + students[i].get('lastName') + ' ' + students[i].get('studentNumber') + ' ' + dataStrs[i];
+                        doc.text(dataStr, 25, 25 + (7 * (i % 32)));
+                        if ((i + 1) % 32 === 0) {
+                            doc.addPage();
+                        }
+                    }
+                    doc.save("Report.pdf");
+                } else {
+                    console.log('Something went wrong! students: ' + students.length + ' datStrs: ' + dataStrs.length);
+                }
+            });
         }
         
     }

@@ -49,5 +49,8 @@
     "semantic-ui-ember": "2.0.0",
     "undo-manager": "1.0.5",
     "xlsx-browserify-shim": "0.0.5"
+  },
+  "dependencies": {
+    "jspdf": "^1.3.3"
   }
 }
