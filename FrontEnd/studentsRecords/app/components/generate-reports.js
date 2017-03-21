@@ -141,29 +141,64 @@ export default Ember.Component.extend({
 		});
 
 	},
-    renderPieChart() {
-    	let ctx = Ember.$('#pieChart');
-    	let myChart = new Chart(ctx, {
-    		type: 'pie',
-    		data: this.get('pieChartData'),
-    		options: {
+	renderPieChart() {
+		let ctx = Ember.$('#pieChart');
+		let myChart = new Chart(ctx, {
+			type: 'pie',
+			data: this.get('pieChartData'),
+			options: {
 				legend:{
 					onClick: function(e,legendItem){
 						console.log("Clicked " + legendItem.text);
 					}
 				}
-    		}
-    	});
-    },
-    destroyChart() {
-    	$('#chart').replaceWith('<div id="chart"><canvas id="barChart"></canvas></div>');
-    },
+			}
+		});
+	},
+	destroyChart() {
+		$('#chart').replaceWith('<div id="chart"><canvas id="barChart"></canvas></div>');
+	},
+	createExcel:function(data, title, showLabel) {
+        	//studentnumber, student name, date, assessmentCode and name
+			var CSV = '';
+			CSV += title + '\r\n\n';
 
-    actions: {
-    	generateReport(){
-    		var self=this;
-    		$("#open").removeClass('hideChart');
-    		$("#chart").removeClass('hideChart');
+			//generate header
+			if (showLabel) {
+				var row = "";
+			    //get header from first index of array
+			    for (var index in data[0]) {
+			        row += index + ',';
+			    }
+			    row = row.slice(0, -1);
+			    //add row
+			    CSV += row + '\r\n';
+			}
+		    //get rows
+		    for (var i = 0; i < data.length; i++) {
+		    	var row = "";
+			    //get columns
+			    for (var index in data[i]) {
+			    	row += '"' + data[i][index] + '",';
+			    }
+			    row.slice(0, row.length - 1);
+			    CSV += row + '\r\n';
+			}
+		    //Generate a file name
+		    var fileName = "";
+		    //make spaces to underscores
+		    fileName += title.replace(/ /g,"_");   
+		    //generate uri
+		    var uri = 'data:text/csv;charset=utf-8,' + encodeURI(CSV);
+		    console.log(uri);
+		    //add href to button
+		    $("#excelButton").attr("href",uri);
+		},
+	actions: {
+		generateReport(){
+			var self=this;
+			$("#open").removeClass('hideChart');
+			$("#chart").removeClass('hideChart');
 
 			var currentTerm = this.get('currentTerm');
 			var termCodeID= currentTerm.get('id');
@@ -177,7 +212,7 @@ export default Ember.Component.extend({
             //category 'Other' makes bar chart
             if (this.get('currentCategoryIndex') == -1)
             {
-
+            	this.createExcel([{"row1": "hi", "row2":"bye"},{"row1": "test2", "row2":"test2"}],"Term# and category",true);
             	barChartLabels = [];
             	barChartVals = [];
             	this.get('store').query('assessmentCode', {
@@ -198,6 +233,7 @@ export default Ember.Component.extend({
             				self.get('borderColours').push(colour+',1)');
             				self.destroyChart();
             				self.renderBarChart();
+            				
             			});
             		});
             	});
@@ -294,6 +330,5 @@ export default Ember.Component.extend({
             });
         }
         
-    }
-
+}
 });
