@@ -253,11 +253,14 @@ export default Ember.Component.extend({
         	let doc = new jsPDF("portrait", "mm", "letter");
         	doc.setFontSize(11);
         	let data = [];
+        	let filename;
         	let assessmentCategory;
         	if (this.get('currentCategoryIndex') === -1) {
         		assessmentCategory = null;
+        		filename="Other"+'_'+this.get('currentTerm').get('name');
         	} else {
         		assessmentCategory=this.get('currentCategory').get('id');
+        		filename=this.get('currentCategory').get('name')+'_'+this.get('currentTerm').get('name');;
         	}
         	this.get('store').query('assessmentCode', {
         		adjudicationCategory: assessmentCategory
@@ -311,7 +314,8 @@ export default Ember.Component.extend({
         					doc.setFont('helvetica', '');
         				}
         			}
-        			doc.save("Report.pdf");
+        			filename= filename.replace(/ /g,"_");
+        			doc.save(filename);
         		} else {
         			console.log('Something went wrong! students: ' + students.length + ' datStrs: ' + dataStrs.length);
         		}
