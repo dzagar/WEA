@@ -17,6 +17,7 @@ export default Ember.Component.extend({
 	pieChartVals: [2,4],
 	store: Ember.inject.service(),
 	termModel: null,
+    generationWarningText: "Generating a PDF",
 	init(){
 		this._super(...arguments);
 		
@@ -250,15 +251,22 @@ export default Ember.Component.extend({
         },
         generatePDF() {
             console.log('Generating PDF document');
+            this.set('generationWarningText', 'Generating a PDF Report');
+            Ember.$('.ui.basic.modal').modal({closable: false}).modal('show');
+            let self = this;
             let doc = new jsPDF("portrait", "mm", "letter");
             doc.setFontSize(11);
             let data = [];
             let assessmentCategory;
+            let fileName = "";
             if (this.get('currentCategoryIndex') === -1) {
                 assessmentCategory = null;
+                fileName = "Other_";
             } else {
                 assessmentCategory = this.get('currentCategory').get('id');
+                fileName = this.get('currentCategory').get('name') + '_';
             }
+            fileName += this.get('currentTerm').get('name') + '.pdf';
             this.get('store').query('assessmentCode', {
                 adjudicationCategory: assessmentCategory
             }).then(function (assessmentCodes) {
@@ -311,17 +319,19 @@ export default Ember.Component.extend({
         					doc.setFont('helvetica', '');
         				}
         			}
-        			filename= filename.replace(/ /g,"_");
-        			doc.save(filename);
+        			doc.save(fileName);
         		} else {
         			console.log('Something went wrong! students: ' + students.length + ' datStrs: ' + dataStrs.length);
         		}
+                Ember.$('.ui.basic.modal').modal('hide');
         	});
         },
         generateExcel() {
         	let data = [];
         	let assessmentCategory;
         	let temp=[];
+            this.set('generationWarningText', 'Generating a CSV File');
+            Ember.$('.ui.basic.modal').modal({closable: false}).modal('show');
         	var self=this;
         	if (this.get('currentCategoryIndex') === -1) {
         		assessmentCategory = null;
@@ -396,7 +406,7 @@ export default Ember.Component.extend({
 			    document.body.appendChild(link);
 			    link.click();
 			    document.body.removeChild(link);
-
+                Ember.$('.ui.basic.modal').modal('hide');
 			    //window.open(uri);
 			});
     	}
