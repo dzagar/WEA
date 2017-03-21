@@ -375,14 +375,26 @@ export default Ember.Component.extend({
         	}).then(function(students) {
         		
         		for (let i=0; i <students.length; i++){
-        			data.push({
-        				studentNumber: students[i].get('studentNumber'),
-        				studentName: students[i].get('firstName')+' '+students[i].get('lastName'),
-        				date: temp[i].date, 
-        				assessmentCodeName: temp[i].name,
-        				assessmentCode: temp[i].code,
-        				note: temp[i].note
-        			});
+        			if(temp[i].note){
+	        			data.push({
+	        				studentNumber: students[i].get('studentNumber'),
+	        				studentName: students[i].get('firstName')+' '+students[i].get('lastName'),
+	        				date: temp[i].date, 
+	        				assessmentCodeName: temp[i].name,
+	        				assessmentCode: temp[i].code,
+	        				note: temp[i].note
+	        			});
+	        		}
+	        		else{
+	        			data.push({
+	        				studentNumber: students[i].get('studentNumber'),
+	        				studentName: students[i].get('firstName')+' '+students[i].get('lastName'),
+	        				date: temp[i].date, 
+	        				assessmentCodeName: temp[i].name,
+	        				assessmentCode: temp[i].code,
+	        				note: ""
+	        			});
+	        		}
     			}
         		
 	            var title="";
