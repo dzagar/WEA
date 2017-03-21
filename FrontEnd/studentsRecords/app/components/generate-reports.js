@@ -296,7 +296,7 @@ export default Ember.Component.extend({
                 this.get('currentCategory').get('id');
             }
             this.get('store').query('assessmentCode', {
-                adjudicationCategory: null
+                adjudicationCategory: assessmentCategory
             }).then(function (assessmentCodes) {
                 let promiseArr = [];
                 assessmentCodes.forEach(function (assessmentCode, index) {
@@ -324,9 +324,9 @@ export default Ember.Component.extend({
                     doc.text('Page ' + pageNumber, 200, 10);
                     doc.setFont('helvetica', 'bold');
                     doc.text('Student Number', 25, 25);
-                    doc.text('Student Name', 55, 25);
-                    doc.text('Adjudication Date', 95, 25);
-                    doc.text('Assessment Code', 125, 25);
+                    doc.text('Student Name', 60, 25);
+                    doc.text('Adjudication Date', 100, 25);
+                    doc.text('Assessment Code', 140, 25);
                     doc.setFont('helvetica', '');
                     for (let i = 0; i < students.length; i++) {
                         let yPos = 32 + (7 * (i % 31));
