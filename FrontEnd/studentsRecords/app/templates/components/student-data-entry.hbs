@@ -56,7 +56,8 @@
     <div style="cursor: pointer;" class="item" data-tab="program">Program Record</div>
     <div style="cursor: pointer;" class="item" data-tab="awards">Scholarships and Awards</div>
     <div style="cursor: pointer;" class="item" data-tab="advanced">Advanced Standings</div>
-    <div style="cursor: pointer;" class="item" data-tab="hsinfo">HighSchool Info</div>
+    <div style="cursor: pointer;" class="item" data-tab="hsinfo">High School Info</div>
+    <div style="cursor: pointer;" class="item" data-tab="adjudication">Adjudications</div>
   </div>
   <div class="ui bottom attached active tab segment" data-tab="basics">
     <!-- student basic information !-->
@@ -290,6 +291,10 @@
 
   <div class="ui bottom attached tab segment" data-tab="hsinfo">
     {{student-high-school-tab currentStudent = currentStudent store = store}}
+  </div>
+
+  <div class="ui bottom attached tab segment" data-tab="adjudication">
+    {{student-adjudication-tab currentStudent = currentStudent store = store}}
   </div>
 
 

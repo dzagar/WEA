@@ -170,24 +170,28 @@ export default Ember.Component.extend({
 				"progress": 0,
 				"total": 100,
 				"name": "Genders",
+				"code": "Genders",
 				"description": "The file must have one header with the title <b>'name'</b>."
 			},
 			{
 				"progress": 0,
 				"total": 100,
 				"name": "Residencies",
+				"code": "Residencies",
 				"description": "The file must have <b>1</b> header with the title <b>'name'</b>."
 			},
 			{
 				"progress": 0,
 				"total": 100,
-				"name": "CourseCodes",
+				"name": "Course Codes",
+				"code": "CourseCodes",
 				"description": "The file must have <b>4</b> headers with the titles <b>'courseLetter'</b>, <b>'courseNumber'</b>, <b>'name'</b>, <b>'unit'</b>."
 			},
 			{
 				"progress": 0,
 				"total": 100,
-				"name": "TermCodes",
+				"name": "Term Codes",
+				"code": "TermCodes",
 				"description": "The file must have <b>1</b> header with the title <b>'name'</b>."
 			}
 		];
@@ -196,18 +200,21 @@ export default Ember.Component.extend({
 				"progress": 0,
 				"total": 100,
 				"name": "Faculties",
+				"code": "Faculties",
 				"description": "The file must have one header with the title <b>'name'</b>."
 			},
 			{
 				"progress": 0,
 				"total": 100,
 				"name": "Departments",
+				"code": "Departments",
 				"description": "The file must have two headers with the titles <b>'name'</b> and <b>'faculty'</b>."
 			},
 			{
 				"progress": 0,
 				"total": 100,
-				"name": "ProgramAdministrations",
+				"name": "Program Administrations",
+				"code": "ProgramAdministrations",
 				"description": "The file must have two headers with the titles <b>'name'</b> and <b>'position'</b>."
 			}
 		];
@@ -216,42 +223,49 @@ export default Ember.Component.extend({
 				"progress": 0,
 				"total": 100,
 				"name": "Students",
+				"code": "Students",
 				"description": "The file must have <b>6</b> headers with the titles <b>'studentNumber'</b>, <b>'firstName'</b>, <b>'lastName'</b>, <b>'gender'</b>, <b>'DOB'</b>, <b>'residency'</b>."
 			},
 			{
 				"progress": 0,
 				"total": 100,
-				"name": "AwardsScholarships",
+				"name": "Awards and Scholarships",
+				"code": "AwardsScholarships",
 				"description": "The file must have <b>2</b> headers with the titles <b>'studentNumber'</b>, <b>'note'</b>."
 			},
 			{
 				"progress": 0,
 				"total": 100,
-				"name": "AdvancedStandings",
+				"name": "Advanced Standings",
+				"code": "AdvancedStandings",
 				"description": "The file must have <b>6</b> headers with the titles <b>'studentNumber'</b>, <b>'Course'</b>, <b>'Description'</b>, <b>'Units'</b>, <b>'Grade'</b>, <b>'From'</b>."
 			},
 			{
 				"progress": 0,
 				"total": 100,
-				"name": "RegistrationComments",
+				"name": "Registration Comments",
+				"code": "RegistrationComments",
 				"description": "The file must have <b>2</b> headers with the titles <b>'studentNumber'</b>, <b>'note'</b>."
 			},
 			{
 				"progress": 0,
 				"total": 100,
-				"name": "BasisofAdmissions",
+				"name": "Basis of Admissions",
+				"code": "BasisofAdmissions",
 				"description": "The file must have <b>2</b> headers with the titles <b>'studentNumber'</b>, <b>'note'</b>."
 			},
 			{
 				"progress": 0,
 				"total": 100,
-				"name": "AdmissionAverages",
+				"name": "Admission Averages",
+				"code": "AdmissionAverages",
 				"description": "The file must have <b>2</b> headers with the titles <b>'studentNumber'</b>, <b>'note'</b>."
 			},
 			{
 				"progress": 0,
 				"total": 100,
-				"name": "AdmissionComments",
+				"name": "Admission Comments",
+				"code": "AdmissionComments",
 				"description": "The file must have <b>2</b> headers with the titles <b>'studentNumber'</b>, <b>'note'</b>."
 			}
 		];
@@ -259,13 +273,15 @@ export default Ember.Component.extend({
 			{
 				"progress": 0,
 				"total": 100,
-				"name": "HighSchools",
+				"name": "High Schools",
+				"code": "HighSchools",
 				"description": "The file must have <b>1</b> header with the title <b>'School Name'</b>."
 			},
 			{
 				"progress": 0,
 				"total": 100,
-				"name": "HighSchoolCourseInformation",
+				"name": "High School Course Information",
+				"code": "HighSchoolCourseInformation",
 				"description": "The file must have <b>8</b> headers with the titles <b>'studentNumber'</b>, <b>'schoolName'</b>, <b>'level'</b>, <b>'subject'</b>, <b>'description'</b>, <b>'source'</b>, <b>'units'</b>, <b>'grade'</b>."
 			}
 		];
@@ -273,19 +289,22 @@ export default Ember.Component.extend({
 			{
 				"progress": 0,
 				"total": 100,
-				"name": "UndergraduateRecordPlans",
+				"name": "Undergraduate Record Plans",
+				"code": "UndergraduateRecordPlans",
 				"description": "The file must have <b>6</b> headers with the titles <b>'studentNumber'</b>, <b>'term'</b>, <b>'program'</b>, <b>'level'</b>, <b>'load'</b>, <b>'plan'</b>."
 			},
 			{
 				"progress": 0,
 				"total": 100,
-				"name": "UndergraduateRecordCourses",
+				"name": "Undergraduate Record Courses",
+				"code": "UndergraduateRecordCourses",
 				"description": "The file must have <b>7</b> headers with the titles <b>'studentNumber'</b>, <b>'term'</b>, <b>'courseLetter'</b>, <b>'courseNumber'</b>, <b>'section'</b>, <b>'grade'</b>, <b>'note'</b>."
 			},
 			{
 				"progress": 0,
 				"total": 100,
-				"name": "UndergraduateRecordAdjudications",
+				"name": "Undergraduate Record Adjudications",
+				"code": "UndergraduateRecordAdjudications",
 				"description": "The file must have <b>10</b> headers with the titles <b>'studentNumber'</b>, <b>'term'</b>, <b>'termAVG'</b>, <b>'termUnitsPassed'</b>, <b>'termUnitsTotals'</b>, <b>'termAdjudication'</b>, <b>'specialAVG'</b>, <b>'cumAVG'</b>, <b>'cumUnitsPassed'</b>, <b>'cumUnitsTotals'</b>."
 			}
 			
@@ -330,6 +349,7 @@ export default Ember.Component.extend({
 
 		import() {
 			this.set('importInProgress', true);
+			Ember.$("#btnImport").addClass("disabled");
 			var files = $("#newFile" + this.get('importCount'))[0].files;
 			var i,f;
 			for (i = 0; i != files.length; ++i) {
@@ -610,7 +630,6 @@ export default Ember.Component.extend({
 													self.pushOutput("<span style='color:green'>Import Successful!</span>");
 													Ember.$("#btnContinue").removeClass("disabled");
 													Ember.$("#TermCodes").addClass("completed");
-													self.send("continue");
 												}
 											});
 										}
@@ -802,7 +821,7 @@ export default Ember.Component.extend({
 									if (!rollBackImport) {
 										var importPA = self.get('importFaculty');
 										Ember.set(importPA.objectAt(2), "total", PAsToImport.length*2);
-										Ember.set(importPA.objectAt(1), "progress", PAsToImport.length);
+										Ember.set(importPA.objectAt(2), "progress", PAsToImport.length);
 										self.set('importFaculty', importPA); 
 										var numberOfPAsImported = 0;
 										var numberOfPAsWithoutDepartment = 0;
@@ -831,19 +850,21 @@ export default Ember.Component.extend({
 															{
 																doneSavingPAs = true;
 																self.pushOutput("<span style='color:green'>Import of program administration information successful!</span>");
-																Ember.$("#ProgramAdministrations").addClass("completed");
-																self.send("continue");														
+																Ember.$("#btnContinue").removeClass("disabled");
+																Ember.$("#ProgramAdministrations").addClass("completed");													
 															}
 														});
 													}
 													else{
+														Ember.set(importPA.objectAt(2), "progress", Ember.get(importPA.objectAt(2), "progress")+1);
+														self.set('importFaculty', importPA);
 														numberOfPAsWithoutDepartment++;
 														if (numberOfPAsImported == PAsToImport.length - numberOfPAsWithoutDepartment && !doneSavingPAs)
 														{
 															doneSavingPAs = true;
 															self.pushOutput("<span style='color:green'>Import of program administration information successful!</span>");
-															Ember.$("#ProgramAdministrations").addClass("completed");
-															self.send("continue");														
+															Ember.$("#btnContinue").removeClass("disabled");
+															Ember.$("#ProgramAdministrations").addClass("completed");												
 														}
 													}
 												});
@@ -1243,7 +1264,6 @@ export default Ember.Component.extend({
 																										self.pushOutput("<span style='color:green'>All Imports successful!</span>");
 																										Ember.$("#btnContinue").removeClass("disabled");
 																										Ember.$("#HighSchoolCourseInformation").addClass("completed");
-																										self.send("continue");
 																									}
 																								});
 																							});
@@ -2298,8 +2318,7 @@ export default Ember.Component.extend({
 																doneSavingComments = true;
 																self.pushOutput("<span style='color:green'>Import of Admission Comments successful!</span>");
 																Ember.$("#btnContinue").removeClass("disabled");
-																Ember.$("#AdmissionComments").addClass("completed");
-																self.send("continue");															
+																Ember.$("#AdmissionComments").addClass("completed");														
 															}
 														});
 													}
@@ -2456,8 +2475,8 @@ export default Ember.Component.extend({
 																				{
 																					doneImportingCumStudents = true;
 																					self.pushOutput("<span style='color:green'>Import of student adjudication information successful!</span>");
-																					Ember.$("#btnContinue").removeClass("disabled");
-																					Ember.$("#admissionComments").addClass("completed");	
+																					Ember.$("#btnFinish").removeClass("disabled");
+																					Ember.$("#StudentAdjudication").addClass("completed");	
 																				}
 																			});
 																		}
@@ -2469,8 +2488,8 @@ export default Ember.Component.extend({
 																			{
 																				doneImportingCumStudents = true;
 																				self.pushOutput("<span style='color:green'>Import of student adjudication information successful!</span>");
-																				Ember.$("#btnContinue").removeClass("disabled");
-																				Ember.$("#admissionComments").addClass("completed");	
+																				Ember.$("#btnFinish").removeClass("disabled");
+																				Ember.$("#StudentAdjudication").addClass("completed");	
 																			}
 																		}
 																	});
@@ -2480,7 +2499,6 @@ export default Ember.Component.extend({
 													});
 												}
 												else{													
-													Ember.set(importUG.objectAt(2), "progress", Ember.get(importUG.objectAt(2), "progress")+1);
 													self.set('importUndergrad', importUG);
 													numberOfCumStudentsWithoutStudent++;
 													for (var j = 0; j < studentInformation.length; j++)
@@ -2488,14 +2506,15 @@ export default Ember.Component.extend({
 														if (studentInformation[j].studentNumber == cumStudentNumber)
 														{
 															numberOfStudentTermsWithoutStudent++;
+															Ember.set(importUG.objectAt(2), "progress", Ember.get(importUG.objectAt(2), "progress")+1);
 														}
 													}
 													if (cumStudentInformation.length + studentInformation.length == numberOfCumStudentsImported + numberOfCumStudentsWithoutStudent + numberOfStudentTermsImported + numberOfStudentTermsWithoutStudent && !doneImportingCumStudents)
 													{
 														doneImportingCumStudents = true;
 														self.pushOutput("<span style='color:green'>Import of student adjudication information successful!</span>");
-														Ember.$("#btnContinue").removeClass("disabled");
-														Ember.$("#admissionComments").addClass("completed");	
+														Ember.$("#btnFinish").removeClass("disabled");
+														Ember.$("#StudentAdjudication").addClass("completed");	
 													}
 												}
 											});
@@ -2516,11 +2535,9 @@ export default Ember.Component.extend({
 				console.log(index);
 				this.set('changingIndex',index);
 				console.log("index is now " + this.get('changingIndex'));
-			},	
+			},
+
 			continue(){
-				//this.set('importInProgress', false);
-				//Ember.$("#btnContinue").addClass("disabled");
-				//this.clearOutput();
 				Ember.$("#newFile" + this.get('importCount')).val('');
 				this.set('changingIndex', this.get('changingIndex')+1);
 				console.log("changed Index to " + this.get('changingIndex'));
