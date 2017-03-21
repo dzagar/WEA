@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var AssessmentCode = require('../models/assessmentCode');
 var Adjudication = require('../models/adjudication');
+var AdjudicationCategory = require('../models/adjudicationCategory');
 var LogicalExpression = require('../models/logicalExpression');
 var Department = require('../models/department');
 var bodyParser = require('body-parser');
@@ -201,7 +202,17 @@ router.route('/')
                     });
                 }
             });
-        } else {
+        } else if(request.query.noCategory){
+            AssessmentCode.find({adjudicationCategory: null}, function(error, assessmentCodes){
+                if (error)
+                {
+                    response.send(error);
+                } else{
+                    response.send({assessmentCodes: assessmentCodes});
+                }
+            })
+
+        }else {
             AssessmentCode.find(function(error, assessmentCodes) {
                 if (error) {
                     response.send(error);
@@ -225,38 +236,101 @@ router.route('/:assessmentCode_id')
         });
     })
     .put(parseUrlencoded, parseJSON, function (request, response) {
-        console.log(request.body.assessmentCode.departments);
         AssessmentCode.findById(request.params.assessmentCode_id, function(error, assessmentCode){
             if (error)
             {
                 response.send(error);
             }
             else{
-                assessmentCode.code = request.body.assessmentCode.code;
-                assessmentCode.name = request.body.assessmentCode.name;
-                if (request.body.assessmentCode.adjudications) assessmentCode.adjudications = request.body.assessmentCode.adjudications.slice();
-                assessmentCode.logicalExpression = request.body.assessmentCode.logicalExpression;
-                if (request.body.assessmentCode.departments){
-                     assessmentCode.departments = request.body.assessmentCode.departments.slice();
-                     for (var i = 0; i < assessmentCode.departments.length; i++){
-                         Department.findById(assessmentCode.departments[i], function(error, department){
-                             if (department.assessmentCodes.indexOf(request.params.assessmentCode_id) < 0)
-                             {
-                                 department.assessmentCodes.push(request.params.assessmentCode_id);
-                                 department.save();
-                             }
-                         });
-                     }                    
+                console.log(assessmentCode);
+                //if the code was previously linked to a category
+                if (assessmentCode.adjudicationCategory){
+                    console.log(assessmentCode.adjudicationCategory);
+                    AdjudicationCategory.findById(assessmentCode.adjudicationCategory, function(error, adjudicationCategory){
+                        //if the category already has a reference to the assessment code we are saving
+                        console.log(adjudicationCategory);
+                        var indexOfAssessmentCode = adjudicationCategory.assessmentCodes.indexOf(assessmentCode.id);
+                        if (indexOfAssessmentCode > -1){
+                            adjudicationCategory.assessmentCodes.slice(indexOfAssessmentCode, 1);
+                        }
+                        adjudicationCategory.save(function(error){
+                            if (error){
+                                response.send(error);
+                            }
+                            else{
+                                //if the new AssessmentCode has a category
+                                if (request.body.assessmentCode.adjudicationCategory){
+                                    AdjudicationCategory.findById(request.body.assessmentCode.adjudicationCategory, function(error, newAdjudcationCategory){
+                                        newAdjudcationCategory.assessmentCodes.push(assessmentCode.id);
+                                        newAdjudcationCategory.save();
+                                    });
+                                }
+                                assessmentCode.code = request.body.assessmentCode.code;
+                                assessmentCode.name = request.body.assessmentCode.name;
+                                if (request.body.assessmentCode.adjudications) assessmentCode.adjudications = request.body.assessmentCode.adjudications.slice();
+                                assessmentCode.logicalExpression = request.body.assessmentCode.logicalExpression;
+                                if (request.body.assessmentCode.departments){
+                                    assessmentCode.departments = request.body.assessmentCode.departments.slice();
+                                    for (var i = 0; i < assessmentCode.departments.length; i++){
+                                        Department.findById(assessmentCode.departments[i], function(error, department){
+                                            if (department.assessmentCodes.indexOf(request.params.assessmentCode_id) < 0)
+                                            {
+                                                department.assessmentCodes.push(request.params.assessmentCode_id);
+                                                department.save();
+                                            }
+                                        });
+                                    }                    
+                                }
+                                assessmentCode.adjudicationCategory = request.body.assessmentCode.adjudicationCategory;
+                                assessmentCode.flagForReview = request.body.assessmentCode.flagForReview;
+                                assessmentCode.save(function(error){
+                                    if (error)
+                                        response.send(error);
+                                    else{
+                                        response.send({assessmentCode: assessmentCode});
+                                    }
+                                });
+                            }
+                        });
+                    });
+
                 }
-                assessmentCode.adjudicationCategory = request.body.assessmentCode.adjudicationCategory;
-                assessmentCode.flagForReview = request.body.assessmentCode.flagForReview;
-                assessmentCode.save(function(error){
-                    if (error)
-                        response.send(error);
-                    else{
-                        response.send({assessmentCode: assessmentCode});
+                else{
+                    //if the new AssessmentCode has a category
+                    if (request.body.assessmentCode.adjudicationCategory){
+                        console.log(request.body.assessmentCode.adjudicationCategory.id);
+                        AdjudicationCategory.findById(request.body.assessmentCode.adjudicationCategory, function(error, newAdjudcationCategory){
+                            newAdjudcationCategory.assessmentCodes.push(assessmentCode.id);
+                            newAdjudcationCategory.save();
+                        });
                     }
-                })
+                    assessmentCode.code = request.body.assessmentCode.code;
+                    assessmentCode.name = request.body.assessmentCode.name;
+                    if (request.body.assessmentCode.adjudications) assessmentCode.adjudications = request.body.assessmentCode.adjudications.slice();
+                    assessmentCode.logicalExpression = request.body.assessmentCode.logicalExpression;
+                    if (request.body.assessmentCode.departments){
+                        assessmentCode.departments = request.body.assessmentCode.departments.slice();
+                        for (var i = 0; i < assessmentCode.departments.length; i++){
+                            Department.findById(assessmentCode.departments[i], function(error, department){
+                                if (department.assessmentCodes.indexOf(request.params.assessmentCode_id) < 0)
+                                {
+                                    department.assessmentCodes.push(request.params.assessmentCode_id);
+                                    department.save();
+                                }
+                            });
+                        }                    
+                    }
+                    assessmentCode.adjudicationCategory = request.body.assessmentCode.adjudicationCategory;
+                    assessmentCode.flagForReview = request.body.assessmentCode.flagForReview;
+                    assessmentCode.save(function(error){
+                        if (error)
+                            response.send(error);
+                        else{
+                            response.send({assessmentCode: assessmentCode});
+                        }
+                    });
+
+                }                
             }
         });
     })
