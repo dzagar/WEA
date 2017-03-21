@@ -34,7 +34,7 @@ export default Ember.Component.extend({
           } else {
             if (error === "wrongUserName") {
               Ember.$("#err").addClass("ui error message");
-              self.set('error', 'Please enter a correct user name');
+              self.set('error', 'Please enter a correct username');
             } else {
               if (error === "wrongPassword") {
                 Ember.$("#err").addClass("ui error message");
