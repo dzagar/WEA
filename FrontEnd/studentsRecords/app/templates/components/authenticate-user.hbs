@@ -1,4 +1,3 @@
-<!-- Display the login screen with the main application background -->
 {{#if isPasswordChanging}}
   <section class="hero">
     <div class="row intro">
@@ -36,13 +35,14 @@
 
 
 {{else}}
-
+<div class = "loginPage">
+  <div class = "ui one column center aligned grid">
     <div class="column six wide form-holder">
-      <h2 class="center aligned header form-head">WE Adjudication</h2>
+      <h2 class="ui center aligned header form-head">WE Adjudication</h2>
       <form {{action 'login' on ="submit"}}>
         <div class="ui form">
           <div class="field">
-            {{input value=name  type="text" placeholder="user name"}}
+            {{input value=name  type="text" placeholder="username"}}
           </div>
           <div class="field">
             {{input value=password  type="password" placeholder="password"}}
@@ -51,11 +51,15 @@
             <button class="ui button large fluid green" {{action 'login'}}>
               Log In
             </button>
-            <p> {{errorMessage}}</p>
+          </div>
+          <div class = "ui form error">
+            <div id = "err"> {{errorMessage}}</div>
           </div>
         </div>
       </form>
     </div>
+  </div>
+</div>
 {{/if}}
 
 

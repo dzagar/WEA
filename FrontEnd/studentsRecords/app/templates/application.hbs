@@ -1,6 +1,6 @@
+{{#if oudaAuth.isAuthenticated }}
 <div class = "wrapper">
   <div class = "appBody ui grid" style="padding-bottom: 50px;">
-  {{#if oudaAuth.isAuthenticated }}
       <div class="ui fixed inverted stackable container menu">
         <div class = "ui container ">
           {{#link-to 'home' class='item'}}
@@ -38,26 +38,24 @@
       <div class = "ui basic segment container" style = "padding-top: 50px;">
       {{outlet}}
       </div>
-    
-    {{else}}
-    <div class = "ui basic segment container" style = "padding-top: 50px;">
-          {{#unless oudaAuth.getName}}
-            {{outlet "login"}}
-          {{/unless}}     
-    </div>   
-    {{/if}}
-  </div>
-    <div class = "footer">
-      <div class="ui violet inverted vertical footer segment">
-        <div class="ui center aligned grid">
-          <div class="four wide column">
-            © Copyright - Digital Sloth
-            <img class="ui right spaced mini image" src="/assets/images/UWO Stacked_Rev.png">
+    </div>
+      <div class = "footer">
+        <div class="ui violet inverted vertical footer segment">
+          <div class="ui center aligned grid">
+            <div class="four wide column">
+              © Copyright - Digital Sloth
+              <img class="ui right spaced mini image" src="/assets/images/UWO Stacked_Rev.png">
+            </div>
           </div>
         </div>
       </div>
-    </div>
 </div>
-
+{{else}}
+<div class = "ui basic segment container" style = "padding-top: 50px;">
+      {{#unless oudaAuth.getName}}
+        {{outlet "login"}}
+      {{/unless}}     
+</div>   
+{{/if}}
 
 
