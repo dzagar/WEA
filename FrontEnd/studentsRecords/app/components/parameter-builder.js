@@ -42,6 +42,11 @@ export default Ember.Component.extend({
 	didUpdateAttrs(){
 		this.rerender();
 	},
+
+	willDestroy(){
+        Ember.$('.ui.modal').remove();  //remove any existing modals
+    },
+    
 	actions: {
 		cancel: function(){
 			var self = this;
