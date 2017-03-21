@@ -364,7 +364,7 @@ export default Ember.Component.extend({
 	            else
 	            	title=self.get('currentCategory').get('name')+'_'+self.get('currentTerm').get('name');
 	            var CSV = '';
-	            CSV += title + '\r\n\n';
+	            //CSV += title + '\r\n\n';
 				//generate header
 				var row = "";
 			    //get header from first index of array
