@@ -293,7 +293,7 @@ export default Ember.Component.extend({
             if (this.get('currentCategoryIndex') === -1) {
                 assessmentCategory = null;
             } else {
-                this.get('currentCategory').get('id');
+                assessmentCategory = this.get('currentCategory').get('id');
             }
             this.get('store').query('assessmentCode', {
                 adjudicationCategory: assessmentCategory
