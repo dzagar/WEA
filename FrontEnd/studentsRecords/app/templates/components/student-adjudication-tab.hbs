@@ -1,0 +1,90 @@
+{{#if showDeleteConfirmation}}
+    {{delete-adjudication adjudication = selectedAdjudication student = currentStudent showWindow = showDeleteConfirmation}}
+{{/if}}
+
+<h2>Adjudications</h2>
+
+<h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
+
+<table class="ui fixed table">
+  <thead>
+    <tr>
+    	<th class="three wide">Term Code</th>
+    	<th class="four wide">Assessment Code</th>
+    	<th class="two wide">Date</th>
+    	<th class="four wide">Note</th>
+    	<th class="two wide"><!--spacer--></th>  
+    </tr>
+  </thead>
+  {{#each currentStudent.adjudications as |adj|}}
+  <tr>
+    <td>
+    		{{adj.termCode.name}}
+    </td>
+    <td>
+        {{adj.assessmentCode.code}} - {{adj.assessmentCode.name}}
+    </td>
+    <td>
+        {{adj.date}}
+    </td>
+    <td>
+        {{adj.note}}
+    </td>
+    <td>
+      <div class="ui inverted buttons">
+        <button class="ui red inverted icon button" {{action "deleteAdjudication" adj}}>
+          <i class="icon trash"></i>
+        </button>
+      </div>
+    </td>
+  </tr>
+  {{/each}}
+  <tr>
+    <td class="dimmable" style="overflow: visible">
+    	{{#ui-dropdown class = "selection (if errorTC 'error')" selected = selectedTermCodeID onChange = (action (mut selectedTermCodeID)) onClick = (action "clearError" "errorTC")}}
+          <div class = "default text">Term Code</div>
+          <i class = "dropdown icon"></i>
+          <div class = "menu">
+              {{#each currentStudent.terms as |term|}}
+              <div class = "item" data-value = {{term.termCode.id}}>
+                  {{term.termCode.name}}
+              </div>
+              {{/each}}
+          </div>
+      {{/ui-dropdown}}
+    </td>
+    <td class="dimmable" style="overflow: visible">
+    	{{#ui-dropdown class = "selection (if errorAC 'error')" selected = selectedAssessmentCodeID onChange = (action (mut selectedAssessmentCodeID)) onClick = (action "clearError" "errorAC")}}
+          <div class = "default text">Assessment Code</div>
+          <i class = "dropdown icon"></i>
+          <div class = "menu">
+              {{#each assessmentCodes as |ac|}}
+              <div class = "item" data-value = {{ac.id}}>
+                  {{ac.code}} - {{ac.name}}
+              </div>
+              {{/each}}
+          </div>
+      {{/ui-dropdown}}
+      {{#if loadingTermCodes}}
+          <div class="ui active dimmer">
+              <div class="ui loader"></div>
+          </div>
+      {{/if}}
+    </td>
+    <td>
+      <div class="ui fluid input {{if errorDate "error"}}" onclick={{action "clearError" "errorDate"}}>
+        {{input type="text" value = newDateValue readonly = "true"}}
+      </div>
+    </td>
+    <td>
+      <div class="ui fluid input {{if errorNote "error"}}" onclick={{action "clearError" "errorNote"}}>
+        {{input type="text" value = newNoteValue onChange = (action (mut newNoteValue))}}
+      </div>
+    </td>
+    <td>
+      <button class="ui inverted green button" {{action "addAdjudication"}}> 
+        Add &nbsp; <i class="add square icon"></i>
+      </button>
+    </td>
+  </tr>
+    </table>

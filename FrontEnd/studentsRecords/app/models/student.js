@@ -18,5 +18,6 @@ export default DS.Model.extend({
   admissionComments: DS.attr(),
   cumAVG: DS.attr(),
   cumUnitsPassed: DS.attr(),
-  cumUnitsTotal: DS.attr()
+  cumUnitsTotal: DS.attr(),
+  adjudications: DS.hasMany('adjudications')
 });
