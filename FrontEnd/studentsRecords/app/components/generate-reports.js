@@ -288,7 +288,7 @@ export default Ember.Component.extend({
             console.log('Generating PDF document');
             let doc = new jsPDF("portrait", "mm", "letter");
             doc.setFontSize(11);
-            let dataStrs = [];
+            let data = [];
             let assessmentCategory;
             if (this.get('currentCategoryIndex') === -1) {
                 assessmentCategory = null;
@@ -302,7 +302,11 @@ export default Ember.Component.extend({
                 assessmentCodes.forEach(function (assessmentCode, index) {
                     assessmentCode.get('adjudications').forEach(function (adjudication, index) {
                         promiseArr.push(adjudication.get('student'));
-                        dataStrs.push(adjudication.get('date') + ' ' + assessmentCode.get('name') + ' ' + assessmentCode.get('code'));
+                        data.push({
+                            date: adjudication.get('date'),
+                            name: assessmentCode.get('name'),
+                            code: assessmentCode.get('code')
+                        });
                         //.then(function (student) {
                             //let dataStr = student.get('firstName') + ' ' + student.get('lastName') + ' ' + student.get('studentNumber') + ' ' + adjudication.get('date') + ' ' + assessmentCode.get('name') + ' ' + assessmentCode.get('code');
                             //console.log(dataStr);
@@ -315,12 +319,32 @@ export default Ember.Component.extend({
                 return Ember.RSVP.all(promiseArr);
             }).then(function(students) {
                 console.log('Done getting students');
-                if (students.length === dataStrs.length) {
+                let pageNumber = 1;
+                if (students.length === data.length) {
+                    doc.text('Page ' + pageNumber, 200, 10);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text('Student Number', 25, 25);
+                    doc.text('Student Name', 55, 25);
+                    doc.text('Adjudication Date', 95, 25);
+                    doc.text('Assessment Code', 125, 25);
+                    doc.setFont('helvetica', '');
                     for (let i = 0; i < students.length; i++) {
-                        let dataStr = students[i].get('firstName') + ' ' + students[i].get('lastName') + ' ' + students[i].get('studentNumber') + ' ' + dataStrs[i];
-                        doc.text(dataStr, 25, 25 + (7 * (i % 32)));
-                        if ((i + 1) % 32 === 0) {
+                        let yPos = 32 + (7 * (i % 31));
+                        doc.text(students[i].get('studentNumber'), 25, yPos);
+                        doc.text(students[i].get('firstName') + ' ' + students[i].get('lastName'), 60, yPos);
+                        doc.text(data[i].date, 100, yPos);
+                        doc.text(data[i].name, 140, yPos);
+                        doc.text(data[i].code, 170, yPos);
+                        if ((i + 1) % 31 === 0) {
                             doc.addPage();
+                            pageNumber++;
+                            doc.text('Page ' + pageNumber, 200, 10);
+                            doc.setFont('helvetica', 'bold');
+                            doc.text('Student Number', 25, 25);
+                            doc.text('Student Name', 60, 25);
+                            doc.text('Adjudication Date', 100, 25);
+                            doc.text('Assessment Code', 140, 25);
+                            doc.setFont('helvetica', '');
                         }
                     }
                     doc.save("Report.pdf");
