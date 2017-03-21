@@ -3,7 +3,6 @@ import Ember from 'ember';
 export default Ember.Component.extend({
 	currentStudent: null,
 	showDeleteConfirmation: false,
-	adjudications: null,
 	assessmentCodes: null,
 	loadingAssessmentCodes: false,
 	newDateValue: Ember.computed(function(){

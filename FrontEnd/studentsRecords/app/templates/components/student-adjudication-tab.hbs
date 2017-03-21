@@ -16,23 +16,23 @@
     	<th class="two wide"><!--spacer--></th>  
     </tr>
   </thead>
-  {{#each currentStudent.adjudications as |adjudication|}}
+  {{#each currentStudent.adjudications as |adj|}}
   <tr>
     <td>
-    		{{adjudication.termCode.name}}
+    		{{adj.termCode.name}}
     </td>
     <td>
-        {{adjudication.assessmentCode.code}} - {{adjudication.assessmentCode.name}}
+        {{adj.assessmentCode.code}} - {{adj.assessmentCode.name}}
     </td>
     <td>
-        {{adjudication.date}}
+        {{adj.date}}
     </td>
     <td>
-        {{adjudication.note}}
+        {{adj.note}}
     </td>
     <td>
       <div class="ui inverted buttons">
-        <button class="ui red inverted icon button" {{action "deleteAdjudication" adjudication}}>
+        <button class="ui red inverted icon button" {{action "deleteAdjudication" adj}}>
           <i class="icon trash"></i>
         </button>
       </div>
