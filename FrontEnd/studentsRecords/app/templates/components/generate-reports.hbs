@@ -17,17 +17,6 @@
 			<div class="ui primary button" {{action 'generateReport'}}>Generate Report</div>
 		</div>
 	</div>
-		<!--
-		<div id="chart" class="hideChart">
-		
-			{{#if (inline-compare currentCategoryIndex "==" -1)}}
-				{{ember-chart id='barchart' type='bar' data=barChartData options= options}}
-			{{else}}
-				{{ember-chart type='pie' data=pieChartData  height=100}}
-			{{/if}}
-
-		</div>
-	-->
 	<div class="ui relaxed items form">
 		{{#if (inline-compare currentCategoryIndex "==" -1)}}
 		<div id="chart"><canvas id="barChart"></canvas></div>
@@ -37,11 +26,8 @@
 	</div>
 	<div class="ui padded centered grid container">
 		<div id="open" class="hideChart">
-			<div class="ui button" {{action 'generatePDF'}}>
-				Generate PDF
-			</div>
-			<!--<a class="" href='/assets/test.pdf' target="_blank"><div class="ui button">Open as PDF</div></a>-->
-			<a class="" href='/assets/test.pdf' download><div class="ui button">Open as Excel</div></a>
+			<div class="ui button" {{action 'generatePDF'}}>Generate PDF</div>
+			<div class="ui button" {{action 'generateExcel'}}>Generate Excel</div>
 		</div>
 	</div>
 </div>

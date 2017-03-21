@@ -158,42 +158,7 @@ export default Ember.Component.extend({
 	destroyChart() {
 		$('#chart').replaceWith('<div id="chart"><canvas id="barChart"></canvas></div>');
 	},
-	createExcel:function(data, title, showLabel) {
-        	//studentnumber, student name, date, assessmentCode and name
-			var CSV = '';
-			CSV += title + '\r\n\n';
-
-			//generate header
-			if (showLabel) {
-				var row = "";
-			    //get header from first index of array
-			    for (var index in data[0]) {
-			        row += index + ',';
-			    }
-			    row = row.slice(0, -1);
-			    //add row
-			    CSV += row + '\r\n';
-			}
-		    //get rows
-		    for (var i = 0; i < data.length; i++) {
-		    	var row = "";
-			    //get columns
-			    for (var index in data[i]) {
-			    	row += '"' + data[i][index] + '",';
-			    }
-			    row.slice(0, row.length - 1);
-			    CSV += row + '\r\n';
-			}
-		    //Generate a file name
-		    var fileName = "";
-		    //make spaces to underscores
-		    fileName += title.replace(/ /g,"_");   
-		    //generate uri
-		    var uri = 'data:text/csv;charset=utf-8,' + encodeURI(CSV);
-		    console.log(uri);
-		    //add href to button
-		    $("#excelButton").attr("href",uri);
-		},
+	
 	actions: {
 		generateReport(){
 			var self=this;
@@ -212,7 +177,6 @@ export default Ember.Component.extend({
             //category 'Other' makes bar chart
             if (this.get('currentCategoryIndex') == -1)
             {
-            	this.createExcel([{"row1": "hi", "row2":"bye"},{"row1": "test2", "row2":"test2"}],"Term# and category",true);
             	barChartLabels = [];
             	barChartVals = [];
             	this.get('store').query('assessmentCode', {
@@ -285,6 +249,7 @@ export default Ember.Component.extend({
         	$("#chart").addClass('hideChart');
         },
         generatePDF() {
+<<<<<<< HEAD
             console.log('Generating PDF document');
             let doc = new jsPDF("portrait", "mm", "letter");
             doc.setFontSize(11);
@@ -307,52 +272,162 @@ export default Ember.Component.extend({
                             name: assessmentCode.get('name'),
                             code: assessmentCode.get('code')
                         });
+=======
+        	console.log('Generating PDF document');
+        	let doc = new jsPDF("portrait", "mm", "letter");
+        	doc.setFontSize(11);
+        	let data = [];
+        	let filename;
+        	let assessmentCategory;
+        	if (this.get('currentCategoryIndex') === -1) {
+        		assessmentCategory = null;
+        		filename="Other"+'_'+this.get('currentTerm').get('name');
+        	} else {
+        		assessmentCategory=this.get('currentCategory').get('id');
+        		filename=this.get('currentCategory').get('name')+'_'+this.get('currentTerm').get('name');;
+        	}
+        	this.get('store').query('assessmentCode', {
+        		adjudicationCategory: assessmentCategory
+        	}).then(function (assessmentCodes) {
+        		let promiseArr = [];
+        		assessmentCodes.forEach(function (assessmentCode, index) {
+        			assessmentCode.get('adjudications').forEach(function (adjudication, index) {
+        				promiseArr.push(adjudication.get('student'));
+        				data.push({
+        					date: adjudication.get('date'),
+        					name: assessmentCode.get('name'),
+        					code: assessmentCode.get('code')
+        				});
+>>>>>>> 989c59a318a00b380623de4c00a080f952fa5ec5
                         //.then(function (student) {
                             //let dataStr = student.get('firstName') + ' ' + student.get('lastName') + ' ' + student.get('studentNumber') + ' ' + adjudication.get('date') + ' ' + assessmentCode.get('name') + ' ' + assessmentCode.get('code');
                             //console.log(dataStr);
                         //});
                     });
-                });
-                return promiseArr;
-            }).then(function(promiseArr) {
-                console.log('Done getting promise array');
-                return Ember.RSVP.all(promiseArr);
-            }).then(function(students) {
-                console.log('Done getting students');
-                let pageNumber = 1;
-                if (students.length === data.length) {
-                    doc.text('Page ' + pageNumber, 200, 10);
-                    doc.setFont('helvetica', 'bold');
-                    doc.text('Student Number', 25, 25);
-                    doc.text('Student Name', 60, 25);
-                    doc.text('Adjudication Date', 100, 25);
-                    doc.text('Assessment Code', 140, 25);
-                    doc.setFont('helvetica', '');
-                    for (let i = 0; i < students.length; i++) {
-                        let yPos = 32 + (7 * (i % 31));
-                        doc.text(students[i].get('studentNumber'), 25, yPos);
-                        doc.text(students[i].get('firstName') + ' ' + students[i].get('lastName'), 60, yPos);
-                        doc.text(data[i].date, 100, yPos);
-                        doc.text(data[i].name, 140, yPos);
-                        doc.text(data[i].code, 170, yPos);
-                        if ((i + 1) % 31 === 0) {
-                            doc.addPage();
-                            pageNumber++;
-                            doc.text('Page ' + pageNumber, 200, 10);
-                            doc.setFont('helvetica', 'bold');
-                            doc.text('Student Number', 25, 25);
-                            doc.text('Student Name', 60, 25);
-                            doc.text('Adjudication Date', 100, 25);
-                            doc.text('Assessment Code', 140, 25);
-                            doc.setFont('helvetica', '');
-                        }
-                    }
-                    doc.save("Report.pdf");
-                } else {
-                    console.log('Something went wrong! students: ' + students.length + ' datStrs: ' + dataStrs.length);
-                }
-            });
-        }
+        		});
+        		return promiseArr;
+        	}).then(function(promiseArr) {
+        		console.log('Done getting promise array');
+        		return Ember.RSVP.all(promiseArr);
+        	}).then(function(students) {
+        		console.log('Done getting students');
+        		let pageNumber = 1;
+        		if (students.length === data.length) {
+        			doc.text('Page ' + pageNumber, 200, 10);
+        			doc.setFont('helvetica', 'bold');
+        			doc.text('Student Number', 25, 25);
+        			doc.text('Student Name', 60, 25);
+        			doc.text('Adjudication Date', 100, 25);
+        			doc.text('Assessment Code', 140, 25);
+        			doc.setFont('helvetica', '');
+        			for (let i = 0; i < students.length; i++) {
+        				let yPos = 32 + (7 * (i % 31));
+        				doc.text(students[i].get('studentNumber'), 25, yPos);
+        				doc.text(students[i].get('firstName') + ' ' + students[i].get('lastName'), 60, yPos);
+        				doc.text(data[i].date, 100, yPos);
+        				doc.text(data[i].name, 140, yPos);
+        				doc.text(data[i].code, 170, yPos);
+        				if ((i + 1) % 31 === 0) {
+        					doc.addPage();
+        					pageNumber++;
+        					doc.text('Page ' + pageNumber, 200, 10);
+        					doc.setFont('helvetica', 'bold');
+        					doc.text('Student Number', 25, 25);
+        					doc.text('Student Name', 60, 25);
+        					doc.text('Adjudication Date', 100, 25);
+        					doc.text('Assessment Code', 140, 25);
+        					doc.setFont('helvetica', '');
+        				}
+        			}
+        			filename= filename.replace(/ /g,"_");
+        			doc.save(filename);
+        		} else {
+        			console.log('Something went wrong! students: ' + students.length + ' datStrs: ' + dataStrs.length);
+        		}
+        	});
+        },
+        generateExcel() {
+        	let data = [];
+        	let assessmentCategory;
+        	let temp=[];
+        	var self=this;
+        	if (this.get('currentCategoryIndex') === -1) {
+        		assessmentCategory = null;
+        	} else {
+        		assessmentCategory=this.get('currentCategory').get('id');
+        	}
+        	this.get('store').query('assessmentCode', {
+        		adjudicationCategory: assessmentCategory
+        	}).then(function (assessmentCodes) {
+        		let promiseArr = [];
+        		assessmentCodes.forEach(function (assessmentCode, index) {
+        			assessmentCode.get('adjudications').forEach(function (adjudication, index) {
+        				promiseArr.push(adjudication.get('student'));
+        				temp.push({
+        					date: adjudication.get('date'),
+        					name: assessmentCode.get('name'),
+        					code: assessmentCode.get('code')
+        				});
+                	});
+        		});
+        		return promiseArr;
+        	}).then(function(promiseArr) {
+        		console.log('Done getting promise array');
+        		return Ember.RSVP.all(promiseArr);
+        	}).then(function(students) {
+        		
+        		for (let i=0; i <students.length; i++){
+        			data.push({
+        				studentNumber: students[i].get('studentNumber'),
+        				studentName: students[i].get('firstName')+' '+students[i].get('lastName'),
+        				date: temp[i].date, 
+        				assessmentCodeName: temp[i].name,
+        				assessmentCode: temp[i].code
+        			});
+    			}
+        		
+	            var title="";
+	            if(self.get('currentCategoryIndex') === -1)
+	            	title="Other_"+self.get('currentTerm').get('name');
+	            else
+	            	title=self.get('currentCategory').get('name')+'_'+self.get('currentTerm').get('name');
+	            var CSV = '';
+	            CSV += title + '\r\n\n';
+				//generate header
+				var row = "";
+			    //get header from first index of array
+			    for (var index in data[0]) {
+			    	row += index + ',';
+			    }
+			    row = row.slice(0, -1);
+			    //add row
+			    CSV += row + '\r\n';
+			    for (var i = 0; i < data.length; i++) {
+			    	var row = "";
+				    //get columns
+				    for (var index in data[i]) {
+				    	row += '"' + data[i][index] + '",';
+				    }
+				    row.slice(0, row.length - 1);
+				    CSV += row + '\r\n';
+				}
+			    var uri = 'data:text/csv;charset=utf-8,' + encodeURI(CSV);
+			    console.log(uri);
+			    //generate filename
+			    var fileName = "";
+			    //make spaces to underscores
+			    fileName += title.replace(/ /g,"_");
+			    var link = document.createElement("a");    
+			    link.href = uri;
+			    link.style = "visibility:hidden";
+			    link.download = fileName + ".csv";
+			    document.body.appendChild(link);
+			    link.click();
+			    document.body.removeChild(link);
+
+			    //window.open(uri);
+			});
+    	}
         
-}
+    }
 });
