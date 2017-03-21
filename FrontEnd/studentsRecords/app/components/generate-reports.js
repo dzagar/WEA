@@ -287,7 +287,8 @@ export default Ember.Component.extend({
                         data.push({
                             date: adjudication.get('date'),
                             name: assessmentCode.get('name'),
-                            code: assessmentCode.get('code')
+                            code: assessmentCode.get('code'),
+                            note: adjudication.get('note')
                         });
                         //.then(function (student) {
                             //let dataStr = student.get('firstName') + ' ' + student.get('lastName') + ' ' + student.get('studentNumber') + ' ' + adjudication.get('date') + ' ' + assessmentCode.get('name') + ' ' + assessmentCode.get('code');
@@ -309,6 +310,7 @@ export default Ember.Component.extend({
         			doc.text('Student Name', 60, 25);
         			doc.text('Adjudication Date', 100, 25);
         			doc.text('Assessment Code', 140, 25);
+        			doc.text('Note', 180, 25);
         			doc.setFont('helvetica', '');
         			for (let i = 0; i < students.length; i++) {
         				let yPos = 32 + (7 * (i % 31));
@@ -317,6 +319,8 @@ export default Ember.Component.extend({
         				doc.text(data[i].date, 100, yPos);
         				doc.text(data[i].name, 140, yPos);
         				doc.text(data[i].code, 170, yPos);
+        				if(data[i].note)
+        					doc.text(data[i].note, 200, yPos);
         				if ((i + 1) % 31 === 0) {
         					doc.addPage();
         					pageNumber++;
@@ -326,6 +330,7 @@ export default Ember.Component.extend({
         					doc.text('Student Name', 60, 25);
         					doc.text('Adjudication Date', 100, 25);
         					doc.text('Assessment Code', 140, 25);
+        					doc.text('Note', 180, 25);
         					doc.setFont('helvetica', '');
         				}
         			}
