@@ -180,17 +180,21 @@ export default Ember.Component.extend({
             {
             	barChartLabels = [];
             	barChartVals = [];
+				console.log('getting assessment codes');
             	this.get('store').query('assessmentCode', {
             		adjudicationCategory: null
             	}).then(function(assessmentCodes){
+					console.log('found ' + assessmentCodes.get('length') + ' assessment codes');
             		assessmentCodes.forEach(function(assessmentCode, codeIndex){ 
             			barChartLabels.push(assessmentCode.get('name'));
             			self.set('barChartLabels', barChartLabels);
             			var assessmentCodeID = assessmentCode.get('id');
+						console.log('getting adjudications with termCodeID ' + termCodeID + ' and assessmentCodeID ' + assessmentCodeID);
             			self.get('store').query('adjudication', {
             				termCode: termCodeID,
             				assessmentCode: assessmentCodeID
             			}).then(function(adjudicationObjects){
+							console.log('found ' + adjudicationObjects.get('length') + ' adjudications');
             				barChartVals.push(adjudicationObjects.get('length'));
             				self.set('barChartVals', barChartVals);
             				var colour=self.getRandomColour();
@@ -277,7 +281,8 @@ export default Ember.Component.extend({
                         data.push({
                             date: adjudication.get('date'),
                             name: assessmentCode.get('name'),
-                            code: assessmentCode.get('code')
+                            code: assessmentCode.get('code'),
+							adjID: adjudication.get('id')
                         });
                         //.then(function (student) {
                             //let dataStr = student.get('firstName') + ' ' + student.get('lastName') + ' ' + student.get('studentNumber') + ' ' + adjudication.get('date') + ' ' + assessmentCode.get('name') + ' ' + assessmentCode.get('code');
@@ -288,8 +293,19 @@ export default Ember.Component.extend({
         		return promiseArr;
         	}).then(function(promiseArr) {
         		console.log('Done getting promise array');
-        		return Ember.RSVP.all(promiseArr);
-        	}).then(function(students) {
+        		return Ember.RSVP.allSettled(promiseArr);
+        	}).then(function(promiseResults) {
+				let students = [];
+				for (let i = 0; i < promiseResults.length; i++) {
+					if (promiseResults[i].state == 'fulfilled')
+					{
+						console.log('student ' + i + ' exists (adjudication ' + data[i].adjID + ')');
+						console.log(promiseResults[i].value);
+						students.push(promiseResults[i].value);
+					} else {
+						console.log('student ' + i + ' failed with reason: ' + promiseResults[i].reason);
+					}
+				}
         		console.log('Done getting students');
         		let pageNumber = 1;
         		if (students.length === data.length) {
@@ -301,12 +317,16 @@ export default Ember.Component.extend({
         			doc.text('Assessment Code', 140, 25);
         			doc.setFont('helvetica', '');
         			for (let i = 0; i < students.length; i++) {
-        				let yPos = 32 + (7 * (i % 31));
-        				doc.text(students[i].get('studentNumber'), 25, yPos);
-        				doc.text(students[i].get('firstName') + ' ' + students[i].get('lastName'), 60, yPos);
-        				doc.text(data[i].date, 100, yPos);
-        				doc.text(data[i].name, 140, yPos);
-        				doc.text(data[i].code, 170, yPos);
+						if (students[i]) {
+							let yPos = 32 + (7 * (i % 31));
+							doc.text(students[i].get('studentNumber'), 25, yPos);
+							doc.text(students[i].get('firstName') + ' ' + students[i].get('lastName'), 60, yPos);
+							doc.text(data[i].date, 100, yPos);
+							doc.text(data[i].name, 140, yPos);
+							doc.text(data[i].code, 170, yPos);
+						} else {
+							console.log("Student " + i + " is null");
+						}
         				if ((i + 1) % 31 === 0) {
         					doc.addPage();
         					pageNumber++;
@@ -319,7 +339,7 @@ export default Ember.Component.extend({
         					doc.setFont('helvetica', '');
         				}
         			}
-        			doc.save(fileName);
+        			//doc.save(fileName);
         		} else {
         			console.log('Something went wrong! students: ' + students.length + ' datStrs: ' + dataStrs.length);
         		}
