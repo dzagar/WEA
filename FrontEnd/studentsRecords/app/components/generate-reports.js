@@ -386,7 +386,6 @@ export default Ember.Component.extend({
 				    row.slice(0, row.length - 1);
 				    CSV += row + '\r\n';
 				}
-				//generate uri
 			    var uri = 'data:text/csv;charset=utf-8,' + encodeURI(CSV);
 			    console.log(uri);
 			    //generate filename
