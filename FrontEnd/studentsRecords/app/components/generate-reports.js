@@ -6,16 +6,13 @@ import XLSX from 'npm:xlsx-browserify-shim';
 export default Ember.Component.extend({
 	backgroundColours: [],
 	barChart: null,
-	barChartLabels: ["test"],
-	barChartVals: [2],
 	barChartBars: [],
 	borderColours: [],
 	categoryModel: null,
 	currentCategory: null,
 	currentCategoryIndex: -1,
 	currentTerm: null,
-	pieChartLabels: ["1","2"],
-	pieChartVals: [2,4],
+	pieChartWedges: [],
 	store: Ember.inject.service(),
 	termModel: null,
     generationWarningText: "Generating a PDF",
@@ -61,14 +58,26 @@ export default Ember.Component.extend({
 		};
 	}),
 
-	pieChartData: Ember.computed('pieChartLabels', 'pieChartVals',function(){
+	pieChartData: Ember.computed('pieChartWedges',function(){
+		let labels = [];
+		let vals = [];
+		let backColours = [];
+		let borderColours = [];
+
+		this.get('pieChartWedges').forEach(function (wedge, index) {
+			labels.push(wedge.label);
+			vals.push(wedge.size);
+			backColours.push(wedge.backColour);
+			borderColours.push(wedge.borderColour);
+		});
+
 		return {
-			labels: this.get('pieChartLabels'),
+			labels: labels,
 			datasets: [{
-				label: "axisLabel",
-				data: this.get('pieChartVals'),
-				backgroundColor: this.get('backgroundColours'),
-				borderColor: this.get('borderColours')
+				label: "Label Goes Here",
+				data: vals,
+				backgroundColor: backColours,
+				borderColor: borderColours
 			}]
 		};
 	}),
@@ -122,12 +131,6 @@ export default Ember.Component.extend({
 	// 	}
 	// },
 	getRandomColour() {
-		// var letters = '0123456789ABCDEF';
-		// var color = '#';
-		// for (var i = 0; i < 6; i++ ) {
-		// 	color += letters[Math.floor(Math.random() * 16)];
-		// }
-		// return color;
 		var hue = 'rgba(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256));
 		return hue;
 	},
@@ -184,8 +187,11 @@ export default Ember.Component.extend({
 			let barChartBars = [];
 			var pieChartLabels=this.get('pieChartLabels');
 			var pieChartVals=this.get('barChartVals');
+			let pieChartWedges = [];
 			console.log("category is "+currentCategory);
 			console.log("currentTerm id is "+currentTerm.get('id'));
+
+
             //category 'Other' makes bar chart
             if (this.get('currentCategoryIndex') == -1)
             {
@@ -227,39 +233,67 @@ export default Ember.Component.extend({
 						console.log(barChartBars);
 						self.set('barChartBars', barChartBars);
 						self.renderBarChart();
+					} else {
+						console.log("Bars and Adjudications don't match. bars: " + barChartBars.length + " adjudicationArrays: " + adjudicationObjArrays.length);
 					}
 				});
 
 
             }
             //other categories make pie chart
-            else{
-            	this.renderPieChart();
-            	pieChartLabels = [];
-            	pieChartVals = [];
-            	var currentCategoryID= currentCategory.get('id');
+            else {
+				let pieChartWedges = [];
+            	var currentCategoryID = currentCategory.get('id');
             	this.get('store').query('assessmentCode', {
             		adjudicationCategory: currentCategoryID
             	}).then(function(assessmentCodes){
+					let promiseArr = [];
             		assessmentCodes.forEach(function(assessmentCode, codeIndex){ 
-            			pieChartLabels.push(assessmentCode.get('name'));
-            			self.set('pieChartLabels', pieChartLabels);
+            			pieChartWedges.push({
+							label: assessmentCode.get('name'),
+							size: 0,
+							backColour: "",
+							borderColour: ""
+						});
+            			
             			var assessmentCodeID = assessmentCode.get('id');
-            			var termCodeID= currentTerm.get('id');
-            			self.get('store').query('adjudication', {
+            			var termCodeID = currentTerm.get('id');
+
+            			promiseArr.push(self.get('store').query('adjudication', {
             				termCode: termCodeID,
             				assessmentCode: assessmentCodeID
-            			}).then(function(adjudicationObjects){
-            				pieChartVals.push(adjudicationObjects.get('length'));
-            				self.set('pieChartVals', pieChartVals);
-            				var colour=self.getRandomColour();
-            				self.get('backgroundColours').push(colour+',0.3)');
-            				self.get('borderColours').push(colour+',1)');
-            				self.destroyChart();
-            				self.renderPieChart();
-            			});
+            			}));
+						
+						// .then(function(adjudicationObjects){
+            			// 	pieChartVals.push(adjudicationObjects.get('length'));
+            			// 	self.set('pieChartVals', pieChartVals);
+            			// 	var colour=self.getRandomColour();
+            			// 	self.get('backgroundColours').push(colour+',0.3)');
+            			// 	self.get('borderColours').push(colour+',1)');
+            			// 	self.destroyChart();
+            			// 	self.renderPieChart();
+            			// });
             		});
-            	});
+					return promiseArr;
+            	}).then(function (promiseArr) {
+					return Ember.RSVP.all(promiseArr);
+				}).then(function (adjudicationObjArrays) {
+					if (pieChartWedges.length == adjudicationObjArrays.length) {
+						pieChartWedges.forEach(function (wedge, index) {
+							wedge.size = adjudicationObjArrays[index].get('length');
+
+							let colour = self.getRandomColour();
+							wedge.backColour = colour + ',0.3)';
+							wedge.borderColour = colour + ',1)';
+						});
+						console.log('done getting data, showing chart');
+						console.log(pieChartWedges);
+						self.set('pieChartWedges', pieChartWedges);
+						self.renderPieChart();
+					} else {
+						console.log("Wedges and AdjudicationArrays don't match. wedges: " + barChartBars.length + " adjudicationArrays: " + adjudicationObjArrays.length);
+					}
+				});
             }
 
         },
