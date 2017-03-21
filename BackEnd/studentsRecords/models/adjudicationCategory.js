@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 var adjudicationCategorySchema = mongoose.Schema(
     {
         name: String,
+        programYear: String,
         assessmentCodes: {type: mongoose.Schema.ObjectId, ref: 'assessmentCode'}
     },
     {

@@ -96,6 +96,21 @@ export default Ember.Component.extend({
 			}).then(function (response) {
 				console.log(response);
 			});
+			this.get('store').query('program-administration', {
+				deleteAll: true
+			}).then(function (response) {
+				console.log(response);
+			});
+			this.get('store').query('department', {
+				deleteAll: true
+			}).then(function (response) {
+				console.log(response);
+			});
+			this.get('store').query('faculty', {
+				deleteAll: true
+			}).then(function (response) {
+				console.log(response);
+			});
 		
 			this.get('store').unloadAll();
 
