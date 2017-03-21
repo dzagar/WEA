@@ -51,6 +51,7 @@ export default Ember.Component.extend({
 
         this.get('store').findAll('term-code').then(function (records) {
             self.set('termCodeModel', records);
+            self.set('currentTerm', records.get('firstObject').get('id'));
         }); 
         this.get('store').findAll('adjudication-category').then(function(records) {
             console.log("there are ", records.get('length'), "adjudication categories");
