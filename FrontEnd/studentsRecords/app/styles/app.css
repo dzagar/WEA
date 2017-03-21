@@ -64,12 +64,25 @@ body > .ember-view {
 .appBody h2 {
 	text-align: center;
 }
+.ui.text.container {
+  min-height: 100%;
+}
+.ui.centered.grid.container {
+  height:auto;
+}
+.ui.button.animated {
+  min-height: 100%;
+}
+.welcomePage {
+  height: 300px;
+  margin-bottom: -50px;
+}
 /*div>.welcome{
 	margin-bottom: 13em;
-}*/
+}
 div>div>div> .ui.huge.button {
 	height: 100%;
-}
+}*/
 
 /*About Us*/
 .headshot > img {
@@ -109,5 +122,27 @@ div>div>div> .ui.huge.button {
   background-size: cover;
   padding: 0;
 }
-
-
+.cstmDPurple {
+  background-color: #562e49 !important;
+  color: #FFFFFF !important;
+}
+.cstmLGrey {
+  background-color: #d8dad9 !important;
+  color: #000000 !important;
+}
+.cstmLPurple {
+  background-color: #9d87ae !important;
+  color: #FFFFFF !important;
+}
+.cstmLBlue {
+  background-color: #c3e8f0 !important;
+  color: #000000 !important;
+}
+.cstmGold {
+  background-color: #cbbb9a !important;
+  color: #FFFFFF !important;
+}
+.cstmTurq {
+  background-color: #75ced2 !important;
+  color: #FFFFFF !important;
+}
