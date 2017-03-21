@@ -111,6 +111,26 @@ export default Ember.Component.extend({
 			}).then(function (response) {
 				console.log(response);
 			});
+			this.get('store').query('assessment-code', {
+				deleteAll: true
+			}).then(function (response) {
+				console.log(response);
+			});
+			this.get('store').query('logical-expression', {
+				deleteAll: true
+			}).then(function (response) {
+				console.log(response);
+			});
+			this.get('store').query('adjudication-category', {
+				deleteAll: true
+			}).then(function (response) {
+				console.log(response);
+			});
+			this.get('store').query('course-grouping', {
+				deleteAll: true
+			}).then(function (response) {
+				console.log(response);
+			});
 		
 			this.get('store').unloadAll();
 
