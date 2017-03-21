@@ -1,1 +1,118 @@
-{{yield}}
+{{#if showDeleteConfirmation}}
+    {{delete-highschool grade = selectedGrade showWindow = showDeleteConfirmation}}
+{{/if}}
+
+<h2>High School Info</h2>
+
+<h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
+
+<table class="ui fixed table">
+  <thead>
+    <tr>
+      <th class="four wide">High School</th>
+      <th class="three wide">Course</th>
+      <th class="two wide">Level</th>
+      <th class="two wide">Source</th>
+      <th class="two wide">Unit</th>
+      <th class="two wide">Grade</th>
+      <th class="two wide"><!--spacer--></th>
+    </tr>
+  </thead>
+  {{#each currentStudent.highSchoolCourses as |grade index|}}
+  <tr>
+    <td>
+        {{grade.source.school.schoolName}}
+    </td>
+    <td>
+        {{grade.source.subject.name}} - {{grade.source.subject.description}}
+    </td>
+    <td>
+        {{grade.source.level}}
+    </td>
+    <td>
+        {{grade.source.source}}
+    </td>
+    <td>
+        {{grade.source.unit}}
+    </td>
+    <td>
+      <div class="ui fluid input">
+        {{input type="text" value = grade.mark}}
+        
+      </div>
+    </td>
+    <td>
+      <div class="ui inverted buttons">
+        <button class="ui blue inverted icon button" {{action "saveHSGrade" grade}}>
+          <i class="icon save"></i>
+        </button>
+        <div class="divider"/>
+        <button class="ui red inverted icon button" {{action "deleteHSGrade" grade}}>
+          <i class="icon trash"></i>
+        </button>
+      </div>
+    </td>
+  </tr>
+  {{/each}}
+  <tr>
+    <td class="dimmable" style="overflow: visible">
+        <div class="ui fluid search selection dropdown {{if errorHS "error"}}" id="hsDropdown" onmouseover={{action "loadHSData"}} onchange={{action "changeHighSchool" value="target.value"}} onclick={{action "clearError" "errorHS"}}>
+            <input name="highSchool" type="hidden">
+            <i class="dropdown icon"></i>
+            <div class="default text">High School</div>
+            <div class="menu">
+                {{#each highSchools as |school|}}
+                    <div class="item" data-value={{school.id}}>{{school.schoolName}}</div>
+                {{/each}}
+            </div>
+        </div>
+        {{#if loadingHS}}
+            <div class="ui active dimmer">
+                <div class="ui loader"></div>
+            </div>
+        {{/if}}
+    </td>
+    <td class="dimmable" style="overflow: visible">
+        <div class="ui fluid search selection dropdown {{if errorSubject "error"}}" id="subjectDropdown" onmouseover={{action "loadSubjectData"}} onchange={{action "changeSubject" value="target.value"}} onclick={{action "clearError" "errorSubject"}}>
+            <input name="subject" type="hidden">
+            <i class="dropdown icon"></i>
+            <div class="default text">Subject</div>
+            <div class="menu">
+                {{#each highSchoolSubjects as |subject|}}
+                    <div class="item" data-value={{subject.id}}>{{subject.name}} - {{subject.description}}</div>
+                {{/each}}
+            </div>
+        </div>
+        {{#if loadingSubject}}
+            <div class="ui active dimmer">
+                <div class="ui loader"></div>
+            </div>
+        {{/if}}
+    </td>
+    <td>
+      <div class="ui fluid input {{if errorLevel "error"}}" onclick={{action "clearError" "errorLevel"}}>
+        {{input type="text" value = newLevelValue}}
+      </div>
+    </td>
+    <td>
+      <div class="ui fluid input {{if errorSource "error"}}" onclick={{action "clearError" "errorSource"}}>
+        {{input type="text" value = newSourceValue}}
+      </div>
+    </td>
+    <td>
+      <div class="ui fluid input {{if errorUnit "error"}}" onclick={{action "clearError" "errorUnit"}}>
+        {{input type="text" value = newUnitValue}}
+      </div>
+    </td>
+    <td>
+      <div class="ui fluid input {{if errorGrade "error"}}" onclick={{action "clearError" "errorGrade"}}>
+        {{input type="text" value = newGradeValue}}
+      </div>
+    </td>
+    <td>
+      <button class="ui inverted green button" {{action "addHSGrade"}}> 
+        Add &nbsp; <i class="add square icon"></i>
+      </button>
+    </td>
+  </tr>
+    </table>
