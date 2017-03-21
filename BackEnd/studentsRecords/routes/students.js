@@ -176,6 +176,7 @@ router.route('/:student_id')
                 student.admissionComments = request.body.student.admissionComments;
                 if (request.body.student.scholarships) student.scholarships = request.body.student.scholarships.slice();
                 if (request.body.student.terms) student.terms = request.body.student.terms.slice();
+                if (request.body.student.adjudications) student.adjudications = request.body.student.adjudications.slice();
                 student.advancedStandings = request.body.student.advancedStandings;
                 student.highSchoolGrades = request.body.student.highSchoolGrades;
                 student.adjudications = request.body.student.adjudications;
