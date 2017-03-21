@@ -228,7 +228,7 @@ router.route('/:assessmentCode_id')
         AssessmentCode.findById(request.params.assessmentCode_id, function(error, assessmentCode){
             if (error)
             {
-                response.send({error:error});
+                response.send(error);
             }
             else{
                 response.send({assessmentCode:assessmentCode});
