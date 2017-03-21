@@ -122,6 +122,13 @@ div>div>div> .ui.huge.button {
   background-size: cover;
   padding: 0;
 }
+/*generate chart*/
+.hideChart{
+  display: none;
+}
+#open{
+  padding-bottom: 20px;
+}
 .cstmDPurple {
   background-color: #562e49 !important;
   color: #FFFFFF !important;

@@ -133,16 +133,24 @@
   <div class="ui bottom attached tab segment" data-tab="program">
     <h2>Program Records</h2>
     <h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
-
-    <select class="ui dropdown" onchange={{action 'selectTerm' value='target.value'}}>
-      {{#each currentStudent.terms as |semester index|}}
-        <option value={{index}}>{{semester.termCode.name}}</option>
-      {{/each}}
-    </select>
-
+    <div class="ui grid">
+      <div class="eight wide column">
+        {{#ui-dropdown class="fluid selection" selected=termIndex onChange=(action (mut termIndex))}}
+          <i class="dropdown icon"></i>
+          <div class="default text">Select Term</div>
+          <div class="menu">
+            {{#each currentStudent.terms as |semester index|}}
+              <div class="item"   data-value= "{{semester.termCode.id}}" >
+                {{semester.termCode.name}}
+              </div>
+            {{/each}}
+          </div>
+        {{/ui-dropdown}}
+      </div>
+    </div>
     <h5>Plan Codes</h5>
-    {{#each currentStudent.terms as |term index|}}
-      {{#if (eq index termIndex)}}
+    {{#each currentStudent.terms as |term|}}
+      {{#if (eq term.termCode.id termIndex)}}
         {{#each term.programRecords as |programRecord|}}
           <label>{{programRecord.name}}</label>
           <div class="ui bulleted list">
@@ -165,8 +173,8 @@
           <th></th>
         </tr>
       </thead>
-      {{#each currentStudent.terms as |term index|}}
-      {{#if (eq index termIndex)}}
+      {{#each currentStudent.terms as |term|}}
+      {{#if (eq term.termCode.id termIndex)}}
         {{#each term.grades as |grade|}}
           <tr>
             <td colspan="2">{{grade.courseCode.name}}</td>
@@ -294,7 +302,7 @@
   </div>
 
   <div class="ui bottom attached tab segment" data-tab="adjudication">
-    {{student-adjudication-tab currentStudent = currentStudent store = store}}
+    {{student-adjudication-tab currentStudent = currentStudent store = store selectedTermCode = termIndex}}
   </div>
 
 

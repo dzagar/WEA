@@ -88,6 +88,7 @@ router.route('/:courseCode_id')
             if (error) {
                 response.send(error);
             } else {
+                console.log("In here.");
                 response.send({courseCode: courseCode});
             }
         });
@@ -103,6 +104,7 @@ router.route('/:courseCode_id')
                 courseCode.name = request.body.courseCode.name;
                 courseCode.unit = request.body.courseCode.unit;
                 courseCode.grades = request.body.courseCode.grades;
+                courseCode.courseGroupings = request.body.courseCode.courseGroupings;
 
                 courseCode.save(function(error) {
                     if (error) {

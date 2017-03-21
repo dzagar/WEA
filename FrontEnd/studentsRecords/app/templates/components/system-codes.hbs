@@ -18,7 +18,7 @@
     {{else if showDeleteCourseGroupingConfirmation}}
     {{delete-course-grouping courseGrouping = currentCourseGrouping showWindow = showDeleteCourseGroupingConfirmation}}
     {{else if showAddCoursesModal}}
-    {{add-new-course-grouping courseGrouping = currentCourseGrouping showWindow = showAddCoursesModal}}
+    {{add-new-course-grouping courseGroup=currentCourseGrouping showWindow = showAddCoursesModal}}
     {{else if }}
 
 {{/if}}
@@ -366,8 +366,8 @@
 <div class="ui bottom attached tab segment" data-tab="hsSubject">
      <table class="ui table">
         <thead>
-          <th class="three wide">Name</th>
-          <th class="three wide">Description</th>
+          <th class="two wide">Name</th>
+          <th class="two wide">Description</th>
           <th class="two wide">Level</th>
           <th class="two wide">Source</th>
           <th class="two wide">Unit</th>
@@ -497,6 +497,18 @@
                 </div>
             </td>
         </tr>
+        <div class = "row">
+						{{#if isLoading}}
+							{{#ui-loader value = feature.progress progress = feature.progress total = feature.total}}
+								<div class="ui segment">
+                                    <p></p>
+                                        <div class="ui active dimmer">
+                                            <div class="ui loader"></div>
+                                        </div>
+                                </div>
+							{{/ui-loader}}
+						{{/if}}
+					</div>
         {{/each}}
 
         <tr>
@@ -618,7 +630,6 @@
         
         {{#each courseGroupingModel as |courseGrouping|}}
          <tr>   
-             {{add-new-course-grouping groupingID = courseGrouping.id}}
             <td>
                 <b>{{courseGrouping.name}}</b>
             </td>
