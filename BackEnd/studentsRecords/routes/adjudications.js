@@ -251,21 +251,21 @@ router.route('/:adjudication_id')
                             } else {
                                 completed++;
                                 if (completed === 3 && !failed) {
-                                    response.json({deleted: adjudication});
+                                    response.json({adjudication: adjudication});
                                 }
                             }
                         });
                     } else {
                         completed++;
                         if (completed === 3 && !failed) {
-                            response.json({deleted: adjudication});
+                            response.json({adjudication: adjudication});
                         }
                     }
                 });
             } else {
                 completed++;
                 if (completed === 3 && !failed) {
-                    response.json({deleted: adjudication});
+                    response.json({adjudication: adjudication});
                 }
             }
 
@@ -277,7 +277,7 @@ router.route('/:adjudication_id')
                     } else if (termCode) {
                         let index = termCode.adjudications.indexOf(adjudication._id);
                         if (index > -1) {
-                            termcode.adjudications.splice(index, 1);
+                            termCode.adjudications.splice(index, 1);
                         }
 
                         termCode.save(function (error) {
@@ -287,21 +287,21 @@ router.route('/:adjudication_id')
                             } else {
                                 completed++;
                                 if (completed === 3 && !failed) {
-                                    response.json({deleted: adjudication});
+                                    response.json({adjudication: adjudication});
                                 }
                             }
                         });
                     } else {
                         completed++;
                         if (completed === 3 && !failed) {
-                            response.json({deleted: adjudication});
+                            response.json({adjudication: adjudication});
                         }
                     }
                 });
             } else {
                 completed++;
                 if (completed === 3 && !failed) {
-                    response.json({deleted: adjudication});
+                    response.json({adjudication: adjudication});
                 }
             }
 
@@ -323,21 +323,21 @@ router.route('/:adjudication_id')
                             } else {
                                 completed++;
                                 if (completed === 3 && !failed) {
-                                    response.json({deleted: adjudication});
+                                    response.json({adjudication: adjudication});
                                 }
                             }
                         });
                     } else {
                         completed++;
                         if (completed === 3 && !failed) {
-                            response.json({deleted: adjudication});
+                            response.json({adjudication: adjudication});
                         }
                     }
                 });
             } else {
                 completed++;
                 if (completed === 3 && !failed) {
-                    response.json({deleted: adjudication});
+                    response.json({adjudication: adjudication});
                 }
             }
         });
