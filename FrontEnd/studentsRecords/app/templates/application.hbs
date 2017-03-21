@@ -6,9 +6,6 @@
           {{#link-to 'home' class='item'}}
             <img class="logo" src="/assets/images/UWO Stacked_Rev.png">WE Adjudication
           {{/link-to}}
-          {{#link-to 'about-us' class='item'}}
-            About Us
-          {{/link-to}}
           {{#link-to 'student-records' class='item'}}
             Student Records
           {{/link-to}}
@@ -43,7 +40,12 @@
         <div class="ui violet inverted vertical footer segment">
           <div class="ui center aligned grid">
             <div class="four wide column">
-              © Copyright - Digital Sloth
+              © Copyright - 
+              {{#link-to 'about-us'}}
+                <span style = "color:white;">
+                  Digital Sloth
+                </span>
+              {{/link-to}}
               <img class="ui right spaced mini image" src="/assets/images/UWO Stacked_Rev.png">
             </div>
           </div>
