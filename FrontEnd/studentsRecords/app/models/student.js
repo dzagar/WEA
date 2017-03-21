@@ -19,5 +19,5 @@ export default DS.Model.extend({
   cumAVG: DS.attr(),
   cumUnitsPassed: DS.attr(),
   cumUnitsTotal: DS.attr(),
-  adjudications: DS.hasMany('adjudications')
+  adjudications: DS.hasMany('adjudication')
 });
