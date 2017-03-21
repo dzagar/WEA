@@ -100,6 +100,10 @@ export default Ember.Component.extend({
                     self.set('loadingAssessmentCodes', false);
                 });
             }
-        }
+        },
+		selectTermToView(termCodeID){
+			this.set('selectedTermCode', termCodeID);
+			Ember.$('.ui.menu').find('.item').tab('change tab', 'program')
+		}
 	}
 });

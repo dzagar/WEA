@@ -103,7 +103,9 @@
   {{#each currentStudent.terms as |term|}}
     <tr>
       <td>
-        {{term.termCode.name}}
+        <a style="cursor: pointer;" {{action 'selectTermToView' term.termCode.id}}>
+          {{term.termCode.name}}
+        </a>
       </td>
       <td>
         {{term.termAVG}}
