@@ -781,7 +781,7 @@ export default Ember.Component.extend({
             var doneReading = false;
             var doneReadingMutex = Mutex.create();
             
-            this.get('store').query('student', {offset: 0, limit: 100}).then(function (records) {
+            this.get('store').findAll('student').then(function (records) {
                 currentTotal += records.get('length');                
                 records.forEach(function(student, studentIndex) {
                     //push objID, termID, cumAVG, CumUnitsTotal, cumUnitsPassed

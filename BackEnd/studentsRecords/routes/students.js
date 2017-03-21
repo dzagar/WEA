@@ -111,7 +111,7 @@ router.route('/')
                     }
                 });
             }
-            else
+            else if (l && l != 0)
             { 
                 Student.paginate({}, { offset: o, limit: l },function (error, students) {
                     if (error) {
@@ -127,6 +127,17 @@ router.route('/')
                     }
                 });
 
+            }
+            else{
+                console.log("get all");
+                Student.find({}, function(error, students){
+                    if (error){
+                        response.send(error);
+                    }
+                    else{
+                        response.send({students: students});
+                    }
+                });
             }
             //models.Students.find(function (error, students) {
             //    if (error) response.send(error);
