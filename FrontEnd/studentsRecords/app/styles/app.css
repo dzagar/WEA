@@ -90,4 +90,24 @@ div>div>div> .ui.huge.button {
     min-height: 75px;
 }
 
+/*Login page*/
+.loginPage {
+  margin-top: 15%;
+}
+.loginPage .grid .form-holder {
+  background-color: white;
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 7px 50px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 7px 50px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px 7px 50px 0px rgba(0,0,0,0.75);
+}
+.loginPage .grid .form-holder form .form .field input {
+  background-color: rgba(100,0,20,0.2);
+}
+.login {
+  background-image: url('/assets/images/uwo-2.jpg');
+  background-size: cover;
+  padding: 0;
+}
+
 
