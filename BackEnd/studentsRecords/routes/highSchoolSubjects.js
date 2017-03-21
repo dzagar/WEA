@@ -19,6 +19,8 @@ router.route('/')
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
+        var o = parseInt(request.query.offset);
+        var l = parseInt(request.query.limit);
         var course = request.query.course;
         if (request.query.deleteAll)
         {
@@ -42,6 +44,19 @@ router.route('/')
                 if (err) response.send(err);
                 else {
                     response.json({highSchoolSubject: highSchoolSubject});
+                }
+            });
+        }
+        else if ((o || o == 0) && l) {
+            HighSchoolSubject.paginate({}, { offset: o, limit: l }, function(err, highSchoolSubject){
+                if (err) response.send(err);
+                else {
+                    HighSchoolSubject.count({}, function(err, num){
+                        if (err) response.send(err);
+                        else {
+                            response.json({highSchoolSubject: highSchoolSubject.docs, meta: {total: num}});
+                        }
+                    });
                 }
             });
         }

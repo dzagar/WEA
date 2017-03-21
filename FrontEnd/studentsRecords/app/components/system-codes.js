@@ -61,6 +61,7 @@ export default Ember.Component.extend({
     return num;
     }),
     totalCourseCodes: null,
+    totalHighSchoolSubjects:  null,
     totalPages: Ember.computed('totalCourseCodes', 'pageSize', function() {
     let ttl = Math.ceil(this.get('totalCourseCodes')/this.get('pageSize'));
     return ttl;
@@ -103,6 +104,7 @@ export default Ember.Component.extend({
     },
 
     init() {
+        var isLoading = true;
         this._super(...arguments);
         var self = this;
         
@@ -155,12 +157,23 @@ export default Ember.Component.extend({
             self.set('totalCourseCodes', records.get('meta').total);
             self.set('courseCodeRecords', records);
         });
+
+        this.set('limit', 10);
+        this.set('offset', 0);
+        this.set('pageSize', 10);
+        this.get('store').query('high-school-subject', {
+            limit: self.get('limit'),
+            offset: self.get('offset')
+        }).then(function(records){
+            self.set('totalHighSchoolSubjects', records.get('meta').total);
+        });
         
         this.set('currentCourseCode', null);
         this.set('currentGender', null);
         this.set('currentResidency', null);
         this.set('currentHighSchool', null);
         this.set('currentHighSchoolSubject', null);
+        isLoading=false;
     },
 
     courseCodeModel: Ember.observer('offset', function () {

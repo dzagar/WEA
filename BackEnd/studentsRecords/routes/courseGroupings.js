@@ -78,7 +78,7 @@ router.route('/')
 
         else if(request.query.courseCodes)
         {
-            CourseGrouping.find({courseCodes: request.query.courseCodes}, function(error, courseGrouping)
+            CourseGrouping.findAll({courseCodes: request.query.courseCodes}, function(error, courseGrouping)
             {
                 if(error)
                 {
@@ -116,7 +116,7 @@ router.route('/')
             if (error) {
                 response.send(error);
             } else {
-                response.send({courseGrouping: courseGrouping});
+                response.json({courseGrouping: courseGrouping});
             }
         });
     })
@@ -124,25 +124,50 @@ router.route('/')
     .put(parseUrlencoded, parseJSON, function (request, response) {
         CourseGrouping.findById(request.params.courseGrouping_id, function (error, courseGrouping){
 
-            courseGrouping.name=request.body.courseGrouping.name;
-            courseGrouping.courseCodes=request.body.courseGrouping.courseCodes;
-
-            courseGrouping.save(function(error){
             if(error)
             {
                 response.send(error);
             }
 
-            else
-            {
-                response.send({courseGrouping: courseGrouping});
-            }
+            else {
+                //delete all references to the courseGrouping in courseCodes
+                for (var i = 0; i < courseGrouping.courseCodes.length; i++){
+                    CourseCode.findById(courseGrouping.courseCodes[i], function(error, courseCode){
+                        var indexOfCourseGrouping  = courseCode.courseGroupings.indexOf(courseGrouping.id);
+                        //they have a reference
+                        if (indexOfCourseGrouping > -1){
+                            courseCode.courseGroupings.splice(indexOfCourseGrouping, 1);
+                            courseCode.save();
+                        }                        
+                    });
+                }
+                for (var i = 0; i < request.body.courseGrouping.courseCodes.length; i++)
+                {
+                    CourseCode.findById(request.body.courseGrouping.courseCodes[i], function(error, courseCode){
+                        courseCode.courseGroupings.push(request.params.courseGrouping_id);
+                        courseCode.save();
+                    });                    
+                }
 
-            });
+
+                if(request.body.courseGrouping.courseCodes)
+                {
+                    courseGrouping.courseCodes=request.body.courseGrouping.courseCodes.slice();
+                }
+                courseGrouping.name=request.body.courseGrouping.name;                
+                courseGrouping.save(function(error){
+                    if(error)
+                    {
+                        response.send(error);
+                    }
+                    else
+                    {
+                        response.json({courseGrouping : courseGrouping});
+                    }
+                });
+            }        
         });
-
     })
-
     .delete(parseUrlencoded, parseJSON, function (request, response) {
         var failed=false;
         var completed=0;
@@ -165,7 +190,8 @@ router.route('/')
 
                         else if(courseCode)
                         {
-                            courseCode.courseGroupings=null;
+                            var indexOfCourseGrouping = courseCode.courseGroupings.indexOf(request.params.courseGrouping_id);
+                            courseCode.courseGroupings.splice(indexOfCourseGrouping, 1);
 
                             courseCode.save(function(error){
                                 if(error)
@@ -178,7 +204,7 @@ router.route('/')
                                     completed++;
                                     if(completed==courseGrouping.courseCodes.length && !failed)
                                     {
-                                        response.json({deleted: courseGrouping});
+                                        response.json({courseGrouping: courseGrouping});
                                     }
                                 }
                             });
@@ -189,7 +215,7 @@ router.route('/')
                             completed++;
                             if(completed==courseGrouping.courseCodes.length && !failed)
                             {
-                                response.json({deleted: courseGrouping});
+                                response.json({courseGrouping: courseGrouping});
                             }
                         }
                     });
@@ -197,7 +223,7 @@ router.route('/')
 
             }   else
                 {
-                    response.json({deleted:courseGrouping});
+                    response.json({courseGrouping:courseGrouping});
                 }
         
         });
