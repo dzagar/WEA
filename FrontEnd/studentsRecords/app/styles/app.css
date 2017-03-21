@@ -13,6 +13,11 @@ html {
   min-width:100%;
 }
 
+body {
+  background-color: #ebebeb !important;
+  color: black !important;
+}
+
 body > .ember-view {
   position: relative;
   margin: 0;
@@ -130,26 +135,26 @@ div>div>div> .ui.huge.button {
   padding-bottom: 20px;
 }
 .cstmDPurple {
-  background-color: #562e49 !important;
+  background-color: #4e2683 !important;
   color: #FFFFFF !important;
 }
 .cstmLGrey {
-  background-color: #d8dad9 !important;
+  background-color: #ebebeb !important;
   color: #000000 !important;
 }
-.cstmLPurple {
-  background-color: #9d87ae !important;
+.cstmLOrange {
+  background-color: #faa600 !important;
   color: #FFFFFF !important;
 }
 .cstmLBlue {
-  background-color: #c3e8f0 !important;
-  color: #000000 !important;
+  background-color: #02bfc6 !important;
+  color: #FFFFFF !important;
 }
 .cstmGold {
   background-color: #cbbb9a !important;
   color: #FFFFFF !important;
 }
 .cstmTurq {
-  background-color: #75ced2 !important;
+  background-color: #00999f !important;
   color: #FFFFFF !important;
 }
