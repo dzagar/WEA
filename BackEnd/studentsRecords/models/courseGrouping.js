@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var mongoosePaginate = require('mongoose-paginate');
 
 var courseGroupingSchema = mongoose.Schema(
     {
@@ -10,5 +11,7 @@ var courseGroupingSchema = mongoose.Schema(
         versionKey: false
     }
 );
+
+courseGroupingSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('courseGrouping', courseGroupingSchema);
