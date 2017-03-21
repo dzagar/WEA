@@ -16,18 +16,33 @@
 	  </div>
 
 	  <div class = "six wide field">
-	    {{#ui-dropdown class = "selection" selected = currentOpr onChange = (action (mut currentOpr))}}
-	      <input name = "op" type = "hidden">
-	      <div class = "default text">Operand</div>
-	      <i class = "dropdown icon"></i>
-	      <div class = "menu">
-	        {{#each operators as |currentOpr|}}
-	          <div class = "item" data-value = {{currentOpr.id}}>
-	            {{currentOpr.name}}
-	          </div>
-	        {{/each}}
-	      </div>
-	    {{/ui-dropdown}}
+	  	{{#if selectByCourseGrouping}}
+	  		{{#ui-dropdown class = "selection" selected = currentOpr onChange = (action (mut currentOpr))}}
+		      <input name = "op" type = "hidden">
+		      <div class = "default text">Operand</div>
+		      <i class = "dropdown icon"></i>
+		      <div class = "menu">
+		        {{#each courseGroupingOprs as |currentOpr|}}
+		          <div class = "item" data-value = {{currentOpr.id}}>
+		            {{currentOpr.name}}
+		          </div>
+		        {{/each}}
+		      </div>
+		    {{/ui-dropdown}}
+	  	{{else}}
+		    {{#ui-dropdown class = "selection" selected = currentOpr onChange = (action (mut currentOpr))}}
+		      <input name = "op" type = "hidden">
+		      <div class = "default text">Operand</div>
+		      <i class = "dropdown icon"></i>
+		      <div class = "menu">
+		        {{#each regOprs as |currentOpr|}}
+		          <div class = "item" data-value = {{currentOpr.id}}>
+		            {{currentOpr.name}}
+		          </div>
+		        {{/each}}
+		      </div>
+		    {{/ui-dropdown}}
+	    {{/if}}
 	  </div>
 
 	  <div class = "four wide field">
@@ -36,7 +51,7 @@
 	      {{#if enforceBetweenVal}}
 	      	{{input type = "text" placeholder = "First Value" value = currentVal1 onChange = (action (mut currentVal1))}}
 	      	{{input type = "text" placeholder = "Second Value" value = currentVal2 onChange = (action (mut currentVal2))}}
-	      {{else if enforceBooleanValueField}}
+	      {{else if selectByCourseGrouping}}
 	      	{{#ui-dropdown class = "selection" selected = currentVal onChange = (action (mut currentVal))}}
 	      		<div class = "default text">True/False</div>
 	      		<i class = "dropdown icon"></i>

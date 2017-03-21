@@ -48,10 +48,10 @@
 		<div class="ten wide stretchered column ui basic vertical ordered steps">
 			{{#if index1}}
 				{{#each importUndergrad as |feature index|}}
-					<div class = "ui segment step " id = {{feature.name}}>
+					<div class = "ui segment step " id = {{feature.code}}>
 						<div class = "content">
 							<h3> {{feature.name}} </h3>
-							<p> {{{feature.description}}} {{index}}</p>
+							<p> {{{feature.description}}}</p>
 							<input type = "file" id = {{concat "newFile" index}}>
 							<br>
 							<br>
@@ -68,16 +68,16 @@
 					</div>
 				{{/each}}
 				<div class = "ui basic centered middle aligned grid segment">
-					<button class="ui primary button" {{action 'import' }}>
+					<button id = "btnImport" class="ui primary button" {{action 'import' }}>
 		  				Import Files
 					</button>
 				</div>
 			{{else if index2}}
 				{{#each importHighSchool as |feature index|}}
-					<div class = "ui segment step " id = {{feature.name}}>
+					<div class = "ui segment step " id = {{feature.code}}>
 						<div class = "content">
 							<h3> {{feature.name}} </h3>
-							<p> {{{feature.description}}} {{index}}</p>
+							<p> {{{feature.description}}}</p>
 							<input type = "file" id = {{concat "newFile" index}}>
 							<br>
 							<br>
@@ -94,16 +94,16 @@
 					</div>
 				{{/each}}
 				<div class = "ui basic centered middle aligned grid segment">
-					<button class="ui primary button" {{action 'import' }}>
+					<button id="btnImport" class="ui primary button" {{action 'import' }}>
 		  				Import Files
 					</button>
 				</div>
 			{{else if index3}}
 				{{#each importStudent as |feature index|}}
-					<div class = "ui segment step " id = {{feature.name}}>
+					<div class = "ui segment step " id = {{feature.code}}>
 						<div class = "content">
 							<h3> {{feature.name}} </h3>
-							<p> {{{feature.description}}} {{index}}</p>
+							<p> {{{feature.description}}}</p>
 							<input type = "file" id = {{concat "newFile" index}}>
 							<br>
 							<br>
@@ -120,16 +120,16 @@
 					</div>
 				{{/each}}
 				<div class = "ui basic centered middle aligned grid segment">
-					<button class="ui primary button" {{action 'import' }}>
+					<button id = "btnImport" class="ui primary button" {{action 'import' }}>
 		  				Import Files
 					</button>
 				</div>
 			{{else if index4}}
 				{{#each importFaculty as |feature index|}}
-					<div class = "ui segment step " id = {{feature.name}}>
+					<div class = "ui segment step " id = {{feature.code}}>
 						<div class = "content">
 							<h3> {{feature.name}} </h3>
-							<p> {{{feature.description}}} {{index}}</p>
+							<p> {{{feature.description}}}</p>
 							<input type = "file" id = {{concat "newFile" index}}>
 							<br>
 							<br>
@@ -146,16 +146,16 @@
 					</div>
 				{{/each}}
 				<div class = "ui basic centered middle aligned grid segment">
-					<button class="ui primary button" {{action 'import' }}>
+					<button id = "btnImport" class="ui primary button" {{action 'import' }}>
 		  				Import Files
 					</button>
 				</div>
 			{{else}}
 				{{#each importBasic as |feature index|}}
-					<div class = "ui segment step " id = {{feature.name}}>
+					<div class = "ui segment step " id = {{feature.code}}>
 						<div class = "content">
 							<h3> {{feature.name}} </h3>
-							<p> {{{feature.description}}} {{index}}</p>
+							<p> {{{feature.description}}}</p>
 							<input type = "file" id = {{concat "newFile" index}}>
 							<br>
 							<br>
@@ -172,7 +172,7 @@
 					</div>
 				{{/each}}
 				<div class = "ui basic centered middle aligned grid segment">
-					<button class="ui primary button" {{action 'import' }}>
+					<button id = "btnImport" class="ui primary button" {{action 'import' }}>
 		  				Import Files
 					</button>
 				</div>
@@ -184,9 +184,15 @@
 				<div class = "ui segment">
 					{{{fileOutput}}}
 				</div>
-				<button id="btnContinue" class="ui primary button disabled" {{action 'continue' }}>
-		  				Continue
-				</button>
+				{{#if (greater-than changingIndex "16")}}
+					{{#link-to 'student-records' id = "btnFinish" class = "ui green button disabled"}}
+						Finish
+					{{/link-to}}
+				{{else}}
+					<button id="btnContinue" class="ui primary button disabled" {{action 'continue' }}>
+			  				Continue
+					</button>
+				{{/if}}
 			</div>
 		{{/if}}
 	</div>

@@ -8,7 +8,6 @@ export default Ember.Component.extend({
   tempPassword: null,
   error: null,
 
-
   errorMessage: Ember.computed ('error', function(){
     return this.get('error');
   }),
@@ -34,12 +33,15 @@ export default Ember.Component.extend({
             self.set('isPasswordChanging', true);
           } else {
             if (error === "wrongUserName") {
-              self.set('error', 'Please enter a correct user name');
+              Ember.$("#err").addClass("ui error message");
+              self.set('error', 'Please enter a correct username');
             } else {
               if (error === "wrongPassword") {
+                Ember.$("#err").addClass("ui error message");
                 self.set('error', 'Please enter a correct password');
               } else {
                 if (error === "loginFailed") {
+                  Ember.$("#err").addClass("ui error message");
                   self.set('error', 'Login Failed ...');
                 }
               }
