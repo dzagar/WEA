@@ -68,6 +68,11 @@
       {{#each studentsRecords as |student index|}}
         <div class="eight wide column">
           <div class="ui fluid labeled icon button" {{action "selectStudent" student index}}>
+            {{#each student.adjudications as |studentAdj|}}
+              {{#if studentAdj.assessmentCode.flagForReview}}
+                <i class="red icon flag"></i>
+              {{/if}}
+            {{/each}}
             <img class="ui avatar image icon" src={{student.photo}}>
             {{student.firstName}} {{student.lastName}}
           </div>

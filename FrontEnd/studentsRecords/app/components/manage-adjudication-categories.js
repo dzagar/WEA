@@ -23,7 +23,8 @@ export default Ember.Component.extend({
             var newCategoryYear = this.get('newCategoryYear');
             var newCategory = this.get('store').createRecord('adjudication-category', {
                 name: newCategoryName,
-                programYear: newCategoryYear
+                programYear: newCategoryYear,
+                assessmentCodes: []
             });
             newCategory.save().then(function(){
                 self.set('newCategoryName', "");
