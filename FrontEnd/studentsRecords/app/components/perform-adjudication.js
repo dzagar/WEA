@@ -29,8 +29,11 @@ var RegularOperators = {
 }
 
 export default Ember.Component.extend({
+    
+    adjudicationStatus: null,
     studentsToAdjudicate: null,
     adjudicationCategories: null,
+    doneStatus: "",
     nonCategoryAdjudications: null,
     adjudicationCategoriesAssessmentCodes: null,
     currentTerm: null,
@@ -41,6 +44,7 @@ export default Ember.Component.extend({
     evaluationProgress: 0,
     evaluationTotal: 1000,
     studentInformation: null,
+    adjudicationStatus: "",
     store: Ember.inject.service(),
 
 
@@ -65,6 +69,11 @@ export default Ember.Component.extend({
         //     self.set('courseGroupingsModel', records);
         // });
     },
+    progressTracker: Ember.observer('evaluationProgress', function () {
+        if (this.get('evaluationProgress') == this.get('evaluationTotal') && this.get('evaluationProgress') > 0){
+            this.set('doneStatus', "<span style='color:green;'>Adjudication Complete! Please proceed to the 'Generate Reports' tab.</span>");
+        }
+    }),
     determineProgress(newProgress, newTotal)
     {
         if (this.get('parsingProgress')/this.get('parsingTotal') <= newProgress/newTotal)
@@ -101,6 +110,8 @@ export default Ember.Component.extend({
         //initialize total size
         totalSize += this.get('adjudicationCategories').get('length') * studentInformation.length;
         totalSize += this.get('nonCategoryAdjudications').get('length') * studentInformation.length;
+        
+        self.set('adjudicationStatus', self.get('adjudicationStatus') + "Evaluating student for <b>" + this.get('adjudicationCategories').get('length') + " adjudication categories</b> and <b>" + this.get('nonCategoryAdjudications').get('length') + " Assessment code(s)</b> that do not belong to a category." + "<br>")
         self.set('evaluationTotal', totalSize);
 
         this.get('nonCategoryAdjudications').forEach(function(assessmentCode, assessmentCodeIndex) {
@@ -781,8 +792,10 @@ export default Ember.Component.extend({
             var doneReading = false;
             var doneReadingMutex = Mutex.create();
             
-            this.get('store').query('student', {offset: 0, limit: 100}).then(function (records) {
-                currentTotal += records.get('length');                
+            this.get('store').findAll('student').then(function (records) {
+                currentTotal += records.get('length');
+                self.set('adjudicationStatus', self.get('adjudicationStatus') + "Begining adjudication of " + currentTotal + " students." + "<br>");
+                self.set('adjudicationStatus', self.get('adjudicationStatus') + "Reading student data..." + "<br>");
                 records.forEach(function(student, studentIndex) {
                     //push objID, termID, cumAVG, CumUnitsTotal, cumUnitsPassed
                     readingMutex.lock(function() {
@@ -858,9 +871,10 @@ export default Ember.Component.extend({
                                                     {
                                                         self.set('studentInformation', studentAdjudicationInfo);
                                                         doneReading = true;
-                                                        //do actual evaluation
-                                                        console.log("done reading.... time to evaluate");
-                                                        console.log(studentAdjudicationInfo);
+                                                        
+                                                        self.set('adjudicationStatus', self.get('adjudicationStatus') + "Student Information successfully imported." + "<br>")
+                                                        self.set('adjudicationStatus', self.get('adjudicationStatus') + "Beginning student evaluation." + "<br>")
+
                                                         self.performAdjudication();
                                                     }
                                                 })
