@@ -5,9 +5,4 @@ export default Ember.Component.extend({
 	currentName: "",
 	authentication: Ember.inject.service('oudaAuth'),
 
-	actions: {
-		startStudentAdjudication: function(){
-			this.get('studentDataEntry')();
-		}
-	}
 });

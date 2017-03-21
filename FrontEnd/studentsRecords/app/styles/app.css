@@ -13,6 +13,11 @@ html {
   min-width:100%;
 }
 
+body {
+  background-color: #ebebeb !important;
+  color: black !important;
+}
+
 body > .ember-view {
   position: relative;
   margin: 0;
@@ -64,12 +69,25 @@ body > .ember-view {
 .appBody h2 {
 	text-align: center;
 }
+.ui.text.container {
+  min-height: 100%;
+}
+.ui.centered.grid.container {
+  height:auto;
+}
+.ui.button.animated {
+  min-height: 100%;
+}
+.welcomePage {
+  height: 300px;
+  margin-bottom: -50px;
+}
 /*div>.welcome{
 	margin-bottom: 13em;
-}*/
+}
 div>div>div> .ui.huge.button {
 	height: 100%;
-}
+}*/
 
 /*About Us*/
 .headshot > img {
@@ -109,7 +127,6 @@ div>div>div> .ui.huge.button {
   background-size: cover;
   padding: 0;
 }
-
 /*generate chart*/
 .hideChart{
   display: none;
@@ -117,5 +134,27 @@ div>div>div> .ui.huge.button {
 #open{
   padding-bottom: 20px;
 }
-
-
+.cstmDPurple {
+  background-color: #4e2683 !important;
+  color: #FFFFFF !important;
+}
+.cstmLGrey {
+  background-color: #ebebeb !important;
+  color: #000000 !important;
+}
+.cstmLOrange {
+  background-color: #faa600 !important;
+  color: #FFFFFF !important;
+}
+.cstmLBlue {
+  background-color: #02bfc6 !important;
+  color: #FFFFFF !important;
+}
+.cstmGold {
+  background-color: #cbbb9a !important;
+  color: #FFFFFF !important;
+}
+.cstmTurq {
+  background-color: #00999f !important;
+  color: #FFFFFF !important;
+}

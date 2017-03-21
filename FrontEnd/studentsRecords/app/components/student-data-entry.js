@@ -70,6 +70,7 @@ export default Ember.Component.extend({
       firstName: self.get('filter').firstName,
       lastName: self.get('filter').lastName,
       limit: self.get('limit'),
+      flagged: self.get('filter').flagged,
       offset: self.get('offset')
     }).then(function (records) {
       self.set('totalStudents', records.get('meta').total);
@@ -134,7 +135,8 @@ export default Ember.Component.extend({
       firstName: self.get('filter').firstName,
       lastName: self.get('filter').lastName,
       limit: self.get('limit'),
-      offset: self.get('offset')
+      offset: self.get('offset'),
+      flagged: self.get('filter').flagged
     }).then(function (records) {
       self.set('totalStudents', records.get("meta").total);
       self.set('studentsRecords', records);
