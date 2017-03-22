@@ -158,3 +158,59 @@ div>div>div> .ui.huge.button {
   background-color: #00999f !important;
   color: #FFFFFF !important;
 }
+.ui.inverted.cstmDPurple.button {
+  color: #4e2683 !important;
+  box-shadow: 0px 0px 0px 2px #4e2683 inset !important;
+  background-color: transparent !important;
+}
+.ui.inverted.cstmDPurple.button:hover{
+  background-color: #4e2683 !important;
+  color: #FFFFFF !important;
+}
+.ui.inverted.cstmLGrey.button {
+  color: #ebebeb !important;
+  box-shadow: 0px 0px 0px 2px #ebebeb inset !important;
+  background-color: transparent !important;
+}
+.ui.inverted.cstmLGrey.button:hover{
+  background-color: #ebebeb !important;
+  color: #000000 !important;
+}
+.ui.inverted.cstmLOrange.button {
+  color: #faa600 !important;
+  box-shadow: 0px 0px 0px 2px #faa600 inset !important;
+  background-color: transparent !important;
+}
+.ui.inverted.cstmLOrange.button:hover{
+  background-color: #faa600 !important;
+  color: #FFFFFF !important;
+}
+.ui.inverted.cstmLBlue.button {
+  color: #02bfc6 !important;
+  box-shadow: 0px 0px 0px 2px #02bfc6 inset !important;
+  background-color: transparent !important;
+}
+.ui.inverted.cstmLBlue.button:hover{
+  background-color: #02bfc6 !important;
+  color: #000000 !important;
+}
+.ui.inverted.cstmGold.button {
+  color: #cbbb9a !important;
+  box-shadow: 0px 0px 0px 2px #cbbb9a inset !important;
+  background-color: transparent !important;
+}
+.ui.inverted.cstmGold.button:hover{
+  background-color: #cbbb9a !important;
+  color: #FFFFFF !important;
+}
+.ui.inverted.cstmTurq.button {
+  color: #00999f !important;
+  box-shadow: 0px 0px 0px 2px #00999f inset !important;
+  background-color: transparent !important;
+}
+.ui.inverted.cstmTurq.button:hover{
+  background-color: #00999f !important;
+  color: #FFFFFF !important;
+}
+
+

@@ -18,7 +18,7 @@
           {{input value=userProfile.email type="text" placeholder="enter email address"}}
         </div>
 
-        {{#if  isChangingPassword }}
+        {{#if isChangingPassword }}
           <div class="inline field">
             <label class="right">Old Password</label>
             {{input value=oldPassword type="password" placeholder="enter old password"}}
@@ -36,15 +36,15 @@
 
           <div class="inline field">
             <p></p>
-            <button class="ui button"  {{action 'cancelChangePassword'}}>Cancel
+            <button class="ui cstmTurq button"  {{action 'cancelChangePassword'}}>Cancel
               Change Password
             </button>
           </div>
         {{else}}
           <div class="inline field">
             <label class="right">Password</label>
-            <button class="ui button"  {{action 'changePassword'}}>Change
-              password
+            <button class="ui cstmTurq button"  {{action 'changePassword'}}>Change
+              Password
             </button>
           </div>
         {{/if}}
@@ -53,8 +53,8 @@
     </div>
 
     <br><br>
-    <button class="ui button"  {{action 'saveUser'}}>Save</button>
-    <button class="ui button"  {{action 'cancel'}}>Cancel</button>
+    <button class="ui cstmLBlue button"  {{action 'saveUser'}}>Save</button>
+    <button class="ui red button"  {{action 'cancel'}}>Cancel</button>
 
   {{else}}
     <div class="ui center aligned raised segment">
