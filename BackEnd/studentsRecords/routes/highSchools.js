@@ -106,6 +106,7 @@ router.route('/')
             } else {
                 highSchool.name = request.body.highSchool.name;
                 highSchool.students = request.body.highSchool.students;
+                highSchool.courses = request.body.highSchool.courses;
 
                 highSchool.save(function(error) {
                     if (error) {
