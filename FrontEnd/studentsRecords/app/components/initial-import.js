@@ -374,7 +374,7 @@ export default Ember.Component.extend({
 						var genderCheckerArray=['NAME'];
 						var genderArray=[worksheet['A1'].v.toUpperCase()];
 						if (VerificationFunction(genderCheckerArray,genderArray)){
-							self.setOutput("Importing new student genders");
+							self.setOutput("Importing genders.");
 							var rollBackImport = false;
 							var doneImporting = false;
 							var gendersToImport = [];
@@ -388,9 +388,10 @@ export default Ember.Component.extend({
 										var genderName = gender.v;
 										//if the gender has already been added
 										if (uniqueGenderNames.includes(genderName)){
-											self.pushOutput("<font color='red'>Import cancelled. Your excel sheet contains duplicate gender names '" + genderName + "'</font>");
+											self.pushOutput("<font color='red'>Import cancelled. Your excel sheet contains duplicate gender names: '" + genderName + ".'</font>");
 											rollBackImport = true;
 											doneImporting = true;
+											Ember.$("#btnImport").removeClass("disabled");
 										} else { //create new gender object
 											gendersToImport[i - 2] = self.get('store').createRecord('gender', 
 											{
@@ -404,7 +405,8 @@ export default Ember.Component.extend({
 										//if no gender was imported
 										if (i == 2) {
 											rollBackImport = true;
-											self.pushOutput("<span style='color:red'>Import cancelled. File does not contain any values...</span>")
+											self.pushOutput("<span style='color:red'>Import cancelled. File does not contain any values.</span>");
+											Ember.$("#btnImport").removeClass("disabled");
 										}
 									}
 								}
@@ -427,7 +429,7 @@ export default Ember.Component.extend({
 											gendersImportedCount++;
 											if (gendersImportedCount == gendersToImport.length)
 											{
-												self.pushOutput("<span style='color:green'>Import Successful!</span>");
+												self.pushOutput("<span style='color:green'>Import successful!</span>");
   												Ember.$("#Genders").addClass("completed");
   												self.send("continue");
 											}
@@ -440,7 +442,7 @@ export default Ember.Component.extend({
 							var residencyCheckerArray = ['NAME'];
 							var residencyArray = [worksheet['A1'].v.toUpperCase()];
 							if (VerificationFunction(residencyCheckerArray,residencyArray)) {
-								self.setOutput("Importing residencies");
+								self.setOutput("Importing residencies.");
 								var rollBackImport = false;
 								var doneImporting = false;
 								var residenciesToImport = [];
@@ -454,9 +456,10 @@ export default Ember.Component.extend({
 										var residencyName = residency.v;
 										//if the residency has already been added
 										if (uniqueResidencyNames.includes(residencyName)) {
-											this.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate residency names '" + residencyName + "'</span>");
+											this.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate residency names: '" + residencyName + ".'</span>");
 											rollBackImport = true;
 											doneImporting = true;
+											Ember.$("#btnImport").removeClass("disabled");
 										} else { //create new residency object
 											residenciesToImport[i - 2] = self.get('store').createRecord('residency', 
 											{
@@ -469,7 +472,8 @@ export default Ember.Component.extend({
 										//if no residency was imported
 										if (i == 2) {
 											rollBackImport = true;
-											this.pushOutput("<span style='color:red'>File does not contain any values...</span>")
+											this.pushOutput("<span style='color:red'>File does not contain any values.</span>")
+											Ember.$("#btnImport").removeClass("disabled");
 										}
 									}
 								}
@@ -492,7 +496,7 @@ export default Ember.Component.extend({
 											numberOfResidenciesImported++;
 											if (numberOfResidenciesImported === residenciesToImport.length)
 											{
-												self.pushOutput("<span style='color:green'>Import Successful!</span>");
+												self.pushOutput("<span style='color:green'>Import successful!</span>");
 												Ember.$("#Residencies").addClass("completed");
 												self.send("continue");
 											}
@@ -505,7 +509,7 @@ export default Ember.Component.extend({
 							var coursecodeCheckerArray = ['COURSELETTER','COURSENUMBER','NAME','UNIT'];
 							var coursecodeArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase()];
 							if (VerificationFunction(coursecodeCheckerArray,coursecodeArray)) {
-								self.setOutput("Importing Course Codes");
+								self.setOutput("Importing course codes.");
 								var rollBackImport = false;
 								var doneImporting = false;
 								var courseCodesToImport = [];
@@ -525,7 +529,7 @@ export default Ember.Component.extend({
 										var courseCodeUnit = courseCode4.v;
 										//if the course code has already been added
 										if (!checkUniqueCourse(uniqueCourseCodes, courseCodeLetter, courseCodeNum, courseCodeUnit)) {
-											self.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate course codes '" + courseCodeLetter +" "+ courseCodeName + "'</span>");
+											self.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate course codes: '" + courseCodeLetter +" "+ courseCodeName + ".'</span>");
 											rollBackImport = true;
 											doneImporting = true;
 										} else { //create new course code object
@@ -543,7 +547,8 @@ export default Ember.Component.extend({
 										//if no course code was imported
 										if (i == 2) {
 											rollBackImport = true;
-											self.pushOutput("<span style='color:red'>Import Cancelled. File does not contain any values...</span>");
+											self.pushOutput("<span style='color:red'>Import cancelled. File does not contain any values.</span>");
+											Ember.$("#btnImport").removeClass("disabled");
 										}
 									}
 								}
@@ -566,7 +571,7 @@ export default Ember.Component.extend({
 											numberOfCodesImported++;
 											if (numberOfCodesImported === courseCodesToImport.length)
 											{
-												self.pushOutput("<span style='color:green'>Import Successful!</span>");
+												self.pushOutput("<span style='color:green'>Import successful!</span>");
   												Ember.$("#CourseCodes").addClass("completed");
   												self.send("continue");
 											}
@@ -591,9 +596,10 @@ export default Ember.Component.extend({
 										{
 											var termCodeName = termCode.v;
 											if (uniqueTermNames.includes(termCodeName)){
-												self.pushOutput("Import cancelled. Your excel sheet contains duplicate term code names '" + termCodeName + "'");
+												self.pushOutput("Import cancelled. Your excel sheet contains duplicate term code names: '" + termCodeName + ".'");
 												rollBackImport = true;
 												doneImporting = true;
+												Ember.$("#btnImport").removeClass("disabled");
 											}
 											else{
 												uniqueTermNames.push(termCodeName);
@@ -615,7 +621,7 @@ export default Ember.Component.extend({
 										Ember.set(importBasic.objectAt(3), "progress", termCodesToImport.length);
 										self.set('importBasic', importBasic);
 
-										self.pushOutput("Successful read of file has completed. Beginning import of " + termCodesToImport.length + " termCodes.");
+										self.pushOutput("Successful read of file has completed. Beginning import of " + termCodesToImport.length + " term codes.");
 										var numberOfTermsImported = 0;
 										var doneSaving = false;
 										for (var i = 0; i < termCodesToImport.length; i++)
@@ -627,7 +633,7 @@ export default Ember.Component.extend({
 												if (numberOfTermsImported === termCodesToImport.length && !doneSaving)
 												{
 													doneSaving = true;
-													self.pushOutput("<span style='color:green'>Import Successful!</span>");
+													self.pushOutput("<span style='color:green'>Import successful!</span>");
 													Ember.$("#btnContinue").removeClass("disabled");
 													Ember.$("#TermCodes").addClass("completed");
 												}
@@ -642,7 +648,7 @@ export default Ember.Component.extend({
 								var facultyCheckerArray = ['NAME'];
 								var facultyArray = [worksheet['A1'].v.toUpperCase()];
 								if (VerificationFunction(facultyCheckerArray,facultyArray)) {
-									self.setOutput("Importing Faculties");
+									self.setOutput("Importing faculties.");
 									var rollBackImport = false;
 									var doneImporting = false;
 									var uniqueFacultyNames = [];
@@ -651,7 +657,7 @@ export default Ember.Component.extend({
 										if (faculty) {
 											var facultyName = faculty.v;
 											if (uniqueFacultyNames.includes(facultyName)) {
-												self.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate faculty names '" + facultyName + "'</span>");
+												self.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate faculty names: '" + facultyName + ".'</span>");
 												rollBackImport = true;
 												doneImporting = true;
 											} else {
@@ -662,7 +668,8 @@ export default Ember.Component.extend({
 											//if no faculty was imported
 											if (i == 2) {
 												rollBackImport = true;
-												self.pushOutput("<span style='color:red'>File does not contain any values...</span>")
+												self.pushOutput("<span style='color:red'>Import cancelled. File does not contain any values.</span>");
+												Ember.$("#btnImport").removeClass("disabled");
 											}
 										}
 									}
@@ -685,7 +692,7 @@ export default Ember.Component.extend({
 												numberOfFacultiesImported++;
 												if (numberOfFacultiesImported === uniqueFacultyNames.length)
 												{
-													self.pushOutput("<span style='color:green'>Import Successful!</span>");
+													self.pushOutput("<span style='color:green'>Import successful!</span>");
 													Ember.$("#Faculties").addClass("completed");
 													self.send("continue");
 												}
@@ -700,7 +707,7 @@ export default Ember.Component.extend({
 								var departmentCheckerArray = ['NAME', 'FACULTY'];
 								var departmentArray = [worksheet['A1'].v.toUpperCase(), worksheet['B1'].v.toUpperCase()];
 								if (VerificationFunction(departmentCheckerArray,departmentArray)) {
-									self.setOutput("Importing departments");
+									self.setOutput("Importing departments.");
 									var rollBackImport = false;
 									var doneImporting = false;
 									var uniqueDepartments = [];
@@ -711,22 +718,25 @@ export default Ember.Component.extend({
 											var facultyName = faculty.v;
 											var departmentName = department.v;
 											if (uniqueDepartments.includes({"facultyName": facultyName, "departmentName": departmentName})) {
-												this.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate department names on row " + i + "</span>");
+												this.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate department names on row " + i + ".</span>");
 												rollBackImport = true;
 												doneImporting = true;
+												Ember.$("#btnImport").removeClass("disabled");
 											} else {
 												uniqueDepartments.push({"facultyName": facultyName, "departmentName": departmentName});
 											}
 										} else {
 											if (faculty || department)
 											{
-												this.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains improperly formatted data on row " + i + "</span>");
+												this.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains improperly formatted data on row " + i + ".</span>");
 												rollBackImport = true;
+												Ember.$("#btnImport").removeClass("disabled");
 											}
 											else{
 												if (i == 2) {
 													rollBackImport = true;
-													this.pushOutput("<span style='color:red'>File does not contain any values...</span>")
+													this.pushOutput("<span style='color:red'>Import cancelled. File does not contain any values.</span>");
+													Ember.$("#btnImport").removeClass("disabled");
 												}
 											}										
 											doneImporting = true;																				
@@ -762,7 +772,7 @@ export default Ember.Component.extend({
 															if (numberOfDepartmentsImported == uniqueDepartments.length - numberOfDepartmentsWithoutFaculty && !doneSavingDepartment)
 															{
 																doneSavingDepartment = true;
-																self.pushOutput("<span style='color:green'>Import of Departments successful!</span>");
+																self.pushOutput("<span style='color:green'>Import successful!</span>");
 																Ember.$("#Departments").addClass("completed");
 																self.send("continue");														
 															}
@@ -773,7 +783,7 @@ export default Ember.Component.extend({
 														if (numberOfDepartmentsImported == uniqueDepartments.length - numberOfDepartmentsWithoutFaculty && !doneSavingDepartment)
 														{
 															doneSavingDepartment = true;
-															self.pushOutput("<span style='color:green'>Import of Departments successful!</span>");
+															self.pushOutput("<span style='color:green'>Import successful!</span>");
 															Ember.$("#Departments").addClass("completed");
 															self.send("continue");													
 														}
@@ -791,7 +801,7 @@ export default Ember.Component.extend({
 								var PACheckerArray = ['NAME', 'POSITION', 'DEPARTMENT'];
 								var PAArray = [worksheet['A1'].v.toUpperCase(), worksheet['B1'].v.toUpperCase(), worksheet['C1'].v.toUpperCase()];
 								if (VerificationFunction(PACheckerArray, PAArray)) {
-									self.setOutput("Importing program administration information");
+									self.setOutput("Importing program administration information.");
 									var rollBackImport = false;
 									var doneImporting = false;
 									var PAsToImport = [];
@@ -807,12 +817,14 @@ export default Ember.Component.extend({
 										} else {
 											if (name || position || department)
 											{
-												this.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains improperly formatted data on row " + i + "</span>");
+												this.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains improperly formatted data on row " + i + ".</span>");
 												rollBackImport = true;
+												Ember.$("#btnImport").removeClass("disabled");
 											}
 											else if (i == 2) {
 												rollBackImport = true;
-												this.pushOutput("<span style='color:red'>File does not contain any values...</span>")
+												this.pushOutput("<span style='color:red'>Import cancelled. File does not contain any values.</span>");
+												Ember.$("#btnImport").removeClass("disabled");
 											}																				
 											doneImporting = true;																				
 										}
@@ -828,7 +840,7 @@ export default Ember.Component.extend({
 										var doneSavingPAs = false;
 										var inPAMutexIndex = 0;
 										var PAMutex = Mutex.create();
-										self.pushOutput("Successful read of file has completed. Beginning import of " + PAsToImport.length + " departments.");
+										self.pushOutput("Successful read of file has completed. Beginning import of " + PAsToImport.length + " program administrations.");
 										for (var i = 0; i < PAsToImport.length; i++) {
 											PAMutex.lock(function() {
 												var inPAMutexCount = inPAMutexIndex++;
@@ -849,7 +861,7 @@ export default Ember.Component.extend({
 															if (numberOfPAsImported == PAsToImport.length - numberOfPAsWithoutDepartment && !doneSavingPAs)
 															{
 																doneSavingPAs = true;
-																self.pushOutput("<span style='color:green'>Import of program administration information successful!</span>");
+																self.pushOutput("<span style='color:green'>Import successful!</span>");
 																Ember.$("#btnContinue").removeClass("disabled");
 																Ember.$("#ProgramAdministrations").addClass("completed");													
 															}
@@ -862,7 +874,7 @@ export default Ember.Component.extend({
 														if (numberOfPAsImported == PAsToImport.length - numberOfPAsWithoutDepartment && !doneSavingPAs)
 														{
 															doneSavingPAs = true;
-															self.pushOutput("<span style='color:green'>Import of program administration information successful!</span>");
+															self.pushOutput("<span style='color:green'>Import successful!</span>");
 															Ember.$("#btnContinue").removeClass("disabled");
 															Ember.$("#ProgramAdministrations").addClass("completed");												
 														}
@@ -881,7 +893,7 @@ export default Ember.Component.extend({
 							
 							if (VerificationFunction(studentCheckerArray,studentArray))
 							{
-								self.setOutput("Importing Students");
+								self.setOutput("Importing students.");
 								var mutex = Mutex.create();
 								var savingMutex = Mutex.create();
 								var deleteMutex = Mutex.create();
@@ -908,7 +920,8 @@ export default Ember.Component.extend({
 										{
 											rollBackImport = true;
 											doneImporting = true;
-											self.pushOutput("<span style='color:red'>Imported file contains duplicate records for student number " + studentNumber.v + "</span>");
+											self.pushOutput("<span style='color:red'>Imported file contains duplicate records for student number " + studentNumber.v + ".</span>");
+											Ember.$("#btnImport").removeClass("disabled");
 										}
 										else
 										{
@@ -943,7 +956,7 @@ export default Ember.Component.extend({
 															Ember.set(importStu.objectAt(0), "total", studentsToImport.length*2);
 															Ember.set(importStu.objectAt(0), "progress", studentsToImport.length);
 															self.set('importStudent', importStu);
-															self.pushOutput("Successful read of file has completed. Beginning import of " + studentsToImport.length + " students");
+															self.pushOutput("Successful read of file has completed. Beginning import of " + studentsToImport.length + " students.");
 															var numberOfStudentsImported = 0;
 															for (var j = 0; j < studentsToImport.length; j++)
 															{
@@ -953,7 +966,7 @@ export default Ember.Component.extend({
 																	numberOfStudentsImported++;
 																	if (numberOfStudentsImported === studentsToImport.length)
 																	{
-																		self.pushOutput("<span style='color:green'>Import Successful!</span>");
+																		self.pushOutput("<span style='color:green'>Import successful!</span>");
 																		Ember.$("#Students").addClass("completed");
 																		self.send("continue");
 																	}
@@ -972,12 +985,14 @@ export default Ember.Component.extend({
 										if (studentSheetA || studentSheetB || studentSheetC || studentSheetD || studentSheetE || studentSheetF)
 										{
 											rollBackImport = true;
-											self.pushOutput("<span style='color:red'>Imported file contains records with missing information on row" + i + "</span>");
+											self.pushOutput("<span style='color:red'>Imported file contains records with missing information on row" + i + ".</span>");
+											Ember.$("#btnImport").removeClass("disabled");
 										}
 										if (i === 2)
 										{
 											rollBackImport = true;
-											self.pushOutput("<span style='color:red'>Student sheet did not contain any properly formated students students...</span>")
+											self.pushOutput("<span style='color:red'>Student sheet did not contain any properly formated students.</span>");
+											Ember.$("#btnImport").removeClass("disabled");
 										}
 									}
 								}
@@ -989,7 +1004,7 @@ export default Ember.Component.extend({
 						var highschoolCheckerArray = ['SCHOOL NAME'];
 						var highschoolArray = [worksheet['A1'].v.toUpperCase()];	
 						if (VerificationFunction(highschoolCheckerArray,highschoolArray)) {
-							self.setOutput("Importing Secondary School Names");
+							self.setOutput("Importing high school names.");
 							var rollBackImport = false;
 							var doneImporting = false;
 							var highSchoolsToImport = [];
@@ -1003,9 +1018,10 @@ export default Ember.Component.extend({
 										var highSchoolName = highSchool.v;
 										//if the hs has already been added
 										if (uniqueHighSchoolNames.includes(highSchoolName)) {
-											self.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate Secondary Schools '" + highSchoolName + "'</span>");
+											self.pushOutput("<span style='color:red'>Import cancelled. Your excel sheet contains duplicate high schools: '" + highSchoolName + ".'</span>");
 											rollBackImport = true;
 											doneImporting = true;
+											Ember.$("#btnImport").removeClass("disabled");
 										} else { //create new hs object
 											highSchoolsToImport[i - 2] = self.get('store').createRecord('high-school', 
 											{
@@ -1018,7 +1034,8 @@ export default Ember.Component.extend({
 										//if no hs was imported
 										if (i == 2) {
 											rollBackImport = true;
-											self.pushOutput("<span style='color:red'>Import cancelled. File does not contain any values...</span>")
+											self.pushOutput("<span style='color:red'>Import cancelled. File does not contain any values.</span>");
+											Ember.$("#btnImport").removeClass("disabled");
 										}
 									}
 								}
@@ -1033,7 +1050,7 @@ export default Ember.Component.extend({
 									Ember.set(importHS.objectAt(0), "progress", highSchoolsToImport.length);
 									self.set('importHighSchool', importHS);
 									var numberOfHSImported = 0;
-									self.pushOutput("Successful read of file has completed. Beginning import of " + highSchoolsToImport.length + " Secondary Schools.");
+									self.pushOutput("Successful read of file has completed. Beginning import of " + highSchoolsToImport.length + " high schools.");
 									for (var i = 0; i < highSchoolsToImport.length; i++) {
 										highSchoolsToImport[i].save().then(function() {
 											Ember.set(importHS.objectAt(0), "progress", Ember.get(importHS.objectAt(0), "progress")+1);
@@ -1041,7 +1058,7 @@ export default Ember.Component.extend({
 											numberOfHSImported++;
 											if (numberOfHSImported === highSchoolsToImport.length)
 											{
-												self.pushOutput("<span style='color:green'>Import Successful!</span>");
+												self.pushOutput("<span style='color:green'>Import successful!</span>");
   												Ember.$("#HighSchools").addClass("completed");
   												self.send("continue");
 											}
@@ -1057,7 +1074,7 @@ export default Ember.Component.extend({
 								var hscourseinfoArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase(),worksheet['G1'].v.toUpperCase(),worksheet['H1'].v.toUpperCase()];
 								if (VerificationFunction(hscourseinfoCheckerArray,hscourseinfoArray))
 								{
-									self.pushOutput("Importing Student Secondary School Information");
+									self.setOutput("Importing student high school information.");
 									var gradeValues = [];
 									var highschoolSubjectValues = [];
 									var highschoolCourseValues = [];
@@ -1086,7 +1103,8 @@ export default Ember.Component.extend({
 											{
 												rollBackImport = true;
 												doneReading = true;
-												self.pushOutput("<span style='color:red'>Improperly formated data in  row " (i) + "</span>");
+												self.pushOutput("<span style='color:red'>Improperly formated data in  row " (i) + ".</span>");
+												Ember.$("#btnImport").removeClass("disabled");
 											}
 											//otherwise get data
 											else if (!(schoolName.v == "NONE FOUND"))
@@ -1111,7 +1129,8 @@ export default Ember.Component.extend({
 												{
 													rollBackImport = true;
 													doneReading = true;
-													self.pushOutput("<span style='color:red'>Improperly formated data in  row " + i + "</span>");
+													self.pushOutput("<span style='color:red'>Improperly formated data in  row " + i + ".</span>");
+													Ember.$("#btnImport").removeClass("disabled");
 												}
 											}
 
@@ -1157,7 +1176,8 @@ export default Ember.Component.extend({
 											{
 												rollBackImport = true;
 												doneReading = true;
-												self.pushOutput("<span style='color:red'>Improperly formated data in  row " (i) + "</span>");												
+												self.pushOutput("<span style='color:red'>Improperly formated data in  row " (i) + ".</span>");		
+												Ember.$("#btnImport").removeClass("disabled");										
 											}
 										}
 									}
@@ -1168,9 +1188,9 @@ export default Ember.Component.extend({
 										Ember.set(importHS.objectAt(1), "progress", highschoolSubjectValues.length+highschoolCourseValues.length+gradeValues.length);
 										self.set('importHighSchool', importHS);
 										self.pushOutput("Successful read of file has completed. Beginning import of");
-										self.pushOutput(highschoolSubjectValues.length + " Subjects");
-										self.pushOutput(highschoolCourseValues.length + " Courses");
-										self.pushOutput(gradeValues.length + " Grades");
+										self.pushOutput(highschoolSubjectValues.length + " subjects.");
+										self.pushOutput(highschoolCourseValues.length + " courses.");
+										self.pushOutput(gradeValues.length + " grades.");
 										var numberOfSubjectsSaved = 0;
 										var startedSavingSubjects = false;
 										var subjectSavingMutex = Mutex.create();
@@ -1261,7 +1281,7 @@ export default Ember.Component.extend({
 																									{
 																										doneGradeImport = true;
 																										self.pushOutput("<span style='color:green'>Import of grades successful!</span>");
-																										self.pushOutput("<span style='color:green'>All Imports successful!</span>");
+																										self.pushOutput("<span style='color:green'>All imports successful!</span>");
 																										Ember.$("#btnContinue").removeClass("disabled");
 																										Ember.$("#HighSchoolCourseInformation").addClass("completed");
 																									}
@@ -1291,7 +1311,7 @@ export default Ember.Component.extend({
 
 								if (VerificationFunction(recordplansCheckerArray,recordplansArray))
 								{
-									self.pushOutput("Importing Program Record Plans");
+									self.setOutput("Importing program record plans.");
 									var termValues = [];
 									var programValues = [];
 									var planValues = [];
@@ -1319,8 +1339,9 @@ export default Ember.Component.extend({
 											console.log("there was no plan");
 											if (i === 2)
 											{
-												self.pushOutput("<span style='color:red'>This file does not contain any properly formated data!</span>");
+												self.pushOutput("<span style='color:red'>This file does not contain any properly formated data.</span>");
 												rollbackImport = true;
+												Ember.$("#btnImport").removeClass("disabled");
 											}
 											doneReading = true;
 
@@ -1333,7 +1354,8 @@ export default Ember.Component.extend({
 											{
 												rollbackImport = true;
 												doneReading = true;
-												self.pushOutput("<span style='color:red'>Imporperly formated data on row " + i + "</span>");
+												self.pushOutput("<span style='color:red'>Imporperly formated data on row " + i + ".</span>");
+												Ember.$("#btnImport").removeClass("disabled");
 											}
 											//populate new value fields for proper data
 											else
@@ -1370,9 +1392,10 @@ export default Ember.Component.extend({
 											//if there is a missing field then the data is invalid
 											if (!program || !level || !load || !plan || program.v == "" || level.v === "" || load.v == "" || plan.v == "")
 											{
-												self.pushOutput("<span style='color:red'>Imporperly formated data on row " + i + "</span>");
+												self.pushOutput("<span style='color:red'>Imporperly formated data on row " + i + ".</span>");
 												rollbackImport = true;
 												doneReading = true;
+												Ember.$("#btnImport").removeClass("disabled");
 											}
 											else
 											{
@@ -1406,9 +1429,10 @@ export default Ember.Component.extend({
 											//if there is a missing field then the data is invalid
 											if (!level || !load || !plan || level.v === "" || load.v == "" || plan.v == "")
 											{
-												self.pushOutput("<span style='color:red'>Imporperly formated data on row " + i + "</span>");
+												self.pushOutput("<span style='color:red'>Imporperly formated data on row " + i + ".</span>");
 												rollbackImport = true;
 												doneReading = true;
+												Ember.$("#btnImport").removeClass("disabled");
 											}
 											else
 											{
@@ -1436,9 +1460,10 @@ export default Ember.Component.extend({
 											//if there is a field in load or level then the data is invalid
 											if (level && level.v !== "" || load && load.v != "")
 											{
-												self.pushOutput("<span style='color:red'>Imporperly formated data on row " + i + "</span>");
+												self.pushOutput("<span style='color:red'>Improperly formated data on row " + i + ".</span>");
 												rollbackImport = true;
 												doneReading = true;
+												Ember.$("#btnImport").removeClass("disabled");
 											}
 											else
 											{
@@ -1459,10 +1484,10 @@ export default Ember.Component.extend({
 										Ember.set(importUG.objectAt(0), "total", (termValues.length + programValues.length)*2);
 										Ember.set(importUG.objectAt(0), "progress", termValues.length + programValues.length);
 										self.set('importUndergrad', importUG);
-										self.pushOutput("Successful read of file has completed. Beginning import of: ");
-										self.pushOutput(planValues.length + " plan codes");
-										self.pushOutput(programValues.length + " program record");
-										self.pushOutput(termValues.length + " terms");
+										self.pushOutput("Successful read of file has completed. Beginning import of");
+										self.pushOutput(planValues.length + " plan codes.");
+										self.pushOutput(programValues.length + " program records.");
+										self.pushOutput(termValues.length + " terms.");
 										var inMutexIndex = 0;
 										var termMutex = Mutex.create();
 										var savingTermMutex = Mutex.create();
@@ -1493,7 +1518,7 @@ export default Ember.Component.extend({
 																if (termValues.length === termsToimport.length && !startedSavingTerms)
 																{
 																	startedSavingTerms = true;
-																	self.pushOutput("<span style='color:green'>Successfully imported Student Terms!</span>");
+																	self.pushOutput("<span style='color:green'>Import of terms successful!</span>");
 																	//now we start saving programs
 
 																	var inProgramMutexIndex = 0;
@@ -1527,7 +1552,7 @@ export default Ember.Component.extend({
 																						if (programsToImport.length === programValues.length && !startedSavingPrograms)
 																						{
 																							startedSavingPrograms = true;
-																							self.pushOutput("<span style='color:green'>Successfully imported Program Records!</span>")
+																							self.pushOutput("<span style='color:green'>Import of program records successful!</span>")
 
 																							var inPlanMutexIndex = 0;
 																							var planMutex = Mutex.create();
@@ -1561,8 +1586,8 @@ export default Ember.Component.extend({
 																											if (numberOfPlansSaved == planValues.length && !donePlanImport)
 																											{																											
 																												donePlanImport = true;
-																												self.pushOutput("<span style='color:green'>Successfully Imported Plan Codes!</span>");
-																												self.pushOutput("<span style='color:green'>All Imports successful!</span>");
+																												self.pushOutput("<span style='color:green'>Import of plan codes successful!</span>");
+																												self.pushOutput("<span style='color:green'>All imports successful!</span>");
 																												Ember.$("#UndergraduateRecordPlans").addClass("completed");
 																												self.send("continue");
 																											}
@@ -1596,7 +1621,7 @@ export default Ember.Component.extend({
 								var recordgradesArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase(),worksheet['G1'].v.toUpperCase()];
 								if(VerificationFunction(recordgradesCheckerArray,recordgradesArray))
 								{
-									self.pushOutput("Importing Undergraduate Student Grades");
+									self.setOutput("Importing undergraduate student grades.");
 									var currentStudentNumber = "";
 									var currentTerm = "";
 									var gradesToImport = [];
@@ -1632,9 +1657,10 @@ export default Ember.Component.extend({
 											//improper data
 											else
 											{
-												self.pushOutput("<span style='color:red'>Improperly formatted data on row " + (i) + "</span>");
+												self.pushOutput("<span style='color:red'>Improperly formatted data on row " + (i) + ".</span>");
 												rollBackImport = true;
 												doneReading = true;
+												Ember.$("#btnImport").removeClass("disabled");
 											}
 										}
 										//if it is the same student in a different term
@@ -1656,9 +1682,10 @@ export default Ember.Component.extend({
 											//improper data
 											else
 											{
-												self.pushOutput("<span style='color:red'>Improperly formatted data on row " + (i) + "</span>");
+												self.pushOutput("<span style='color:red'>Improperly formatted data on row " + (i) + ".</span>");
 												rollBackImport = true;
 												doneReading = true;
+												Ember.$("#btnImport").removeClass("disabled");
 											}
 
 
@@ -1692,7 +1719,7 @@ export default Ember.Component.extend({
 										Ember.set(importUG.objectAt(1), "total", gradesToImport.length*2);
 										Ember.set(importUG.objectAt(1), "progress", gradesToImport.length);
 										self.set('importUndergrad', importUG);
-										self.pushOutput("Successful read of file has been completed. Beginning import of " + gradesToImport.length + " student grades");
+										self.pushOutput("Successful read of file has been completed. Beginning import of " + gradesToImport.length + " student grades.");
 										var inGradeMutexIndex = 0;
 										var gradeMutex = Mutex.create();
 										var numberOfGradesImported = 0;
@@ -1732,7 +1759,7 @@ export default Ember.Component.extend({
 															{
 																startedSavingGrades = true;
 																																									
-																self.pushOutput("<span style='color:green'>Import of Grades successful!</span>");
+																self.pushOutput("<span style='color:green'>Import successful!</span>");
 																Ember.$("#btnContinue").removeClass("disabled");
 																Ember.$("#UndergraduateRecordGrades").addClass("completed");
 																self.send("continue");
@@ -1752,7 +1779,7 @@ export default Ember.Component.extend({
 								var scholarshipsArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
 								if(VerificationFunction(scholarshipsCheckerArray,scholarshipsArray))
 								{
-									self.pushOutput("Importing Scholarships!");
+									self.setOutput("Importing scholarships.");
 									var currentStudentNumber = "";
 									var scholarshipArray=[];
 									var doneReading = false;
@@ -1773,9 +1800,10 @@ export default Ember.Component.extend({
 											}
 											else
 											{
-												self.pushOutput("improperly formatted data on row" + i);
+												self.pushOutput("Improperly formatted data on row" + i + ".");
 												rollBackImport = true;
 												doneReading = true;
+												Ember.$("#btnImport").removeClass("disabled");
 											}
 										}
 										else if(note && note.v !="")
@@ -1794,7 +1822,7 @@ export default Ember.Component.extend({
 										Ember.set(importStu.objectAt(1), "total", scholarshipArray.length*2);
 										Ember.set(importStu.objectAt(1), "progress", scholarshipArray.length);
 										self.set('importStudent', importStu);
-										self.pushOutput("Successful read of file has completed. Beginning import of " + scholarshipArray.length + " student scholarships");
+										self.pushOutput("Successful read of file has completed. Beginning import of " + scholarshipArray.length + " scholarships.");
 										var scholarshipIndex = 0;
 										var scholarshipMutex = Mutex.create();
 										var numberOfScholarshipsImported = 0;
@@ -1823,7 +1851,7 @@ export default Ember.Component.extend({
 															if (numberOfScholarshipsImported == scholarshipArray.length - numberOfScholarShipsCanceled && !doneSavingScholarships)
 															{
 																doneSavingScholarships = true;														
-																self.pushOutput("<span style='color:green'>Import of Scholarships successful!</span>");
+																self.pushOutput("<span style='color:green'>Import successful!</span>");
 																Ember.$("#AwardsScholarships").addClass("completed");
 																self.send("continue");													
 															}
@@ -1835,7 +1863,7 @@ export default Ember.Component.extend({
 														if (numberOfScholarshipsImported == scholarshipArray.length - numberOfScholarShipsCanceled && !doneSavingScholarships)
 														{
 															doneSavingScholarships = true;														
-															self.pushOutput("<span style='color:green'>Import of Scholarships successful!</span>");
+															self.pushOutput("<span style='color:green'>Import successful!</span>");
 															Ember.$("#btnContinue").removeClass("disabled");
 															Ember.$("#awards").addClass("completed");														
 
@@ -1854,7 +1882,7 @@ export default Ember.Component.extend({
 								var advancedstandingsArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase()];
 								if(VerificationFunction(advancedstandingsCheckerArray,advancedstandingsArray))
 								{
-									self.pushOutput("Importing Advanced Standings!");
+									self.setOutput("Importing advanced standings.");
 									var currentStudentNumber = "";
 									var advancedStandingsToImport = [];
 									var doneReading = false;
@@ -1884,9 +1912,10 @@ export default Ember.Component.extend({
 											}											
 											else
 											{
-												self.pushOutput("<span style='color:red'>Import Cancelled! Improperly formatted data on row " + i + "</span>");
+												self.pushOutput("<span style='color:red'>Improperly formatted data on row " + i + ".</span>");
 												rollBackImport = true;
 												doneReading = true;
+												Ember.$("#btnImport").removeClass("disabled");
 											}
 										}
 										
@@ -1901,9 +1930,10 @@ export default Ember.Component.extend({
 											//improper data
 											else
 											{
-												self.pushOutput("<span style='color:red'>Import Cancelled! Improperly formatted data on row " + i + "</span>");
+												self.pushOutput("<span style='color:red'>Improperly formatted data on row " + i + ".</span>");
 												rollBackImport = true;
 												doneReading = true;
+												Ember.$("#btnImport").removeClass("disabled");
 											}
 										}
 										else
@@ -1917,7 +1947,7 @@ export default Ember.Component.extend({
 										Ember.set(importStu.objectAt(2), "total", advancedStandingsToImport.length*2);
 										Ember.set(importStu.objectAt(2), "progress", advancedStandingsToImport.length);
 										self.set('importStudent', importStu);
-										self.pushOutput("Successful read of file has completed. Beginning import of " + advancedStandingsToImport.length + " Advanced Standings.");
+										self.pushOutput("Successful read of file has completed. Beginning import of " + advancedStandingsToImport.length + " advanced standings.");
 										var AdvancedStandingIndex = 0;
 										var AdvancedStandingMutex = Mutex.create();
 										var advancedStandingsImported = 0;
@@ -1954,7 +1984,7 @@ export default Ember.Component.extend({
 															if (advancedStandingsImported == advancedStandingsToImport.length - advancedStandingsCancelled && !doneSaving)
 															{
 																doneSaving = true;														
-																self.pushOutput("<span style='color:green'>Import of Avanced Standings successful!</span>");
+																self.pushOutput("<span style='color:green'>Import successful!</span>");
 																Ember.$("#AdvancedStandings").addClass("completed");
 																self.send("continue");
 
@@ -1967,7 +1997,7 @@ export default Ember.Component.extend({
 														if (advancedStandingsImported == advancedStandingsToImport.length - advancedStandingsCancelled && !doneSaving)
 														{
 															doneSaving = true;														
-															self.pushOutput("<span style='color:green'>Import of Avanced Standings successful!</span>");
+															self.pushOutput("<span style='color:green'>Import successful!</span>");
 															Ember.$("#btnContinue").removeClass("disabled");
 															Ember.$("#advancedStandings").addClass("completed");	
 
@@ -1986,7 +2016,7 @@ export default Ember.Component.extend({
 								var registrationcommentsArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
 								if(VerificationFunction(registrationcommentsCheckerArray,registrationcommentsArray))
 								{
-									self.pushOutput("Importing Registration Comments");
+									self.setOutput("Importing registration comments.");
 									var currentStudentNumber = "";
 									var doneReading = false;
 									var uniqueStudents = [];
@@ -2023,7 +2053,7 @@ export default Ember.Component.extend({
 										Ember.set(importStu.objectAt(3), "total", uniqueStudents.length*2);
 										Ember.set(importStu.objectAt(3), "progress", uniqueStudents.length);
 										self.set('importStudent', importStu);
-										self.pushOutput("Successful read of file has completed. Beginning import of " + uniqueStudents.length + " registration comments");
+										self.pushOutput("Successful read of file has completed. Beginning import of " + uniqueStudents.length + " registration comments.");
 										var inRegistrationMutexIndex = 0;
 										var registrationMutex = Mutex.create();
 										var numberOfCommentsImported = 0;
@@ -2046,7 +2076,7 @@ export default Ember.Component.extend({
 															if (numberOfCommentsImported == (uniqueStudents.length - numberOfCommentWithNoStudent) && !doneImportingComments)
 															{
 																doneImportingComments = true;
-																self.pushOutput("<span style='color:green'>Import of Registration Comments successful!</span>");
+																self.pushOutput("<span style='color:green'>Import successful!</span>");
 																Ember.$("#RegistrationComments").addClass("completed");
 																self.send("continue");
 															}
@@ -2058,7 +2088,7 @@ export default Ember.Component.extend({
 														if (numberOfCommentsImported == (uniqueStudents.length - numberOfCommentWithNoStudent) && !doneImportingComments)
 														{
 															doneImportingComments = true;
-															self.pushOutput("<span style='color:green'>Import of Registration Comments successful!</span>");
+															self.pushOutput("<span style='color:green'>Import successful!</span>");
 															Ember.$("#btnContinue").removeClass("disabled");
 															Ember.$("#registrationComments").addClass("completed");
 
@@ -2078,7 +2108,7 @@ export default Ember.Component.extend({
 								var basisofadmissionArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
 								if(VerificationFunction(basisofadmissionCheckerArray,basisofadmissionArray))
 								{
-									self.setOutput("Importing Basis of Admission.")
+									self.setOutput("Importing basis of admissions.")
 									var currentStudentNumber= "";
 									var doneReading = false;
 									var uniqueStudents = [];
@@ -2114,7 +2144,7 @@ export default Ember.Component.extend({
 										Ember.set(importStu.objectAt(4), "progress", uniqueStudents.length);
 										self.set('importStudent', importStu);
 
-										self.pushOutput("Successful read of file complete. Beginning import of " + uniqueStudents.length + " Basis of Admissions.");
+										self.pushOutput("Successful read of file complete. Beginning import of " + uniqueStudents.length + " basis of admissions.");
 										var inAdmissionMutexIndex = 0;
 										var admissionMutex = Mutex.create();
 										var numberOfAdmissionsImported = 0;
@@ -2137,7 +2167,7 @@ export default Ember.Component.extend({
 															if (numberOfAdmissionsImported == uniqueStudents.length - numberOfAdmissionsWithNoStudent && !doneImportingAdmissions)
 															{
 																doneImportingAdmissions = true;
-																self.pushOutput("<span style='color:green'>Import of Basis of Admissions successful!</span>");
+																self.pushOutput("<span style='color:green'>Import successful!</span>");
 																Ember.$("#BasisofAdmissions").addClass("completed");
 																self.send("continue");
 															}
@@ -2149,7 +2179,7 @@ export default Ember.Component.extend({
 															if (numberOfAdmissionsImported == uniqueStudents.length - numberOfAdmissionsWithNoStudent && !doneImportingAdmissions)
 															{
 																doneImportingAdmissions = true;
-																self.pushOutput("<span style='color:green'>Import of Basis of Admissions successful!</span>");
+																self.pushOutput("<span style='color:green'>Import successful!</span>");
 																Ember.$("#BasisOfAdmissions").addClass("completed");
 																self.send("continue");
 															}
@@ -2168,7 +2198,7 @@ export default Ember.Component.extend({
 								var admissionaverageArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
 								if(VerificationFunction(admissionaverageCheckerArray,admissionaverageArray))
 								{
-									self.setOutput("Importing Admission Averages.");
+									self.setOutput("Importing admission averages.");
 									var currentStudentNumber= "";
 									var doneReading = false;
 									var uniqueStudents = [];
@@ -2203,7 +2233,7 @@ export default Ember.Component.extend({
 										Ember.set(importStu.objectAt(5), "total", uniqueStudents.length*2); 
 										Ember.set(importStu.objectAt(5), "progress", uniqueStudents.length);
 										self.set('importStudent', importStu);
-										self.pushOutput("Successful read of file complete. Beginning Import of " + uniqueStudents.length + " Admission Averages");
+										self.pushOutput("Successful read of file complete. Beginning import of " + uniqueStudents.length + " admission averages.");
 										var inAdmissionMutexIndex = 0;
 										var admissionMutex = Mutex.create();
 										var numberOfAveragesImported = 0;
@@ -2226,7 +2256,7 @@ export default Ember.Component.extend({
 															if (numberOfAveragesImported == uniqueStudents.length - numberOfAveragesWithNoStudent && !doneSavingAverages)
 															{
 																doneSavingAverages = true;
-																self.pushOutput("<span style='color:green'>Import of Admission Averages successful!</span>");
+																self.pushOutput("<span style='color:green'>Import successful!</span>");
 																Ember.$("#AdmissionAverages").addClass("completed");
 																self.send("continue");
 															}
@@ -2237,7 +2267,7 @@ export default Ember.Component.extend({
 														if (numberOfAveragesImported == uniqueStudents.length - numberOfAveragesWithNoStudent && !doneSavingAverages)
 														{
 															doneSavingAverages = true;
-															self.pushOutput("<span style='color:green'>Import of Admission Averages successful!</span>");
+															self.pushOutput("<span style='color:green'>Import successful!</span>");
 															Ember.$("#admissionAverage").addClass("completed");
 														}
 													}
@@ -2255,7 +2285,7 @@ export default Ember.Component.extend({
 								var admissioncommentsArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase()];
 								if(VerificationFunction(admissioncommentsCheckerArray,admissioncommentsArray))
 								{
-									self.pushOutput("Importing Admission Comments");
+									self.setOutput("Importing admission comments.");
 									var currentStudentNumber= "";
 									var doneReading = false;
 									var uniqueStudents = [];
@@ -2316,7 +2346,7 @@ export default Ember.Component.extend({
 															if (numberOfCommentsImported == uniqueStudents.length - numberOfCommentsWithNoStudent && !doneSavingComments)
 															{
 																doneSavingComments = true;
-																self.pushOutput("<span style='color:green'>Import of Admission Comments successful!</span>");
+																self.pushOutput("<span style='color:green'>Import successful!</span>");
 																Ember.$("#btnContinue").removeClass("disabled");
 																Ember.$("#AdmissionComments").addClass("completed");														
 															}
@@ -2328,7 +2358,7 @@ export default Ember.Component.extend({
 														if (numberOfCommentsImported == uniqueStudents.length - numberOfCommentsWithNoStudent && !doneSavingComments)
 														{
 															doneSavingComments = true;
-															self.pushOutput("<span style='color:green'>Import of Admission Comments successful!</span>");
+															self.pushOutput("<span style='color:green'>Import successful!</span>");
 															Ember.$("#btnContinue").removeClass("disabled");
 															Ember.$("#AdmissionComments").addClass("completed");															
 														}
@@ -2350,7 +2380,7 @@ export default Ember.Component.extend({
 							var studentAdjudicationArray = [worksheet['A1'].v.toUpperCase(),worksheet['B1'].v.toUpperCase(),worksheet['C1'].v.toUpperCase(),worksheet['D1'].v.toUpperCase(),worksheet['E1'].v.toUpperCase(),worksheet['F1'].v.toUpperCase(),worksheet['G1'].v.toUpperCase(),worksheet['H1'].v.toUpperCase(),worksheet['I1'].v.toUpperCase(),worksheet['J1'].v.toUpperCase()];
 							if (VerificationFunction(studentAdjudicationCheckerArray, studentAdjudicationArray))
 							{
-								self.pushOutput("Importing student adjudication information");
+								self.setOutput("Importing student adjudication information.");
 								var rollBackImport = false;
 								var doneReading = false;
 								var studentInformation = [];
@@ -2374,9 +2404,10 @@ export default Ember.Component.extend({
 									{
 										if (!checkUniqueTerm(studentInformation, studentNumber.v, term.v))
 										{											
-											self.pushOutput("<span style='color:red'>Import Cancelled. Duplicate values found on row " + i + " for student number " + studentNumber.v + " and term " + term.v + "</span>");
+											self.pushOutput("<span style='color:red'>Duplicate values found on row " + i + " for student number " + studentNumber.v + " and term " + term.v + ".</span>");
 											rollbackImport = true;
 											doneReading = true;
+											Ember.$("#btnImport").removeClass("disabled");
 										}
 										else{
 											studentInformation.push({"studentNumber": studentNumber.v, "termCode": term.v, "termAVG": termAVG.v, "termUnitsPassed": termUnitsPassed.v, "termUnitsTotal": termUnitsTotal.v});
@@ -2394,9 +2425,10 @@ export default Ember.Component.extend({
 									}
 									else if (studentNumber || term || termAVG || termUnitsPassed || termUnitsTotal || cumAVG || cumUnitsPassed || cumUnitsTotal)
 									{
-										self.pushOutput("<span style='color:red'>Imporperly formated data on row " + i + "</span>");
+										self.pushOutput("<span style='color:red'>Imporperly formated data on row " + i + ".</span>");
 										rollbackImport = true;
 										doneReading = true;
+										Ember.$("#btnImport").removeClass("disabled");
 									}
 									else{
 										doneReading = true;
@@ -2408,7 +2440,7 @@ export default Ember.Component.extend({
 									Ember.set(importUG.objectAt(2), "total", (cumStudentInformation.length + studentInformation.length)*2); 
 									Ember.set(importUG.objectAt(2), "progress", cumStudentInformation.length + studentInformation.length);
 									self.set('importUndergrad', importUG);
-									self.pushOutput("Successful read of file has completed. Beginning import of " + cumStudentInformation.length + " student's information and " + studentInformation.length + " student terms information");
+									self.pushOutput("Successful read of file has completed. Beginning import of " + cumStudentInformation.length + " student information records and " + studentInformation.length + " student term information records.");
 									var numberOfCumStudentsImported = 0;
 									var numberOfCumStudentsWithoutStudent = 0;
 									var numberOfStudentTermsImported = 0;
@@ -2474,7 +2506,7 @@ export default Ember.Component.extend({
 																				if (cumStudentInformation.length + studentInformation.length == numberOfCumStudentsImported + numberOfCumStudentsWithoutStudent + numberOfStudentTermsImported + numberOfStudentTermsWithoutStudent && !doneImportingCumStudents)
 																				{
 																					doneImportingCumStudents = true;
-																					self.pushOutput("<span style='color:green'>Import of student adjudication information successful!</span>");
+																					self.pushOutput("<span style='color:green'>Import successful!</span>");
 																					Ember.$("#btnFinish").removeClass("disabled");
 																					Ember.$("#StudentAdjudication").addClass("completed");	
 																				}
@@ -2487,7 +2519,7 @@ export default Ember.Component.extend({
 																			if (cumStudentInformation.length + studentInformation.length == numberOfCumStudentsImported + numberOfCumStudentsWithoutStudent + numberOfStudentTermsImported + numberOfStudentTermsWithoutStudent && !doneImportingCumStudents)
 																			{
 																				doneImportingCumStudents = true;
-																				self.pushOutput("<span style='color:green'>Import of student adjudication information successful!</span>");
+																				self.pushOutput("<span style='color:green'>Import successful!</span>");
 																				Ember.$("#btnFinish").removeClass("disabled");
 																				Ember.$("#StudentAdjudication").addClass("completed");	
 																			}
@@ -2512,7 +2544,7 @@ export default Ember.Component.extend({
 													if (cumStudentInformation.length + studentInformation.length == numberOfCumStudentsImported + numberOfCumStudentsWithoutStudent + numberOfStudentTermsImported + numberOfStudentTermsWithoutStudent && !doneImportingCumStudents)
 													{
 														doneImportingCumStudents = true;
-														self.pushOutput("<span style='color:green'>Import of student adjudication information successful!</span>");
+														self.pushOutput("<span style='color:green'>Import successful!</span>");
 														Ember.$("#btnFinish").removeClass("disabled");
 														Ember.$("#StudentAdjudication").addClass("completed");	
 													}
