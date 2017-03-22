@@ -16,6 +16,7 @@ export default Ember.Component.extend({
 	store: Ember.inject.service(),
 	termModel: null,
     generationWarningText: "Generating a PDF",
+	colourOptions: [{red: 78, blue: 38 , green: 131}, {red: 155, blue: 115, green: 208}, {red: 2, blue: 191, green: 198}, {red: 0, blue: 140, green: 147}],
 	init(){
 		this._super(...arguments);
 		
@@ -130,8 +131,10 @@ export default Ember.Component.extend({
 	// 		});
 	// 	}
 	// },
-	getRandomColour() {
-		var hue = 'rgba(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256));
+	getColour(index, alpha) {
+		let i = index % this.get('colourOptions').length;
+		let hue = 'rgba(' + this.get('colourOptions')[i].red + ',' + this.get('colourOptions')[i].blue + ',' + this.get('colourOptions')[i].green + ',' + alpha + ')';
+		//var hue = 'rgba(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256));
 		return hue;
 	},
 	renderBarChart() {
@@ -247,9 +250,9 @@ export default Ember.Component.extend({
 						barChartBars.forEach(function (bar, index) {
 							bar.length = adjudicationObjArrays[index].get('length');
 
-							let colour = self.getRandomColour();
-							bar.backColour = colour + ',0.3)';
-							bar.borderColour = colour + ',1)';
+							//let colour = self.getColour(0, 0.3);
+							bar.backColour = self.getColour(index, 0.3);
+							bar.borderColour = self.getColour(index, 1);
 						});
 						console.log('done getting data, showing chart');
 						console.log(barChartBars);
@@ -305,9 +308,9 @@ export default Ember.Component.extend({
 						pieChartWedges.forEach(function (wedge, index) {
 							wedge.size = adjudicationObjArrays[index].get('length');
 
-							let colour = self.getRandomColour();
-							wedge.backColour = colour + ',0.3)';
-							wedge.borderColour = colour + ',1)';
+							//let colour = self.getRandomColour();
+							wedge.backColour = self.getColour(index, 0.3);
+							wedge.borderColour = self.getColour(index, 1);
 						});
 						console.log('done getting data, showing chart');
 						console.log(pieChartWedges);
