@@ -26,6 +26,8 @@ export default Ember.Component.extend({
 
     init() {
         this._super(...arguments);
+        this.send("loadHSData");
+        this.send("loadSubjectData");
     },
 
     didRender() {
@@ -42,6 +44,8 @@ export default Ember.Component.extend({
                 fullTextSearch: "exact"
             });
     },
+
+
 
     actions: {
         addHSGrade()

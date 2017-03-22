@@ -56,16 +56,17 @@
       {{/each}}
       <tr>
         <td class="dimmable" style="overflow: visible">
-            <div class="ui fluid search selection dropdown {{if errorHS "error"}}" id="hsDropdown" onmouseover={{action "loadHSData"}} onchange={{action "changeHighSchool" value="target.value"}} onclick={{action "clearError" "errorHS"}}>
-                <input name="highSchool" type="hidden">
-                <i class="dropdown icon"></i>
-                <div class="default text">High School</div>
-                <div class="menu">
+            {{#ui-dropdown class = "selection (if errorHS 'error')" selected = selectedHighSchoolID onChange = (action (mut selectedHighSchoolID)) onClick = (action "clearError" "errorHS")}}
+                <div class = "default text">High School</div>
+                <i class = "dropdown icon"></i>
+                <div class = "menu">
                     {{#each highSchools as |school|}}
-                        <div class="item" data-value={{school.id}}>{{school.schoolName}}</div>
+                    <div class = "item" data-value = {{school.id}}>
+                        {{school.schoolName}}
+                    </div>
                     {{/each}}
                 </div>
-            </div>
+            {{/ui-dropdown}}
             {{#if loadingHS}}
                 <div class="ui active dimmer">
                     <div class="ui loader"></div>
@@ -73,16 +74,17 @@
             {{/if}}
         </td>
         <td class="dimmable" style="overflow: visible">
-            <div class="ui fluid search selection dropdown {{if errorSubject "error"}}" id="subjectDropdown" onmouseover={{action "loadSubjectData"}} onchange={{action "changeSubject" value="target.value"}} onclick={{action "clearError" "errorSubject"}}>
-                <input name="subject" type="hidden">
-                <i class="dropdown icon"></i>
-                <div class="default text">Subject</div>
-                <div class="menu">
+            {{#ui-dropdown class = "selection (if errorSubject 'error')" selected = selectedSubjectID onChange = (action (mut selectedSubjectID)) onClick = (action "clearError" "errorSubject")}}
+                <div class = "default text">High School</div>
+                <i class = "dropdown icon"></i>
+                <div class = "menu">
                     {{#each highSchoolSubjects as |subject|}}
-                        <div class="item" data-value={{subject.id}}>{{subject.name}} - {{subject.description}}</div>
+                    <div class = "item" data-value = {{subject.id}}>
+                        {{subject.name}} - {{subject.description}}
+                    </div>
                     {{/each}}
                 </div>
-            </div>
+            {{/ui-dropdown}}
             {{#if loadingSubject}}
                 <div class="ui active dimmer">
                     <div class="ui loader"></div>
