@@ -91,7 +91,6 @@
             <tr>
             <th class="eight wide">Residency</th>
             <th class="eight wide"><!--spacer--></th>
-            
             </tr>
         </thead>
         
@@ -141,16 +140,11 @@
     <table class="ui table">
         <thead>
             <tr>
-            <th class="two wide">Course Letter</th>
-            <th class="three wide">Course Number</th>
-            <th><!--spacer--></th>
-            <th>Course Name</th>
-            <th><!--spacer--></th>
-            <th><!--spacer--></th>
-            <th>Unit</th>
-            <th><!--spacer--></th>
-            <th><!--spacer--></th>
-            
+            <th class="three wide">Course Letter</th>
+            <th class="two wide">Course Number</th>
+            <th class="five wide">Course Name</th>
+            <th class="one wide">Unit</th>
+            <th class="three wide"><!--spacer--></th>
             </tr>
         </thead>
         
@@ -162,22 +156,24 @@
                 </div>
             </td>
 
-            <td colspan="2">
+            <td>
                 <div class="ui fluid input">
                     {{input type="text" value = courseCode.courseNumber}}
                 </div>
             </td>
 
-            <td colspan="3">
+            <td>
                 <div class="ui fluid input">
                     {{input type="text" value = courseCode.name}}
                 </div>
             </td>
-            <td style="width:90px;">
+
+            <td>
                 <div class="ui fluid input">
                     {{input type="text" value = courseCode.unit}}
                 </div>
             </td>
+
             <td>
                 <div class="ui inverted buttons">
                     <button class="ui cstmLBlue inverted button" {{action "saveCourseCode" courseCode}}>Save
@@ -198,20 +194,20 @@
                 </div>
             </td>
     
-            <td colspan="2">
+            <td>
                 <div class="ui fluid input">
                     {{input type="text" value = newCourseCodeCourseNumber}}
                 </div>
             </td>
 
 
-            <td colspan="3">
+            <td>
                 <div class="ui fluid input">
                     {{input type="text" value = newCourseCodeName}}
                 </div>
             </td>
                 
-            <td style="width:90px;"> 
+            <td> 
                 <div class="ui fluid input">
                     {{input type="text" value = newCourseCodeUnit}}
                 </div>
