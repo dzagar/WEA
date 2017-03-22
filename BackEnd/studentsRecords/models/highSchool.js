@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var mongoosePaginate = require('mongoose-paginate');
 
 var highSchoolSchema = mongoose.Schema(
     {
@@ -10,4 +11,5 @@ var highSchoolSchema = mongoose.Schema(
     }
 );
 
+highSchoolSchema.plugin(mongoosePaginate);
 module.exports = mongoose.model('highSchool', highSchoolSchema);

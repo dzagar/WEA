@@ -17,7 +17,15 @@ export default Ember.Component.extend({
     genderOutput: "",
     highSchoolCourseModel: null,
     highSchoolModel: null,
+    highSchoolSubjectModel: null,
     highSchoolOutput: "",
+    loadingCourseGroup: false,
+    loadingGender: false,
+    loadingHighSchool: false,
+    loadingHsSubject: false,
+    loadingResidency: false,
+    loadingTermCode: false,
+    highSchoolRecords: null,
     highSchoolSubjectModel: null,
     newCourseCodeCourseLetter: "",
     newCourseCodeCourseNumber: "",
@@ -53,19 +61,62 @@ export default Ember.Component.extend({
     showDeleteTermCodeConfirmation: false,
     termCodeModel: null,
     termCodeOutput: "",
+    termCodeRecords: null,
     limit: null,
-    offset: null,
-    pageSize: null,
-    pageNumber: Ember.computed('offset', 'pageSize', function() {
-    let num = this.get('offset')/this.get('pageSize')+1;
+    courseCodeOffset: null,
+    highSchoolOffset: null,
+    highSchoolSubjectOffset: null,
+    termCodeOffset: null,
+    termCodePageSize: null,
+    highSchoolPageSize: null,
+    highSchoolSubjectPageSize: null,
+    courseCodePageSize: null,
+
+    courseCodePageNumber: Ember.computed('courseCodeOffset', 'courseCodePageSize', function() {
+    let num = this.get('courseCodeOffset')/this.get('courseCodePageSize')+1;
     return num;
     }),
+
+    highSchoolPageNumber: Ember.computed('highSchoolOffset', 'highSchoolPageSize', function() {
+    let num = this.get('highSchoolOffset')/this.get('highSchoolPageSize')+1;
+    return num;
+    }),
+
+    highSchoolSubjectPageNumber: Ember.computed('highSchoolSubjectOffset', 'highSchoolSubjectPageSize', function () {
+    let num = this.get('highSchoolSubjectOffset')/this.get('highSchoolSubjectPageSize')+1;
+    return num;
+    }),
+
+    termCodePageNumber: Ember.computed('termCodeOffset', 'termCodePageSize', function() {
+    let num = this.get('termCodeOffset')/this.get('termCodePageSize')+1;
+    return num;
+    }),
+
     totalCourseCodes: null,
+    totalHighSchools: null,
     totalHighSchoolSubjects:  null,
-    totalPages: Ember.computed('totalCourseCodes', 'pageSize', function() {
-    let ttl = Math.ceil(this.get('totalCourseCodes')/this.get('pageSize'));
+    totalTermCodes: null,
+
+    totalCourseCodePages: Ember.computed('totalCourseCodes', 'courseCodePageSize', function() {
+    let ttl = Math.ceil(this.get('totalCourseCodes')/this.get('courseCodePageSize'));
+    return ttl; 
+    }),
+
+    totalHighSchoolPages: Ember.computed('totalHighSchools', 'highSchoolPageSize', function() {
+    let ttl = Math.ceil(this.get('totalHighSchools')/this.get('highSchoolPageSize'));
     return ttl;
     }),
+
+    totalHighSchoolSubjectPages: Ember.computed('totalHighSchoolSubjects', 'highSchoolSubjectPageSize', function () {
+    let ttl = Math.ceil(this.get('totalHighSchoolSubjects')/this.get('highSchoolSubjectPageSize'));
+    return ttl;
+    }),
+
+    totalTermCodePages: Ember.computed('totalTermCodes','termCodePageSize', function() {
+    let ttl = Math.ceil(this.get('totalTermCodes')/this.get('termCodePageSize'));
+    return ttl;
+    }),
+
     store: Ember.inject.service(),
 
     setResidencyOutput: function(newOutput) {
@@ -104,9 +155,50 @@ export default Ember.Component.extend({
     },
 
     init() {
-        var isLoading = true;
+        
         this._super(...arguments);
         var self = this;
+        this.set('limit', 10);
+        this.set('termCodeOffset', 0);
+        this.set('courseCodeOffset', 0);
+        this.set('highSchoolOffset', 0);
+        this.set('highSchoolSubjectOffset', 0);
+        this.set('termCodePageSize', 10);
+        this.set('courseCodePageSize', 10);
+        this.set('highSchoolPageSize', 10);
+        this.set('highSchoolSubjectPageSize', 10);
+
+         this.get('store').query('course-code', {
+            limit: self.get('limit'),
+            offset: self.get('courseCodeOffset')
+        }).then(function(records){
+            self.set('totalCourseCodes', records.get('meta').total);
+            self.set('courseCodeRecords', records);
+        });
+
+        this.get('store').query('term-code',{
+            limit: self.get('limit'),
+            offset: self.get('termCodeOffset')
+        }).then(function(records){
+            self.set('totalTermCodes', records.get('meta').total);
+            self.set('termCodeRecords', records);
+        });
+
+        this.get('store').query('high-school', {
+            limit: self.get('limit'),
+            offset: self.get('highSchoolOffset')
+        }).then(function(records){
+            self.set('totalHighSchools', records.get('meta').total);
+            self.set('highSchoolRecords', records);
+        });
+
+        this.get('store').query('high-school-subject', {
+            limit: self.get('limit'),
+            offset: self.get('highSchoolSubjectOffset')
+        }).then(function(records){
+            self.set('totalHighSchoolSubjects', records.get('meta').total);
+            self.set('highSchoolSubjectRecords', records);
+        });
         
         // load Residency data model
         this.get('store').findAll('residency').then(function (records) {
@@ -118,43 +210,12 @@ export default Ember.Component.extend({
             self.set('genderModel',records);
         });
 
-        this.get('store').findAll('high-school').then(function (records) {
-            self.set('highSchoolModel', records);
-        });
-
         this.get('store').findAll('high-school-subject').then(function (records) {
             self.set('courseArray', records);
         });
 
-        this.get('store').findAll('term-code').then(function (records) {
-            self.set('termCodeModel', records);
-        });
-
         this.get('store').findAll('course-grouping').then(function (records) {
             self.set('courseGroupingModel', records);
-        });
-
-
-
-        this.set('limit', 10);
-        this.set('offset', 0);
-        this.set('pageSize', 10);
-        this.get('store').query('course-code', {
-            limit: self.get('limit'),
-            offset: self.get('offset')
-        }).then(function(records){
-            self.set('totalCourseCodes', records.get('meta').total);
-            self.set('courseCodeRecords', records);
-        });
-
-        this.set('limit', 10);
-        this.set('offset', 0);
-        this.set('pageSize', 10);
-        this.get('store').query('high-school-subject', {
-            limit: self.get('limit'),
-            offset: self.get('offset')
-        }).then(function(records){
-            self.set('totalHighSchoolSubjects', records.get('meta').total);
         });
         
         this.set('currentCourseCode', null);
@@ -162,18 +223,53 @@ export default Ember.Component.extend({
         this.set('currentResidency', null);
         this.set('currentHighSchool', null);
         this.set('currentHighSchoolSubject', null);
-        isLoading=false;
+        this.set('currentTermCode', null);
+        this.set('currentCourseGrouping', null);
+        
     },
 
-    courseCodeModel: Ember.observer('offset', function () {
+    courseCodeModel: Ember.observer('courseCodeOffset', function () {
       var self = this;
       this.get('store').query('course-code', {
         limit: self.get('limit'),
-        offset: self.get('offset')
+        offset: self.get('courseCodeOffset')
       }).then(function (records) {
         self.set('totalCourseCodes', records.get('meta').total);
         self.set('courseCodeRecords', records);
       });
+    }),
+
+    termCodeModel: Ember.observer('termCodeOffset', function () {
+      var self = this;
+      this.get('store').query('term-code', {
+        limit: self.get('limit'),
+        offset: self.get('termCodeOffset')
+      }).then(function (records) {
+        self.set('totalTermCodes', records.get('meta').total);
+        self.set('termCodeRecords', records);
+      });
+    }),
+
+    highSchoolModel: Ember.observer('highSchoolOffset', function () {
+        var self=this;
+        this.get('store').query('high-school', {
+            limit: self.get('limit'),
+            offset: self.get('highSchoolOffset')
+        }).then(function (records) {
+            self.set('totalHighSchools', records.get('meta').total);
+            self.set('highSchoolRecords', records);
+        });
+    }),
+
+    highSchoolSubjectModel: Ember.observer('highSchoolSubjectOffset', function () {
+        var self=this;
+        this.get('store').query('high-school-subject', {
+            limit: self.get('limit'),
+            offset: self.get('highSchoolSubjectOffset')
+        }).then(function(records){
+            self.set('totalHighSchoolSubjects', records.get('meta').total);
+            self.set('highSchoolSubjectRecords', records);
+        });
     }),
     
     didRender() {
@@ -184,17 +280,57 @@ export default Ember.Component.extend({
     //If relative is true, the offsetDelta is added to offset
     //If relative is false, the offsetDelta becomes the new offset
     //Checks and deals with the edge of the set
-    changeOffset: function (offsetDelta, relative) {
+    changeCourseCodeOffset: function (offsetDelta, relative) {
       if (relative) {
-        if (this.get('offset') + offsetDelta >= this.get('totalCourseCodes'))
-          this.set('offset', (this.get('totalPages') - 1) * this.get('pageSize'));
-        else if (this.get('offset') + offsetDelta < 0)
-          this.set('offset', 0);
+        if (this.get('courseCodeOffset') + offsetDelta >= this.get('totalCourseCodes'))
+          this.set('courseCodeOffset', (this.get('totalCourseCodePages') - 1) * this.get('courseCodePageSize'));
+        else if (this.get('courseCodeOffset') + offsetDelta < 0)
+          this.set('courseCodeOffset', 0);
         else
-          this.set('offset', this.get('offset') + offsetDelta);
+          this.set('courseCodeOffset', this.get('courseCodeOffset') + offsetDelta);
       } else {
-        this.set('offset', offsetDelta);
+        this.set('courseCodeOffset', offsetDelta);
       }
+    },
+
+    changeHighSchoolOffset: function (offsetDelta, relative) {
+        if (relative) {
+        if (this.get('highSchoolOffset') + offsetDelta >= this.get('totalHighSchools'))
+          this.set('highSchoolOffset', (this.get('totalHighSchools') - 1) * this.get('highSchoolPageSize'));
+        else if (this.get('highSchoolOffset') + offsetDelta < 0)
+          this.set('highSchoolOffset', 0);
+        else
+          this.set('highSchoolOffset', this.get('highSchoolOffset') + offsetDelta);
+      } else {
+        this.set('highSchoolOffset', offsetDelta);
+      }
+    },
+
+    changeHighSchoolSubjectOffset: function (offsetDelta, relative) {
+        if (relative) {
+        if (this.get('highSchoolSubjectOffset') + offsetDelta >= this.get('totalHighSchoolSubjects'))
+          this.set('highSchoolSubjectOffset', (this.get('totalHighSchoolSubjects') - 1) * this.get('highSchoolSubjectPageSize'));
+        else if (this.get('highSchoolSubjectOffset') + offsetDelta < 0)
+          this.set('highSchoolSubjectOffset', 0);
+        else
+          this.set('highSchoolSubjectOffset', this.get('highSchoolSubjectOffset') + offsetDelta);
+      } else {
+        this.set('highSchoolSubjectOffset', offsetDelta);
+      }
+    },
+
+    changeTermCodeOffset: function (offsetDelta, relative) {
+        if (relative) {
+        if (this.get('termCodeOffset') + offsetDelta >= this.get('totalTermCodes'))
+          this.set('termCodeOffset', (this.get('totalTermCodePages') - 1) * this.get('termCodePageSize'));
+        else if (this.get('termCodeOffset') + offsetDelta < 0)
+          this.set('termCodeOffset', 0);
+        else
+          this.set('termCodeOffset', this.get('termCodeOffset') + offsetDelta);
+      } else {
+        this.set('termCodeOffset', offsetDelta);
+      }
+
     },
 
     actions:
@@ -316,7 +452,6 @@ export default Ember.Component.extend({
 
         saveCourseCode(courseCode)
         {
-            console.log(this.courseArray);
             courseCode.save();
         },
 
@@ -381,9 +516,24 @@ export default Ember.Component.extend({
             this.set('showAddCoursesModal', false);
         },
 
-        switchPage(pageNum)
+        switchCourseCodePage(pageNum)
         {
-          this.changeOffset((pageNum - 1) * this.get('pageSize'), false);
+          this.changeCourseCodeOffset((pageNum - 1) * this.get('courseCodePageSize'), false);
+        },
+
+        switchHighSchoolPage(pageNum)
+        {
+            this.changeHighSchoolOffset((pageNum - 1) * this.get('highSchoolPageSize'), false);
+        },
+
+        switchHighSchoolSubjectPage(pageNum)
+        {
+            this.changeHighSchoolSubjectOffset((pageNum - 1) * this.get('highSchoolSubjectPageSize'), false);
+        },
+
+        switchTermCodePage(pageNum)
+        {
+            this.changeTermCodeOffset((pageNum - 1) * this.get('termCodePageSize'), false);
         },
 
         addHighSchoolSubject()
@@ -444,29 +594,31 @@ export default Ember.Component.extend({
         addTermCode()
         {
             var termCodeArray=this.get('termCodeModel');
-            var termCodeName=this.get('newTermCodeName');
             var isTermCode=true;
 
-            for(var i=0;i<termCodeArray.length;i++)
+            if(this.get('newTermCodeName').trim() != "")
             {
-                if(termCodeName.toUpperCase()==termCodeArray.content[i]._data.name)
+                for(var i=0;i<termCodeArray.length;i++)
                 {
-                    this.setTermCodeOutput("The term code entered is already created! Please enter a new term code name!");
-                    isTermCode=false;
+                    if(termCodeName.toUpperCase()==termCodeArray.content[i]._data.name)
+                    {
+                        this.setTermCodeOutput("The term code entered is already created! Please enter a new term code name!");
+                        isTermCode=false;
+                    }
                 }
-            }
 
-            if(isTermCode)
-            {
-                this.setTermCodeOutput("");
-                if (this.get(termCodeName).trim() != "")
-                {
-                    this.set('newTermCodeObj',this.get('store').createRecord('term-code',{
-                        name: termCodeName.trim()
-                    }));
-                    this.get('newTermCodeObj').save();
-                    this.set('newTermCodeName',"");
-                }
+                    if(isTermCode)
+                    {
+                        this.setTermCodeOutput("");
+                        if (this.get('newTermCodeName').trim() != "")
+                        {
+                            this.set('newTermCodeObj',this.get('store').createRecord('term-code',{
+                                name: this.get('newTermCodeName').trim()
+                            }));
+                            this.get('newTermCodeObj').save();
+                            this.set('newTermCodeName',"");
+                        }
+                    }
             }
         },
 
@@ -485,6 +637,7 @@ export default Ember.Component.extend({
 
         saveTermCode(termCode)
         {
+            console.log(this.get('totalTermCodes'));
             termCode.save();
         },
 
@@ -542,6 +695,11 @@ export default Ember.Component.extend({
             this.set('showDeleteTermCodeConfirmation', false);
             this.set('showDeleteCourseGroupingConfirmation', false);
             this.set('showAddCoursesModal', true);
+        },
+
+        saveName(courseGrouping)
+        {
+            courseGrouping.save();
         }
 
     }

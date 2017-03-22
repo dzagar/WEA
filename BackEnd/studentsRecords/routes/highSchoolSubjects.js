@@ -49,7 +49,7 @@ router.route('/')
             });
         }
         else if ((o || o == 0) && l) {
-            HighSchoolSubject.paginate({}, { offset: o, limit: l }, function(err, highSchoolSubject){
+            HighSchoolSubject.paginate({}, {sort:'name', offset: o, limit: l }, function(err, highSchoolSubject){
                 if (err) response.send(err);
                 else {
                     HighSchoolSubject.count({}, function(err, num){
