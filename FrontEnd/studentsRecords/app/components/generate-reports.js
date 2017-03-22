@@ -433,7 +433,8 @@ export default Ember.Component.extend({
 							date: "",
 							assessmentName: assessmentCode.get('name'),
 							assessmentCode: assessmentCode.get('code'),
-							note: ""
+							note: "",
+							termID: null
 						});
 						adjudicationPromises.push(self.get('store').find('adjudication', adjudication.get('id')));	//store the promise until we're ready to deal with it
                     });
@@ -445,6 +446,7 @@ export default Ember.Component.extend({
 					adjudications.forEach(function (adjudication, i) {	//Add adjudication data to 'data' object
 						data[i].date = adjudication.get('date');
 						data[i].note = adjudication.get('note');
+						data[i].termID = adjudication.get('termCode').get('id');
 						studentPromises.push(self.get('store').find('student', adjudication.get('student').get('id')));	//store the promise until we're ready to deal with it
 					});
 
@@ -457,6 +459,15 @@ export default Ember.Component.extend({
 								console.log('Error: student ' + i + ' is null');
 							}
 						});
+						
+						//remove all records that don't belong in this term
+						for(let i = 0; i < data.length; i++) {
+							if (data[i].termID != self.get('currentTerm').get('id')) {
+								console.log('Bad record found: ' + data[i].termID + ' / ' + self.get('currentTerm').get('id') + ' (index ' + i + ')');
+								data.splice(i, 1);
+								i--;
+							}
+						}
 
 						//write the pdf
 						let pageNumber = 1;
@@ -537,7 +548,8 @@ export default Ember.Component.extend({
 							date: "",
 							assessmentName: assessmentCode.get('name'),
 							assessmentCode: assessmentCode.get('code'),
-							note: ""
+							note: "",
+							termID: null
 						});
 						adjudicationPromises.push(self.get('store').find('adjudication', adjudication.get('id')));	//store the promise until we're ready to deal with it
                     });
@@ -549,6 +561,7 @@ export default Ember.Component.extend({
 					adjudications.forEach(function (adjudication, i) {	//Add adjudication data to 'data' object
 						data[i].date = adjudication.get('date');
 						data[i].note = adjudication.get('note');
+						data[i].termID = adjudication.get('termCode').get('id');
 						studentPromises.push(self.get('store').find('student', adjudication.get('student').get('id')));	//store the promise until we're ready to deal with it
 					});
 
@@ -562,6 +575,15 @@ export default Ember.Component.extend({
 							}
 						});
 						
+						//remove all records that don't belong in this term
+						for(let i = 0; i < data.length; i++) {
+							if (data[i].termID != self.get('currentTerm').get('id')) {
+								console.log('Bad record found: ' + data[i].termID + ' / ' + self.get('currentTerm').get('id') + ' (index ' + i + ')');
+								data.splice(i, 1);
+								i--;
+							}
+						}
+
 						var title="";
 						if(self.get('currentCategoryIndex') === -1)
 							title="Other_"+self.get('currentTerm').get('name');
@@ -573,7 +595,8 @@ export default Ember.Component.extend({
 						var row = "";
 						//get header from first index of array
 						for (var index in data[0]) {
-							row += index + ',';
+							if (index != 'termID')
+								row += index + ',';
 						}
 						row = row.slice(0, -1);
 						//add row
@@ -581,10 +604,17 @@ export default Ember.Component.extend({
 						for (var i = 0; i < data.length; i++) {
 							var row = "";
 							//get columns
-							for (var index in data[i]) {
-								row += '"' + data[i][index] + '",';
-							}
-							row.slice(0, row.length - 1);
+							
+							row += '"' + data[i].studentNumber + '",';
+							row += '"' + data[i].studentName + '",';
+							row += '"' + data[i].date + '",';
+							row += '"' + data[i].assessmentName + '",';
+							row += '"' + data[i].assessmentCode + '",';
+							if (data[i].note)
+								row += '"' + data[i].note + '"';
+							else
+								row += '""';
+							//row.slice(0, row.length - 1);
 							CSV += row + '\r\n';
 						}
 						var uri = 'data:text/csv;charset=utf-8,' + encodeURI(CSV);
