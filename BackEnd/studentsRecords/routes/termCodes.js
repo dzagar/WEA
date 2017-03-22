@@ -225,7 +225,7 @@ router.route('/:termCode_id')
                                     } else {
                                         completedTerms++;
                                         if (completedTerms === termCode.terms.length && !failed) {
-                                            competed++;
+                                            completed++;
                                             if (completed === 2 && !failed) {
                                                 response.json({deleted: termCode});
                                             }
@@ -235,7 +235,7 @@ router.route('/:termCode_id')
                             } else {
                                 completedTerms++;
                                 if (completedTerms === termCode.terms.length && !failed) {
-                                    competed++;
+                                    completed++;
                                     if (completed === 2 && !failed) {
                                         response.json({deleted: termCode});
                                     }
