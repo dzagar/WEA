@@ -105,7 +105,7 @@ router.route('/')
                 response.send(error);
             } else {
 
-                highSchool.name = request.body.highSchool.name;
+                highSchool.schoolName = request.body.highSchool.schoolName;
                 highSchool.courses = request.body.highSchool.courses;
 
                 highSchool.save(function(error) {
