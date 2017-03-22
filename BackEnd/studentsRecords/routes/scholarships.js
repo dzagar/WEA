@@ -74,11 +74,27 @@ router.route('/:scholarship_id')
             }
         });
     })
+
     //update scholarship
-    // .put(parseUrlencoded, parseJSON, function (request, response) {
-    //     models.Scholarships.findById(request.params.scholarship_id, function (error, scholarship) {
-    //     })
-    // })
+    .put(parseUrlencoded, parseJSON, function (request, response) {
+        Scholarship.findById(request.params.scholarship_id, function (error, scholarship) {
+            if (error) {
+                response.send(error);
+            } else {
+                scholarship.student = request.body.scholarship.student;
+                scholarship.note = request.body.scholarship.note;
+
+                scholarship.save(function (error){
+                    if (error){
+                        response.send(error);
+                    } else {
+                        response.json({scholarship: scholarship});
+                    }
+                });
+            }
+        });
+    })
+
     //removes user scholarship
     .delete(parseUrlencoded, parseJSON, function (request, response) {
         Scholarship.findByIdAndRemove(request.params.scholarship_id, function(error, scholarship) {
@@ -93,20 +109,19 @@ router.route('/:scholarship_id')
                         if (index > -1) {
                             student.scholarships.splice(index, 1);
                         }
-
                         student.save(function (error) {
                             if (error) {
                                 response.send(error);
                             } else {
-                                response.json({deleted: scholarship});
+                                response.json({scholarship: scholarship});
                             }
                         });
                     } else {
-                        response.json({deleted: scholarship});
+                        response.json({scholarship: scholarship});
                     }
                 });
             } else {
-                response.json({deleted: scholarship});
+                response.json({scholarship: scholarship});
             }
         });
     });

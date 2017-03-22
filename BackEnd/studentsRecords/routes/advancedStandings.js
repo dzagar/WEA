@@ -130,7 +130,6 @@ router.route('/:advancedStanding_id')
             if (error) {
                 response.send(error);
             } else if (advancedStanding) {
-
                 Student.findById(advancedStanding.student, function (error, student) {
                     if (error) {
                         response.send(error);
@@ -143,15 +142,15 @@ router.route('/:advancedStanding_id')
                             if (error) {
                                 response.send(error);
                             } else {
-                                response.json({deleted: advancedStanding});
+                                response.json({advancedStanding: advancedStanding});
                             }
                         });
                     } else {
-                        response.json({deleted: advancedStanding});
+                        response.json({advancedStanding: advancedStanding});
                     }
                 });
             } else {
-                response.json({deleted: advancedStanding});
+                response.json({advancedStanding: advancedStanding});
             }
         });
     });
