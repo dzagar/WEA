@@ -241,15 +241,15 @@
     <table class="ui table">
       <thead>
         <tr>
-          <th>Advanced Standings</th>
+          <th>Course</th>
           <th>
-            <!--spacer-->
+            <!--spacer-->Description
           </th>
           <th>
-            <!--spacer-->
+            <!--spacer-->Units
           </th>
-          <th><!--spacer--></th>
-          <th><!--spacer--></th>
+          <th><!--spacer-->Grade</th>
+          <th><!--spacer-->Source</th>
           <th><!--spacer--></th>
         </tr>
       </thead>
@@ -257,41 +257,26 @@
       {{#each currentStudent.advancedStandings as |advancedStanding|}}
          <tr>
             <td>
-                <label>
-                  Course: 
-                </label>
                 <div class="ui fluid input">
                     {{input type="text" value = advancedStanding.course }}
                 </div>
             </td>
             <td>
-                <label>
-                  Description: 
-                </label>
                 <div class="ui fluid input">
                     {{input type="text" value = advancedStanding.description}}
                 </div>
             </td>
             <td>
-                <label>
-                  Units: 
-                </label>
                 <div class="ui fluid input">
                     {{input type="text" value = advancedStanding.units}}
                 </div>
             </td>
             <td>
-                <label>
-                  Grade: 
-                </label>
                 <div class="ui fluid input">
                     {{input type="text" value = advancedStanding.grade}}
                 </div>
             </td>
             <td>
-                <label>
-                  From: 
-                </label>
                 <div class="ui fluid input">
                     {{input type="text" value = advancedStanding.from}}
                 </div>
@@ -328,7 +313,7 @@
           </td>
           <td>
           <div class="ui fluid input">
-            {{input type="text" value = newAdvancedStandingFrom placeholder="From"}}
+            {{input type="text" value = newAdvancedStandingFrom placeholder="Source"}}
             </div>
           </td>
         <td>
