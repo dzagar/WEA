@@ -77,6 +77,14 @@ export default Ember.Component.extend({
                     self.set('ruleCode', "");
                     self.set('ruleFlagged', false);
                 });
+            } else {
+                this.set('ruleObj', null);
+                self.set('isEditing', false);
+                self.set('ruleCategory', null);
+                self.set('selectedDepartments', []);
+                self.set('ruleName', "");
+                self.set('ruleCode', "");
+                self.set('ruleFlagged', false);
             }
         },
         addNewRule() {  
