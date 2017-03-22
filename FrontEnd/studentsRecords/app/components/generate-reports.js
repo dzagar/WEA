@@ -359,89 +359,143 @@ export default Ember.Component.extend({
                 adjudicationCategory: assessmentCategory,
 				noCategory: noCategory
             }).then(function (assessmentCodes) {
-                let promiseArr = [];
+
+				// var counter = 0;
+				// assessmentCodes.forEach(function(assessmentCode){
+				// 	counter += assessmentCode.get("adjudications").get('length');
+				// 	assessmentCode.get('adjudications').forEach(function(adjudication){
+				// 		self.get('store').find('adjudication', adjudication.get('id')).then(function(adjudicationOBJ){
+				// 			self.get('store').find('student', adjudication.get('student').get('id')).then(function(studentOBJ){
+				// 				data.push({
+				// 					date: adjudicationOBJ.get('date'),
+				// 					name: assessmentCode.get('name'),
+				// 					code: assessmentCode.get('code'),
+				// 					adjID: adjudicationOBJ.get('id'),
+				// 					note: adjudicationOBJ.get('note'),
+				// 					studentNumber: studentOBJ.get('studentNumber'),
+				// 					firstName: studentOBJ.get('firstName'),
+				// 					lastName: studentOBJ.get('lastName')
+				// 				});
+				// 				counter--;
+				// 				if (counter == 0)
+				// 				{
+				// 					let pageNumber = 1;
+				// 					doc.text('Page ' + pageNumber, 200, 10);
+				// 					doc.setFont('helvetica', 'bold');
+				// 					doc.text('Student #', 25, 25);
+				// 					doc.text('Student Name', 45, 25);
+				// 					doc.text('Adjudication Date', 85, 25);
+				// 					doc.text('Assessment Code', 125, 25);
+				// 					doc.text('Note', 170, 25);
+				// 					doc.setFont('helvetica', '');
+				// 					for (let i = 0; i < data.length; i++) {
+				// 						if (data[i]) {
+				// 							let yPos = 32 + (7 * (i % 31));
+				// 							doc.text(data[i].studentNumber, 25, yPos);
+				// 							doc.text(data[i].firstName + ' ' + data[i].lastName, 45, yPos);
+				// 							doc.text(data[i].date, 85, yPos);
+				// 							doc.text(data[i].name, 125, yPos);
+				// 							doc.text(data[i].code, 155, yPos);
+				// 							if(data[i].note)
+				// 								doc.text(data[i].note, 170, yPos);
+				// 						} else {
+				// 							//console.log("Student " + i + " is null (adjudication " + data[i].adjID + ")");
+				// 						}
+				// 						if ((i + 1) % 31 === 0) {
+				// 							doc.addPage();
+				// 							pageNumber++;
+				// 							doc.text('Page ' + pageNumber, 200, 10);
+				// 							doc.setFont('helvetica', 'bold');
+				// 							doc.text('Student Number', 25, 25);
+				// 							doc.text('Student Name', 60, 25);
+				// 							doc.text('Adjudication Date', 100, 25);
+				// 							doc.text('Assessment Code', 140, 25);
+				// 							doc.text('Note', 180, 25);
+				// 							doc.setFont('helvetica', '');
+				// 						}
+				// 					}
+				// 					doc.save(fileName);
+				// 				}
+				// 			});
+				// 		});
+				// 	});
+				// });
+				
+                let adjudicationPromises = [];
                 assessmentCodes.forEach(function (assessmentCode, index) {
                     assessmentCode.get('adjudications').forEach(function (adjudication, index) {
-						if (adjudication.get('student')) {
-							console.log(adjudication.get('student').get('firstName'));
-							promiseArr.push(adjudication.get('student'));
-							let studentID = adjudication.get('student').get('id');
-							data.push({
-								date: adjudication.get('date'),
-								name: assessmentCode.get('name'),
-								code: assessmentCode.get('code'),
-								adjID: adjudication.get('id'),
-								note: adjudication.get('note'),
-								studentID: studentID
-							});
-						} else {
-							console.log('Null student record found. Adjudication ID: ' + adjudication.get('id'));
-						}
-                        //.then(function (student) {
-                            //let dataStr = student.get('firstName') + ' ' + student.get('lastName') + ' ' + student.get('studentNumber') + ' ' + adjudication.get('date') + ' ' + assessmentCode.get('name') + ' ' + assessmentCode.get('code');
-                            //console.log(dataStr);
-                        //});
+						data.push({					//fill out fields we won't be able to fill later
+							studentNumber: "",
+							studentName: "",
+							date: "",
+							assessmentName: assessmentCode.get('name'),
+							assessmentCode: assessmentCode.get('code'),
+							note: ""
+						});
+						adjudicationPromises.push(self.get('store').find('adjudication', adjudication.get('id')));	//store the promise until we're ready to deal with it
                     });
         		});
-        		return promiseArr;
-        	}).then(function(promiseArr) {
-        		console.log('Done getting promise array');
-        		return Ember.RSVP.allSettled(promiseArr);
-        	}).then(function(promiseResults) {
-				let students = [];
-				for (let i = 0; i < promiseResults.length; i++) {
-					if (promiseResults[i].state == 'fulfilled')
-					{
-						console.log('student ' + i + '(' + data[i].studentID + ') exists (adjudication ' + data[i].adjID + ')');
-						//console.log(data[i].studentID);
-						//console.log(promiseResults[i].value);
-						students.push(promiseResults[i].value);
-					} else {
-						console.log('student ' + i + ' failed with reason: ' + promiseResults[i].reason);
-					}
-				}
-        		console.log('Done getting students');
-        		let pageNumber = 1;
-        		if (students.length === data.length) {
-        			doc.text('Page ' + pageNumber, 200, 10);
-        			doc.setFont('helvetica', 'bold');
-        			doc.text('Student #', 25, 25);
-        			doc.text('Student Name', 45, 25);
-        			doc.text('Adjudication Date', 85, 25);
-        			doc.text('Assessment Code', 125, 25);
-        			doc.text('Note', 170, 25);
-        			doc.setFont('helvetica', '');
-        			for (let i = 0; i < students.length; i++) {
-						if (students[i]) {
+
+				Ember.RSVP.all(adjudicationPromises).then(function(adjudications) {	//wait for all adjudication promises to be resolved, then use the resulting array of adjudication objects
+					let studentPromises = [];
+
+					adjudications.forEach(function (adjudication, i) {	//Add adjudication data to 'data' object
+						data[i].date = adjudication.get('date');
+						data[i].note = adjudication.get('note');
+						studentPromises.push(self.get('store').find('student', adjudication.get('student').get('id')));	//store the promise until we're ready to deal with it
+					});
+
+					Ember.RSVP.all(studentPromises).then(function (students) {	//wait for all student promises to be resolved, then use the resulting array of student objects
+						students.forEach(function (student, i) {
+							if (student != null) {	//add student data to the 'data' object array
+								data[i].studentNumber = student.get('studentNumber');
+								data[i].studentName = student.get('firstName') + ' ' + student.get('lastName');
+							} else {
+								console.log('Error: student ' + i + ' is null');
+							}
+						});
+
+						//write the pdf
+						let pageNumber = 1;
+
+						doc.text('Page ' + pageNumber, 200, 10);
+						doc.setFont('helvetica', 'bold');
+						doc.text('Student #', 25, 25);
+						doc.text('Student Name', 45, 25);
+						doc.text('Adjudication Date', 85, 25);
+						doc.text('Assessment Code', 125, 25);
+						doc.text('Note', 170, 25);
+						doc.setFont('helvetica', '');
+
+						data.forEach(function (dataObj, i) {
 							let yPos = 32 + (7 * (i % 31));
-							doc.text(students[i].get('studentNumber'), 25, yPos);
-							doc.text(students[i].get('firstName') + ' ' + students[i].get('lastName'), 45, yPos);
-							doc.text(data[i].date, 85, yPos);
-							doc.text(data[i].name, 125, yPos);
-							doc.text(data[i].code, 155, yPos);
-							if(data[i].note)
-								doc.text(data[i].note, 170, yPos);
-						} else {
-							//console.log("Student " + i + " is null (adjudication " + data[i].adjID + ")");
-						}
-        				if ((i + 1) % 31 === 0) {
-        					doc.addPage();
-        					pageNumber++;
-        					doc.text('Page ' + pageNumber, 200, 10);
-        					doc.setFont('helvetica', 'bold');
-        					doc.text('Student Number', 25, 25);
-        					doc.text('Student Name', 60, 25);
-        					doc.text('Adjudication Date', 100, 25);
-        					doc.text('Assessment Code', 140, 25);
-        					doc.text('Note', 180, 25);
-        					doc.setFont('helvetica', '');
-        				}
-        			}
-        			doc.save(fileName);
-        		} else {
-        			console.log('Something went wrong! students: ' + students.length + ' datStrs: ' + dataStrs.length);
-        		}
-                Ember.$('.ui.basic.modal').modal('hide');
+							doc.text(dataObj.studentNumber, 25, yPos);
+							doc.text(dataObj.studentName, 45, yPos);
+							doc.text(dataObj.date, 85, yPos);
+							doc.text(dataObj.assessmentName, 125, yPos);
+							doc.text(dataObj.assessmentCode, 155, yPos);
+							if(dataObj.note) {
+								doc.text(dataObj.note, 170, yPos);
+							}
+
+							if ((i + 1) % 31 === 0) {
+								doc.addPage();
+								pageNumber++;
+								doc.text('Page ' + pageNumber, 200, 10);
+								doc.setFont('helvetica', 'bold');
+								doc.text('Student #', 25, 25);
+								doc.text('Student Name', 45, 25);
+								doc.text('Adjudication Date', 85, 25);
+								doc.text('Assessment Code', 125, 25);
+								doc.text('Note', 170, 25);
+								doc.setFont('helvetica', '');
+							}
+						});
+
+						doc.save(fileName);
+						Ember.$('.ui.basic.modal').modal('hide');
+					});
+				});
         	});
         },
         generateExcel() {
