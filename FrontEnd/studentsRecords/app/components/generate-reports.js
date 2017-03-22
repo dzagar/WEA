@@ -361,7 +361,8 @@ export default Ember.Component.extend({
                             date: adjudication.get('date'),
                             name: assessmentCode.get('name'),
                             code: assessmentCode.get('code'),
-							adjID: adjudication.get('id')
+							adjID: adjudication.get('id'),
+							note: adjudication.get('note')
                         });
                         //.then(function (student) {
                             //let dataStr = student.get('firstName') + ' ' + student.get('lastName') + ' ' + student.get('studentNumber') + ' ' + adjudication.get('date') + ' ' + assessmentCode.get('name') + ' ' + assessmentCode.get('code');
@@ -394,6 +395,7 @@ export default Ember.Component.extend({
         			doc.text('Student Name', 60, 25);
         			doc.text('Adjudication Date', 100, 25);
         			doc.text('Assessment Code', 140, 25);
+        			doc.text('Note', 180, 25);
         			doc.setFont('helvetica', '');
         			for (let i = 0; i < students.length; i++) {
 						if (students[i]) {
@@ -403,6 +405,8 @@ export default Ember.Component.extend({
 							doc.text(data[i].date, 100, yPos);
 							doc.text(data[i].name, 140, yPos);
 							doc.text(data[i].code, 170, yPos);
+							if(data[i].note)
+								doc.text(data[i].note, 180, yPos);
 						} else {
 							console.log("Student " + i + " is null");
 						}
@@ -415,6 +419,7 @@ export default Ember.Component.extend({
         					doc.text('Student Name', 60, 25);
         					doc.text('Adjudication Date', 100, 25);
         					doc.text('Assessment Code', 140, 25);
+        					doc.text('Note', 180, 25);
         					doc.setFont('helvetica', '');
         				}
         			}
@@ -447,7 +452,8 @@ export default Ember.Component.extend({
         				temp.push({
         					date: adjudication.get('date'),
         					name: assessmentCode.get('name'),
-        					code: assessmentCode.get('code')
+        					code: assessmentCode.get('code'),
+        					note: adjudication.get('note')
         				});
                 	});
         		});
@@ -458,13 +464,26 @@ export default Ember.Component.extend({
         	}).then(function(students) {
         		
         		for (let i=0; i <students.length; i++){
-        			data.push({
-        				studentNumber: students[i].get('studentNumber'),
-        				studentName: students[i].get('firstName')+' '+students[i].get('lastName'),
-        				date: temp[i].date, 
-        				assessmentCodeName: temp[i].name,
-        				assessmentCode: temp[i].code
-        			});
+        			if (temp[i].note){
+	        			data.push({
+	        				studentNumber: students[i].get('studentNumber'),
+	        				studentName: students[i].get('firstName')+' '+students[i].get('lastName'),
+	        				date: temp[i].date, 
+	        				assessmentCodeName: temp[i].name,
+	        				assessmentCode: temp[i].code,
+	        				note: temp[i].note
+	        			});
+        			}
+        			else{
+        				data.push({
+	        				studentNumber: students[i].get('studentNumber'),
+	        				studentName: students[i].get('firstName')+' '+students[i].get('lastName'),
+	        				date: temp[i].date, 
+	        				assessmentCodeName: temp[i].name,
+	        				assessmentCode: temp[i].code,
+	        				note: ""
+	        			});
+        			}
     			}
         		
 	            var title="";
@@ -493,7 +512,7 @@ export default Ember.Component.extend({
 				    CSV += row + '\r\n';
 				}
 			    var uri = 'data:text/csv;charset=utf-8,' + encodeURI(CSV);
-			    console.log(uri);
+			    //console.log(uri);
 			    //generate filename
 			    var fileName = "";
 			    //make spaces to underscores
