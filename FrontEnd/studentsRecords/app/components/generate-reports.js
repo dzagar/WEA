@@ -478,21 +478,21 @@ export default Ember.Component.extend({
 						doc.text('Page ' + pageNumber, 200, 10);
 						doc.setFont('helvetica', 'bold');
 						doc.text('Student #', 25, 25);
-						doc.text('Student Name', 45, 25);
-						doc.text('Adjudication Date', 85, 25);
+						doc.text('Student Name', 50, 25);
+						doc.text('Adj. Date', 100, 25);
 						doc.text('Assessment Code', 125, 25);
-						doc.text('Note', 170, 25);
+						//doc.text('Note', 170, 25);
 						doc.setFont('helvetica', '');
 
 						data.forEach(function (dataObj, i) {
 							let yPos = 32 + (7 * (i % 31));
 							doc.text(dataObj.studentNumber, 25, yPos);
-							doc.text(dataObj.studentName, 45, yPos);
-							doc.text(dataObj.date, 85, yPos);
+							doc.text(dataObj.studentName, 50, yPos);
+							doc.text(dataObj.date, 100, yPos);
 							doc.text(dataObj.assessmentName, 125, yPos);
-							doc.text(dataObj.assessmentCode, 155, yPos);
+							doc.text(dataObj.assessmentCode, 170, yPos);
 							if(dataObj.note) {
-								doc.text(dataObj.note, 170, yPos);
+								//doc.text(dataObj.note, 170, yPos);
 							}
 
 							if ((i + 1) % 31 === 0) {
@@ -501,10 +501,10 @@ export default Ember.Component.extend({
 								doc.text('Page ' + pageNumber, 200, 10);
 								doc.setFont('helvetica', 'bold');
 								doc.text('Student #', 25, 25);
-								doc.text('Student Name', 45, 25);
-								doc.text('Adjudication Date', 85, 25);
+								doc.text('Student Name', 50, 25);
+								doc.text('Adj. Date', 100, 25);
 								doc.text('Assessment Code', 125, 25);
-								doc.text('Note', 170, 25);
+								//doc.text('Note', 170, 25);
 								doc.setFont('helvetica', '');
 							}
 						});
