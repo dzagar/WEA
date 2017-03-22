@@ -48,7 +48,7 @@ router.route('/')
                 }
             });
         } else if ((o || o == 0) && l) {
-            CourseCode.paginate({}, { offset: o, limit: l }, function(err, courseCodes){
+            CourseCode.paginate({},  {sort:'courseLetter', offset: o, limit: l }, function(err, courseCodes){
                 if (err) response.send(err);
                 else {
                     CourseCode.count({}, function(err, num){

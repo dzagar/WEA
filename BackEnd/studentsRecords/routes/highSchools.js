@@ -19,6 +19,8 @@ router.route('/')
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
+        var o = parseInt(request.query.offset);
+        var l = parseInt(request.query.limit);
         if (request.query.deleteAll)
         {
             console.log("delete All was true");
@@ -42,6 +44,20 @@ router.route('/')
                 if (err) response.send(err);
                 else {
                     response.json({highSchool: highSchool});
+                }
+            });
+        }
+
+        else if ((o || o == 0) && l) {
+            HighSchool.paginate({}, {sort: 'schoolName', offset: o, limit: l }, function(err, highSchool){
+                if (err) response.send(err);
+                else {
+                    HighSchool.count({}, function(err, num){
+                        if (err) response.send(err);
+                        else {
+                            response.json({highSchool: highSchool.docs, meta: {total: num}});
+                        }
+                    });
                 }
             });
         }

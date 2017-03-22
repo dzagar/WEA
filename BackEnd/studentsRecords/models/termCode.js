@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var mongoosePaginate = require('mongoose-paginate');
 
 var termCodeSchema = mongoose.Schema(
     {
@@ -11,5 +12,5 @@ var termCodeSchema = mongoose.Schema(
         versionKey: false
     }
 );
-
+termCodeSchema.plugin(mongoosePaginate);
 module.exports = mongoose.model('termCode',termCodeSchema);
