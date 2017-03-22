@@ -38,11 +38,13 @@ export default Ember.Component.extend({
   selectedDate: null,
   selectedGender: null,
   selectedResidency: null,
+  selectedNewTerm: null,
   showMenuBar: false,
   showAddStudent: false,
   showAllStudents: true,
   showAdvancedStandingDeleteConfirmation: false,
   showDeleteConfirmation: false,
+  studentUnselectedTermCodes: null,
   showScholarshipDeleteConfirmation: false,
   showFindStudent: false,
   store: Ember.inject.service(),
@@ -104,6 +106,15 @@ export default Ember.Component.extend({
 
   fetchStudent: Ember.observer('currentStudent', function () {
     this.showStudentData(this.get('currentStudent'));
+    var self = this;
+    this.get('store').query('term-code', {
+      student: self.get('currentStudent').get('id'),
+      nonTerms: true
+    }).then(function(nonTerms){
+      self.set('studentUnselectedTermCodes', nonTerms);
+      console.log(self.get('studentUnselectedTermCodes'));
+    });
+   
   }),
 
   init() {
@@ -271,7 +282,17 @@ export default Ember.Component.extend({
     changeOffset(offsetDelta, relative) {
       this.changeOffset(offsetDelta, relative)
     },
-    addNewTermToStudent(){
+    addNewTermToStudent(newTerm){
+      var self = this;
+      this.get('studentUnselectedTermCodes').removeObject(self.get('store').peekRecord('term-code', newTerm));
+      var newtermAddingToStudent = this.get('store').createRecord('term', {
+        termAVG: 0,
+        termUnitsPassed: 0,
+        termUnitsTotal: 0
+      });
+      newtermAddingToStudent.set('student', this.get('currentStudent'));
+      newtermAddingToStudent.set('termCode', self.get('store').peekRecord('term-code', newTerm));
+      newtermAddingToStudent.save();
 
     },
     deleteGrade(gradeOBJ){

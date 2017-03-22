@@ -148,9 +148,20 @@
         {{/ui-dropdown}}
       </div>
       <div class="four wide column">
-        <div class="ui inverted green button" {{action 'addNewTermToStudent'}}>
-          Add New Term to {{currentStudent.firstName}}
+      {{#ui-dropdown id="addingNewStudentTerm" class="labeled selection icon top right inverted green pointing button" selected = selectedNewTerm onChange=(action 'addNewTermToStudent')}}
+        <i class="plus icon"></i>
+        Add New Term To Student
+        <div class="menu">
+          {{#each studentUnselectedTermCodes as |nonTerms|}}
+            <div data-value="{{nonTerms.id}}" class="item">
+              {{nonTerms.name}}
+            </div>
+          {{/each}}
         </div>
+      {{/ui-dropdown}}
+        {{!--<div class="ui inverted green button" {{action 'addNewTermToStudent'}}>
+          Add New Term to {{currentStudent.firstName}}
+        </div>--}}
       </div>
     </div>
     <h5>Plan Codes</h5>

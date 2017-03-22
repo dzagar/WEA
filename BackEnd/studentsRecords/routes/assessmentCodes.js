@@ -210,7 +210,7 @@ router.route('/')
                     response.json({assessmentCodes: assessmentCodes});
                 }
             });
-        } else if (request.query.noCategroy) {
+        } else if (request.query.noCategory == "true") {
             AssessmentCode.find({adjudicationCategory: null}, function(error, assessmentCodes) {
                 if (error) {
                     response.send(error);
