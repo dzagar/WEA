@@ -747,11 +747,17 @@
         {{#each courseGroupingModel as |courseGrouping|}}
          <tr>   
             <td>
-                <b>{{courseGrouping.name}}</b>
-            </td>
+                <div class="ui fluid input">
+                    {{input type="text" value = courseGrouping.name}}
+                </div>
+           </td>
 
             <td>
                 <div class="ui inverted buttons">
+                    <button class="ui inverted cstmDPurple button" {{action "saveName" courseGrouping}}>Save Name
+                        &nbsp; <i class="save icon"></i>
+                    </button>
+                    <div class="divider"/>
                     <button class="ui inverted cstmLBlue button" {{action "modifyCourses" courseGrouping}}>Modify Courses
                         &nbsp; <i class="add square icon"></i>
                     </button>
@@ -759,7 +765,6 @@
                     <button class="ui inverted red button" {{action "deleteCourseGrouping" courseGrouping}}> Delete Grouping
                         &nbsp; <i class="trash icon"></i>
                     </button>
-
                 </div>
             </td>
         </tr>

@@ -695,6 +695,11 @@ export default Ember.Component.extend({
             this.set('showDeleteTermCodeConfirmation', false);
             this.set('showDeleteCourseGroupingConfirmation', false);
             this.set('showAddCoursesModal', true);
+        },
+
+        saveName(courseGrouping)
+        {
+            courseGrouping.save();
         }
 
     }
