@@ -17,7 +17,7 @@
 				<option value={{index}}>{{semester.name}}</option>
 				{{/each}}
 			</select>
-			<div class="ui primary button" {{action 'generateReport'}}>Generate Report</div>
+			<div class="ui cstmLBlue button" {{action 'generateReport'}}>Generate Report</div>
 		</div>
 	</div>
 	<div class="ui relaxed items form">
@@ -33,8 +33,8 @@
 	</div>
 	<div class="ui padded centered grid container">
 		<div id="open" class="hideChart">
-			<div class="ui button" {{action 'generatePDF'}}>Generate PDF</div>
-			<div class="ui button" {{action 'generateExcel'}}>Generate Excel</div>
+			<div class="ui cstmTurq button" {{action 'generatePDF'}}>Generate PDF</div>
+			<div class="ui green button" {{action 'generateExcel'}}>Generate Excel</div>
 		</div>
 	</div>
 </div>
