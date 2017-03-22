@@ -135,6 +135,9 @@ export default Ember.Component.extend({
 		return hue;
 	},
 	renderBarChart() {
+		if (this.get('barChart')) {
+			this.get('barChart').destroy();
+		}
 		let ctx = Ember.$('#barChart');
 		this.set('barChart', new Chart(ctx, {
 			type: 'bar',
@@ -156,6 +159,9 @@ export default Ember.Component.extend({
 
 	},
 	renderPieChart() {
+		if (this.get('pieChart')) {
+			this.get('pieChart').destroy();
+		}
 		let ctx = Ember.$('#pieChart');
 		this.set('pieChart', new Chart(ctx, {
 			type: 'pie',
@@ -169,13 +175,13 @@ export default Ember.Component.extend({
 			}
 		}));
 	},
-	destroyChart(type) {
-		if (type == 'bar') {
-			$('#chart').replaceWith('<div id="chart"><canvas id="barChart"></canvas></div>');
-		} else if (type == 'pie') {
-			$('#chart').replaceWith('<div id="chart"><canvas id="pieChart"></canvas></div>');
-		}
-	},
+	// destroyChart(type) {
+	// 	if (type == 'bar') {
+	// 		$('#chart').replaceWith('<div id="chart"><canvas id="barChart"></canvas></div>');
+	// 	} else if (type == 'pie') {
+	// 		$('#chart').replaceWith('<div id="chart"><canvas id="pieChart"></canvas></div>');
+	// 	}
+	// },
 	
 	actions: {
 		generateReport(){
@@ -199,7 +205,7 @@ export default Ember.Component.extend({
             //category 'Other' makes bar chart
             if (this.get('currentCategoryIndex') == -1)
             {
-				this.destroyChart('bar');
+				//this.destroyChart('bar');
 				console.log('getting assessment codes');
             	this.get('store').query('assessmentCode', {
             		adjudicationCategory: null
@@ -247,7 +253,7 @@ export default Ember.Component.extend({
             }
             //other categories make pie chart
             else {
-				this.destroyChart('pie');
+				//this.destroyChart('pie');
 				let pieChartWedges = [];
             	var currentCategoryID = currentCategory.get('id');
             	this.get('store').query('assessmentCode', {
