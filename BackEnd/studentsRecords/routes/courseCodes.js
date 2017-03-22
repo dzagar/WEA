@@ -88,8 +88,7 @@ router.route('/:courseCode_id')
             if (error) {
                 response.send(error);
             } else {
-                console.log("In here.");
-                response.send({courseCode: courseCode});
+                response.json({courseCode: courseCode});
             }
         });
     })
