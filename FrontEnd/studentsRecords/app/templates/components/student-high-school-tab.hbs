@@ -91,22 +91,22 @@
         </td>
         <td>
           <div class="ui fluid input {{if errorLevel "error"}}" onclick={{action "clearError" "errorLevel"}}>
-            {{input type="text" value = newLevelValue}}
+            {{input type="text" value = newLevelValue placeholder="Level"}}
           </div>
         </td>
         <td>
           <div class="ui fluid input {{if errorSource "error"}}" onclick={{action "clearError" "errorSource"}}>
-            {{input type="text" value = newSourceValue}}
+            {{input type="text" value = newSourceValue placeholder="Source"}}
           </div>
         </td>
         <td>
           <div class="ui fluid input {{if errorUnit "error"}}" onclick={{action "clearError" "errorUnit"}}>
-            {{input type="text" value = newUnitValue}}
+            {{input type="text" value = newUnitValue placeholder="Unit"}}
           </div>
         </td>
         <td>
           <div class="ui fluid input {{if errorGrade "error"}}" onclick={{action "clearError" "errorGrade"}}>
-            {{input type="text" value = newGradeValue}}
+            {{input type="text" value = newGradeValue placeholder="Grade"}}
           </div>
         </td>
         <td>

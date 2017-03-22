@@ -78,7 +78,7 @@
     </td>
     <td>
       <div class="ui fluid input {{if errorNote "error"}}" onclick={{action "clearError" "errorNote"}}>
-        {{input type="text" value = newNoteValue onChange = (action (mut newNoteValue))}}
+        {{input type="text" value = newNoteValue onChange = (action (mut newNoteValue)) placeholder="Note"}}
       </div>
     </td>
     <td>
