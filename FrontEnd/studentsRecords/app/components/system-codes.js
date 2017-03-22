@@ -3,6 +3,8 @@ import Ember from 'ember';
 export default Ember.Component.extend({
     
     courseArray: [],
+    courseCodeOffset: null,
+    courseCodePageSize: null,
     courseCodeRecords: null,
     courseGroupingModel: null,
     courseGroupingOutput: "",
@@ -15,12 +17,15 @@ export default Ember.Component.extend({
     currentTermCode: null,
     genderModel: null,
     genderOutput: "",
-    highSchoolCourseModel: null,
     highSchoolModel: null,
-    highSchoolSubjectModel: null,
+    highSchoolOffset: null,
     highSchoolOutput: "",
+    highSchoolPageSize: null,
     highSchoolRecords: null,
     highSchoolSubjectModel: null,
+    highSchoolSubjectOffset: null,
+    highSchoolSubjectPageSize: null,
+    limit: null,
     newCourseCodeCourseLetter: "",
     newCourseCodeCourseNumber: "",
     newCourseCodeName: "",
@@ -32,12 +37,8 @@ export default Ember.Component.extend({
     newGenderObj: null,
     newHighSchoolName: "",
     newHighSchoolObj: null,
-    newHighSchoolCourseObj: null,
     newHighSchoolSubjectName: "",
     newHighSchoolSubjectDescriptionName: "",
-    newHighSchoolSubjectLevel: "",
-    newHighSchoolSubjectSource: "",
-    newHighSchoolSubjectUnit: "",
     newHighSchoolSubjectObj: null,
     newResidencyName: "",
     newResidencyObj: null,
@@ -54,18 +55,16 @@ export default Ember.Component.extend({
     showDeleteResidencyConfirmation: false,
     showDeleteTermCodeConfirmation: false,
     termCodeModel: null,
-    termCodeOutput: "",
-    termCodeRecords: null,
-    limit: null,
-    courseCodeOffset: null,
-    highSchoolOffset: null,
-    highSchoolSubjectOffset: null,
     termCodeOffset: null,
+    termCodeOutput: "",
     termCodePageSize: null,
-    highSchoolPageSize: null,
-    highSchoolSubjectPageSize: null,
-    courseCodePageSize: null,
-
+    termCodeRecords: null,
+    totalCourseCodes: null,
+    totalHighSchools: null,
+    totalHighSchoolSubjects:  null,
+    totalTermCodes: null,
+    
+    
     courseCodePageNumber: Ember.computed('courseCodeOffset', 'courseCodePageSize', function() {
     let num = this.get('courseCodeOffset')/this.get('courseCodePageSize')+1;
     return num;
@@ -85,11 +84,6 @@ export default Ember.Component.extend({
     let num = this.get('termCodeOffset')/this.get('termCodePageSize')+1;
     return num;
     }),
-
-    totalCourseCodes: null,
-    totalHighSchools: null,
-    totalHighSchoolSubjects:  null,
-    totalTermCodes: null,
 
     totalCourseCodePages: Ember.computed('totalCourseCodes', 'courseCodePageSize', function() {
     let ttl = Math.ceil(this.get('totalCourseCodes')/this.get('courseCodePageSize'));
@@ -113,9 +107,9 @@ export default Ember.Component.extend({
 
     store: Ember.inject.service(),
 
-    setResidencyOutput: function(newOutput) {
-		this.set('residencyOutput', newOutput);	
-	},
+    setCourseGroupingOutput: function(newOutput) {
+        this.set('courseGroupingOutput', newOutput);
+    },
 
     setGenderOutput: function(newOutput) {
         this.set('genderOutput',newOutput);
@@ -125,16 +119,16 @@ export default Ember.Component.extend({
         this.set('highSchoolOutput',newOutput);
     },
 
-    setTermCodeOutput: function(newOutput) {
-        this.set('termCodeOutput', newOutput);
-    },
-
     setHighSchoolSubjectOutput: function(newOutput) {
         this.set('highSchoolSubjectOutput', newOutput);
     },
 
-    setCourseGroupingOutput: function(newOutput) {
-        this.set('courseGroupingOutput', newOutput);
+    setResidencyOutput: function(newOutput) {
+		this.set('residencyOutput', newOutput);	
+	},
+
+    setTermCodeOutput: function(newOutput) {
+        this.set('termCodeOutput', newOutput);
     },
 
      checkUniqueCourseInfo: function (sourceArray, newName, newDescription, newSource, newLevel, newUnit) {
