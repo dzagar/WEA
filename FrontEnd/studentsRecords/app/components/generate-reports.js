@@ -341,17 +341,23 @@ export default Ember.Component.extend({
             doc.setFontSize(11);
             let data = [];
             let assessmentCategory;
+			let noCategory;
             let fileName = "";
+			console.log('category is null? ' + (this.get('currentCategoryIndex') === -1));
             if (this.get('currentCategoryIndex') === -1) {
                 assessmentCategory = null;
+				noCategory = true;
                 fileName = "Other_";
             } else {
                 assessmentCategory = this.get('currentCategory').get('id');
+				noCategory = false;
                 fileName = this.get('currentCategory').get('name') + '_';
             }
             fileName += this.get('currentTerm').get('name') + '.pdf';
+			console.log('querying');
             this.get('store').query('assessmentCode', {
-                adjudicationCategory: assessmentCategory
+                adjudicationCategory: assessmentCategory,
+				noCategory: noCategory
             }).then(function (assessmentCodes) {
                 let promiseArr = [];
                 assessmentCodes.forEach(function (assessmentCode, index) {
