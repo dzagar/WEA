@@ -356,14 +356,18 @@ export default Ember.Component.extend({
                 let promiseArr = [];
                 assessmentCodes.forEach(function (assessmentCode, index) {
                     assessmentCode.get('adjudications').forEach(function (adjudication, index) {
-                        promiseArr.push(adjudication.get('student'));
-                        data.push({
-                            date: adjudication.get('date'),
-                            name: assessmentCode.get('name'),
-                            code: assessmentCode.get('code'),
-							adjID: adjudication.get('id'),
-							note: adjudication.get('note')
-                        });
+						if (adjudication.get('student')) {
+							promiseArr.push(adjudication.get('student'));
+							data.push({
+								date: adjudication.get('date'),
+								name: assessmentCode.get('name'),
+								code: assessmentCode.get('code'),
+								adjID: adjudication.get('id'),
+								note: adjudication.get('note')
+							});
+						} else {
+							console.log('Null student record found. Adjudication ID: ' + adjudication.get('id'));
+						}
                         //.then(function (student) {
                             //let dataStr = student.get('firstName') + ' ' + student.get('lastName') + ' ' + student.get('studentNumber') + ' ' + adjudication.get('date') + ' ' + assessmentCode.get('name') + ' ' + assessmentCode.get('code');
                             //console.log(dataStr);
@@ -391,24 +395,24 @@ export default Ember.Component.extend({
         		if (students.length === data.length) {
         			doc.text('Page ' + pageNumber, 200, 10);
         			doc.setFont('helvetica', 'bold');
-        			doc.text('Student Number', 25, 25);
-        			doc.text('Student Name', 60, 25);
-        			doc.text('Adjudication Date', 100, 25);
-        			doc.text('Assessment Code', 140, 25);
-        			doc.text('Note', 180, 25);
+        			doc.text('Student #', 25, 25);
+        			doc.text('Student Name', 45, 25);
+        			doc.text('Adjudication Date', 85, 25);
+        			doc.text('Assessment Code', 125, 25);
+        			doc.text('Note', 170, 25);
         			doc.setFont('helvetica', '');
         			for (let i = 0; i < students.length; i++) {
 						if (students[i]) {
 							let yPos = 32 + (7 * (i % 31));
 							doc.text(students[i].get('studentNumber'), 25, yPos);
-							doc.text(students[i].get('firstName') + ' ' + students[i].get('lastName'), 60, yPos);
-							doc.text(data[i].date, 100, yPos);
-							doc.text(data[i].name, 140, yPos);
-							doc.text(data[i].code, 170, yPos);
+							doc.text(students[i].get('firstName') + ' ' + students[i].get('lastName'), 45, yPos);
+							doc.text(data[i].date, 85, yPos);
+							doc.text(data[i].name, 125, yPos);
+							doc.text(data[i].code, 155, yPos);
 							if(data[i].note)
-								doc.text(data[i].note, 180, yPos);
+								doc.text(data[i].note, 170, yPos);
 						} else {
-							console.log("Student " + i + " is null");
+							console.log("Student " + i + " is null (adjudication " + data[i].adjID + ")");
 						}
         				if ((i + 1) % 31 === 0) {
         					doc.addPage();
@@ -423,7 +427,7 @@ export default Ember.Component.extend({
         					doc.setFont('helvetica', '');
         				}
         			}
-        			doc.save(fileName);
+        			//doc.save(fileName);
         		} else {
         			console.log('Something went wrong! students: ' + students.length + ' datStrs: ' + dataStrs.length);
         		}
