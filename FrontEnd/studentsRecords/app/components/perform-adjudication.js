@@ -44,6 +44,7 @@ export default Ember.Component.extend({
     evaluationProgress: 0,
     evaluationTotal: 1000,
     studentInformation: null,
+    routing: Ember.inject.service('-routing'),
     adjudicationStatus: "",
     store: Ember.inject.service(),
 
@@ -72,6 +73,8 @@ export default Ember.Component.extend({
     progressTracker: Ember.observer('evaluationProgress', function () {
         if (this.get('evaluationProgress') == this.get('evaluationTotal') && this.get('evaluationProgress') > 0){
             this.set('doneStatus', "<span style='color:green;'>Adjudication Complete! Please proceed to the 'Generate Reports' tab.</span>");
+            Ember.$("#btnGenerateReports").removeClass("disabled");
+            Ember.$("#btnEditFlagged").removeClass("disabled");
         }
     }),
     determineProgress(newProgress, newTotal)
@@ -890,6 +893,12 @@ export default Ember.Component.extend({
         },
         selectTerm(termCodeID){
             this.set('currentTerm', termCodeID);
+        },
+        proceedToReports(){
+            this.get('routing').transitionTo('generate-reports');
+        },
+        proceedToFlagged(){
+            this.get('routing').transitionTo('student-records');
         }
     }
 });

@@ -4,7 +4,7 @@
       {{parameter-builder ruleEditing = ruleObj showWindow = isAdding}}
       {{/if}}
     {{/if}}
-    <h2>Manage Assessment Rule</h2>
+    <h2>Manage Adjudication Rule</h2>
     <form class="ui form">
         <div class="inline field">
             <label>Adjudication Category:</label>
@@ -24,11 +24,11 @@
             {{/ui-dropdown}}
         </div>
         <div class="inline field">
-            <label>Assessment name:</label>
+            <label>Adjudication name:</label>
             {{input value=ruleName type="text" placeholder="enter rule name" }}
         </div>
         <div class="inline field">
-            <label>Assessment code:</label>
+            <label>Adjudication code:</label>
             {{input value=ruleCode type="text" placeholder="enter rule code" }}
         </div>
         <div class="inline field">
@@ -50,7 +50,7 @@
             {{ui-checkbox label="Flag this rule for manual review" checked=ruleFlagged onChange=(action (mut ruleFlagged))}}
         </div>
         <div class="inline field">
-            <label>Assessment parameters:</label>
+            <label>Adjudication rule parameters:</label>
             <button id="addFirst" class="ui cstmTurq button" {{action 'addFirstRule'}}>Edit rule parameters</button>
         </div>
     </form>

@@ -56,10 +56,6 @@ export default Ember.Component.extend({
         		failed = true;
         		this.set('errorAC', true);
         	}
-        	if (!(this.get('newNoteValue'))){
-        		failed = true;
-        		this.set('errorNote', true);
-        	}
         	if (!(this.get('newDateValue'))){
         		failed = true;
         		this.set('errorDate', true);

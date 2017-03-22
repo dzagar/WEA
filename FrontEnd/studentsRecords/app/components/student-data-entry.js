@@ -114,6 +114,7 @@ export default Ember.Component.extend({
       self.set('studentUnselectedTermCodes', nonTerms);
       console.log(self.get('studentUnselectedTermCodes'));
     });
+    self.set('termIndex', null);
    
   }),
 
