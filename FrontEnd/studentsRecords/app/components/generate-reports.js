@@ -218,7 +218,8 @@ export default Ember.Component.extend({
 				//this.destroyChart('bar');
 				console.log('getting assessment codes');
             	this.get('store').query('assessmentCode', {
-            		adjudicationCategory: null
+            		adjudicationCategory: null,
+					noCategory: true
             	}).then(function(assessmentCodes){
 					console.log('found ' + assessmentCodes.get('length') + ' assessment codes');
 					let promiseArr = [];
@@ -327,7 +328,9 @@ export default Ember.Component.extend({
         },
         selectCategory(index){
         	this.set('currentCategoryIndex', index);
-        	this.set('currentCategory', this.get('categoryModel').objectAt(Number(index)));
+			if (index != -1) {
+				this.set('currentCategory', this.get('categoryModel').objectAt(Number(index)));
+			}
         	console.log("new index " + this.get('currentCategoryIndex'));
         	$("#open").addClass('hideChart');
         	$("#chart").addClass('hideChart');
@@ -343,8 +346,8 @@ export default Ember.Component.extend({
             let assessmentCategory;
 			let noCategory;
             let fileName = "";
-			console.log('category is null? ' + (this.get('currentCategoryIndex') === -1));
-            if (this.get('currentCategoryIndex') === -1) {
+			console.log('category is null? ' + (this.get('currentCategoryIndex') == -1));
+            if (this.get('currentCategoryIndex') == -1) {
                 assessmentCategory = null;
 				noCategory = true;
                 fileName = "Other_";
@@ -509,8 +512,8 @@ export default Ember.Component.extend({
             let assessmentCategory;
 			let noCategory;
             let fileName = "";
-			console.log('category is null? ' + (this.get('currentCategoryIndex') === -1));
-            if (this.get('currentCategoryIndex') === -1) {
+			console.log('category is null? ' + (this.get('currentCategoryIndex') == -1));
+            if (this.get('currentCategoryIndex') == -1) {
                 assessmentCategory = null;
 				noCategory = true;
                 fileName = "Other_";
