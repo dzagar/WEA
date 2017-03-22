@@ -67,14 +67,14 @@ export default Ember.Component.extend({
 			}
 
 			if (!(this.get('invalidStudentNumber') || this.get('invalidName') || this.get('invalidDOB') || this.get('invalidGender') || this.get('invalidResidency'))) {
-				this.set('photo', "/assets/studentsPhotos/nonBinary.png");
+				//this.set('photo', "/assets/studentsPhotos/nonBinary.png");
 				this.set('newStudent', this.get('store').createRecord('student', {
 					studentNumber: this.get('studentNumber'),
 					firstName: this.get('firstName'),
 					lastName: this.get('lastName'),
 					gender: this.get('store').peekRecord('gender', this.get('gender')),
 					DOB: new Date(Date.parse(this.get('DOB'))),
-					photo: this.get('photo'),
+					photo: null,
 					resInfo: this.get('store').peekRecord('residency', this.get('resInfo')),
 					basisOfAdmission: this.get('basisOfAdmission'),
 					admissionAverage: this.get('admissionAverage'),

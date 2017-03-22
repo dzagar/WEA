@@ -32,7 +32,7 @@
 
 <!-- Delete confirmation popups -->
 {{#if showDeleteConfirmation}} 
-  {{delete-student INDEX = currentIndex student = currentStudent showWindow = showDeleteConfirmation total = totalStudents}}
+  {{delete-student showAllStudents = showAllStudents showMenuBar = showMenuBar student = currentStudent showWindow = showDeleteConfirmation total = totalStudents}}
 {{else if showAdvancedStandingDeleteConfirmation}}
   {{delete-advanced-standing advancedStanding = currentAdvancedStanding showWindow = showAdvancedStandingDeleteConfirmation}}
 {{else if showScholarshipDeleteConfirmation}}
