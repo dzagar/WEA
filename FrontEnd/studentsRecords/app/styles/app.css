@@ -13,6 +13,11 @@ html {
   min-width:100%;
 }
 
+body {
+  background-color: #ebebeb !important;
+  color: black !important;
+}
+
 body > .ember-view {
   position: relative;
   margin: 0;
@@ -64,12 +69,25 @@ body > .ember-view {
 .appBody h2 {
 	text-align: center;
 }
+.ui.text.container {
+  min-height: 100%;
+}
+.ui.centered.grid.container {
+  height:auto;
+}
+.ui.button.animated {
+  min-height: 100%;
+}
+.welcomePage {
+  height: 300px;
+  margin-bottom: -50px;
+}
 /*div>.welcome{
 	margin-bottom: 13em;
-}*/
+}
 div>div>div> .ui.huge.button {
 	height: 100%;
-}
+}*/
 
 /*About Us*/
 .headshot > img {
@@ -108,6 +126,115 @@ div>div>div> .ui.huge.button {
   background-image: url('/assets/images/uwo-2.jpg');
   background-size: cover;
   padding: 0;
+}
+/*generate chart*/
+.hideChart{
+  display: none;
+}
+#open{
+  padding-bottom: 20px;
+}
+.cstmDPurple {
+  background-color: #4e2683 !important;
+  color: #FFFFFF !important;
+}
+.ui.cstmDPurple.button:hover {
+  background-color: #350D6A !important;
+  color: inherit;
+}
+.cstmLGrey {
+  background-color: #ebebeb !important;
+  color: #000000 !important;
+}
+.ui.cstmLGrey.button:hover {
+  background-color: #D2D2D2 !important;
+  color: inherit;
+}
+.cstmLOrange {
+  background-color: #faa600 !important;
+  color: #FFFFFF !important;
+}
+.ui.cstmLOrange.button:hover {
+  background-color: #E18D00 !important;
+  color: inherit;
+}
+.cstmLBlue {
+  background-color: #02bfc6 !important;
+  color: #FFFFFF !important;
+}
+.ui.cstmLBlue.button:hover {
+  background-color: #00A6AD !important;
+  color: inherit;
+}
+.cstmGold {
+  background-color: #cbbb9a !important;
+  color: #FFFFFF !important;
+}
+.ui.cstmGold.button:hover {
+  background-color: #B2A281 !important;
+  color: inherit;
+}
+.cstmTurq {
+  background-color: #00999f !important;
+  color: #FFFFFF !important;
+}
+.ui.cstmTurq.button:hover {
+  background-color: #008086 !important;
+  color: inherit;
+}
+.ui.inverted.cstmDPurple.button {
+  color: #4e2683 !important;
+  box-shadow: 0px 0px 0px 2px #4e2683 inset !important;
+  background-color: transparent !important;
+}
+.ui.inverted.cstmDPurple.button:hover{
+  background-color: #4e2683 !important;
+  color: #FFFFFF !important;
+}
+.ui.inverted.cstmLGrey.button {
+  color: #ebebeb !important;
+  box-shadow: 0px 0px 0px 2px #ebebeb inset !important;
+  background-color: transparent !important;
+}
+.ui.inverted.cstmLGrey.button:hover{
+  background-color: #ebebeb !important;
+  color: #000000 !important;
+}
+.ui.inverted.cstmLOrange.button {
+  color: #faa600 !important;
+  box-shadow: 0px 0px 0px 2px #faa600 inset !important;
+  background-color: transparent !important;
+}
+.ui.inverted.cstmLOrange.button:hover{
+  background-color: #faa600 !important;
+  color: #FFFFFF !important;
+}
+.ui.inverted.cstmLBlue.button {
+  color: #02bfc6 !important;
+  box-shadow: 0px 0px 0px 2px #02bfc6 inset !important;
+  background-color: transparent !important;
+}
+.ui.inverted.cstmLBlue.button:hover{
+  background-color: #02bfc6 !important;
+  color: #FFFFFF !important;
+}
+.ui.inverted.cstmGold.button {
+  color: #cbbb9a !important;
+  box-shadow: 0px 0px 0px 2px #cbbb9a inset !important;
+  background-color: transparent !important;
+}
+.ui.inverted.cstmGold.button:hover{
+  background-color: #cbbb9a !important;
+  color: #FFFFFF !important;
+}
+.ui.inverted.cstmTurq.button {
+  color: #00999f !important;
+  box-shadow: 0px 0px 0px 2px #00999f inset !important;
+  background-color: transparent !important;
+}
+.ui.inverted.cstmTurq.button:hover{
+  background-color: #00999f !important;
+  color: #FFFFFF !important;
 }
 
 

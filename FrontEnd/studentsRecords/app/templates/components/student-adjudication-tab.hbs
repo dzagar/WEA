@@ -5,7 +5,7 @@
 <h2>Adjudications</h2>
 
 <h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
-
+<br>
 <table class="ui fixed table">
   <thead>
     <tr>
@@ -87,4 +87,55 @@
       </button>
     </td>
   </tr>
-    </table>
+  </table>
+  <br>
+  <h4>Term Information</h4>
+  <table class="ui fixed table">
+  <thead>
+    <tr>
+      <th class="">Term Code</th>
+      <th class="">Term Average</th>
+      <th class="">Completed Credits</th>
+      <th class="">Attempted Credits</th>
+      <th class="">Failed Credits</th>
+    </tr>
+  </thead>
+  {{#each currentStudent.terms as |term|}}
+    <tr>
+      <td>
+        <a style="cursor: pointer;" {{action 'selectTermToView' term.termCode.id}}>
+          {{term.termCode.name}}
+        </a>
+      </td>
+      <td>
+        {{term.termAVG}}
+      </td>
+      <td>
+        {{term.termUnitsPassed}}
+      </td>
+      <td>
+        {{term.termUnitsTotal}}
+      </td>
+      <td>
+        {{inline-math term.termUnitsTotal "-" term.termUnitsPassed}}
+      </td>
+    </tr>
+  {{/each}}
+  <tr class="active positive">
+      <td>
+        <b>Cumulative values</b>
+      </td>
+      <td>
+        <b>{{currentStudent.cumAVG}}</b>
+      </td>
+      <td>
+        <b>{{currentStudent.cumUnitsPassed}}</b>
+      </td>
+      <td>
+        <b>{{currentStudent.cumUnitsTotal}}</b>
+      </td>
+      <td>
+        <b>{{inline-math currentStudent.cumUnitsTotal "-" currentStudent.cumUnitsPassed}}</b>
+      </td>
+  </tr>
+</table>

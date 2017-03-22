@@ -8,6 +8,7 @@ var Term = require('../models/termCode');
 var AdvancedStanding = require('../models/advancedStanding');
 var HighSchoolGrade = require('../models/highSchoolGrade');
 var Adjudication = require('../models/adjudication');
+var AssessmentCode = require('../models/assessmentCode');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
 var parseJSON = bodyParser.json();
@@ -62,6 +63,7 @@ router.route('/')
         var o = parseInt(request.query.offset);
         var residency = request.query.resInfo;
         var student = request.query.student;
+        var flagged = request.query.flagged;
 
         if (deleteAll) {
             Student.remove({}, function(err){
@@ -89,29 +91,59 @@ router.route('/')
         else if (!student) {
             if (firstName != null || lastName != null || studentNumber != null)
             {
-                var regexFName = new RegExp(firstName, "img");
-                var regexLName = new RegExp(lastName, "img");
-                var regexStudentNum = new RegExp(studentNumber, "img");
-                var conditions = {};
-                if (firstName != "") conditions["firstName"] = regexFName;
-                if (lastName != "") conditions["lastName"] = regexLName;
-                if (studentNumber != "") conditions["studentNumber"] = regexStudentNum;
-
-                Student.paginate(conditions, {offset: o, limit: l}, function(error, students) {
-                    if (error) {
-                        response.send(error);
-                    } else {
-                        Student.count(conditions, function(error, num) {
-                            if (error) {
-                                response.send(error);
-                            } else {
-                                response.json({student: students.docs, meta: {total: num}})
-                            }
+                if (flagged == "true"){
+                    //get all assessment codes that are flagged
+                    //get all adjudications that are in assessmentCode
+                    AssessmentCode.find({flagForReview: true}, function(error, assessmentCodes){
+                        Adjudication.find({assessmentCode: {"$in": assessmentCodes}}, function(error, adjudications){
+                            var regexFName = new RegExp(firstName, "img");
+                            var regexLName = new RegExp(lastName, "img");
+                            var regexStudentNum = new RegExp(studentNumber, "img");
+                            var conditions = {};
+                            if (firstName != "") conditions["firstName"] = regexFName;
+                            if (lastName != "") conditions["lastName"] = regexLName;
+                            if (studentNumber != "") conditions["studentNumber"] = regexStudentNum;
+                            conditions["adjudications"] = {"$in": adjudications};
+                            Student.paginate(conditions, {offset: o, limit: l}, function(error, students) {
+                                if (error) {
+                                    response.send(error);
+                                } else {
+                                    Student.count(conditions, function(error, num) {
+                                        if (error) {
+                                            response.send(error);
+                                        } else {
+                                            response.json({student: students.docs, meta: {total: num}})
+                                        }
+                                    });
+                                }
+                            });
                         });
-                    }
-                });
+                    });
+                }else{
+                    var regexFName = new RegExp(firstName, "img");
+                    var regexLName = new RegExp(lastName, "img");
+                    var regexStudentNum = new RegExp(studentNumber, "img");
+                    var conditions = {};
+                    if (firstName != "") conditions["firstName"] = regexFName;
+                    if (lastName != "") conditions["lastName"] = regexLName;
+                    if (studentNumber != "") conditions["studentNumber"] = regexStudentNum;
+
+                    Student.paginate(conditions, {offset: o, limit: l}, function(error, students) {
+                        if (error) {
+                            response.send(error);
+                        } else {
+                            Student.count(conditions, function(error, num) {
+                                if (error) {
+                                    response.send(error);
+                                } else {
+                                    response.json({student: students.docs, meta: {total: num}})
+                                }
+                            });
+                        }
+                    });
+                }                
             }
-            else
+            else if (l && l != 0)
             { 
                 Student.paginate({}, { offset: o, limit: l },function (error, students) {
                     if (error) {
@@ -127,6 +159,17 @@ router.route('/')
                     }
                 });
 
+            }
+            else{
+                console.log("get all");
+                Student.find({}, function(error, students){
+                    if (error){
+                        response.send(error);
+                    }
+                    else{
+                        response.send({students: students});
+                    }
+                });
             }
             //models.Students.find(function (error, students) {
             //    if (error) response.send(error);

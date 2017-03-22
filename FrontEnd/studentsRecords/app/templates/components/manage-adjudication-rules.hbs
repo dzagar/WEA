@@ -51,11 +51,11 @@
         </div>
         <div class="inline field">
             <label>Assessment parameters:</label>
-            <button id="addFirst" class="ui button" {{action 'addFirstRule'}}>Edit rule parameters</button>
+            <button id="addFirst" class="ui cstmTurq button" {{action 'addFirstRule'}}>Edit rule parameters</button>
         </div>
     </form>
     <br>
-    <button class="ui button" {{action 'save'}}>Save</button>
+    <button class="ui cstmLBlue button" {{action 'save'}}>Save</button>
     <button class="ui button" {{action 'cancel'}}>Cancel</button>
 {{else}}
     <div class="ui grid">
@@ -86,7 +86,7 @@
               {{oneRule.code}}
           </td>
           <td>
-              <button class = "ui button" {{action "setRuleFields" oneRule}}>Manage Rule</button>
+              <button class = "ui cstmTurq button" {{action "setRuleFields" oneRule}}>Manage Rule</button>
           </td>
           <td class="right aligned">
                <button class="ui mini circular icon button" {{action 'deleteRule' oneRule}} title="Delete">

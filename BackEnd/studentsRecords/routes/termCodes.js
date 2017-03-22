@@ -87,6 +87,22 @@ router.route('/')
             });
         }
 
+        else if(request.query.student && request.query.nonTerms){
+            Term.find({student: request.query.student}, function(error, terms){
+                var termCodeValues = [];
+                for (var i = 0; i < terms.length; i++){
+                    termCodeValues.push(terms[i].termCode);
+                }
+                TermCode.find({id: {"$nin": termCodeValues}}, function(error, termCodes){
+                    if (error){
+                        response.send(error);
+                    }else{
+                        response.send({termCodes: termCodes});
+                    }
+                });
+            });
+        }
+
         else { 
             TermCode.find(function(error, termCodes) {
                 if (error) {

@@ -21,7 +21,22 @@ router.route('/')
         
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
-        if (request.query.name)
+        if (request.query.deleteAll){
+            AdjudicationCategory.remove({}, function (error) {
+                if (error) {
+                    response.send(error);
+                } else {
+                    AdjudicationCategory.find(function (error, adjudicationCategories) {
+                        if (error) {
+                            response.send(error);
+                        } else {
+                            response.json({adjudicationCategories: adjudicationCategories});
+                        }
+                    });
+                }
+            });
+        }
+        else if (request.query.name)
         {
             AdjudicationCategory.findOne({name: request.query.name}, function(error, adjudicationCategories) {
                 if (error){

@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var mongoosePaginate = require('mongoose-paginate');
 var studentsSchema = mongoose.Schema(
     {
+        adjudication: [{type: mongoose.Schema.ObjectId, ref: 'Adjudication'}],
         DOB: String,
         firstName: String,
         gender: {type: mongoose.Schema.ObjectId, ref: 'Gender'},

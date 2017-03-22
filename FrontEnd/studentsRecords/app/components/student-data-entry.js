@@ -8,6 +8,7 @@ export default Ember.Component.extend({
   currentScholarship: null,
   currentStudent: null,
   currentIndex: null,
+  courseCodeModel: null,
   filter: {studentNumber: "", firstName: "", lastName: ""},
   firstIndex: 0,
   genderModel: null,
@@ -20,6 +21,7 @@ export default Ember.Component.extend({
   newAdvancedStandingGrade:"",
   newAdvancedStandingObj: null,
   newAdvancedStandingUnits:"",
+  newCourseCodeID: null,
   newHighSchoolName:"",
   newHighSchoolObj: null,
   newScholarshipName:"",
@@ -36,11 +38,13 @@ export default Ember.Component.extend({
   selectedDate: null,
   selectedGender: null,
   selectedResidency: null,
+  selectedNewTerm: null,
   showMenuBar: false,
   showAddStudent: false,
   showAllStudents: true,
   showAdvancedStandingDeleteConfirmation: false,
   showDeleteConfirmation: false,
+  studentUnselectedTermCodes: null,
   showScholarshipDeleteConfirmation: false,
   showFindStudent: false,
   store: Ember.inject.service(),
@@ -70,6 +74,7 @@ export default Ember.Component.extend({
       firstName: self.get('filter').firstName,
       lastName: self.get('filter').lastName,
       limit: self.get('limit'),
+      flagged: self.get('filter').flagged,
       offset: self.get('offset')
     }).then(function (records) {
       self.set('totalStudents', records.get('meta').total);
@@ -101,6 +106,15 @@ export default Ember.Component.extend({
 
   fetchStudent: Ember.observer('currentStudent', function () {
     this.showStudentData(this.get('currentStudent'));
+    var self = this;
+    this.get('store').query('term-code', {
+      student: self.get('currentStudent').get('id'),
+      nonTerms: true
+    }).then(function(nonTerms){
+      self.set('studentUnselectedTermCodes', nonTerms);
+      console.log(self.get('studentUnselectedTermCodes'));
+    });
+   
   }),
 
   init() {
@@ -122,6 +136,9 @@ export default Ember.Component.extend({
     this.get('store').findAll('advanced-standing').then(function (records) {
       self.set('advancedStandingModel',records);
     });
+    this.get('store').findAll('course-code').then(function(records){
+      self.set('courseCodeModel', records);
+    });
 
     // load first page of the students records
     this.set('limit', 10);
@@ -134,7 +151,8 @@ export default Ember.Component.extend({
       firstName: self.get('filter').firstName,
       lastName: self.get('filter').lastName,
       limit: self.get('limit'),
-      offset: self.get('offset')
+      offset: self.get('offset'),
+      flagged: self.get('filter').flagged
     }).then(function (records) {
       self.set('totalStudents', records.get("meta").total);
       self.set('studentsRecords', records);
@@ -264,7 +282,43 @@ export default Ember.Component.extend({
     changeOffset(offsetDelta, relative) {
       this.changeOffset(offsetDelta, relative)
     },
+    addNewTermToStudent(newTerm){
+      var self = this;
+      this.get('studentUnselectedTermCodes').removeObject(self.get('store').peekRecord('term-code', newTerm));
+      var newtermAddingToStudent = this.get('store').createRecord('term', {
+        termAVG: 0,
+        termUnitsPassed: 0,
+        termUnitsTotal: 0
+      });
+      newtermAddingToStudent.set('student', this.get('currentStudent'));
+      newtermAddingToStudent.set('termCode', self.get('store').peekRecord('term-code', newTerm));
+      newtermAddingToStudent.save();
 
+    },
+    deleteGrade(gradeOBJ){
+      gradeOBJ.destroyRecord();
+    },
+    addNewGrade(){
+      var self = this;
+      var newGrade = this.get('store').createRecord('grade', {
+        mark: this.get('newCourseGradeInput'),
+        note: this.get('newCourseGradeNote')
+      });
+      this.get('store').find('course-code', self.get('newCourseCodeID')).then(function(courseCodeOBJ){
+        self.get('store').queryRecord('term', {
+          student: self.get('currentStudent').get('id'),
+          termCode: self.get('termIndex')
+        }).then(function(termOBJ){
+          newGrade.set('courseCode', courseCodeOBJ);
+          newGrade.set('term', termOBJ);
+          newGrade.save().then(function(){
+            self.set('newCourseGradeInput', "");
+            self.set('newCourseGradeNote', "");
+            self.set('newCourseCodeID', null);
+          });
+        });
+      });
+    },
     saveStudent () {
       //this doesnt work
       this.get('store').query('student', {

@@ -35,7 +35,7 @@
 
 {{#if showFilters}}
   <div class="ui form">
-    <div class="three fields">
+    <div class="four fields">
       <div class="field">
         <label>Student Number</label>
         <input id="studentNumber" placeholder="Student Number" type="number" min="0">
@@ -56,8 +56,13 @@
         </label>
         <input id="lastName" placeholder="Last Name" type="text">
       </div>
+      <div class="field">        
+        <br>        
+        <br>
+        {{ui-checkbox label = "Show only students flagged for review" checked = filterByFlaggedForReview onChange=(action (mut filterByFlaggedForReview))}}
+      </div>
     </div>
-    <div class="ui button" {{action "applyFilters"}}>Apply</div>
+    <div class="ui cstmLBlue button" {{action "applyFilters"}}>Apply</div>
     <div class="ui button" {{action "clearFilters"}}>Clear</div>
   </div>
 {{/if}}
@@ -67,7 +72,7 @@
     <div class="ui vertically padded grid">
       {{#each studentsRecords as |student index|}}
         <div class="eight wide column">
-          <div class="ui fluid labeled icon button" {{action "selectStudent" student index}}>
+          <div class="ui fluid labeled icon cstmTurq button" {{action "selectStudent" student index}}>
             {{#each student.adjudications as |studentAdj|}}
               {{#if studentAdj.assessmentCode.flagForReview}}
                 <i class="red icon flag"></i>

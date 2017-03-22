@@ -202,17 +202,23 @@ router.route('/')
                     });
                 }
             });
-        } else if(request.query.noCategory){
-            AssessmentCode.find({adjudicationCategory: null}, function(error, assessmentCodes){
-                if (error)
-                {
+        } else if (request.query.adjudicationCategory) {
+            AssessmentCode.find({adjudicationCategory: request.query.adjudicationCategory}, function(error, assessmentCodes) {
+                if (error) {
                     response.send(error);
-                } else{
-                    response.send({assessmentCodes: assessmentCodes});
+                } else {
+                    response.json({assessmentCodes: assessmentCodes});
                 }
-            })
-
-        }else {
+            });
+        } else if (request.query.noCategory == "true") {
+            AssessmentCode.find({adjudicationCategory: null}, function(error, assessmentCodes) {
+                if (error) {
+                    response.send(error);
+                } else {
+                    response.json({assessmentCodes: assessmentCodes});
+                }
+            });
+        } else {
             AssessmentCode.find(function(error, assessmentCodes) {
                 if (error) {
                     response.send(error);

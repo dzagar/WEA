@@ -1,0 +1,40 @@
+<div class="ui basic modal">
+	<div class="ui indeterminate text loader">{{generationWarningText}}</div>
+</div>
+<div class = "ui welcome container">
+	<div class = "ui text container">
+		<h2>Select criteria for report:</h2>
+		<div class=" ui padded centered grid container">
+			<select id="criteria" class="ui dropdown" onchange={{action 'selectCategory' value='target.value'}}>
+				<!-- <option value="">Select a Criteria</option> -->
+				<option value="-1">Other</option>
+				{{#each categoryModel as |category index|}}
+				<option value={{index}}>{{category.name}}</option>
+				{{/each}}
+			</select>
+			<select id="term" class="ui dropdown" onchange={{action 'selectTerm' value='target.value'}}>
+				{{#each termModel as |semester index|}}
+				<option value={{index}}>{{semester.name}}</option>
+				{{/each}}
+			</select>
+			<div class="ui cstmLBlue button" {{action 'generateReport'}}>Generate Report</div>
+		</div>
+	</div>
+	<div class="ui relaxed items form">
+		{{#if (inline-compare currentCategoryIndex "==" -1)}}
+			<div id="chart">
+				<canvas id="barChart"></canvas>
+			</div>
+		{{else}}
+			<div id="chart">
+				<canvas id="pieChart"></canvas>
+			</div>
+		{{/if}}
+	</div>
+	<div class="ui padded centered grid container">
+		<div id="open" class="hideChart">
+			<div class="ui cstmTurq button" {{action 'generatePDF'}}>Generate PDF</div>
+			<div class="ui green button" {{action 'generateExcel'}}>Generate Excel</div>
+		</div>
+	</div>
+</div>
