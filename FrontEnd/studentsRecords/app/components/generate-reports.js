@@ -357,13 +357,16 @@ export default Ember.Component.extend({
                 assessmentCodes.forEach(function (assessmentCode, index) {
                     assessmentCode.get('adjudications').forEach(function (adjudication, index) {
 						if (adjudication.get('student')) {
+							console.log(adjudication.get('student').get('firstName'));
 							promiseArr.push(adjudication.get('student'));
+							let studentID = adjudication.get('student').get('id');
 							data.push({
 								date: adjudication.get('date'),
 								name: assessmentCode.get('name'),
 								code: assessmentCode.get('code'),
 								adjID: adjudication.get('id'),
-								note: adjudication.get('note')
+								note: adjudication.get('note'),
+								studentID: studentID
 							});
 						} else {
 							console.log('Null student record found. Adjudication ID: ' + adjudication.get('id'));
@@ -383,8 +386,9 @@ export default Ember.Component.extend({
 				for (let i = 0; i < promiseResults.length; i++) {
 					if (promiseResults[i].state == 'fulfilled')
 					{
-						console.log('student ' + i + ' exists (adjudication ' + data[i].adjID + ')');
-						console.log(promiseResults[i].value);
+						console.log('student ' + i + '(' + data[i].studentID + ') exists (adjudication ' + data[i].adjID + ')');
+						//console.log(data[i].studentID);
+						//console.log(promiseResults[i].value);
 						students.push(promiseResults[i].value);
 					} else {
 						console.log('student ' + i + ' failed with reason: ' + promiseResults[i].reason);
@@ -412,7 +416,7 @@ export default Ember.Component.extend({
 							if(data[i].note)
 								doc.text(data[i].note, 170, yPos);
 						} else {
-							console.log("Student " + i + " is null (adjudication " + data[i].adjID + ")");
+							//console.log("Student " + i + " is null (adjudication " + data[i].adjID + ")");
 						}
         				if ((i + 1) % 31 === 0) {
         					doc.addPage();
@@ -427,7 +431,7 @@ export default Ember.Component.extend({
         					doc.setFont('helvetica', '');
         				}
         			}
-        			//doc.save(fileName);
+        			doc.save(fileName);
         		} else {
         			console.log('Something went wrong! students: ' + students.length + ' datStrs: ' + dataStrs.length);
         		}
