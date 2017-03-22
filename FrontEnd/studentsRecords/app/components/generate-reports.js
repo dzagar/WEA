@@ -420,7 +420,7 @@ export default Ember.Component.extend({
 				// 		});
 				// 	});
 				// });
-				
+
                 let adjudicationPromises = [];
                 assessmentCodes.forEach(function (assessmentCode, index) {
                     assessmentCode.get('adjudications').forEach(function (adjudication, index) {
@@ -498,104 +498,209 @@ export default Ember.Component.extend({
 				});
         	});
         },
-        generateExcel() {
-        	let data = [];
-        	let assessmentCategory;
-        	let temp=[];
-            this.set('generationWarningText', 'Generating a CSV File');
+		generateExcel() {
+            console.log('Generating Excel document');
+            this.set('generationWarningText', 'Generating a CSV Report');
             Ember.$('.ui.basic.modal').modal({closable: false}).modal('show');
-        	var self=this;
-        	if (this.get('currentCategoryIndex') === -1) {
-        		assessmentCategory = null;
-        	} else {
-        		assessmentCategory=this.get('currentCategory').get('id');
-        	}
-        	this.get('store').query('assessmentCode', {
-        		adjudicationCategory: assessmentCategory
-        	}).then(function (assessmentCodes) {
-        		let promiseArr = [];
-        		assessmentCodes.forEach(function (assessmentCode, index) {
-        			assessmentCode.get('adjudications').forEach(function (adjudication, index) {
-        				promiseArr.push(adjudication.get('student'));
-        				temp.push({
-        					date: adjudication.get('date'),
-        					name: assessmentCode.get('name'),
-        					code: assessmentCode.get('code'),
-        					note: adjudication.get('note')
-        				});
-                	});
+            let self = this;
+            let doc = new jsPDF("portrait", "mm", "letter");
+            doc.setFontSize(11);
+            let data = [];
+            let assessmentCategory;
+			let noCategory;
+            let fileName = "";
+			console.log('category is null? ' + (this.get('currentCategoryIndex') === -1));
+            if (this.get('currentCategoryIndex') === -1) {
+                assessmentCategory = null;
+				noCategory = true;
+                fileName = "Other_";
+            } else {
+                assessmentCategory = this.get('currentCategory').get('id');
+				noCategory = false;
+                fileName = this.get('currentCategory').get('name') + '_';
+            }
+            fileName += this.get('currentTerm').get('name') + '.pdf';
+			console.log('querying');
+            this.get('store').query('assessmentCode', {
+                adjudicationCategory: assessmentCategory,
+				noCategory: noCategory
+            }).then(function (assessmentCodes) {				
+                let adjudicationPromises = [];
+                assessmentCodes.forEach(function (assessmentCode, index) {
+                    assessmentCode.get('adjudications').forEach(function (adjudication, index) {
+						data.push({					//fill out fields we won't be able to fill later
+							studentNumber: "",
+							studentName: "",
+							date: "",
+							assessmentName: assessmentCode.get('name'),
+							assessmentCode: assessmentCode.get('code'),
+							note: ""
+						});
+						adjudicationPromises.push(self.get('store').find('adjudication', adjudication.get('id')));	//store the promise until we're ready to deal with it
+                    });
         		});
-        		return promiseArr;
-        	}).then(function(promiseArr) {
-        		console.log('Done getting promise array');
-        		return Ember.RSVP.all(promiseArr);
-        	}).then(function(students) {
+
+				Ember.RSVP.all(adjudicationPromises).then(function(adjudications) {	//wait for all adjudication promises to be resolved, then use the resulting array of adjudication objects
+					let studentPromises = [];
+
+					adjudications.forEach(function (adjudication, i) {	//Add adjudication data to 'data' object
+						data[i].date = adjudication.get('date');
+						data[i].note = adjudication.get('note');
+						studentPromises.push(self.get('store').find('student', adjudication.get('student').get('id')));	//store the promise until we're ready to deal with it
+					});
+
+					Ember.RSVP.all(studentPromises).then(function (students) {	//wait for all student promises to be resolved, then use the resulting array of student objects
+						students.forEach(function (student, i) {
+							if (student != null) {	//add student data to the 'data' object array
+								data[i].studentNumber = student.get('studentNumber');
+								data[i].studentName = student.get('firstName') + ' ' + student.get('lastName');
+							} else {
+								console.log('Error: student ' + i + ' is null');
+							}
+						});
+						
+						var title="";
+						if(self.get('currentCategoryIndex') === -1)
+							title="Other_"+self.get('currentTerm').get('name');
+						else
+							title=self.get('currentCategory').get('name')+'_'+self.get('currentTerm').get('name');
+						var CSV = '';
+						//CSV += title + '\r\n\n';
+						//generate header
+						var row = "";
+						//get header from first index of array
+						for (var index in data[0]) {
+							row += index + ',';
+						}
+						row = row.slice(0, -1);
+						//add row
+						CSV += row + '\r\n';
+						for (var i = 0; i < data.length; i++) {
+							var row = "";
+							//get columns
+							for (var index in data[i]) {
+								row += '"' + data[i][index] + '",';
+							}
+							row.slice(0, row.length - 1);
+							CSV += row + '\r\n';
+						}
+						var uri = 'data:text/csv;charset=utf-8,' + encodeURI(CSV);
+						//console.log(uri);
+						//generate filename
+						var fileName = "";
+						//make spaces to underscores
+						fileName += title.replace(/ /g,"_");
+						var link = document.createElement("a");    
+						link.href = uri;
+						link.style = "visibility:hidden";
+						link.download = fileName + ".csv";
+						document.body.appendChild(link);
+						link.click();
+						document.body.removeChild(link);
+
+						Ember.$('.ui.basic.modal').modal('hide');
+					});
+				});
+        	});
+        },
+        // generateExcel() {
+        // 	let data = [];
+        // 	let assessmentCategory;
+        // 	let temp=[];
+        //     this.set('generationWarningText', 'Generating a CSV File');
+        //     Ember.$('.ui.basic.modal').modal({closable: false}).modal('show');
+        // 	var self=this;
+        // 	if (this.get('currentCategoryIndex') === -1) {
+        // 		assessmentCategory = null;
+        // 	} else {
+        // 		assessmentCategory=this.get('currentCategory').get('id');
+        // 	}
+        // 	this.get('store').query('assessmentCode', {
+        // 		adjudicationCategory: assessmentCategory
+        // 	}).then(function (assessmentCodes) {
+        // 		let promiseArr = [];
+        // 		assessmentCodes.forEach(function (assessmentCode, index) {
+        // 			assessmentCode.get('adjudications').forEach(function (adjudication, index) {
+        // 				promiseArr.push(adjudication.get('student'));
+        // 				temp.push({
+        // 					date: adjudication.get('date'),
+        // 					name: assessmentCode.get('name'),
+        // 					code: assessmentCode.get('code'),
+        // 					note: adjudication.get('note')
+        // 				});
+        //         	});
+        // 		});
+        // 		return promiseArr;
+        // 	}).then(function(promiseArr) {
+        // 		console.log('Done getting promise array');
+        // 		return Ember.RSVP.all(promiseArr);
+        // 	}).then(function(students) {
         		
-        		for (let i=0; i <students.length; i++){
-        			if (temp[i].note){
-	        			data.push({
-	        				studentNumber: students[i].get('studentNumber'),
-	        				studentName: students[i].get('firstName')+' '+students[i].get('lastName'),
-	        				date: temp[i].date, 
-	        				assessmentCodeName: temp[i].name,
-	        				assessmentCode: temp[i].code,
-	        				note: temp[i].note
-	        			});
-        			}
-        			else{
-        				data.push({
-	        				studentNumber: students[i].get('studentNumber'),
-	        				studentName: students[i].get('firstName')+' '+students[i].get('lastName'),
-	        				date: temp[i].date, 
-	        				assessmentCodeName: temp[i].name,
-	        				assessmentCode: temp[i].code,
-	        				note: ""
-	        			});
-        			}
-    			}
+        // 		for (let i=0; i <students.length; i++){
+        // 			if (temp[i].note){
+	    //     			data.push({
+	    //     				studentNumber: students[i].get('studentNumber'),
+	    //     				studentName: students[i].get('firstName')+' '+students[i].get('lastName'),
+	    //     				date: temp[i].date, 
+	    //     				assessmentCodeName: temp[i].name,
+	    //     				assessmentCode: temp[i].code,
+	    //     				note: temp[i].note
+	    //     			});
+        // 			}
+        // 			else{
+        // 				data.push({
+	    //     				studentNumber: students[i].get('studentNumber'),
+	    //     				studentName: students[i].get('firstName')+' '+students[i].get('lastName'),
+	    //     				date: temp[i].date, 
+	    //     				assessmentCodeName: temp[i].name,
+	    //     				assessmentCode: temp[i].code,
+	    //     				note: ""
+	    //     			});
+        // 			}
+    	// 		}
         		
-	            var title="";
-	            if(self.get('currentCategoryIndex') === -1)
-	            	title="Other_"+self.get('currentTerm').get('name');
-	            else
-	            	title=self.get('currentCategory').get('name')+'_'+self.get('currentTerm').get('name');
-	            var CSV = '';
-	            //CSV += title + '\r\n\n';
-				//generate header
-				var row = "";
-			    //get header from first index of array
-			    for (var index in data[0]) {
-			    	row += index + ',';
-			    }
-			    row = row.slice(0, -1);
-			    //add row
-			    CSV += row + '\r\n';
-			    for (var i = 0; i < data.length; i++) {
-			    	var row = "";
-				    //get columns
-				    for (var index in data[i]) {
-				    	row += '"' + data[i][index] + '",';
-				    }
-				    row.slice(0, row.length - 1);
-				    CSV += row + '\r\n';
-				}
-			    var uri = 'data:text/csv;charset=utf-8,' + encodeURI(CSV);
-			    //console.log(uri);
-			    //generate filename
-			    var fileName = "";
-			    //make spaces to underscores
-			    fileName += title.replace(/ /g,"_");
-			    var link = document.createElement("a");    
-			    link.href = uri;
-			    link.style = "visibility:hidden";
-			    link.download = fileName + ".csv";
-			    document.body.appendChild(link);
-			    link.click();
-			    document.body.removeChild(link);
-                Ember.$('.ui.basic.modal').modal('hide');
-			    //window.open(uri);
-			});
-    	}
+	    //         var title="";
+	    //         if(self.get('currentCategoryIndex') === -1)
+	    //         	title="Other_"+self.get('currentTerm').get('name');
+	    //         else
+	    //         	title=self.get('currentCategory').get('name')+'_'+self.get('currentTerm').get('name');
+	    //         var CSV = '';
+	    //         //CSV += title + '\r\n\n';
+		// 		//generate header
+		// 		var row = "";
+		// 	    //get header from first index of array
+		// 	    for (var index in data[0]) {
+		// 	    	row += index + ',';
+		// 	    }
+		// 	    row = row.slice(0, -1);
+		// 	    //add row
+		// 	    CSV += row + '\r\n';
+		// 	    for (var i = 0; i < data.length; i++) {
+		// 	    	var row = "";
+		// 		    //get columns
+		// 		    for (var index in data[i]) {
+		// 		    	row += '"' + data[i][index] + '",';
+		// 		    }
+		// 		    row.slice(0, row.length - 1);
+		// 		    CSV += row + '\r\n';
+		// 		}
+		// 	    var uri = 'data:text/csv;charset=utf-8,' + encodeURI(CSV);
+		// 	    //console.log(uri);
+		// 	    //generate filename
+		// 	    var fileName = "";
+		// 	    //make spaces to underscores
+		// 	    fileName += title.replace(/ /g,"_");
+		// 	    var link = document.createElement("a");    
+		// 	    link.href = uri;
+		// 	    link.style = "visibility:hidden";
+		// 	    link.download = fileName + ".csv";
+		// 	    document.body.appendChild(link);
+		// 	    link.click();
+		// 	    document.body.removeChild(link);
+        //         Ember.$('.ui.basic.modal').modal('hide');
+		// 	    //window.open(uri);
+		// 	});
+    	// }
         
     }
 });
