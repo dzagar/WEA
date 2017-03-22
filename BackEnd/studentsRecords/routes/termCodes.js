@@ -73,7 +73,7 @@ router.route('/')
         }
 
         else if ((o || o == 0) && l) {
-            TermCode.paginate({}, { offset: o, limit: l }, function(err, termCode){
+            TermCode.paginate({}, {sort:'name', offset: o, limit: l }, function(err, termCode){
                 if (err) response.send(err);
                 else {
                     TermCode.count({}, function(err, num){

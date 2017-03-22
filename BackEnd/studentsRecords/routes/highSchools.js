@@ -49,7 +49,7 @@ router.route('/')
         }
 
         else if ((o || o == 0) && l) {
-            HighSchool.paginate({}, { offset: o, limit: l }, function(err, highSchool){
+            HighSchool.paginate({}, {sort: 'schoolName', offset: o, limit: l }, function(err, highSchool){
                 if (err) response.send(err);
                 else {
                     HighSchool.count({}, function(err, num){
