@@ -145,12 +145,22 @@ export default Ember.Component.extend({
 					yAxes: [{
 						ticks: {
 							beginAtZero:true
+						},
+						scaleLabel:{
+							display: true,
+							labelString: "Students"
+						}
+					}],
+					xAxes: [{
+						scaleLabel:{
+							display: true,
+							labelString: "Assessment Code"
 						}
 					}]
 				},
 				legend: {
 					display: false
-				}
+				}		
 			}
 		}));
 
