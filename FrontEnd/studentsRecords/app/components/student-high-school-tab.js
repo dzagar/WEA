@@ -89,24 +89,23 @@ export default Ember.Component.extend({
             if (!failed) {
                 let self = this;
 
-                this.get('store').queryRecord('high-school', {id: this.get('selectedHighSchoolID')}).then(function (schoolObj) {
-                    self.get('store').queryRecord('high-school-subject', {id: self.get('selectedSubjectID')}).then(function (subjectObj) {
+                this.get('store').find('high-school', this.get('selectedHighSchoolID')).then(function (schoolObj) {
+                    self.get('store').find('high-school-subject', self.get('selectedSubjectID')).then(function (subjectObj) {
                         let newHSCourse = self.get('store').createRecord('high-school-course', {
                             level: Number(self.get('newLevelValue')),
                             source: self.get('newSourceValue'),
                             unit: Number(self.get('newUnitValue')),
+                            school: schoolObj,
+                            subject: subjectObj
                         });
-                        newHSCourse.set('school', schoolObj);
-                        newHSCourse.set('subject', subjectObj);
 
                         newHSCourse.save().then(function() {
                             console.log(newHSCourse.id);
                             let newGrade = self.get('store').createRecord('high-school-grade', {
-                                mark: Number(self.get('newGradeValue'))
+                                mark: Number(self.get('newGradeValue')),
+                                student: self.get('currentStudent'),
+                                source: newHSCourse
                             });
-                            newGrade.set('student', self.get('currentStudent'));
-                            newGrade.set('source', newHSCourse);
-
                             newGrade.save().then(function() {
                                 console.log('success!');
                             });
