@@ -165,12 +165,8 @@ export default Ember.Service.extend({
 
   close(user) {
     var myStore = this.get('store');
-    myStore.query('login', {filter: {userName: user}}).then(function (Login) {
-      if (Login) {
-        Login.forEach((record) => {
-          record.destroyRecord();
-        });
-      }
+    myStore.queryRecord('login', {filter: {userName: user}}).then(function (Login) {
+      Login.destroyRecord();
     });
     window.localStorage.removeItem('sas-session-id');
     this.set('getName', null);
