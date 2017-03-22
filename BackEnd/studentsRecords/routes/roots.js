@@ -30,7 +30,7 @@ function decrypt(cipherText) {
 
 router.route('/')
     .post(parseUrlencoded, parseJSON, function (request, response) {
-        if (request.body.root.password === null) {
+        if (request.body.root.password === null || request.body.root.nonce === null) {
             // make sure to delete any leftover from any previous session for the same user if any.
             Roots.Model.find({}, function (error, oldLogins) {
                 oldLogins.forEach(function (record) {
