@@ -21,6 +21,7 @@ Router.map(function() {
 
   this.route('adjudication');
 
+  this.route('user');
 });
 
 export default Router;
