@@ -19,7 +19,7 @@ export default Ember.Component.extend({
     ruleName: null, //code
     ruleCode: null, //name
     selectedDepartments: [],  //departments
-
+    newRule: null,
 
     init() {
         this._super(...arguments);
@@ -56,6 +56,7 @@ export default Ember.Component.extend({
             });
             ruleSaving.save().then(function(){
                 self.set('isEditing', false);
+                self.set('newRule', false);
                 self.set('ruleCategory', null);
                 self.set('selectedDepartments', []);
                 self.set('ruleName', "");
@@ -64,17 +65,31 @@ export default Ember.Component.extend({
             });
 
         },
-        cancel() {
-            this.set('isEditing', false);
-            this.set('ruleCategory', null);
-            this.set('selectedDepartments', []);
-            this.set('ruleName', "");
-            this.set('ruleCode', "");
-            this.set('ruleFlagged', false);
-
+        cancel(ruleObject) {
+            var self = this;
+            if (this.get('newRule')){
+                this.set('ruleObj', null);
+                self.set('isEditing', false);
+                ruleObject.destroyRecord().then(()=>{
+                    self.set('ruleCategory', null);
+                    self.set('selectedDepartments', []);
+                    self.set('ruleName', "");
+                    self.set('ruleCode', "");
+                    self.set('ruleFlagged', false);
+                });
+            } else {
+                this.set('ruleObj', null);
+                self.set('isEditing', false);
+                self.set('ruleCategory', null);
+                self.set('selectedDepartments', []);
+                self.set('ruleName', "");
+                self.set('ruleCode', "");
+                self.set('ruleFlagged', false);
+            }
         },
         addNewRule() {  
             var self = this;
+            this.set('newRule', true);
             this.set('ruleName', "");
             this.set('ruleCode', "");
             this.set('isEditing', true);        
@@ -92,6 +107,7 @@ export default Ember.Component.extend({
 
         setRuleFields(ruleEditing){
             var self = this;
+            this.set('newRule', false);
             this.set('ruleObj', ruleEditing);
             this.set('ruleCode', ruleEditing.get('code'));
             this.set('ruleName', ruleEditing.get('name'));
@@ -116,9 +132,8 @@ export default Ember.Component.extend({
             this.set('isAdding', true);
         },
         cancelRuleAdd() {
-			// Ember.$('.ui.modal').modal('hide');
-            // Ember.$('.ui.modal').remove();
             this.set('isAdding', false);
+
         },
         selectCourse(newCourse) {
             this.set('selectCourse', newCourse);
