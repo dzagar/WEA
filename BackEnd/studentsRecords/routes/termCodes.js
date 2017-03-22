@@ -93,10 +93,11 @@ router.route('/')
                 for (var i = 0; i < terms.length; i++){
                     termCodeValues.push(terms[i].termCode);
                 }
-                TermCode.find({id: {"$nin": termCodeValues}}, function(error, termCodes){
+                TermCode.find({"_id": {"$nin": termCodeValues}}, function(error, termCodes){
                     if (error){
                         response.send(error);
                     }else{
+                        console.log(termCodes.length);
                         response.send({termCodes: termCodes});
                     }
                 });
