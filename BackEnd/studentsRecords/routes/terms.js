@@ -135,10 +135,12 @@ router.route('/')
 
 router.route('/:term_id')
     .get(parseUrlencoded, parseJSON, function (request, response) {
+        console.log(request.params.term_id);
         Term.findById(request.params.term_id, function (error, term) {
             if (error) {
                 response.send(error);
             } else {
+                console.log(term);
                 response.json({term: term});
             }
         });
