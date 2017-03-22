@@ -8,6 +8,7 @@ export default Ember.Component.extend({
   currentScholarship: null,
   currentStudent: null,
   currentIndex: null,
+  courseCodeModel: null,
   filter: {studentNumber: "", firstName: "", lastName: ""},
   firstIndex: 0,
   genderModel: null,
@@ -20,6 +21,7 @@ export default Ember.Component.extend({
   newAdvancedStandingGrade:"",
   newAdvancedStandingObj: null,
   newAdvancedStandingUnits:"",
+  newCourseCodeID: null,
   newHighSchoolName:"",
   newHighSchoolObj: null,
   newScholarshipName:"",
@@ -122,6 +124,9 @@ export default Ember.Component.extend({
 
     this.get('store').findAll('advanced-standing').then(function (records) {
       self.set('advancedStandingModel',records);
+    });
+    this.get('store').findAll('course-code').then(function(records){
+      self.set('courseCodeModel', records);
     });
 
     // load first page of the students records
@@ -266,7 +271,33 @@ export default Ember.Component.extend({
     changeOffset(offsetDelta, relative) {
       this.changeOffset(offsetDelta, relative)
     },
+    addNewTermToStudent(){
 
+    },
+    deleteGrade(gradeOBJ){
+      gradeOBJ.destroyRecord();
+    },
+    addNewGrade(){
+      var self = this;
+      var newGrade = this.get('store').createRecord('grade', {
+        mark: this.get('newCourseGradeInput'),
+        note: this.get('newCourseGradeNote')
+      });
+      this.get('store').find('course-code', self.get('newCourseCodeID')).then(function(courseCodeOBJ){
+        self.get('store').queryRecord('term', {
+          student: self.get('currentStudent').get('id'),
+          termCode: self.get('termIndex')
+        }).then(function(termOBJ){
+          newGrade.set('courseCode', courseCodeOBJ);
+          newGrade.set('term', termOBJ);
+          newGrade.save().then(function(){
+            self.set('newCourseGradeInput', "");
+            self.set('newCourseGradeNote', "");
+            self.set('newCourseCodeID', null);
+          });
+        });
+      });
+    },
     saveStudent () {
       //this doesnt work
       this.get('store').query('student', {
