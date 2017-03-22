@@ -38,6 +38,10 @@ export default Ember.Component.extend({
 	      self.set('genderModel', records);
 	    });
 	},
+
+	willDestroy(){
+		Ember.$('.ui.modal').remove();
+	},
 	actions: {
 		addStudent: function(student){
 			this.set('invalidStudentNumber', false);
