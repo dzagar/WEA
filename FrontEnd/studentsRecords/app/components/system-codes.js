@@ -624,7 +624,6 @@ export default Ember.Component.extend({
 
         saveTermCode(termCode)
         {
-            console.log(this.get('totalTermCodes'));
             termCode.save();
         },
 

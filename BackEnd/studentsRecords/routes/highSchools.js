@@ -28,11 +28,11 @@ router.route('/')
                     if (error)
                         response.send(error);
                     else{
-                        HighSchool.find({}, function(error, highSchools) {
+                        HighSchool.find({}, function(error, highSchool) {
                             if (error)
                                 response.send(error);
                                 else{
-                                    response.json({highSchool: highSchools});
+                                    response.json({highSchool: highSchool});
                                 }
                         });
                     } console.log("removed highschools");
@@ -63,27 +63,27 @@ router.route('/')
         }
         else if (request.query.filter) {
              var Student = request.query.filter;
-             HighSchool.find({"student": Student.student}, function (error, students) {
+             HighSchool.find({"student": Student.student}, function (error, highSchool) {
                 if (error) {
                     response.send(error);
                 } else {
-                    response.json({highSchool: students});
+                    response.json({highSchool: highSchool});
                 }
             });
         } else if (request.query.schoolName) {
-            HighSchool.find({schoolName: request.query.schoolName}, function(error, highSchools) {
+            HighSchool.find({schoolName: request.query.schoolName}, function(error, highSchool) {
                 if (error) {
                     response.send(error);
                 } else {
-                    response.json({highSchool: highSchools});
+                    response.json({highSchool: highSchool});
                 }
             });
         } else {
-            HighSchool.find( {}, null, {sort: 'schoolName'}, function (error, highSchools) {
+            HighSchool.find( {}, null, {sort: 'schoolName'}, function (error, highSchool) {
                 if (error) {
                     response.send(error);
                 } else {
-                    response.json({highSchool: highSchools});
+                    response.json({highSchool: highSchool});
                 }
             });
         }
@@ -104,8 +104,8 @@ router.route('/')
             if (error) {
                 response.send(error);
             } else {
+
                 highSchool.name = request.body.highSchool.name;
-                highSchool.students = request.body.highSchool.students;
                 highSchool.courses = request.body.highSchool.courses;
 
                 highSchool.save(function(error) {
