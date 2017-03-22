@@ -1,11 +1,10 @@
 {{#if showDeleteConfirmation}}
 {{delete-data-confirmation notDONE = showDeleteConfirmation isImporting = importData}}
 {{else if importData}}
-
 <div class="ui centered middle aligned grid">
 	<div class = "row">
 		<div class="column">
-			<div class="ui tiny steps">
+			<div class="ui tiny steps cstmGold">
 				<a id="basic" class="active step item">
 					<i class="minus icon"></i>
 					<div class="content">
@@ -37,7 +36,7 @@
 				<a id="undergraduate" class="disabled step item">
 					<i class="minus icon"></i>
 					<div class="content">
-		     			<div class="title" >Undergraduate Program Information</div>
+		     			<div class="title" >Program Information</div>
 		     			<!--Undergraduate Record Plans, Undergraduate Record Courses-->
 		    		</div>
 				</a>			
@@ -45,7 +44,7 @@
 		</div>
 	</div>
 	<div class = "row">
-		<div class="ten wide stretchered column ui basic vertical ordered steps">
+		<div class="ten wide stretchered column ui basic vertical ordered steps cstmGold">
 			{{#if index1}}
 				{{#each importUndergrad as |feature index|}}
 					<div class = "ui segment step " id = {{feature.code}}>
@@ -68,7 +67,7 @@
 					</div>
 				{{/each}}
 				<div class = "ui basic centered middle aligned grid segment">
-					<button id = "btnImport" class="ui primary button" {{action 'import' }}>
+					<button id = "btnImport" class="ui cstmLBlue button" {{action 'import' }}>
 		  				Import Files
 					</button>
 				</div>
@@ -94,7 +93,7 @@
 					</div>
 				{{/each}}
 				<div class = "ui basic centered middle aligned grid segment">
-					<button id="btnImport" class="ui primary button" {{action 'import' }}>
+					<button id="btnImport" class="ui cstmLBlue button" {{action 'import' }}>
 		  				Import Files
 					</button>
 				</div>
@@ -120,7 +119,7 @@
 					</div>
 				{{/each}}
 				<div class = "ui basic centered middle aligned grid segment">
-					<button id = "btnImport" class="ui primary button" {{action 'import' }}>
+					<button id = "btnImport" class="ui cstmLBlue button" {{action 'import' }}>
 		  				Import Files
 					</button>
 				</div>
@@ -146,7 +145,7 @@
 					</div>
 				{{/each}}
 				<div class = "ui basic centered middle aligned grid segment">
-					<button id = "btnImport" class="ui primary button" {{action 'import' }}>
+					<button id = "btnImport" class="ui cstmLBlue button" {{action 'import' }}>
 		  				Import Files
 					</button>
 				</div>
@@ -172,7 +171,7 @@
 					</div>
 				{{/each}}
 				<div class = "ui basic centered middle aligned grid segment">
-					<button id = "btnImport" class="ui primary button" {{action 'import' }}>
+					<button id = "btnImport" class="ui cstmLBlue button" {{action 'import' }}>
 		  				Import Files
 					</button>
 				</div>
@@ -189,7 +188,7 @@
 						Finish
 					{{/link-to}}
 				{{else}}
-					<button id="btnContinue" class="ui primary button disabled" {{action 'continue' }}>
+					<button id="btnContinue" class="ui cstmDPurple button disabled" {{action 'continue' }}>
 			  				Continue
 					</button>
 				{{/if}}
@@ -199,7 +198,7 @@
 </div>
 {{else}}
 <div class = "ui grid">
-	<div class = "column ui yellow segment">
+	<div class = "column ui cstmLOrange segment" style = "margin-top:50px;">
 		<p>
 			To import new data, you must delete all old data. This action is irreversible, so be sure you are ready before proceeding.
 		</p>
