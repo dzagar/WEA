@@ -454,7 +454,7 @@
           <th class="four wide">Description</th>
           <th class="two wide"><!--spacer--></th>
         </thead>
-        {{#each courseArray as |highSchoolSubject|}}
+        {{#each highSchoolSubjectRecords as |highSchoolSubject|}}
         <tr>
 
             <td>
@@ -508,6 +508,90 @@
 		        </div>
             </td>
         </tr>
+
+        <tr>
+            <td colspan="12">
+                <div style="margin: auto; width: 50%;">
+                  <div class="ui fluid pagination nine item menu">
+                    {{#if (inline-compare highSchoolSubjectPageNumber '<' 5)}}
+                      <div class="disabled item"></div>
+                    {{/if}}
+                    {{#if (inline-compare highSchoolSubjectPageNumber '>' 3)}}
+                      <a class="item" {{action "switchHighSchoolSubjectPage" 1}}>
+                        1
+                      </a> 
+                    {{else}}
+                      <div class="disabled item"></div>
+                    {{/if}} 
+                    {{#if (inline-compare highSchoolSubjectPageNumber '>' 5)}}
+                      <div class="disabled item">
+                        ...
+                      </div>
+                    {{else}} 
+                      {{#if (inline-compare highSchoolSubjectPageNumber '===' 5)}}
+                      <a class="item" {{action "switchHighSchoolSubjectPage" 2}}>
+                        2
+                      </a> 
+                      {{/if}} 
+                    {{/if}}
+                    {{#if (inline-compare highSchoolSubjectPageNumber '>' 2)}}
+                      <a class="item" {{action "switchHighSchoolSubjectPage" (inline-math highSchoolSubjectPageNumber '-' 2)}}>
+                        {{inline-math highSchoolSubjectPageNumber '-' 2}}
+                      </a> 
+                    {{else}}
+                      <div class="disabled item"></div>
+                    {{/if}}
+                    {{#if (inline-compare highSchoolSubjectPageNumber '>' 1)}}
+                      <a class="item" {{action "switchHighSchoolSubjectPage" (inline-math highSchoolSubjectPageNumber '-' 1)}}>
+                        {{inline-math highSchoolSubjectPageNumber '-' 1}}
+                      </a>
+                    {{else}}
+                      <div class="disabled item"></div>
+                    {{/if}}
+
+                    <a class="active item">
+                      {{highSchoolSubjectPageNumber}}
+                    </a> 
+
+                    {{#if (inline-compare highSchoolSubjectPageNumber '<' totalHighSchoolSubjectPages)}}
+                      <a class="item" {{action "switchHighSchoolSubjectPage" (inline-math highSchoolSubjectPageNumber '+ ' 1)}}>
+                        {{inline-math highSchoolSubjectPageNumber '+ ' 1}}
+                      </a>
+                    {{else}}
+                      <div class="disabled item"></div>
+                    {{/if}}
+                    {{#if (inline-compare highSchoolSubjectPageNumber '<' (inline-math totalHighSchoolSubjectPages '- ' 1))}}
+                      <a class="item" {{action "switchHighSchoolSubjectPage" (inline-math highSchoolSubjectPageNumber '+ ' 2)}}>
+                        {{inline-math highSchoolSubjectPageNumber '+ ' 2}}
+                      </a>
+                    {{else}}
+                      <div class="disabled item"></div>
+                    {{/if}}
+                    {{#if (inline-compare highSchoolSubjectPageNumber '<' (inline-math totalHighSchoolSubjectPages '- ' 4))}}
+                      <div class="disabled item">
+                        ...
+                      </div>
+                    {{else}}
+                      {{#if (inline-compare highSchoolSubjectPageNumber '===' (inline-math totalHighSchoolSubjectPages ' - ' 4))}}
+                        <a class="item" {{action "switchHighSchoolSubjectPage" (inline-math totalHighSchoolSubjectPages '- ' 1 )}}>
+                          {{inline-math totalHighSchoolSubjectPages '- ' 1 }}
+                        </a>
+                      {{/if}}
+                    {{/if}}
+                    {{#if (inline-compare highSchoolSubjectPageNumber '<' (inline-math totalHighSchoolSubjectPages '- ' 2))}}
+                      <a class="item" {{action "switchHighSchoolSubjectPage" totalHighSchoolSubjectPages}}>
+                        {{totalHighSchoolSubjectPages}}
+                      </a>
+                    {{else}}
+                      <div class="disabled item"></div>
+                    {{/if}}
+                    {{#if (inline-compare highSchoolSubjectPageNumber '>' (inline-math totalHighSchoolSubjectPages '-' 4))}}
+                        <div class="disabled item"></div>
+                    {{/if}}
+                  </div>
+                </div>
+            </td>
+        </tr> 
     </table>
 </div>
 
