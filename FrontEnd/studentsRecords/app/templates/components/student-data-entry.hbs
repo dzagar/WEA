@@ -117,7 +117,7 @@
             <button class="ui inverted red icon button" {{action 'deleteCurrentStudent'}}>
                   Delete <i class="trash icon"></i>
             </button>
-            <button class="ui inverted green icon button" {{action 'saveStudent'}}>
+            <button class="ui inverted cstmLBlue icon button" {{action 'saveStudent'}}>
                   Save <i class="save icon"></i>
             </button>
           </div>
@@ -148,8 +148,8 @@
         {{/ui-dropdown}}
       </div>
       <div class="four wide column">
-        <div class="ui button" {{action 'addNewTermToStudent'}}>
-          Add new Term to student
+        <div class="ui inverted green button" {{action 'addNewTermToStudent'}}>
+          Add New Term to {{currentStudent.firstName}}
         </div>
       </div>
     </div>
@@ -188,7 +188,7 @@
             <td>{{grade.note}}</td>
             <td>
               <div class="ui inverted buttons">
-                <div class="ui blue inverted button" {{action "saveGrade" grade}}>Save</div>
+                <div class="ui inverted cstmLBlue button" {{action "saveGrade" grade}}>Save</div>
                 <div class="ui red inverted button" {{action "deleteGrade" grade}}>Delete</div>
               </div>
             </td>
@@ -287,7 +287,7 @@
             </td>
             <td>
                 <div class="ui inverted buttons">
-                    <button class="ui blue inverted button" {{action "saveAS" advancedStanding}}>Save</button>
+                    <button class="ui inverted cstmLBlue button" {{action "saveAS" advancedStanding}}>Save</button>
                     <div class="divider"/>
                     <button class="ui red inverted button" {{action "deleteAS" advancedStanding}}>Delete</button>
                 </div> 
@@ -360,7 +360,7 @@
             </td>
             <td>
                 <div class="ui inverted buttons">
-                    <button class="ui blue inverted button" {{action "saveScholarship" scholarship}}>Save</button>
+                    <button class="ui inverted cstmLBlue button" {{action "saveScholarship" scholarship}}>Save</button>
                     <div class="divider"/>
                     <button class="ui red inverted button" {{action "deleteScholarship" scholarship}}>Delete</button>
                 </div> 
