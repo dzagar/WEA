@@ -31,7 +31,7 @@
     <div style="cursor: pointer;" class="item" data-tab="gender">Gender</div>
     <div style="cursor: pointer;" class="item" data-tab="hsSubject">High School Subjects</div>
     <div style="cursor: pointer;" class="item" data-tab="residency">Residency</div>
-    <div style="cursor: pointer;" class="item" data-tab="highschool">Secondary Schools</div>
+    <div style="cursor: pointer;" class="item" data-tab="highschool">High Schools</div>
     <div style="cursor: pointer;" class="item" data-tab="termCode">Term Codes</div>
   </div>
 
@@ -104,7 +104,7 @@
             </td>
             <td>
                 <div class="ui inverted buttons">
-                    <button class="ui blue inverted button" {{action "saveResidency" residency}}>Save
+                    <button class="ui cstmLBlue inverted button" {{action "saveResidency" residency}}>Save
                         &nbsp; <i class="save icon"></i>
                     </button>
                     <div class="divider"/>
@@ -180,7 +180,7 @@
             </td>
             <td>
                 <div class="ui inverted buttons">
-                    <button class="ui blue inverted button" {{action "saveCourseCode" courseCode}}>Save
+                    <button class="ui cstmLBlue inverted button" {{action "saveCourseCode" courseCode}}>Save
                         &nbsp; <i class="save icon"></i>
                     </button>
                     <div class="divider"/>
@@ -329,7 +329,7 @@
 
             <td>
                 <div class="ui inverted buttons">
-                    <button class="ui blue inverted button" {{action "saveHighSchool" highSchool}}>Save
+                    <button class="ui cstmLBlue inverted button" {{action "saveHighSchool" highSchool}}>Save
                         &nbsp; <i class="save icon"></i>
                     </button>
                     <div class="divider"/>
@@ -409,7 +409,7 @@
 
             <td>
                 <div class="ui inverted buttons">
-                    <button class="ui blue inverted button" {{action "saveHighSchoolSubject" highSchoolSubject}}>Save
+                    <button class="ui cstmLBlue inverted button" {{action "saveHighSchoolSubject" highSchoolSubject}}>Save
                         &nbsp; <i class="save icon"></i>
                     </button>
                     <div class="divider"/>
@@ -487,7 +487,7 @@
 
             <td>
                 <div class="ui inverted buttons">
-                    <button class="ui blue inverted button" {{action "saveTermCode" termCode}}>Save
+                    <button class="ui cstmLBlue inverted button" {{action "saveTermCode" termCode}}>Save
                         &nbsp; <i class="save icon"></i>
                     </button>
                     <div class="divider"/>
@@ -636,7 +636,7 @@
 
             <td>
                 <div class="ui inverted buttons">
-                    <button class="ui inverted green button" {{action "modifyCourses" courseGrouping}}>Modify Courses
+                    <button class="ui inverted cstmLBlue button" {{action "modifyCourses" courseGrouping}}>Modify Courses
                         &nbsp; <i class="add square icon"></i>
                     </button>
                     <div class="divider"/>
@@ -661,7 +661,7 @@
         </div>
     </div>
     <br>
-    <button class="ui button" {{action "addCourseGrouping"}}>Add</button>
+    <button class="ui inverted green button" {{action "addCourseGrouping"}}>Add</button>
         <div>
             <label>{{courseGroupingOutput}}</label>
         </div>
