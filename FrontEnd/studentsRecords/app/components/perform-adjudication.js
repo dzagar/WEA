@@ -794,7 +794,7 @@ export default Ember.Component.extend({
             
             this.get('store').findAll('student').then(function (records) {
                 currentTotal += records.get('length');
-                self.set('adjudicationStatus', self.get('adjudicationStatus') + "Begining adjudication of " + currentTotal + " students." + "<br>");
+                self.set('adjudicationStatus', self.get('adjudicationStatus') + "Beginning adjudication of " + currentTotal + " students." + "<br>");
                 self.set('adjudicationStatus', self.get('adjudicationStatus') + "Reading student data..." + "<br>");
                 records.forEach(function(student, studentIndex) {
                     //push objID, termID, cumAVG, CumUnitsTotal, cumUnitsPassed

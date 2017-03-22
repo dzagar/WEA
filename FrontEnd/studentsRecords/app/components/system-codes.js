@@ -19,12 +19,6 @@ export default Ember.Component.extend({
     highSchoolModel: null,
     highSchoolSubjectModel: null,
     highSchoolOutput: "",
-    loadingCourseGroup: false,
-    loadingGender: false,
-    loadingHighSchool: false,
-    loadingHsSubject: false,
-    loadingResidency: false,
-    loadingTermCode: false,
     highSchoolRecords: null,
     highSchoolSubjectModel: null,
     newCourseCodeCourseLetter: "",
@@ -470,13 +464,12 @@ export default Ember.Component.extend({
 
         addHighSchool()
         {
-            var highSchoolArray=this.get('highSchoolModel');
+            var highSchoolArray=this.get('highSchoolRecords');
             var highSchoolName=this.get('newHighSchoolName');
             var isHighSchoolCreated=true;
 
              for(var i=0;i<highSchoolArray.content.length;i++)
             {
-                console.log(highSchoolArray);
                 if(highSchoolName.toUpperCase()==highSchoolArray.content[i]._data.schoolName.toUpperCase())
                 {
                     this.setHighSchoolOutput("The secondary school entered is already created! Please enter a new secondary school name!");
@@ -624,7 +617,7 @@ export default Ember.Component.extend({
 
         deleteTermCode(termCode)
         {
-            this.set('currentHighSchoolSubject',hsSubject);
+            this.set('currentTermCode',termCode);
             this.set('showDeleteGenderConfirmation', false);
             this.set('showDeleteResidencyConfirmation', false);
             this.set('showCourseCodeConfirmation', false);
