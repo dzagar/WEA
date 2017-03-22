@@ -10,7 +10,7 @@ export default Ember.Component.extend({
 	currentVal: null,
     enforceBetweenVal: false,
     regOprs: null,
-    courseGroupingOprs: null,
+    courseGroupingOprs: [],
     currentVal1: null,
     currentVal2: null,
     enforceBooleanValueField: false,
@@ -141,16 +141,16 @@ export default Ember.Component.extend({
         ];
         this.set('regOprs', regOprs);
         this.set('fields', fields);
-        this.get('store').findAll('course-grouping', function(courseGroupings){
+        console.log('in init');
+        this.get('store').findAll('course-grouping').then(function(courseGroupings){
             console.log('went into findall');
-            courseGroupings.forEach(function(grouping){
+            courseGroupings.forEach(function(courseGrouping){
                 var newOpr = {
                     "id": courseGrouping.get('id'),
                     "name": courseGrouping.get('name')
                 };
                 self.get('courseGroupingOprs').push(newOpr);
             });
-        }).then(function(){
             if (self.get('currentField')){
                 console.log(self.get('currentField'));
                 console.log(self.get('currentOpr'));
