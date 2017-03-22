@@ -138,25 +138,49 @@ div>div>div> .ui.huge.button {
   background-color: #4e2683 !important;
   color: #FFFFFF !important;
 }
+.ui.cstmDPurple.button:hover {
+  background-color: #350D6A !important;
+  color: inherit;
+}
 .cstmLGrey {
   background-color: #ebebeb !important;
   color: #000000 !important;
+}
+.ui.cstmLGrey.button:hover {
+  background-color: #D2D2D2 !important;
+  color: inherit;
 }
 .cstmLOrange {
   background-color: #faa600 !important;
   color: #FFFFFF !important;
 }
+.ui.cstmLOrange.button:hover {
+  background-color: #E18D00 !important;
+  color: inherit;
+}
 .cstmLBlue {
   background-color: #02bfc6 !important;
   color: #FFFFFF !important;
+}
+.ui.cstmLBlue.button:hover {
+  background-color: #00A6AD !important;
+  color: inherit;
 }
 .cstmGold {
   background-color: #cbbb9a !important;
   color: #FFFFFF !important;
 }
+.ui.cstmGold.button:hover {
+  background-color: #B2A281 !important;
+  color: inherit;
+}
 .cstmTurq {
   background-color: #00999f !important;
   color: #FFFFFF !important;
+}
+.ui.cstmTurq.button:hover {
+  background-color: #008086 !important;
+  color: inherit;
 }
 .ui.inverted.cstmDPurple.button {
   color: #4e2683 !important;
@@ -192,7 +216,7 @@ div>div>div> .ui.huge.button {
 }
 .ui.inverted.cstmLBlue.button:hover{
   background-color: #02bfc6 !important;
-  color: #000000 !important;
+  color: #FFFFFF !important;
 }
 .ui.inverted.cstmGold.button {
   color: #cbbb9a !important;

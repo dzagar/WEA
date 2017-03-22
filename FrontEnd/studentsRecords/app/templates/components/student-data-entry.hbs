@@ -117,7 +117,7 @@
             <button class="ui inverted red icon button" {{action 'deleteCurrentStudent'}}>
                   Delete <i class="trash icon"></i>
             </button>
-            <button class="ui inverted green icon button" {{action 'saveStudent'}}>
+            <button class="ui inverted cstmLBlue icon button" {{action 'saveStudent'}}>
                   Save <i class="save icon"></i>
             </button>
           </div>
@@ -146,6 +146,11 @@
             {{/each}}
           </div>
         {{/ui-dropdown}}
+      </div>
+      <div class="four wide column">
+        <div class="ui inverted green button" {{action 'addNewTermToStudent'}}>
+          Add New Term to {{currentStudent.firstName}}
+        </div>
       </div>
     </div>
     <h5>Plan Codes</h5>
@@ -181,11 +186,40 @@
             <td>{{grade.courseCode.courseLetter}}{{grade.courseCode.courseNumber}}</td>
             <td><div class="ui fluid input">{{input type="text" value = grade.mark }}</div></td>
             <td>{{grade.note}}</td>
-            <td><button class="ui blue inverted button" {{action "saveGrade" grade}}>Save</button></td>
+            <td>
+              <div class="ui inverted buttons">
+                <div class="ui inverted cstmLBlue button" {{action "saveGrade" grade}}>Save</div>
+                <div class="ui red inverted button" {{action "deleteGrade" grade}}>Delete</div>
+              </div>
+            </td>
           </tr>
         {{/each}}
       {{/if}}
       {{/each}}
+      {{#if termIndex}}
+        <tr>
+          <td colspan="3" style="overflow: visible;">
+            <div class="ui fluid input">
+              {{#ui-dropdown class="fluid selection" selected=newCourseCodeID onChange=(action (mut newCourseCodeID))}}
+                <i class="dropdown icon"></i>
+                <div class="default text">Select Course</div>
+                <div class="menu">
+                  {{#each courseCodeModel as |courseCode|}}
+                    <div class="item"   data-value= {{courseCode.id}} >
+                      {{courseCode.courseLetter}}{{courseCode.courseNumber}} 
+                    </div>
+                  {{/each}}
+                </div>
+              {{/ui-dropdown}}
+            </div>
+          </td>          
+          <td><div class="ui fluid input">{{input type="text" value = newCourseGradeInput placeholder="Grade" }}</div></td>
+          <td><div class="ui fluid input">{{input type="text" value = newCourseGradeNote placeholder="Note" }}</div></td>
+          <td>
+              <div class="ui green inverted button" {{action "addNewGrade"}}>Add Grade</div>
+          </td>
+        </tr>
+      {{/if}}
     </table>
   </div>
 
@@ -253,7 +287,7 @@
             </td>
             <td>
                 <div class="ui inverted buttons">
-                    <button class="ui blue inverted button" {{action "saveAS" advancedStanding}}>Save</button>
+                    <button class="ui inverted cstmLBlue button" {{action "saveAS" advancedStanding}}>Save</button>
                     <div class="divider"/>
                     <button class="ui red inverted button" {{action "deleteAS" advancedStanding}}>Delete</button>
                 </div> 
@@ -326,7 +360,7 @@
             </td>
             <td>
                 <div class="ui inverted buttons">
-                    <button class="ui blue inverted button" {{action "saveScholarship" scholarship}}>Save</button>
+                    <button class="ui inverted cstmLBlue button" {{action "saveScholarship" scholarship}}>Save</button>
                     <div class="divider"/>
                     <button class="ui red inverted button" {{action "deleteScholarship" scholarship}}>Delete</button>
                 </div> 

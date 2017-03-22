@@ -130,7 +130,7 @@ router.route('/:grade_id')
                     if (error && !failed) {
                         failed = true;
                         response.send(error);
-                    } else if (termCode) {
+                    } else if (term) {
                         let index = term.grades.indexOf(grade._id);
                         if (index > -1) {
                             term.grades.splice(index, 1);
@@ -143,14 +143,14 @@ router.route('/:grade_id')
                             } else {
                                 completed++;
                                 if (completed === 2 && !failed) {
-                                    response.json({deleted: grade});
+                                    response.json({grade: grade});
                                 }
                             }
                         });
                     } else {
                         completed++;
                         if (completed === 2 && !failed) {
-                            response.json({deleted: grade});
+                            response.json({grade: grade});
                         }
                     }
                 });
@@ -160,7 +160,7 @@ router.route('/:grade_id')
                         failed = true;
                         response.send(error);
                     } else if (courseCode) {
-                        let index = courseCodes.grades.indexOf(grade._id);
+                        let index = courseCode.grades.indexOf(grade._id);
                         if (index > -1) {
                             courseCode.grades.splice(index, 1);
                         }
@@ -172,19 +172,19 @@ router.route('/:grade_id')
                             } else {
                                 completed++;
                                 if (completed === 2 && !failed) {
-                                    response.json({deleted: grade});
+                                    response.json({grade: grade});
                                 }
                             }
                         });
                     } else {
                         completed++;
                         if (completed === 2 && !failed) {
-                            response.json({deleted: grade});
+                            response.json({grade: grade});
                         }
                     }
                 });
             } else {
-                response.json({deleted: grade});
+                response.json({grade: grade});
             }
         });
     });
