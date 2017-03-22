@@ -45,7 +45,7 @@ router.route('/')
             });
         }
         else if (!Student) {
-            Gender.find(function(error, genders) {
+            Gender.find({}, null, {sort:'name'}, function(error, genders) {
                 if (error) {
                     response.send(error);
                 } else {
