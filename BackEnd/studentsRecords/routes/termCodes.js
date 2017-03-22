@@ -22,6 +22,8 @@ router.route('/')
         });
     })
     .get(parseUrlencoded, parseJSON, function (request, response) {
+        var o = parseInt(request.query.offset);
+        var l = parseInt(request.query.limit);
         if (request.query.deleteAll)
         {
             TermCode.remove({}, function(error) {
@@ -69,6 +71,22 @@ router.route('/')
 
             });
         }
+
+        else if ((o || o == 0) && l) {
+            TermCode.paginate({}, { offset: o, limit: l }, function(err, termCode){
+                if (err) response.send(err);
+                else {
+                    TermCode.count({}, function(err, num){
+                        if (err) response.send(err);
+                        else {
+                            response.json({termCode: termCode.docs, meta: {total: num}});
+                            console.log(num);
+                        }
+                    });
+                }
+            });
+        }
+
         else { 
             TermCode.find(function(error, termCodes) {
                 if (error) {
@@ -87,6 +105,80 @@ router.route('/:termCode_id')
                 response.send(error);
             } else {
                 response.json({termCode: termCode});
+            }
+        });
+    })
+
+    .put(parseUrlencoded, parseJSON, function (request,response) {
+        TermCode.findById(request.params.termCode_id, function (error, termCode) {
+            if(error)
+            {
+                response.send(error);
+            }
+
+            else
+            {
+                // for(var i = 0 ; i < termCode.terms.length ; i++)
+                // {
+                //     TermCode.findById(termCode.terms[i], function(error, term) {
+                //         var indexOfTerm=term.termCodes.indexOf(termCode.id);
+
+                //         if (indexOfTerm > -1){
+                //             term.termCodes.splice(indexOfTerm, 1);
+                //             term.save();
+                //         }    
+                //     });
+                // }
+
+                // for(var i = 0; i < request.body.termCode.terms.length ; i++)
+                // {
+                //     Term.findById(request.body.term.termCodes[i], function(error,term) {
+                //         term.termCodes.push(request.params.termCode_id);
+                //         term.save();
+                //     });
+                // }
+
+                // for(var i = 0; i < termCode.adjudications.length ; i++)
+                // {
+                //     TermCode.findById(termCode.adjudications[i], function(error, adjudication) {
+                //         var indexOfAdjudication=adjudication.termCodes.indexOf(termCode.id);
+
+                //         if(indexOfAdjudication > -1)
+                //         {
+                //             adjudication.termCodes.splice(indexOfAdjudication,1);
+                //             adjudication.save();
+                //         }
+                //     });
+                // }
+
+                // for(var i = 0; i < request.body.termCode.adjudications.length ; i++)
+                // {
+                //     Adjudication.findById(request.body.adjudications.termCodes[i], function(error, adjudication){
+                //         adjudication.termCodes.push(request.params.termCode_id);
+                //         adjudication.save();
+                //     });
+                // }
+                termCode.name=request.body.termCode.name;
+                if(request.body.termCode.adjudications)
+                {
+                    termCode.adjudications=request.body.termCode.adjudications.slice();
+                }
+
+                else if(request.body.termCode.terms)
+                {
+                    termCode.terms=request.body.termCode.terms.slice();
+                }
+
+                termCode.save(function(error){
+                    if(error)
+                    {
+                        response.send(error);
+                    }
+                    else
+                    {
+                        response.json({termCode : termCode});
+                    }
+                });
             }
         });
     })
