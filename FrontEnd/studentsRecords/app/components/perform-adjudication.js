@@ -815,7 +815,7 @@ export default Ember.Component.extend({
                             currentTotal += terms.get('length');
                             terms.forEach(function(term, termIndex) {
                                 //get the program if the term = currentTerm
-                                if (term.get('termCode').get('id') == currentTerm)
+                                if (term.get('termCode').get('id') == currentTerm && term.get('programRecords').get('length') != 0)
                                 {
                                     term.get('programRecords').forEach(function(programRecord, prIndex){
                                         var programRecordID = programRecord.get('id');

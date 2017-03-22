@@ -39,7 +39,7 @@
     <table class="ui fixed table">
         <thead>
         <tr>
-            <th class="eight wide">Gender</th>
+            <th class="eight wide">Gender Name</th>
             <th class="eight wide"><!--spacer--></th>
         </tr>
         </thead>
@@ -66,7 +66,7 @@
         <tr>
             <td>
                 <div class="ui fluid input">
-                    {{input type="text" value = newGenderName}}
+                    {{input type="text" value = newGenderName placeholder="Gender Name"}}
                 </div>
             </td>
             <td>
@@ -89,7 +89,7 @@
       <table class="ui fixed table">
         <thead>
             <tr>
-            <th class="eight wide">Residency</th>
+            <th class="eight wide">Residency Name</th>
             <th class="eight wide"><!--spacer--></th>
             </tr>
         </thead>
@@ -117,7 +117,7 @@
         <tr>
             <td>
                 <div class="ui fluid input">
-                    {{input type="text" value = newResidencyName}}
+                    {{input type="text" value = newResidencyName placeholder = "Residency Name"}}
                 </div>
             </td>
             <td>
@@ -141,9 +141,9 @@
         <thead>
             <tr>
             <th class="two wide">Course Letter</th>
-            <th class="two wide">Course Number</th>
+            <th class="three wide">Course Number</th>
             <th class="five wide">Course Name</th>
-            <th class="two wide">Unit</th>
+            <th class="two wide">Course Unit</th>
             <th class="four wide"><!--spacer--></th>
             </tr>
         </thead>
@@ -190,26 +190,26 @@
         <tr>
             <td>
                 <div class="ui fluid input">
-                    {{input type="text" value = newCourseCodeCourseLetter}}
+                    {{input type="text" value = newCourseCodeCourseLetter placeholder="Course Letter"}}
                 </div>
             </td>
     
             <td>
                 <div class="ui fluid input">
-                    {{input type="text" value = newCourseCodeCourseNumber}}
+                    {{input type="text" value = newCourseCodeCourseNumber placeholder="Course Number"}}
                 </div>
             </td>
 
 
             <td>
                 <div class="ui fluid input">
-                    {{input type="text" value = newCourseCodeName}}
+                    {{input type="text" value = newCourseCodeName placeholder="Course Name"}}
                 </div>
             </td>
                 
             <td> 
                 <div class="ui fluid input">
-                    {{input type="text" value = newCourseCodeUnit}}
+                    {{input type="text" value = newCourseCodeUnit placeholder="Course Unit"}}
                 </div>
             </td>
 
@@ -339,7 +339,7 @@
         <tr>
              <td>
                 <div class="ui fluid input">
-                    {{input type="text" value = newHighSchoolName}}
+                    {{input type="text" value = newHighSchoolName placeholder = "High School Name"}}
                 </div>
             </td>
 
@@ -446,8 +446,8 @@
 <div class="ui bottom attached tab segment" data-tab="hsSubject">
      <table class="ui table">
         <thead>
-          <th class="four wide">Name</th>
-          <th class="four wide">Description</th>
+          <th class="four wide">Subject Name</th>
+          <th class="four wide">Subject Description</th>
           <th class="two wide"><!--spacer--></th>
         </thead>
         {{#each highSchoolSubjectRecords as |highSchoolSubject|}}
@@ -480,13 +480,13 @@
         <tr>
              <td>
                 <div class="ui fluid input">
-                    {{input type="text" value = newHighSchoolSubjectName}}
+                    {{input type="text" value = newHighSchoolSubjectName placeholder= "Subject Name"}}
                 </div>
             </td>
 
             <td>
                 <div class="ui fluid input">
-                  {{input type="text" value = newHighSchoolSubjectDescriptionName}}
+                  {{input type="text" value = newHighSchoolSubjectDescriptionName placeholder= "Subject Description"}}
                 </div>
             </td>
 
@@ -626,7 +626,7 @@
         <tr>
              <td>
                 <div class="ui fluid input">
-                    {{input type="text" value = newTermCodeName}}
+                    {{input type="text" value = newTermCodeName placeholder = "Term Code Name"}}
                 </div>
             </td>
 
@@ -768,7 +768,7 @@
         <tr>
             <td>
                 <div class = "ui fluid input">
-                    {{input type="text" value = newCourseGroupingName placeholder = "Grouping name"}}
+                    {{input type="text" value = newCourseGroupingName placeholder = "Grouping Name"}}
                 </div>
             </td>
             <td>
