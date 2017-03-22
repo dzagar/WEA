@@ -366,14 +366,10 @@
 <div class="ui bottom attached tab segment" data-tab="hsSubject">
      <table class="ui table">
         <thead>
-          <th class="two wide">Name</th>
-          <th class="two wide">Description</th>
-          <th class="two wide">Level</th>
-          <th class="two wide">Source</th>
-          <th class="two wide">Unit</th>
+          <th class="four wide">Name</th>
+          <th class="four wide">Description</th>
           <th class="two wide"><!--spacer--></th>
         </thead>
-
         {{#each courseArray as |highSchoolSubject|}}
         <tr>
 
@@ -388,25 +384,6 @@
                   {{input type="text" value = highSchoolSubject.description}}
                 </div>
             </td>
-           
-            <td>
-                <div class="ui fluid input">
-                  {{input type="text" value = highSchoolSubject.level}}
-                </div>
-            </td>
-
-            <td>
-                <div class="ui fluid input">
-                  {{input type="text" value = highSchoolSubject.source}}
-                </div>
-            </td>
-
-            <td>
-              <div class="ui fluid input">
-                  {{input type="text" value = highSchoolSubject.unit}}
-              </div>
-            </td>
-
             <td>
                 <div class="ui inverted buttons">
                     <button class="ui cstmLBlue inverted button" {{action "saveHighSchoolSubject" highSchoolSubject}}>Save
@@ -430,24 +407,6 @@
             <td>
                 <div class="ui fluid input">
                   {{input type="text" value = newHighSchoolSubjectDescriptionName}}
-                </div>
-            </td>
-
-            <td>
-                <div class="ui fluid input">
-                  {{input type="text" value = newHighSchoolSubjectLevel}}
-                </div>
-            </td>
-
-            <td>
-                <div class="ui fluid input">
-                  {{input type="text" value = newHighSchoolSubjectSource}}
-                </div>
-            </td>
-
-            <td>
-                <div class="ui fluid input">
-                  {{input type="text" value = newHighSchoolSubjectUnit}}
                 </div>
             </td>
 

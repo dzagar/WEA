@@ -9,6 +9,7 @@ var parseJSON = bodyParser.json();
 
 router.route('/')
     .post(parseUrlencoded, parseJSON, function (request, response) {
+        console.log('entered post');
         var highSchoolSubject = new HighSchoolSubject(request.body.highSchoolSubject);
         highSchoolSubject.save(function(error) {
             if (error) {
@@ -91,7 +92,7 @@ router.route('/:highSchoolSubject_id')
         });
     })
     .put(parseUrlencoded, parseJSON, function (request, response) {
-        HighSchoolSubject.findById(request.params.highSchool_id, function(error, highSchoolSubject) {
+        HighSchoolSubject.findById(request.params.highSchoolSubject_id, function(error, highSchoolSubject) {
             if (error) {
                 response.send(error);
             } else {
