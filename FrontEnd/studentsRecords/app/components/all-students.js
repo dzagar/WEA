@@ -16,6 +16,7 @@ export default Ember.Component.extend({
   store: Ember.inject.service(),
   studentsRecords: null,
   totalPages: 0,
+  filterByFlaggedForReview: false,
   totalStudents: 0,
 
   actions: {
@@ -53,12 +54,13 @@ export default Ember.Component.extend({
 
     applyFilters() {
       let self = this;
-      this.set('filter', {studentNumber: Ember.$('#studentNumber').val(), firstName: Ember.$('#firstName').val(), lastName: Ember.$('#lastName').val()});
+      this.set('filter', {studentNumber: Ember.$('#studentNumber').val(), firstName: Ember.$('#firstName').val(), lastName: Ember.$('#lastName').val(), flagged: this.get('filterByFlaggedForReview')});
 
       this.get('store').query('student', {
         number: self.get('filter').studentNumber,
         firstName: self.get('filter').firstName,
         lastName: self.get('filter').lastName,
+        flagged: self.get('filter').flagged,
         limit: self.get('limit'),
         offset: 0
       }).then(function (records) {
@@ -70,8 +72,8 @@ export default Ember.Component.extend({
 
     clearFilters() {
       let self = this;
-      this.set('filter', {studentNumber: "", firstName: "", lastName: ""});
-      
+      this.set('filter', {studentNumber: "", firstName: "", lastName: "", flagged: false});
+      this.set('filterByFlaggedForReview', false);
       Ember.$('#studentNumber').val("");
       Ember.$('#firstName').val("");
       Ember.$('#lastName').val("");
@@ -80,6 +82,7 @@ export default Ember.Component.extend({
         number: self.get('filter').studentNumber,
         firstName: self.get('filter').firstName,
         lastName: self.get('filter').lastName,
+        flagged: false,
         limit: self.get('limit'),
         offset: 0
       }).then(function (records) {

@@ -22,9 +22,13 @@
 	</div>
 	<div class="ui relaxed items form">
 		{{#if (inline-compare currentCategoryIndex "==" -1)}}
-		<div id="chart"><canvas id="barChart"></canvas></div>
+			<div id="chart">
+				<canvas id="barChart"></canvas>
+			</div>
 		{{else}}
-		<div id="chart"><canvas id="pieChart"></canvas></div>
+			<div id="chart">
+				<canvas id="pieChart"></canvas>
+			</div>
 		{{/if}}
 	</div>
 	<div class="ui padded centered grid container">
