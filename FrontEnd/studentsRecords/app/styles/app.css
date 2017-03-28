@@ -14,7 +14,9 @@ html {
 }
 
 body {
-  background-color: #ebebeb !important;
+  /*background-color: #ebebeb !important;*/
+  background-image: url('images/geometricCheckBG.png');
+  background-size: cover;
   color: black !important;
 }
 
