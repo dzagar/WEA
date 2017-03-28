@@ -10,8 +10,7 @@ html {
 }
 
 body {
-  /*background-color: #ebebeb !important;*/
-  background-image: url('images/geometricCheckBG.png');
+  background-image: url('images/uwo-2.jpg');
   background-size: cover;
   color: black !important;
 }
@@ -34,6 +33,7 @@ body > .ember-view .liquid-container .liquid-child{
 .wrapper {
   min-width:100%;
   height: inherit;
+  background-image: url('images/geometricCheckBG.png');
 }
 /**
  * Footer Styles
@@ -140,8 +140,6 @@ div>div>div> .ui.huge.button {
   background-color: rgba(186,219,250,0.2);
 }
 .login {
-  background-image: url('/assets/images/uwo-2.jpg');
-  background-size: cover;
   padding: 0;
 }
 /*generate chart*/
