@@ -61,7 +61,9 @@ body > .ember-view {
 .appBody.ui.grid {
 	margin-top: 1px;
 }
-
+.appBody .content {
+  top: 0;
+}
 /*Welcome Page*/
 .appBody h1.ui.header {
     margin-top: 1.5em;
@@ -81,10 +83,6 @@ body > .ember-view {
 }
 .ui.button.animated {
   min-height: 100%;
-}
-.welcomePage {
-  height: 300px;
-  margin-bottom: -50px;
 }
 .ui.animated.button {
   min-height:125px;
