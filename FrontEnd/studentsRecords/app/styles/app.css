@@ -86,6 +86,9 @@ body > .ember-view {
   height: 300px;
   margin-bottom: -50px;
 }
+.ui.animated.button {
+  min-height:125px;
+}
 /*div>.welcome{
 	margin-bottom: 13em;
 }
