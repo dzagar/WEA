@@ -9,10 +9,6 @@ html {
   box-sizing: inherit;
 }
 
-.wrapper {
-  min-width:100%;
-}
-
 body {
   /*background-color: #ebebeb !important;*/
   background-image: url('images/geometricCheckBG.png');
@@ -24,6 +20,20 @@ body > .ember-view {
   position: relative;
   margin: 0;
   min-height: 100%;
+}
+body > .ember-view .liquid-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+body > .ember-view .liquid-container .liquid-child{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+.wrapper {
+  min-width:100%;
+  height: inherit;
 }
 /**
  * Footer Styles
@@ -60,7 +70,7 @@ body > .ember-view {
   margin-right:1px;
 }
 
-.appBody.ui.grid {
+.wrapper.appBody.ui.grid {
 	margin-top: 1px;
 }
 .appBody .content {
