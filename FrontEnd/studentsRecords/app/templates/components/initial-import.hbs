@@ -187,8 +187,9 @@
 		</div>
 		{{#if importInProgress}}
 			<div class = "six wide column">
-				<div class = "header"> Importing...</div>
+			<div class = "overlay">
 				<div class = "ui segment">
+					<div class = "header"> Importing...</div>
 					{{{fileOutput}}}
 				</div>
 				{{#if (greater-than changingIndex "16")}}
@@ -200,6 +201,7 @@
 			  				Continue
 					</button>
 				{{/if}}
+			</div>
 			</div>
 		{{/if}}
 	</div>

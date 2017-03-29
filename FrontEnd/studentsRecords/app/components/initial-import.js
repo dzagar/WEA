@@ -316,6 +316,15 @@ export default Ember.Component.extend({
 		this.set('importUndergrad', undergraduateCategory);
 	},
 
+	didRender(){
+		Ember.$('.overlay')
+		.visibility({
+		    type   : 'fixed',
+		    offset : 15, // give some space from top of screen
+		    silent: true
+		  });
+	},
+
 	indexChange: Ember.observer('changingIndex', function(){
 		this.set('index1', this.get('changingIndex') > 16); //show undergraduate
 		this.set('index2', this.get('changingIndex') > 14); //show high school
@@ -325,7 +334,6 @@ export default Ember.Component.extend({
 
 	clearOutput: function() {
 		this.set('fileOutput', "");
-
 	},
 	pushOutput: function(newLine) {
 		var lineToAdd = this.get('fileOutput') + "</br>" + newLine;

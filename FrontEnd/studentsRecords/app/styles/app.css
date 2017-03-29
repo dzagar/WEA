@@ -96,6 +96,11 @@ div>div>div> .ui.huge.button {
 	height: 100%;
 }*/
 
+/*IMPORT*/
+.ui .segment .step > .content {
+  max-width:600px;
+}
+
 /*About Us*/
 .headshot > img {
     max-width:100%;
