@@ -38,7 +38,7 @@
     <div style="cursor: pointer;" class="item" data-tab="HighSchoolSubjects">High School Subjects</div>
   </div>
 
-  <div class="ui bottom attached tab segment" data-tab="Genders">
+  <div class="ui bottom attached active tab segment" data-tab="Genders">
     <table class="ui fixed table">
         <thead>
         <tr>
@@ -46,7 +46,17 @@
             <th class="eight wide"><!--spacer--></th>
         </tr>
         </thead>
-        {{#if (inline-compare genderModel.length '>' 0)}}
+        {{#if (inline-compare genderModel.length '==' 0)}}
+            <tr style = "height:100px">
+            <td colspan = "2" class = "middle aligned">
+            <div class = "dimmable">
+              <div class = "ui active inverted dimmer">
+                <div class = "ui text">No Genders Found</div>
+              </div>
+            </div>
+            </td>
+        </tr>
+        {{else if (inline-compare genderModel.length '>' 0)}}
             {{#each genderModel as |gender|}}
             <tr>
                 <td>
@@ -68,11 +78,15 @@
             </tr>
             {{/each}}
         {{else}}
-            <div class = "dimmable">
-              <div class = "ui active inverted dimmer">
-                <div class = "ui text loader">Loading Genders...</div>
-              </div>
-            </div>
+            <tr style = "height:100px">
+                <td colspan = "2" class = "middle aligned">
+                <div class = "dimmable">
+                  <div class = "ui active inverted dimmer">
+                    <div class = "ui text loader">Loading Genders...</div>
+                  </div>
+                </div>
+                </td>
+            </tr>
         {{/if}}
         <tr>
             <td>
@@ -104,7 +118,17 @@
             <th class="eight wide"><!--spacer--></th>
             </tr>
         </thead>
-        {{#if (inline-compare residencyModel.length '>' 0)}}
+        {{#if (inline-compare residencyModel.length '==' 0)}}
+            <tr style = "height:100px">
+            <td colspan = "2" class = "middle aligned">
+            <div class = "dimmable">
+              <div class = "ui active inverted dimmer">
+                <div class = "ui text">No Residencies Found</div>
+              </div>
+            </div>
+            </td>
+        </tr>
+        {{else if (inline-compare residencyModel.length '>' 0)}}
         {{#each residencyModel as |residency|}}
         <tr>
             <td>
@@ -126,11 +150,15 @@
         </tr>
         {{/each}}
         {{else}}
-            <div class = "dimmable" style="min-height:300px;width:100%;">
-              <div class = "ui active inverted dimmer">
-                <div class = "ui text loader">Loading Residencies...</div>
-              </div>
-            </div>
+            <tr style = "height:100px">
+                <td colspan = "2" class = "middle aligned">
+                <div class = "dimmable">
+                  <div class = "ui active inverted dimmer">
+                    <div class = "ui text loader">Loading Residencies...</div>
+                  </div>
+                </div>
+                </td>
+            </tr>
         {{/if}}
         <tr>
             <td>
@@ -154,7 +182,7 @@
         </table>
   </div>
 
-<div class="ui bottom attached active tab segment" data-tab="CourseCodes">
+<div class="ui bottom attached tab segment" data-tab="CourseCodes">
     <table class="ui table">
         <thead>
             <tr>
@@ -165,7 +193,17 @@
             <th class="four wide"><!--spacer--></th>
             </tr>
         </thead>
-        {{#if (inline-compare courseCodeRecords.length '>' 0)}}
+        {{#if (inline-compare courseCodeRecords.length '==' 0)}}
+            <tr style = "height:100px">
+            <td colspan = "5" class = "middle aligned">
+            <div class = "dimmable">
+              <div class = "ui active inverted dimmer">
+                <div class = "ui text">No Course Codes Found</div>
+              </div>
+            </div>
+            </td>
+        </tr>
+        {{else if (inline-compare courseCodeRecords.length '>' 0)}}
         {{#each courseCodeRecords as |courseCode|}}
         <tr>
             <td>
@@ -206,11 +244,15 @@
         </tr>
         {{/each}}
         {{else}}
-            <div class = "dimmable" style="min-height:300px">
-              <div class = "ui active inverted dimmer">
-                <div class = "ui text loader">Loading Course Codes...</div>
-              </div>
-            </div>
+            <tr style = "height:100px">
+                <td colspan = "5" class = "middle aligned">
+                <div class = "dimmable">
+                  <div class = "ui active inverted dimmer">
+                    <div class = "ui text loader">Loading Course Codes...</div>
+                  </div>
+                </div>
+                </td>
+            </tr>
         {{/if}}
         <tr>
             <td>
@@ -339,7 +381,17 @@
             <th class="eight wide"><!--spacer--></th>
             </tr>
         </thead>
-        {{#if (inline-compare highSchoolRecords.length '>' 0)}}
+        {{#if (inline-compare highSchoolRecords.length '==' 0)}}
+            <tr style = "height:100px">
+            <td colspan = "2" class = "middle aligned">
+            <div class = "dimmable">
+              <div class = "ui active inverted dimmer">
+                <div class = "ui text">No High Schools Found</div>
+              </div>
+            </div>
+            </td>
+        </tr>
+        {{else if (inline-compare highSchoolRecords.length '>' 0)}}
         {{#each highSchoolRecords as |highSchool|}}
         <tr>
             <td>
@@ -362,11 +414,15 @@
         </tr>
         {{/each}}
         {{else}}
-            <div class = "dimmable" style="min-height:300px">
-              <div class = "ui active inverted dimmer">
-                <div class = "ui text loader">Loading High Schools...</div>
-              </div>
-            </div>
+            <tr style = "height:100px">
+                <td colspan = "2" class = "middle aligned">
+                <div class = "dimmable">
+                  <div class = "ui active inverted dimmer">
+                    <div class = "ui text loader">Loading High Schools...</div>
+                  </div>
+                </div>
+                </td>
+            </tr>
         {{/if}}
         <tr>
              <td>
@@ -482,7 +538,17 @@
           <th class="four wide">Subject Description</th>
           <th class="two wide"><!--spacer--></th>
         </thead>
-        {{#if (inline-compare highSchoolSubjectRecords.length '>' 0)}}
+        {{#if (inline-compare highSchoolSubjectRecords.length '==' 0)}}
+            <tr style = "height:100px">
+            <td colspan = "3" class = "middle aligned">
+            <div class = "dimmable">
+              <div class = "ui active inverted dimmer">
+                <div class = "ui text">No High School Subjects Found</div>
+              </div>
+            </div>
+            </td>
+        </tr>
+        {{else if (inline-compare highSchoolSubjectRecords.length '>' 0)}}
         {{#each highSchoolSubjectRecords as |highSchoolSubject|}}
         <tr>
 
@@ -511,11 +577,15 @@
         </tr> 
         {{/each}}
         {{else}}
-            <div class = "dimmable" style="min-height:300px">
-              <div class = "ui active inverted dimmer">
-                <div class = "ui text loader">Loading High School Subjects...</div>
-              </div>
-            </div>
+            <tr style = "height:100px">
+                <td colspan = "3" class = "middle aligned">
+                <div class = "dimmable">
+                  <div class = "ui active inverted dimmer">
+                    <div class = "ui text loader">Loading High School Subjects...</div>
+                  </div>
+                </div>
+                </td>
+            </tr>
         {{/if}}
         <tr>
              <td>
@@ -639,12 +709,16 @@
             <th class="eight wide"><!--spacer--></th>
             </tr>
         </thead>
-        {{#if loadInProgress}}
-            <div class = "dimmable" style="min-height:300px">
+        {{#if (inline-compare termCodeRecords.length '==' 0)}}
+            <tr style = "height:100px">
+            <td colspan = "2" class = "middle aligned">
+            <div class = "dimmable">
               <div class = "ui active inverted dimmer">
-                <div class = "ui text loader">Loading Term Codes...</div>
+                <div class = "ui text">No Term Codes Found</div>
               </div>
             </div>
+            </td>
+        </tr>
         {{else if (inline-compare termCodeRecords.length '>' 0)}}
         {{#each termCodeRecords as |termCode|}}
           <tr>  
@@ -668,11 +742,15 @@
         </tr>
         {{/each}}
         {{else}}
-            <div class = "dimmable" style="min-height:300px">
-              <div class = "ui active inverted dimmer">
-                <div class = "ui text">No Term Codes Found</div>
-              </div>
-            </div>
+            <tr style = "height:100px">
+                <td colspan = "2" class = "middle aligned">
+                <div class = "dimmable">
+                  <div class = "ui active inverted dimmer">
+                    <div class = "ui text loader">Loading Term Codes...</div>
+                  </div>
+                </div>
+                </td>
+            </tr>
         {{/if}}
         <tr>
              <td>
@@ -790,12 +868,16 @@
                 <th class="ten wide"><!--spacer--></th>
             </tr>
         </thead>
-        {{#if loadInProgress}}
-            <div class = "dimmable" style="min-height:300px">
+        {{#if (inline-compare courseGroupingModel.length '==' 0)}}
+        <tr style = "height:100px">
+            <td colspan = "2" class = "middle aligned">
+            <div class = "dimmable">
               <div class = "ui active inverted dimmer">
-                <div class = "ui text loader">Loading Course Groupings...</div>
+                <div class = "ui text">No Course Groupings Found</div>
               </div>
             </div>
+            </td>
+        </tr>
         {{else if (inline-compare courseGroupingModel.length '>' 0)}}
         {{#each courseGroupingModel as |courseGrouping|}}
          <tr>   
@@ -823,11 +905,15 @@
         </tr>
         {{/each}}
         {{else}}
-            <div class = "dimmable" style="min-height:300px">
-              <div class = "ui active inverted dimmer">
-                <div class = "ui text">No Course Groupings Found</div>
-              </div>
-            </div>
+            <tr style = "height:100px">
+                <td colspan = "2" class = "middle aligned">
+                <div class = "dimmable">
+                  <div class = "ui active inverted dimmer">
+                    <div class = "ui text loader">Loading Course Groupings...</div>
+                  </div>
+                </div>
+                </td>
+            </tr>
         {{/if}}
         <tr>
             <td>
