@@ -54,342 +54,350 @@
 <!-- Note that offset is an "in" and "out" parameter !-->
   {{all-students currentIndex = currentIndex currentStudent = currentStudent showAllStudents = showAllStudents showMenuBar = showMenuBar offset = offset limit = limit studentsRecords = studentsRecords totalPages = totalPages pageNumber = pageNumber message = studentDataMessage totalStudents = totalStudents filter = filter changeOffset = (action 'changeOffset')}}
 {{else}}
-  <!-- Show data entry form -->
-  <div class="ui stackable container top attached tabular menu">
-    <div style="cursor: pointer;" class="active item" data-tab="basics">Basic Info</div>
-    <div style="cursor: pointer;" class="item" data-tab="program">Program Record</div>
-    <div style="cursor: pointer;" class="item" data-tab="awards">Scholarships and Awards</div>
-    <div style="cursor: pointer;" class="item" data-tab="advanced">Advanced Standings</div>
-    <div style="cursor: pointer;" class="item" data-tab="hsinfo">High School Info</div>
-    <div style="cursor: pointer;" class="item" data-tab="adjudication">Adjudications</div>
-  </div>
-  {{#if studentNotLoaded}}
-    <div class = "dimmable" style="min-height:300px">
-      <div class = "ui active inverted dimmer">
-        <div class = "ui text loader">{{studentDataMessage}}</div>
-      </div>
+<div class = "ui two column centered relaxed grid">
+  <div class = "three wide column">
+    <!-- Show data entry form -->
+    <div class="ui secondary vertical fluid pointing menu">
+      <div style="cursor: pointer;" class="active item" data-tab="basics">Basic Info</div>
+      <div style="cursor: pointer;" class="item" data-tab="program">Program Record</div>
+      <div style="cursor: pointer;" class="item" data-tab="awards">Scholarships and Awards</div>
+      <div style="cursor: pointer;" class="item" data-tab="advanced">Advanced Standings</div>
+      <div style="cursor: pointer;" class="item" data-tab="hsinfo">High School Info</div>
+      <div style="cursor: pointer;" class="item" data-tab="adjudication">Adjudications</div>
     </div>
-  {{else}}
-  <div class="ui bottom attached active tab segment" data-tab="basics">
-    <!-- student basic information !-->
-    <div class="ui grid studentInfo">
-      <div class="ui right aligned  seven wide column">
-        <div class="ui relaxed items form">
-          <div class="item inline field">
-            <label>Student Number</label>
-            {{input size="10" type="text"  value = currentStudent.studentNumber readonly=true}}
-          </div>
-          <div class="item inline field">
-            <label>First Name</label>
-            {{input type="text"  value = currentStudent.firstName focus-in = (action "textFocusIn" "firstName") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
-          </div>
-          <div class="item inline field">
-            <label>Last Name</label>
-            {{input type="text" value = currentStudent.lastName focus-in = (action "textFocusIn" "lastName") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
-          </div>
-          <div class="item inline field">
-            <label>Gender</label>
-            <select id="ddlGender" onchange={{action 'selectGender' value="target.value"}} onclick = {{action 'genderFocusIn'}} onblur = {{action 'onFocusOut'}}>
-              {{#each genderModel as |genderChoice|}}
-              <option value={{genderChoice.id}} selected={{eq currentStudent.genInfo.id genderChoice.id}}>{{genderChoice.name}}</option>
-              {{/each}}
-            </select>
-          </div>
-          <div class="item inline field">
-            <label>Date of Birth</label>
-            <input value={{selectedDate}} type="date" onchange={{action 'assignDate' value="target.value"}} onFocus = {{action 'dobFocusIn'}} onBlur = {{action 'onFocusOut'}}>
-          </div>
-          <div class="item inline field">
-            <label>Residency</label>
-            <select id="ddlResidency" onchange={{action 'selectResidency' value="target.value" }} onclick = {{action 'residencyFocusIn'}} onblur = {{action 'onFocusOut'}}>
-                  {{#each residencyModel as |residencyChoice|}}
-                    <option value={{residencyChoice.id}} selected={{eq currentStudent.resInfo.id residencyChoice.id}}>{{residencyChoice.name}} </option>
-                  {{/each}}
-                </select>
-          </div>
-
-          <div class="item inline field">
-            <label>Basis of Admission</label> {{input type="text" value = currentStudent.basisOfAdmission focus-in = (action "textFocusIn" "basisOfAdmission") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
-          </div>
-          <div class="item inline field">
-            <label>Admission Average</label> {{input type="text" value = currentStudent.admissionAverage focus-in = (action "textFocusIn" "admissionAverage") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
-          </div>
-          <div class="ui two column grid">
-            <div class="item inline field column">
-              <label>Admission Comments</label> {{textarea rows="4" type="text" value = currentStudent.admissionComments focus-in = (action "textFocusIn" "admissionComments") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
-            </div>
-            <div class="item inline field column">
-              <label>Registration Comments</label> {{textarea rows="4" type="text" value = currentStudent.registrationComments focus-in = (action "textFocusIn" "registrationComments") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
-            </div>
-          </div>
-          
-
-          <div class="inline field">
-            <button class="ui inverted red icon button" {{action 'deleteCurrentStudent'}}>
-                  Delete <i class="trash icon"></i>
-            </button>
-            <button class="ui inverted cstmLBlue icon button" {{action 'saveStudent'}}>
-                  Save <i class="save icon"></i>
-            </button>
-          </div>
+  </div>
+  <div class = "twelve wide column">
+    {{#if studentNotLoaded}}
+      <div class = "dimmable" style="min-height:300px">
+        <div class = "ui active inverted dimmer">
+          <div class = "ui text loader">{{studentDataMessage}}</div>
         </div>
       </div>
-      <!-- Show student photo -->
-      <div class=" ui relaxed items center aligned six wide column ">
-        <img src={{studentPhoto}} class="item">
+    {{else}}
+    <div class="ui tab segment active" data-tab="basics" style = "margin-top:0">
+      <!-- student basic information !-->
+      <h2>Basic Information</h2>
+      <h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
+      <div class="ui grid studentInfo">
+        <div class="ui right aligned seven wide column">
+          <div class="ui relaxed items form">
+            <div class="item inline field">
+              <label>Student Number</label>
+              {{input size="10" type="text"  value = currentStudent.studentNumber readonly=true}}
+            </div>
+            <div class="item inline field">
+              <label>First Name</label>
+              {{input type="text"  value = currentStudent.firstName focus-in = (action "textFocusIn" "firstName") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
+            </div>
+            <div class="item inline field">
+              <label>Last Name</label>
+              {{input type="text" value = currentStudent.lastName focus-in = (action "textFocusIn" "lastName") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
+            </div>
+            <div class="item inline field">
+              <label>Gender</label>
+              <select id="ddlGender" onchange={{action 'selectGender' value="target.value"}} onclick = {{action 'genderFocusIn'}} onblur = {{action 'onFocusOut'}}>
+                {{#each genderModel as |genderChoice|}}
+                <option value={{genderChoice.id}} selected={{eq currentStudent.genInfo.id genderChoice.id}}>{{genderChoice.name}}</option>
+                {{/each}}
+              </select>
+            </div>
+            <div class="item inline field">
+              <label>Date of Birth</label>
+              <input value={{selectedDate}} type="date" onchange={{action 'assignDate' value="target.value"}} onFocus = {{action 'dobFocusIn'}} onBlur = {{action 'onFocusOut'}}>
+            </div>
+            <div class="item inline field">
+              <label>Residency</label>
+              <select id="ddlResidency" onchange={{action 'selectResidency' value="target.value" }} onclick = {{action 'residencyFocusIn'}} onblur = {{action 'onFocusOut'}}>
+                    {{#each residencyModel as |residencyChoice|}}
+                      <option value={{residencyChoice.id}} selected={{eq currentStudent.resInfo.id residencyChoice.id}}>{{residencyChoice.name}} </option>
+                    {{/each}}
+                  </select>
+            </div>
+
+            <div class="item inline field">
+              <label>Basis of Admission</label> {{input type="text" value = currentStudent.basisOfAdmission focus-in = (action "textFocusIn" "basisOfAdmission") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
+            </div>
+            <div class="item inline field">
+              <label>Admission Average</label> {{input type="text" value = currentStudent.admissionAverage focus-in = (action "textFocusIn" "admissionAverage") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
+            </div>
+            <div class="ui two column grid">
+              <div class="item inline field column">
+                <label>Admission Comments</label> {{textarea rows="4" type="text" value = currentStudent.admissionComments focus-in = (action "textFocusIn" "admissionComments") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
+              </div>
+              <div class="item inline field column">
+                <label>Registration Comments</label> {{textarea rows="4" type="text" value = currentStudent.registrationComments focus-in = (action "textFocusIn" "registrationComments") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
+              </div>
+            </div>
+            
+
+            <div class="inline field">
+              <button class="ui inverted red icon button" {{action 'deleteCurrentStudent'}}>
+                    Delete <i class="trash icon"></i>
+              </button>
+              <button class="ui inverted cstmLBlue icon button" {{action 'saveStudent'}}>
+                    Save <i class="save icon"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Show student photo -->
+        <div class=" ui relaxed items center aligned six wide column ">
+          <img src={{studentPhoto}} class="item">
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="ui bottom attached tab segment" data-tab="program">
-    <h2>Program Records</h2>
-    <h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
-    <div class="ui grid">
-      <div class="eight wide column">
-        {{#ui-dropdown class="fluid selection" selected=termIndex onChange=(action (mut termIndex))}}
-          <i class="dropdown icon"></i>
-          <div class="default text">Select Term</div>
+    <div class="ui tab segment" data-tab="program" style = "margin-top:0">
+      <h2>Program Records</h2>
+      <h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
+      <div class="ui grid">
+        <div class="eight wide column">
+          {{#ui-dropdown class="fluid selection" selected=termIndex onChange=(action (mut termIndex))}}
+            <i class="dropdown icon"></i>
+            <div class="default text">Select Term</div>
+            <div class="menu">
+              {{#each currentStudent.terms as |semester index|}}
+                <div class="item"   data-value= "{{semester.termCode.id}}" >
+                  {{semester.termCode.name}}
+                </div>
+              {{/each}}
+            </div>
+          {{/ui-dropdown}}
+        </div>
+        <div class="four wide column">
+        {{#ui-dropdown id="addingNewStudentTerm" class="labeled selection icon top right inverted green pointing button" selected = selectedNewTerm onChange=(action 'addNewTermToStudent')}}
+          <i class="plus icon"></i>
+          Add New Term To Student
           <div class="menu">
-            {{#each currentStudent.terms as |semester index|}}
-              <div class="item"   data-value= "{{semester.termCode.id}}" >
-                {{semester.termCode.name}}
+            {{#each studentUnselectedTermCodes as |nonTerms|}}
+              <div data-value="{{nonTerms.id}}" class="item">
+                {{nonTerms.name}}
               </div>
             {{/each}}
           </div>
         {{/ui-dropdown}}
+          {{!--<div class="ui inverted green button" {{action 'addNewTermToStudent'}}>
+            Add New Term to {{currentStudent.firstName}}
+          </div>--}}
+        </div>
       </div>
-      <div class="four wide column">
-      {{#ui-dropdown id="addingNewStudentTerm" class="labeled selection icon top right inverted green pointing button" selected = selectedNewTerm onChange=(action 'addNewTermToStudent')}}
-        <i class="plus icon"></i>
-        Add New Term To Student
-        <div class="menu">
-          {{#each studentUnselectedTermCodes as |nonTerms|}}
-            <div data-value="{{nonTerms.id}}" class="item">
-              {{nonTerms.name}}
+      <h5>Plan Codes</h5>
+      {{#each currentStudent.terms as |term|}}
+        {{#if (eq term.termCode.id termIndex)}}
+          {{#each term.programRecords as |programRecord|}}
+            <label>{{programRecord.name}}</label>
+            <div class="ui bulleted list">
+            {{#each programRecord.planCodes as |planCode|}}
+              <div class="item">{{planCode.name}}</div>
+            {{/each}}
             </div>
           {{/each}}
-        </div>
-      {{/ui-dropdown}}
-        {{!--<div class="ui inverted green button" {{action 'addNewTermToStudent'}}>
-          Add New Term to {{currentStudent.firstName}}
-        </div>--}}
-      </div>
-    </div>
-    <h5>Plan Codes</h5>
-    {{#each currentStudent.terms as |term|}}
-      {{#if (eq term.termCode.id termIndex)}}
-        {{#each term.programRecords as |programRecord|}}
-          <label>{{programRecord.name}}</label>
-          <div class="ui bulleted list">
-          {{#each programRecord.planCodes as |planCode|}}
-            <div class="item">{{planCode.name}}</div>
-          {{/each}}
-          </div>
-        {{/each}}
-      {{/if}}
-    {{/each}}
+        {{/if}}
+      {{/each}}
 
-    <table class="ui fixed table">
-      <thead>
-        <tr>
-          <th>Course</th>
-          <th><!--spacer--></th>
-          <th>Course Code</th>
-          <th>Grade</th>
-          <th>Note</th>
-          <th></th>
-        </tr>
-      </thead>
-      {{#each currentStudent.terms as |term|}}
-      {{#if (eq term.termCode.id termIndex)}}
-        {{#each term.grades as |grade|}}
+      <table class="ui fixed table">
+        <thead>
           <tr>
-            <td colspan="2">{{grade.courseCode.name}}</td>
-            <td>{{grade.courseCode.courseLetter}}{{grade.courseCode.courseNumber}}</td>
-            <td><div class="ui fluid input">{{input type="text" value = grade.mark }}</div></td>
-            <td>{{grade.note}}</td>
-            <td>
-              <div class="ui inverted buttons">
-                <div class="ui inverted cstmLBlue button" {{action "saveGrade" grade}}>Save</div>
-                <div class="ui red inverted button" {{action "deleteGrade" grade}}>Delete</div>
+            <th>Course</th>
+            <th><!--spacer--></th>
+            <th>Course Code</th>
+            <th>Grade</th>
+            <th>Note</th>
+            <th></th>
+          </tr>
+        </thead>
+        {{#each currentStudent.terms as |term|}}
+        {{#if (eq term.termCode.id termIndex)}}
+          {{#each term.grades as |grade|}}
+            <tr>
+              <td colspan="2">{{grade.courseCode.name}}</td>
+              <td>{{grade.courseCode.courseLetter}}{{grade.courseCode.courseNumber}}</td>
+              <td><div class="ui fluid input">{{input type="text" value = grade.mark }}</div></td>
+              <td>{{grade.note}}</td>
+              <td>
+                <div class="ui inverted buttons">
+                  <div class="ui inverted cstmLBlue button" {{action "saveGrade" grade}}>Save</div>
+                  <div class="ui red inverted button" {{action "deleteGrade" grade}}>Delete</div>
+                </div>
+              </td>
+            </tr>
+          {{/each}}
+        {{/if}}
+        {{/each}}
+        {{#if termIndex}}
+          <tr>
+            <td colspan="3" style="overflow: visible;">
+              <div class="ui fluid input">
+                {{#ui-dropdown class="fluid selection" selected=newCourseCodeID onChange=(action (mut newCourseCodeID))}}
+                  <i class="dropdown icon"></i>
+                  <div class="default text">Select Course</div>
+                  <div class="menu">
+                    {{#each courseCodeModel as |courseCode|}}
+                      <div class="item"   data-value= {{courseCode.id}} >
+                        {{courseCode.courseLetter}}{{courseCode.courseNumber}} 
+                      </div>
+                    {{/each}}
+                  </div>
+                {{/ui-dropdown}}
               </div>
+            </td>          
+            <td><div class="ui fluid input">{{input type="text" value = newCourseGradeInput placeholder="Grade" }}</div></td>
+            <td><div class="ui fluid input">{{input type="text" value = newCourseGradeNote placeholder="Note" }}</div></td>
+            <td>
+                <div class="ui green inverted button" {{action "addNewGrade"}}>Add Grade</div>
             </td>
           </tr>
+        {{/if}}
+      </table>
+    </div>
+
+    <div class="ui tab segment" data-tab="advanced" style = "margin-top:0">
+      <h2>Advanced Standings</h2>
+      <h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
+
+      <table class="ui table">
+        <thead>
+          <tr>
+            <th>Course</th>
+            <th>
+              <!--spacer-->Description
+            </th>
+            <th>
+              <!--spacer-->Units
+            </th>
+            <th><!--spacer-->Grade</th>
+            <th><!--spacer-->Source</th>
+            <th><!--spacer--></th>
+          </tr>
+        </thead>
+
+        {{#each currentStudent.advancedStandings as |advancedStanding|}}
+           <tr>
+              <td>
+                  <div class="ui fluid input">
+                      {{input type="text" value = advancedStanding.course }}
+                  </div>
+              </td>
+              <td>
+                  <div class="ui fluid input">
+                      {{input type="text" value = advancedStanding.description}}
+                  </div>
+              </td>
+              <td>
+                  <div class="ui fluid input">
+                      {{input type="text" value = advancedStanding.units}}
+                  </div>
+              </td>
+              <td>
+                  <div class="ui fluid input">
+                      {{input type="text" value = advancedStanding.grade}}
+                  </div>
+              </td>
+              <td>
+                  <div class="ui fluid input">
+                      {{input type="text" value = advancedStanding.from}}
+                  </div>
+              </td>
+              <td>
+                  <div class="ui inverted buttons">
+                      <button class="ui inverted cstmLBlue button" {{action "saveAS" advancedStanding}}>Save</button>
+                      <div class="divider"/>
+                      <button class="ui red inverted button" {{action "deleteAS" advancedStanding}}>Delete</button>
+                  </div> 
+              </td>
+          </tr>
         {{/each}}
-      {{/if}}
-      {{/each}}
-      {{#if termIndex}}
         <tr>
-          <td colspan="3" style="overflow: visible;">
-            <div class="ui fluid input">
-              {{#ui-dropdown class="fluid selection" selected=newCourseCodeID onChange=(action (mut newCourseCodeID))}}
-                <i class="dropdown icon"></i>
-                <div class="default text">Select Course</div>
-                <div class="menu">
-                  {{#each courseCodeModel as |courseCode|}}
-                    <div class="item"   data-value= {{courseCode.id}} >
-                      {{courseCode.courseLetter}}{{courseCode.courseNumber}} 
-                    </div>
-                  {{/each}}
-                </div>
-              {{/ui-dropdown}}
-            </div>
-          </td>          
-          <td><div class="ui fluid input">{{input type="text" value = newCourseGradeInput placeholder="Grade" }}</div></td>
-          <td><div class="ui fluid input">{{input type="text" value = newCourseGradeNote placeholder="Note" }}</div></td>
           <td>
-              <div class="ui green inverted button" {{action "addNewGrade"}}>Add Grade</div>
+            <div class="ui fluid input">
+              {{input type="text" value = newAdvancedStandingCourse placeholder="Course"}}
+            </div>
+          </td>
+          <td>
+            <div class="ui fluid input">
+              {{input type="text" value = newAdvancedStandingDescription placeholder="Description"}}
+              </div>
+          </td>
+          <td>
+            <div class="ui fluid input">
+              {{input type="text" value = newAdvancedStandingUnits placeholder="Units"}}
+              </div>
+            </td>
+            <td>
+            <div class="ui fluid input">
+              {{input type="text" value = newAdvancedStandingGrade placeholder="Grade"}}
+              </div>
+            </td>
+            <td>
+            <div class="ui fluid input">
+              {{input type="text" value = newAdvancedStandingFrom placeholder="Source"}}
+              </div>
+            </td>
+          <td>
+            <button class="ui inverted green button" {{action "addAS"}}> 
+                      Add &nbsp; <i class="add square icon"></i>
+                      </button>
           </td>
         </tr>
-      {{/if}}
-    </table>
-  </div>
+      </table>
+    </div>
 
-  <div class="ui bottom attached tab segment" data-tab="advanced">
-    <h2>Advanced Standings</h2>
-    <h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
 
-    <table class="ui table">
-      <thead>
-        <tr>
-          <th>Course</th>
-          <th>
-            <!--spacer-->Description
-          </th>
-          <th>
-            <!--spacer-->Units
-          </th>
-          <th><!--spacer-->Grade</th>
-          <th><!--spacer-->Source</th>
-          <th><!--spacer--></th>
-        </tr>
-      </thead>
 
-      {{#each currentStudent.advancedStandings as |advancedStanding|}}
-         <tr>
-            <td>
-                <div class="ui fluid input">
-                    {{input type="text" value = advancedStanding.course }}
-                </div>
-            </td>
-            <td>
-                <div class="ui fluid input">
-                    {{input type="text" value = advancedStanding.description}}
-                </div>
-            </td>
-            <td>
-                <div class="ui fluid input">
-                    {{input type="text" value = advancedStanding.units}}
-                </div>
-            </td>
-            <td>
-                <div class="ui fluid input">
-                    {{input type="text" value = advancedStanding.grade}}
-                </div>
-            </td>
-            <td>
-                <div class="ui fluid input">
-                    {{input type="text" value = advancedStanding.from}}
-                </div>
-            </td>
-            <td>
-                <div class="ui inverted buttons">
-                    <button class="ui inverted cstmLBlue button" {{action "saveAS" advancedStanding}}>Save</button>
-                    <div class="divider"/>
-                    <button class="ui red inverted button" {{action "deleteAS" advancedStanding}}>Delete</button>
-                </div> 
-            </td>
-        </tr>
+    <div class="ui tab segment" data-tab="hsinfo" style = "margin-top:0">
+      {{student-high-school-tab currentStudent = currentStudent store = store}}
+    </div>
+
+    <div class="ui tab segment" data-tab="adjudication" style = "margin-top:0">
+      {{student-adjudication-tab currentStudent = currentStudent store = store selectedTermCode = termIndex}}
+    </div>
+
+
+    <div class="ui tab segment" data-tab="awards" style = "margin-top:0">
+      <h2>Scholarships and Awards</h2>
+      <h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
+      <table class="ui fixed table">
+        <thead>
+          <tr>
+              <th>Scholarship/Award Name</th>
+              <th><!--spacer--></th>
+              <th><!--spacer--></th>  
+          </tr>
+          </thead>
+          {{#each currentStudent.scholarships as |scholarship|}}
+          <tr>
+              <td colspan="2">
+                  <div class="ui fluid input">
+                      {{input type="text" value = scholarship.note}}
+                  </div>
+              </td>
+              <td>
+                  <div class="ui inverted buttons">
+                      <button class="ui inverted cstmLBlue button" {{action "saveScholarship" scholarship}}>Save</button>
+                      <div class="divider"/>
+                      <button class="ui red inverted button" {{action "deleteScholarship" scholarship}}>Delete</button>
+                  </div> 
+              </td>
+              
+          </tr>
       {{/each}}
       <tr>
-        <td>
-          <div class="ui fluid input">
-            {{input type="text" value = newAdvancedStandingCourse placeholder="Course"}}
-          </div>
-        </td>
-        <td>
-          <div class="ui fluid input">
-            {{input type="text" value = newAdvancedStandingDescription placeholder="Description"}}
-            </div>
-        </td>
-        <td>
-          <div class="ui fluid input">
-            {{input type="text" value = newAdvancedStandingUnits placeholder="Units"}}
-            </div>
-          </td>
-          <td>
-          <div class="ui fluid input">
-            {{input type="text" value = newAdvancedStandingGrade placeholder="Grade"}}
-            </div>
-          </td>
-          <td>
-          <div class="ui fluid input">
-            {{input type="text" value = newAdvancedStandingFrom placeholder="Source"}}
-            </div>
-          </td>
-        <td>
-          <button class="ui inverted green button" {{action "addAS"}}> 
-                    Add &nbsp; <i class="add square icon"></i>
-                    </button>
-        </td>
-      </tr>
-    </table>
-  </div>
-
-
-
-  <div class="ui bottom attached tab segment" data-tab="hsinfo">
-    {{student-high-school-tab currentStudent = currentStudent store = store}}
-  </div>
-
-  <div class="ui bottom attached tab segment" data-tab="adjudication">
-    {{student-adjudication-tab currentStudent = currentStudent store = store selectedTermCode = termIndex}}
-  </div>
-
-
-  <div class="ui bottom attached tab segment" data-tab="awards">
-    <h2>Scholarships and Awards</h2>
-    <h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
-    <table class="ui fixed table">
-      <thead>
-        <tr>
-            <th>Scholarship/Award Name</th>
-            <th><!--spacer--></th>
-            <th><!--spacer--></th>  
+              <td>
+                  <div class="ui fluid input">
+                      {{input type="text" value = newScholarshipName placeholder="Scholarship/Award Name"}}
+                  </div>
+              </td>
+              <td>
+                  <button class="ui inverted green button" {{action "addScholarship"}}> 
+                  Add &nbsp; <i class="add square icon"></i>
+                  </button>
+              </td>
         </tr>
-        </thead>
-        {{#each currentStudent.scholarships as |scholarship|}}
-        <tr>
-            <td colspan="2">
-                <div class="ui fluid input">
-                    {{input type="text" value = scholarship.note}}
-                </div>
-            </td>
-            <td>
-                <div class="ui inverted buttons">
-                    <button class="ui inverted cstmLBlue button" {{action "saveScholarship" scholarship}}>Save</button>
-                    <div class="divider"/>
-                    <button class="ui red inverted button" {{action "deleteScholarship" scholarship}}>Delete</button>
-                </div> 
-            </td>
-            
-        </tr>
-    {{/each}}
-    <tr>
-            <td>
-                <div class="ui fluid input">
-                    {{input type="text" value = newScholarshipName placeholder="Scholarship/Award Name"}}
-                </div>
-            </td>
-            <td>
-                <button class="ui inverted green button" {{action "addScholarship"}}> 
-                Add &nbsp; <i class="add square icon"></i>
-                </button>
-            </td>
-      </tr>
-    </table>
+      </table>
+    </div>
+  {{/if}}
   </div>
-{{/if}}
+</div>
 {{/if}}
 <div style="margin: auto; width: 50%;">
   <div class="ui fluid pagination nine item menu">

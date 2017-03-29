@@ -6,63 +6,44 @@
   </div>
 </div>
 {{#if ADM01IsPermitted }}
+<div class = "ui grid" style = "margin:0">
+    <div class = "sixteen wide column" style="padding-bottom:0">
+        <div class = "ui secondary pointing fluid four item menu">
+            <div style="cursor: pointer;" class="active item" data-tab="ManageUsers">User Accounts</div>
+            <div style="cursor: pointer;" class="item" data-tab="ManageRoles">System Roles</div>
+            <div style="cursor: pointer;" class="item" data-tab="ManageFeatures">System Features/Privileges</div>
+            <div style="cursor: pointer;" class="item" data-tab="ManageAdjudication">Manage Adjudication</div>
+        </div>
+    </div>
+</div>
 
-  <div class="ui centered grid">
-    <div class="three wide column">
-      <div class="ui violet vertical pointing menu">
-        <div class="adminMenu">
-          <a class="item active" {{action "manageUsers"}}>
-            <i class="large users icon"></i>
-            Users Accounts
-          </a>
-        </div>
-        <div class="adminMenu">
-          <a class="item" {{action "manageRoles"}}>
-            <i class="large list layout icon"></i>
-            System Roles
-          </a>
-        </div>
-        <div class="adminMenu">
-          <a class="item " {{action "manageFeatures"}}>
-            <i class="large lock icon"></i>
-            System Features/Privileges
-          </a>
-        </div>
-        <div class="adminMenu">
-          <a class="item " {{action "manageAdjudication"}}>
-            <i class="large lock icon"></i>
-            Adjudication Rules
-          </a>
-        </div>
-        <div class="adminMenu">
-          <a class="item " {{action "manageAdjudicationCategories"}}>
-            <i class="large lock icon"></i>
-            Adjudication Categories
-          </a>
-        </div>
+<div class = "ui tab segment active" data-tab="ManageUsers">
+  {{manage-users}}
+</div>
+<div class = "ui tab segment" data-tab="ManageRoles">
+  {{manage-roles}}
+</div>
+<div class = "ui tab segment" data-tab="ManageFeatures">
+  {{manage-features}}
+</div>
+<div class = "ui tab segment" data-tab="ManageAdjudication">
+  <div class = "ui two column centered relaxed grid">
+    <div class = "three wide column">
+      <div class = "ui secondary vertical fluid pointing menu">
+        <div style="cursor: pointer;" class="active item" data-tab="Rules">Manage Rules</div>
+        <div style="cursor: pointer;" class="item" data-tab="Categories">Manage Categories</div>
       </div>
     </div>
-    <div class="eleven wide column">
-      <div class="ui segment container">
-          <br>
-        {{#if isUsersShowing}}
-          {{manage-users}}
-        {{/if}}
-        {{#if isRolesEditing }}
-          {{manage-roles}}
-        {{/if}}
-        {{#if isFeaturesEditing }}
-          {{manage-features}}
-        {{/if}}
-        {{#if isAdjudicationRulesEditing}}
-          {{manage-adjudication-rules}}
-        {{/if}}
-        {{#if isAdjudicationCategoriesIsShowing}}
-          {{manage-adjudication-categories}}
-        {{/if}}
+    <div class = "twelve wide column">
+      <div class = "ui tab segment active" data-tab="Rules" style = "margin-top:0">
+        {{manage-adjudication-rules}}
+      </div>
+      <div class = "ui tab segment" data-tab="Categories" style = "margin-top:0">
+        {{manage-adjudication-categories}}
       </div>
     </div>
   </div>
+</div>
 
 {{else}}
   <div class="ui center aligned raised segment">

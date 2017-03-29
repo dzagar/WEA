@@ -58,6 +58,7 @@ export default Ember.Component.extend({
   studentPhoto: null,
   studentsRecords: null,
   studentScholarhips: null,
+  tab: null,
   termIndex: 0,
   totalStudents: 0,
   totalPages: Ember.computed('totalStudents', 'pageSize', function() {
@@ -87,13 +88,13 @@ export default Ember.Component.extend({
 
       self.set('firstIndex', records.indexOf(records.get("firstObject")));
       self.set('lastIndex', records.indexOf(records.get("lastObject")));
-      // if (self.get('movingBackword')) {
-      //   self.set('currentIndex', records.indexOf(records.get("lastObject")));
-      //   self.setCurrentStudent(self.get('currentIndex'));
-      // } else {
-      //   self.set('currentIndex', records.indexOf(records.get("firstObject")));
-      //   self.setCurrentStudent(self.get('currentIndex'));
-      // }
+      if (self.get('movingBackword')) {
+        self.set('currentIndex', records.indexOf(records.get("lastObject")));
+        self.setCurrentStudent(self.get('currentIndex'));
+      } else {
+        self.set('currentIndex', records.indexOf(records.get("firstObject")));
+        self.setCurrentStudent(self.get('currentIndex'));
+      }
     }, function (reason) {
       console.log("Query to student records failed");
       self.set('studentDataMessage', "No Student Data Found");
@@ -181,8 +182,9 @@ export default Ember.Component.extend({
   setCurrentStudent: function (index) {
     var student = this.get('studentsRecords').objectAt(index);
     console.log('setting current student. student exists? ' + (student != null))
-    if (student != null)
+    if (student != null){
       this.set('currentStudent', student);
+    }
 
   },
 
@@ -277,11 +279,19 @@ export default Ember.Component.extend({
   },
 
   didRender() {
-    Ember.$('.menu .item').tab();
+    var self = this;
+    if (!this.get('studentNotLoaded')&&this.get('tab')!=null){
+      Ember.$(".ui.tab").removeClass("active");
+      Ember.$(".ui.tab[data-tab=\"" + this.get('tab') + "\"]").addClass("active");
+    }
+    Ember.$('.ui .menu .item').tab({
+      'onVisible': function(tab){
+        self.set('tab',tab);
+      },
+    });
   },
 
   actions: {
-
     //Calls the change offset function
     //The action is necessary for passing to all-students
     changeOffset(offsetDelta, relative) {

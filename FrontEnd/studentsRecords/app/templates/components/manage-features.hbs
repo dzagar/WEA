@@ -1,28 +1,26 @@
 {{#if MF001IsPermitted }}
   {{#if isEditing }}
-    <h2>Add new system feature</h2>
+    <h2>Add New System Feature</h2>
     <div class="ui form">
       <div class="inline field">
         <label>Feature code</label>
-        {{input value=code type="text" placeholder="enter feature code" }}
+        {{input value=code type="text" placeholder="Enter feature code" }}
       </div>
       <div class="inline field">
         <label>Feature name</label>
-        {{input value=sysFeature type="text" placeholder="enter feature description" }}
+        {{input value=sysFeature type="text" placeholder="Enter feature description" }}
       </div>
     </div>
     <br>
     <button class="ui cstmLBlue button" {{action 'save'}}>Save</button>
     <button class="ui red button" {{action 'cancel'}}>Cancel</button>
   {{else}}
-    <div class="ui grid">
-    <div class="eight wide column">
-      <h2 class="ui header" style="margin-top: 2px;">Manage System Features</h2>
+    <div class="ui centered grid">
+      <div class="eight wide column">
+        <h2 class="ui header" style="margin-top: 2px;">Manage System Features</h2>
+      </div>
     </div>
-    <div class="eight wide column right aligned">
-      <button class="ui cstmTurq button" {{action 'addNewFeature'}}>Add System Feature</button>
-    </div>
-  </div>
+
       <table class="ui table" style="margin-top: 25px;">
       <thead>
       <tr>
@@ -46,12 +44,20 @@
           </td>
         </tr>
       {{/each}}
+        <tr>
+          <td class = "middle left aligned">
+                {{#file-picker fileLoaded="importFromExcel" accept=".xlsx" readAs="readAsBinaryString" dropzone=false progress=false  preview=false}}
+                  <button class="ui cstmTurq button">Import System Features</button>
+                {{/file-picker}}
+          </td>
+          <td></td>
+          <td class = "middle right aligned">
+            <button class="ui green inverted button" {{action 'addNewFeature'}}>Add System Feature &nbsp; <i class = "add square icon"></i></button>
+          </td>
+        </tr>
       </tbody>
     </table>
     <br>
-    {{#file-picker fileLoaded="importFromExcel" accept=".xlsx" readAs="readAsBinaryString" dropzone=false progress=false  preview=false}}
-      <button class="ui cstmTurq button">Import System Features</button>
-    {{/file-picker}}
   {{/if}}
 {{else}}
   <div class="ui center aligned raised segment">

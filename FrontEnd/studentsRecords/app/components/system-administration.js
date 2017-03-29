@@ -15,13 +15,9 @@ export default Ember.Component.extend({
     }
   }),
 
-  didInsertElement() {
-    Ember.$(document).ready(function(){
-      Ember.$('.ui .adminMenu .item').on('click', function() {
-        Ember.$('.ui .adminMenu .item').removeClass('active');
-        Ember.$(this).addClass('active');
-      });
-    });
+  didRender(){
+    Ember.$('.menu .item').tab();
+    Ember.$('.ui.menu').find('.item').tab('change tab', 'second');
   },
 
   actions: {
