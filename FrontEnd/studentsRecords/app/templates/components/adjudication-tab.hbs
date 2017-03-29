@@ -1,0 +1,22 @@
+<div class = "ui center aligned grid container" style="padding-bottom:0">
+  <div class = "ui basic segment">
+    <div class = "ui huge header">
+      Adjudication
+    </div>
+  </div>
+</div>
+<div class = "ui grid" style = "margin:0">
+    <div class = "five wide column"></div>
+    <div class = "six wide column">
+        <div class = "ui grid secondary pointing menu" style = "padding-bottom:0">
+            <a class = "active item" {{action "showAdjudication"}}>Perform Adjudication</a>
+            <a class = "right floated item" {{action "showReports"}}>Generate Reports</a>
+        </div>
+    </div>
+    <div class = "five wide column"></div>
+</div>
+{{#if showingAdjudication}}
+	{{perform-adjudication}}
+{{else}}
+	{{generate-reports}}
+{{/if}}
