@@ -2090,7 +2090,7 @@ export default Ember.Component.extend({
 															doneImportingComments = true;
 															self.pushOutput("<span style='color:green'>Import successful!</span>");
 															Ember.$("#btnContinue").removeClass("disabled");
-															Ember.$("#registrationComments").addClass("completed");
+															Ember.$("#RegistrationComments").addClass("completed");
 
 														}
 													}
@@ -2180,7 +2180,7 @@ export default Ember.Component.extend({
 															{
 																doneImportingAdmissions = true;
 																self.pushOutput("<span style='color:green'>Import successful!</span>");
-																Ember.$("#BasisOfAdmissions").addClass("completed");
+																Ember.$("#BasisofAdmissions").addClass("completed");
 																self.send("continue");
 															}
 													}
