@@ -55,7 +55,6 @@
   {{all-students currentIndex = currentIndex currentStudent = currentStudent showAllStudents = showAllStudents showMenuBar = showMenuBar offset = offset limit = limit studentsRecords = studentsRecords totalPages = totalPages pageNumber = pageNumber message = studentDataMessage totalStudents = totalStudents filter = filter changeOffset = (action 'changeOffset')}}
 {{else}}
   <!-- Show data entry form -->
-
   <div class="ui stackable container top attached tabular menu">
     <div style="cursor: pointer;" class="active item" data-tab="basics">Basic Info</div>
     <div style="cursor: pointer;" class="item" data-tab="program">Program Record</div>
@@ -64,6 +63,13 @@
     <div style="cursor: pointer;" class="item" data-tab="hsinfo">High School Info</div>
     <div style="cursor: pointer;" class="item" data-tab="adjudication">Adjudications</div>
   </div>
+  {{#if studentNotLoaded}}
+    <div class = "dimmable" style="min-height:300px">
+      <div class = "ui active inverted dimmer">
+        <div class = "ui text loader">{{studentDataMessage}}</div>
+      </div>
+    </div>
+  {{else}}
   <div class="ui bottom attached active tab segment" data-tab="basics">
     <!-- student basic information !-->
     <div class="ui grid studentInfo">
@@ -384,7 +390,7 @@
     </table>
   </div>
 {{/if}}
-
+{{/if}}
 <div style="margin: auto; width: 50%;">
   <div class="ui fluid pagination nine item menu">
     {{#if (inline-compare pageNumber '<' 5)}}

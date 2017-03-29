@@ -85,8 +85,10 @@
       {{/each}}
     </div>
   {{else}}
-    <div class="ui disabled header" style="text-align: center; line-height: 300px">
-      {{message}}
+    <div class = "dimmable" style="min-height:300px">
+      <div class = "ui active inverted dimmer">
+        <div class = "ui text loader">{{message}}</div>
+      </div>
     </div>
   {{/if}}
 </div>
