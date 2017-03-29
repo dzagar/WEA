@@ -29,16 +29,16 @@
   <!-- Show data entry form -->
 
   <div class="ui top attached tabular menu">
-    <div style="cursor: pointer;" class="active item" data-tab="coursecode">Course Codes</div>
-    <div style="cursor: pointer;" class="item" data-tab="courseGroup">Course Groupings</div>
-    <div style="cursor: pointer;" class="item" data-tab="gender">Gender</div>
-    <div style="cursor: pointer;" class="item" data-tab="hsSubject">High School Subjects</div>
-    <div style="cursor: pointer;" class="item" data-tab="residency">Residency</div>
-    <div style="cursor: pointer;" class="item" data-tab="highschool">High Schools</div>
-    <div style="cursor: pointer;" class="item" data-tab="termCode">Term Codes</div>
+    <div style="cursor: pointer;" class="active item" data-tab="Genders">Gender</div>
+    <div style="cursor: pointer;" class="item" data-tab="Residencies">Residency</div>
+    <div style="cursor: pointer;" class="item" data-tab="TermCodes">Term Codes</div>
+    <div style="cursor: pointer;" class="item" data-tab="CourseCodes">Course Codes</div>
+    <div style="cursor: pointer;" class="item" data-tab="CourseGroupings">Course Groupings</div>
+    <div style="cursor: pointer;" class="item" data-tab="HighSchools">High Schools</div>
+    <div style="cursor: pointer;" class="item" data-tab="HighSchoolSubjects">High School Subjects</div>
   </div>
 
-  <div class="ui bottom attached tab segment" data-tab="gender">
+  <div class="ui bottom attached tab segment" data-tab="Genders">
     <table class="ui fixed table">
         <thead>
         <tr>
@@ -46,26 +46,34 @@
             <th class="eight wide"><!--spacer--></th>
         </tr>
         </thead>
-        {{#each genderModel as |gender|}}
-        <tr>
-            <td>
-                <div class="ui fluid input">
-                    {{input type="text" value = gender.name}}
-                </div>
-            </td>
-            <td>
-                <div class="ui inverted buttons">
-                    <button class="ui cstmLBlue inverted button" {{action "saveGender" gender}}>Save
-                        &nbsp; <i class="save icon"></i>
-                    </button>
-                    <div class="divider"/>
-                    <button class="ui red inverted button" {{action "deleteGender" gender}}>Delete
-                        &nbsp; <i class="trash icon"></i>
-                    </button>
-                </div>
-            </td>
-        </tr>
-        {{/each}}
+        {{#if (inline-compare genderModel.length '>' 0)}}
+            {{#each genderModel as |gender|}}
+            <tr>
+                <td>
+                    <div class="ui fluid input">
+                        {{input type="text" value = gender.name}}
+                    </div>
+                </td>
+                <td>
+                    <div class="ui inverted buttons">
+                        <button class="ui cstmLBlue inverted button" {{action "saveGender" gender}}>Save
+                            &nbsp; <i class="save icon"></i>
+                        </button>
+                        <div class="divider"/>
+                        <button class="ui red inverted button" {{action "deleteGender" gender}}>Delete
+                            &nbsp; <i class="trash icon"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            {{/each}}
+        {{else}}
+            <div class = "dimmable">
+              <div class = "ui active inverted dimmer">
+                <div class = "ui text loader">Loading Genders...</div>
+              </div>
+            </div>
+        {{/if}}
         <tr>
             <td>
                 <div class="ui fluid input">
@@ -88,7 +96,7 @@
     </table>
   </div>
 
-  <div class="ui bottom attached tab segment" data-tab="residency">
+  <div class="ui bottom attached tab segment" data-tab="Residencies">
       <table class="ui fixed table">
         <thead>
             <tr>
@@ -96,7 +104,7 @@
             <th class="eight wide"><!--spacer--></th>
             </tr>
         </thead>
-        
+        {{#if (inline-compare residencyModel.length '>' 0)}}
         {{#each residencyModel as |residency|}}
         <tr>
             <td>
@@ -117,6 +125,13 @@
             </td>
         </tr>
         {{/each}}
+        {{else}}
+            <div class = "dimmable" style="min-height:300px;width:100%;">
+              <div class = "ui active inverted dimmer">
+                <div class = "ui text loader">Loading Residencies...</div>
+              </div>
+            </div>
+        {{/if}}
         <tr>
             <td>
                 <div class="ui fluid input">
@@ -139,7 +154,7 @@
         </table>
   </div>
 
-<div class="ui bottom attached active tab segment" data-tab="coursecode">
+<div class="ui bottom attached active tab segment" data-tab="CourseCodes">
     <table class="ui table">
         <thead>
             <tr>
@@ -150,7 +165,7 @@
             <th class="four wide"><!--spacer--></th>
             </tr>
         </thead>
-        
+        {{#if (inline-compare courseCodeRecords.length '>' 0)}}
         {{#each courseCodeRecords as |courseCode|}}
         <tr>
             <td>
@@ -190,6 +205,13 @@
             </td>
         </tr>
         {{/each}}
+        {{else}}
+            <div class = "dimmable" style="min-height:300px">
+              <div class = "ui active inverted dimmer">
+                <div class = "ui text loader">Loading Course Codes...</div>
+              </div>
+            </div>
+        {{/if}}
         <tr>
             <td>
                 <div class="ui fluid input">
@@ -309,7 +331,7 @@
     </table>
  </div>
 
- <div class="ui bottom attached tab segment" data-tab="highschool">
+ <div class="ui bottom attached tab segment" data-tab="HighSchools">
      <table class="ui table">
         <thead>
             <tr>
@@ -317,7 +339,7 @@
             <th class="eight wide"><!--spacer--></th>
             </tr>
         </thead>
-
+        {{#if (inline-compare highSchoolRecords.length '>' 0)}}
         {{#each highSchoolRecords as |highSchool|}}
         <tr>
             <td>
@@ -339,6 +361,13 @@
             </td>
         </tr>
         {{/each}}
+        {{else}}
+            <div class = "dimmable" style="min-height:300px">
+              <div class = "ui active inverted dimmer">
+                <div class = "ui text loader">Loading High Schools...</div>
+              </div>
+            </div>
+        {{/if}}
         <tr>
              <td>
                 <div class="ui fluid input">
@@ -446,13 +475,14 @@
     </table>
 </div>
 
-<div class="ui bottom attached tab segment" data-tab="hsSubject">
+<div class="ui bottom attached tab segment" data-tab="HighSchoolSubjects">
      <table class="ui table">
         <thead>
           <th class="four wide">Subject Name</th>
           <th class="four wide">Subject Description</th>
           <th class="two wide"><!--spacer--></th>
         </thead>
+        {{#if (inline-compare highSchoolSubjectRecords.length '>' 0)}}
         {{#each highSchoolSubjectRecords as |highSchoolSubject|}}
         <tr>
 
@@ -480,6 +510,13 @@
             </td>
         </tr> 
         {{/each}}
+        {{else}}
+            <div class = "dimmable" style="min-height:300px">
+              <div class = "ui active inverted dimmer">
+                <div class = "ui text loader">Loading High School Subjects...</div>
+              </div>
+            </div>
+        {{/if}}
         <tr>
              <td>
                 <div class="ui fluid input">
@@ -594,7 +631,7 @@
     </table>
 </div>
 
-<div class="ui bottom attached tab segment" data-tab="termCode">
+<div class="ui bottom attached tab segment" data-tab="TermCodes">
      <table class="ui table">
         <thead>
             <tr>
@@ -602,7 +639,13 @@
             <th class="eight wide"><!--spacer--></th>
             </tr>
         </thead>
-
+        {{#if loadInProgress}}
+            <div class = "dimmable" style="min-height:300px">
+              <div class = "ui active inverted dimmer">
+                <div class = "ui text loader">Loading Term Codes...</div>
+              </div>
+            </div>
+        {{else if (inline-compare termCodeRecords.length '>' 0)}}
         {{#each termCodeRecords as |termCode|}}
           <tr>  
             <td>
@@ -623,9 +666,14 @@
                 </div>
             </td>
         </tr>
-    
         {{/each}}
-
+        {{else}}
+            <div class = "dimmable" style="min-height:300px">
+              <div class = "ui active inverted dimmer">
+                <div class = "ui text">No Term Codes Found</div>
+              </div>
+            </div>
+        {{/if}}
         <tr>
              <td>
                 <div class="ui fluid input">
@@ -734,7 +782,7 @@
     </table>
 </div>
 
-<div class="ui bottom attached tab segment" data-tab="courseGroup">
+<div class="ui bottom attached tab segment" data-tab="CourseGroupings">
     <table class="ui table">
         <thead>
             <tr>
@@ -742,7 +790,13 @@
                 <th class="ten wide"><!--spacer--></th>
             </tr>
         </thead>
-        
+        {{#if loadInProgress}}
+            <div class = "dimmable" style="min-height:300px">
+              <div class = "ui active inverted dimmer">
+                <div class = "ui text loader">Loading Course Groupings...</div>
+              </div>
+            </div>
+        {{else if (inline-compare courseGroupingModel.length '>' 0)}}
         {{#each courseGroupingModel as |courseGrouping|}}
          <tr>   
             <td>
@@ -768,6 +822,13 @@
             </td>
         </tr>
         {{/each}}
+        {{else}}
+            <div class = "dimmable" style="min-height:300px">
+              <div class = "ui active inverted dimmer">
+                <div class = "ui text">No Course Groupings Found</div>
+              </div>
+            </div>
+        {{/if}}
         <tr>
             <td>
                 <div class = "ui fluid input">
