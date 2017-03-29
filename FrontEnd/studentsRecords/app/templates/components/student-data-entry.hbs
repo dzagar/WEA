@@ -74,7 +74,7 @@
         </div>
       </div>
     {{else}}
-    <div class="ui tab segment active" data-tab="basics">
+    <div class="ui tab segment active" data-tab="basics" style = "margin-top:0">
       <!-- student basic information !-->
       <div class="ui grid studentInfo">
         <div class="ui right aligned seven wide column">
@@ -145,7 +145,7 @@
       </div>
     </div>
 
-    <div class="ui tab segment" data-tab="program">
+    <div class="ui tab segment" data-tab="program" style = "margin-top:0">
       <h2>Program Records</h2>
       <h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
       <div class="ui grid">
@@ -249,7 +249,7 @@
       </table>
     </div>
 
-    <div class="ui tab segment" data-tab="advanced">
+    <div class="ui tab segment" data-tab="advanced" style = "margin-top:0">
       <h2>Advanced Standings</h2>
       <h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
 
@@ -342,16 +342,16 @@
 
 
 
-    <div class="ui tab segment" data-tab="hsinfo">
+    <div class="ui tab segment" data-tab="hsinfo" style = "margin-top:0">
       {{student-high-school-tab currentStudent = currentStudent store = store}}
     </div>
 
-    <div class="ui tab segment" data-tab="adjudication">
+    <div class="ui tab segment" data-tab="adjudication" style = "margin-top:0">
       {{student-adjudication-tab currentStudent = currentStudent store = store selectedTermCode = termIndex}}
     </div>
 
 
-    <div class="ui tab segment" data-tab="awards">
+    <div class="ui tab segment" data-tab="awards" style = "margin-top:0">
       <h2>Scholarships and Awards</h2>
       <h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
       <table class="ui fixed table">
