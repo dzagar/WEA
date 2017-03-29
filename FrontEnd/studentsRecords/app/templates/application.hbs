@@ -1,4 +1,4 @@
-{{#liquid-if oudaAuth.isAuthenticated class="loginTrans"}}
+{{#if oudaAuth.isAuthenticated }}
 <div class = "wrapper">
   <div class = "appBody ui grid" style="padding-bottom: 55px;">
       <div class="ui fixed cstmDPurple inverted menu">
@@ -60,6 +60,6 @@
         {{outlet "login"}}
       {{/unless}}     
 </div>   
-{{/liquid-if}}
+{{/if}}
 
 
