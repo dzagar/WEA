@@ -10,7 +10,6 @@ export default Ember.Route.extend({
     }
   },
   deactivate: function() {
-    // Ember.$('.wrapper').css('background-image', "url('/assets/images/geometricCheckBG.png')");
     Ember.$('body').removeClass(this.toCssClass());
   },
   toCssClass: function() {
