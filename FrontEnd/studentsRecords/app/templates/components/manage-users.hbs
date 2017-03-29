@@ -1,9 +1,6 @@
-<div class="ui grid">
+<div class="ui centered grid">
   <div class="eight wide column">
     <h2 class="ui header" style="margin-top: 2px;">Manage Users</h2>
-  </div>
-  <div class="eight wide column right aligned">
-    {{add-new-user}}
   </div>
 </div>
 
@@ -21,31 +18,35 @@
   </tr>
   </thead>
   <tbody>
-
-  {{#each usersModel as |user|}}
-    <tr>
-      <td>
-        {{user.firstName}}
-      </td>
-      <td>
-        {{user.lastName}}
-      </td>
-      <td>
-        {{user.email}}
-      </td>
-      <td>
-        {{enable-disable-user ID=user.id status=user.enabled}}
-      </td>
-      <td class="right aligned">
-        {{assign-role ID=user.id}}
-      </td>
-      <td class="right aligned">
-      {{edit-user ID=user.id }}
-      </td>
-      <td class="right aligned">
-        {{delete-user ID=user.id }}
-      </td>
-    </tr>
-  {{/each}}
+    {{#each usersModel as |user|}}
+      <tr>
+        <td>
+          {{user.firstName}}
+        </td>
+        <td>
+          {{user.lastName}}
+        </td>
+        <td>
+          {{user.email}}
+        </td>
+        <td>
+          {{enable-disable-user ID=user.id status=user.enabled}}
+        </td>
+        <td class="right aligned">
+          {{assign-role ID=user.id}}
+        </td>
+        <td class="right aligned">
+        {{edit-user ID=user.id }}
+        </td>
+        <td class="right aligned">
+          {{delete-user ID=user.id }}
+        </td>
+      </tr>
+    {{/each}}
+      <tr>
+        <td colspan = "7" class = "middle right aligned">
+            {{add-new-user}}
+        </td>
+      </tr>
   </tbody>
 </table>

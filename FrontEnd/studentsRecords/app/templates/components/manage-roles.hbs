@@ -1,24 +1,22 @@
 {{#if MSR01IsPermitted }}
   {{#if isEditing }}
-    <h2>Add new system role</h2>
+    <h2>Add New System Role</h2>
     <div class="ui form">
       <div class="field">
         <label>Role name</label>
-        {{input value=name type="text" placeholder="enter role name" }}
+        {{input value=name type="text" placeholder="Enter role name" }}
       </div>
     </div>
     <br>
     <button class="ui cstmLBlue button" {{action 'save'}}>Save</button>
-    <button class="ui button" {{action 'cancel'}}>Cancel</button>
+    <button class="ui red button" {{action 'cancel'}}>Cancel</button>
   {{else}}
-  <div class="ui grid">
+  <div class="ui centered grid">
     <div class="eight wide column">
-      <h2 class="ui header" style="margin-top: 2px;">System Roles</h2>
-    </div>
-    <div class="eight wide column right aligned">
-      <button class="ui cstmTurq button" {{action 'addNewRole'}}>Add New Role</button>
+      <h2 class="ui header" style="margin-top: 2px;">Manage Roles</h2>
     </div>
   </div>
+
     <table class="ui table" style="margin-top: 25px;">
       <thead>
       <tr>
@@ -43,6 +41,11 @@
           </td>
         </tr>
       {{/each}}
+        <tr>
+          <td colspan = "3" class = "middle right aligned">
+              <button class="ui green inverted button" {{action 'addNewRole'}}>Add New Role &nbsp; <i class = "add square icon"></i></button>
+          </td>
+        </tr>
       </tbody>
     </table>
 
