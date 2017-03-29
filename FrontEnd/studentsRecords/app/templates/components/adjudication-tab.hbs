@@ -8,15 +8,17 @@
 <div class = "ui grid" style = "margin:0">
     <div class = "five wide column"></div>
     <div class = "six wide column">
-        <div class = "ui grid secondary pointing menu" style = "padding-bottom:0">
-            <a class = "active item" {{action "showAdjudication"}}>Perform Adjudication</a>
-            <a class = "right floated item" {{action "showReports"}}>Generate Reports</a>
+        <div class = "ui secondary pointing fluid two item menu" style = "padding-bottom:0">
+            <div class = "active item" data-tab="Adjudication">Perform Adjudication</div>
+            <div class = "right floated item" data-tab="Reports">Generate Reports</div>
         </div>
     </div>
     <div class = "five wide column"></div>
 </div>
-{{#if showingAdjudication}}
+<div class = "ui tab segment active" data-tab="Adjudication">
 	{{perform-adjudication}}
-{{else}}
+</div>
+<div class = "ui tab segment" data-tab="Reports">
 	{{generate-reports}}
-{{/if}}
+</div>
+

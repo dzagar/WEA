@@ -27,8 +27,20 @@
 {{/if}}
 
   <!-- Show data entry form -->
-
-  <div class="ui top attached tabular menu">
+<div class = "ui grid" style = "margin:0">
+    <div class = "sixteen wide column" style="padding-bottom:0">
+        <div class = "ui secondary pointing fluid seven item menu">
+            <div style="cursor: pointer;" class="active item" data-tab="Genders">Gender</div>
+            <div style="cursor: pointer;" class="item" data-tab="Residencies">Residency</div>
+            <div style="cursor: pointer;" class="item" data-tab="TermCodes">Term Codes</div>
+            <div style="cursor: pointer;" class="item" data-tab="CourseCodes">Course Codes</div>
+            <div style="cursor: pointer;" class="item" data-tab="CourseGroupings">Course Groupings</div>
+            <div style="cursor: pointer;" class="item" data-tab="HighSchools">High Schools</div>
+            <div style="cursor: pointer;" class="item" data-tab="HighSchoolSubjects">High School Subjects</div>
+        </div>
+    </div>
+</div>
+<!--   <div class="ui top attached tabular menu">
     <div style="cursor: pointer;" class="active item" data-tab="Genders">Gender</div>
     <div style="cursor: pointer;" class="item" data-tab="Residencies">Residency</div>
     <div style="cursor: pointer;" class="item" data-tab="TermCodes">Term Codes</div>
@@ -36,9 +48,9 @@
     <div style="cursor: pointer;" class="item" data-tab="CourseGroupings">Course Groupings</div>
     <div style="cursor: pointer;" class="item" data-tab="HighSchools">High Schools</div>
     <div style="cursor: pointer;" class="item" data-tab="HighSchoolSubjects">High School Subjects</div>
-  </div>
+  </div> -->
 
-  <div class="ui bottom attached active tab segment" data-tab="Genders">
+  <div class="ui tab segment active" data-tab="Genders">
     <table class="ui fixed table">
         <thead>
         <tr>
@@ -110,7 +122,7 @@
     </table>
   </div>
 
-  <div class="ui bottom attached tab segment" data-tab="Residencies">
+  <div class="ui tab segment" data-tab="Residencies">
       <table class="ui fixed table">
         <thead>
             <tr>
@@ -182,7 +194,7 @@
         </table>
   </div>
 
-<div class="ui bottom attached tab segment" data-tab="CourseCodes">
+<div class="ui tab segment" data-tab="CourseCodes">
     <table class="ui table">
         <thead>
             <tr>
@@ -373,7 +385,7 @@
     </table>
  </div>
 
- <div class="ui bottom attached tab segment" data-tab="HighSchools">
+ <div class="ui tab segment" data-tab="HighSchools">
      <table class="ui table">
         <thead>
             <tr>
@@ -531,7 +543,7 @@
     </table>
 </div>
 
-<div class="ui bottom attached tab segment" data-tab="HighSchoolSubjects">
+<div class="ui tab segment" data-tab="HighSchoolSubjects">
      <table class="ui table">
         <thead>
           <th class="four wide">Subject Name</th>
@@ -701,7 +713,7 @@
     </table>
 </div>
 
-<div class="ui bottom attached tab segment" data-tab="TermCodes">
+<div class="ui tab segment" data-tab="TermCodes">
      <table class="ui table">
         <thead>
             <tr>
@@ -860,7 +872,7 @@
     </table>
 </div>
 
-<div class="ui bottom attached tab segment" data-tab="CourseGroupings">
+<div class="ui tab segment" data-tab="CourseGroupings">
     <table class="ui table">
         <thead>
             <tr>

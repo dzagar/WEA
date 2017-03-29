@@ -223,7 +223,7 @@ export default Ember.Component.extend({
                 self.send('load'+tab);
             }
         });
-
+        Ember.$('.ui.menu').find('.item').tab('change tab', 'second');
     },
 
     //Changes the offset based on offsetDelta and relative.
