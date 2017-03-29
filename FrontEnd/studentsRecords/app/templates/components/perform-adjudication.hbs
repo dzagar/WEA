@@ -1,29 +1,29 @@
-<div class = "ui welcome container">
-	<div class = "ui text container">
-		<h2>
-			Please choose a term to adjudicate for:
-		</h2>
-
-        <div class = "ui padded centered grid container">
-            <select class="ui dropdown" onchange={{action 'selectTerm' value='target.value'}}>
-                {{#each termCodeModel as |termCode|}}
-                    <option value={{termCode.id}}>{{termCode.name}}</option>
-                {{/each}}
-            </select>
-        </div>
-
-        <div class = "ui padded centered grid container">
-			<div class = "five wide column">
-				<div class = "ui cstmGold button" {{action 'adjudicate'}}>
+<div class = "ui centered padded grid">
+    <div class = "ui form" style = "padding-top: 20px;">
+        <div class = "ui inline fields">
+            <div class = "inline field">
+        		<h3>
+        			Please choose a term to adjudicate for:
+        		</h3>
+            </div>
+            <div class = "inline field">
+                <select class="ui dropdown" onchange={{action 'selectTerm' value='target.value'}}>
+                    {{#each termCodeModel as |termCode|}}
+                        <option value={{termCode.id}}>{{termCode.name}}</option>
+                    {{/each}}
+                </select>
+            </div>
+            <div class = "inline field">
+				<div class = "ui green button" {{action 'adjudicate'}}>
 					Start Adjudication Process
 				</div>
-			</div>
-		</div>
-	</div>
+            </div>
+        </div>
+    </div>
 </div>
-<div class="ui centered middle aligned grid">
+<div class="ui grid">
 	<div class = "row">        
-		<div class="eight wide stretchered column ui basic vertical ordered steps">
+		<div class="eight wide stretchered column ui segment">
             <br>
             <label>Student Information Collection Progress</label>    
             {{#ui-progress value = parsingProgress progress = parsingProgress total = parsingTotal}}
@@ -41,7 +41,7 @@
             <br>
 		</div>
 		<div class = "eight wide column">
-            <div class="ui raised padded text container segment">
+            <div class="ui segment">
                 <h2 class="ui header">Adjudication Status</h2>
                 {{{adjudicationStatus}}}
                 {{{doneStatus}}}

@@ -54,6 +54,7 @@ export default Ember.Component.extend({
   studentSubjects: [],
   studentSchools: [],
   studentGrades: null,
+  studentNotLoaded: false,
   studentPhoto: null,
   studentsRecords: null,
   studentScholarhips: null,
@@ -86,13 +87,13 @@ export default Ember.Component.extend({
 
       self.set('firstIndex', records.indexOf(records.get("firstObject")));
       self.set('lastIndex', records.indexOf(records.get("lastObject")));
-      if (self.get('movingBackword')) {
-        self.set('currentIndex', records.indexOf(records.get("lastObject")));
-        self.setCurrentStudent(self.get('currentIndex'));
-      } else {
-        self.set('currentIndex', records.indexOf(records.get("firstObject")));
-        self.setCurrentStudent(self.get('currentIndex'));
-      }
+      // if (self.get('movingBackword')) {
+      //   self.set('currentIndex', records.indexOf(records.get("lastObject")));
+      //   self.setCurrentStudent(self.get('currentIndex'));
+      // } else {
+      //   self.set('currentIndex', records.indexOf(records.get("firstObject")));
+      //   self.setCurrentStudent(self.get('currentIndex'));
+      // }
     }, function (reason) {
       console.log("Query to student records failed");
       self.set('studentDataMessage', "No Student Data Found");
@@ -105,6 +106,8 @@ export default Ember.Component.extend({
   }),
 
   fetchStudent: Ember.observer('currentStudent', function () {
+    this.set('studentNotLoaded', true);
+    this.set('studentDataMessage', "Loading Student...");
     this.showStudentData(this.get('currentStudent'));
     var self = this;
     this.get('store').query('term-code', {
@@ -113,9 +116,9 @@ export default Ember.Component.extend({
     }).then(function(nonTerms){
       self.set('studentUnselectedTermCodes', nonTerms);
       console.log(self.get('studentUnselectedTermCodes'));
+      self.set('studentNotLoaded', false);
     });
     self.set('termIndex', null);
-   
   }),
 
   init() {
@@ -166,7 +169,7 @@ export default Ember.Component.extend({
       self.set('lastIndex', records.indexOf(records.get("lastObject")));
 
       // Show first student data
-      self.set('currentIndex', self.get('firstIndex'));
+      //self.set('currentIndex', self.get('firstIndex'));
     }, function (reason) {
       console.log("Query to student records failed");
       self.set('studentDataMessage', "No Student Data Found");
@@ -180,6 +183,7 @@ export default Ember.Component.extend({
     console.log('setting current student. student exists? ' + (student != null))
     if (student != null)
       this.set('currentStudent', student);
+
   },
 
   showStudentData: function (student) {
