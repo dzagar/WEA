@@ -207,7 +207,6 @@ router.route('/:termCode_id')
                 failed = true;
                 response.send(error);
             } else if (termCode) {
-
                 if (termCode.terms.length > 0) {
                     let completedTerms = 0;
                     for (let i = 0; i < termCode.terms.length; i++) {
@@ -217,7 +216,6 @@ router.route('/:termCode_id')
                                 response.send(error);
                             } else if (term) {
                                 term.termCode = null;
-
                                 term.save(function (error) {
                                     if (error && !failed) {
                                         failed = true;
@@ -269,7 +267,7 @@ router.route('/:termCode_id')
                                         completedAdjudications++;
                                         if (completedAdjudications === termCode.adjudications.length && !failed) {
                                             completed++;
-                                            if (completed === 4 && !failed) {
+                                            if (completed === 2 && !failed) {
                                                 response.json({deleted: termcode});
                                             }
                                         }
@@ -279,12 +277,17 @@ router.route('/:termCode_id')
                                 completedAdjudications++;
                                 if (completedAdjudications === termCode.adjudications.length && !failed) {
                                     completed++;
-                                    if (completed === 4 && !failed) {
+                                    if (completed === 2 && !failed) {
                                         response.json({deleted: termCode});
                                     }
                                 }
                             }
                         });
+                    }
+                } else {
+                    completed++;
+                    if (completed === 2 && !failed){
+                        response.json({deleted: termCode});
                     }
                 }
             } else {

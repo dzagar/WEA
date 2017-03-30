@@ -421,7 +421,16 @@ export default Ember.Component.extend({
                 unit: this.get('newCourseCodeUnit').trim()
                 }));
                 
-                this.get('newCourseCodeObj').save();
+                var self = this;
+                this.get('newCourseCodeObj').save().then(function(){
+                     self.get('store').query('course-code', {
+                        limit: self.get('limit'),
+                        offset: self.get('courseCodeOffset')
+                    }).then(function(records){
+                        self.set('totalCourseCodes', records.get('meta').total);
+                        self.set('courseCodeRecords', records);
+                    });
+                });
                 this.set('newCourseCodeName',"");
                 this.set('newCourseCodeCourseLetter',"");
                 this.set('newCourseCodeCourseNumber',"");
@@ -483,7 +492,16 @@ export default Ember.Component.extend({
                     this.set('newHighSchoolObj',this.get('store').createRecord('high-school',{
                         schoolName: this.get('newHighSchoolName').trim()
                     }));
-                    this.get('newHighSchoolObj').save();
+                    var self = this;
+                    this.get('newHighSchoolObj').save().then(function(){
+                        self.get('store').query('high-school', {
+                            limit: self.get('limit'),
+                            offset: self.get('highSchoolOffset')
+                        }).then(function(records){
+                            self.set('totalHighSchools', records.get('meta').total);
+                            self.set('highSchoolRecords', records);
+                        });
+                    });
                     this.set('newHighSchoolName',"");
                 }
             }
@@ -496,7 +514,7 @@ export default Ember.Component.extend({
 
         deleteHighSchool(highSchool)
         {
-            this.set('currentHighSchool',highSchool);
+            this.set('currentHighSchool', highSchool);
             this.set('showDeleteGenderConfirmation', false);
             this.set('showDeleteResidencyConfirmation', false);
             this.set('showCourseCodeConfirmation', false);
@@ -570,6 +588,17 @@ export default Ember.Component.extend({
                         description: this.get('newHighSchoolSubjectDescriptionName').trim()
                     }));
                     this.get('newHighSchoolSubjectObj').save().then(()=>{
+                        var self = this;
+                        this.get('store').query('high-school-subject', {
+                            limit: self.get('limit'),
+                            offset: self.get('highSchoolSubjectOffset')
+                        }).then(function(records){
+                            self.set('totalHighSchoolSubjects', records.get('meta').total);
+                            self.set('highSchoolSubjectRecords', records);
+                            self.get('store').findAll('high-school-subject').then(function (records) {
+                                self.set('courseArray', records);
+                            });
+                        });
                         self.set('newHighSchoolSubjectName',"");
                         self.set('newHighSchoolSubjectDescriptionName',"");
                     });
@@ -633,7 +662,16 @@ export default Ember.Component.extend({
                             this.set('newTermCodeObj',this.get('store').createRecord('term-code',{
                                 name: this.get('newTermCodeName').trim()
                             }));
-                            this.get('newTermCodeObj').save();
+                            var self = this;
+                            this.get('newTermCodeObj').save().then(function(){
+                                self.get('store').query('term-code',{
+                                    limit: self.get('limit'),
+                                    offset: self.get('termCodeOffset')
+                                }).then(function(records){
+                                    self.set('totalTermCodes', records.get('meta').total);
+                                    self.set('termCodeRecords', records);
+                                });
+                            });
                             this.set('newTermCodeName',"");
                         }
                     }
