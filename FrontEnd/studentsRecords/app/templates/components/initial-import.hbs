@@ -9,7 +9,7 @@
 {{#if showDeleteConfirmation}}
 {{delete-data-confirmation notDONE = showDeleteConfirmation isImporting = importData}}
 {{else if importData}}
-<div class="ui centered middle aligned grid">
+<div class="ui grid">
 	<div class = "row">
 		<div class="column">
 			<div class="ui tiny steps cstmGold">
@@ -51,7 +51,7 @@
 			</div>
 		</div>
 	</div>
-	<div class = "row">
+	<div class = "centered row">
 		<div class="ten wide stretchered column ui basic vertical ordered steps cstmGold">
 			{{#if index1}}
 				{{#each importUndergrad as |feature index|}}
@@ -187,8 +187,9 @@
 		</div>
 		{{#if importInProgress}}
 			<div class = "six wide column">
-				<div class = "header"> Importing...</div>
+			<div class = "overlay">
 				<div class = "ui segment">
+					<div class = "header"> Importing...</div>
 					{{{fileOutput}}}
 				</div>
 				{{#if (greater-than changingIndex "16")}}
@@ -200,6 +201,7 @@
 			  				Continue
 					</button>
 				{{/if}}
+			</div>
 			</div>
 		{{/if}}
 	</div>

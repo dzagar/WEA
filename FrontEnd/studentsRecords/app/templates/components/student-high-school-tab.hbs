@@ -55,8 +55,8 @@
       </tr>
       {{/each}}
       <tr>
-        <td align="right" style="overflow:visible;">
-            {{#ui-dropdown class = "selection (if errorHS 'error')" selected = selectedHighSchoolID onChange = (action (mut selectedHighSchoolID)) onClick = (action "clearError" "errorHS")}}
+        <td style="overflow:visible">
+            {{#ui-dropdown class = "fluid selection (if errorHS 'error')" selected = selectedHighSchoolID onChange = (action (mut selectedHighSchoolID)) onClick = (action "clearError" "errorHS")}}
                 <div class = "default text">High School</div>
                 <i class = "dropdown icon"></i>
                 <div class = "menu">
@@ -68,9 +68,9 @@
                 </div>
             {{/ui-dropdown}}
         </td>
-        <td align="right" style="overflow:visible;">
-            {{#ui-dropdown class = "selection (if errorSubject 'error')" selected = selectedSubjectID onChange = (action (mut selectedSubjectID)) onClick = (action "clearError" "errorSubject")}}
-                <div class = "default text">High School</div>
+        <td style="overflow:visible">
+            {{#ui-dropdown class = "fluid selection (if errorSubject 'error')" selected = selectedSubjectID onChange = (action (mut selectedSubjectID)) onClick = (action "clearError" "errorSubject")}}
+                <div class = "default text">Subject</div>
                 <i class = "dropdown icon"></i>
                 <div class = "menu">
                     {{#each highSchoolSubjects as |subject|}}
