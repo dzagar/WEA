@@ -122,11 +122,11 @@ router.route('/')
         let failed = false;
         let completed = 0;
         HighSchool.findByIdAndRemove(request.params.highSchool_id, function(error, school) {
+            console.log(school);
             if (error) {
                 failed = true;
                 response.send(error);
-            } else if (school) {
-
+            } else if (school && school.courses.length > 0) {
                 for (let i = 0; i < school.courses.length && !failed; i++) {
                     HighSchoolCourse.findById(school.courses[i], function (error, course) {
                         if (error && !failed) {
