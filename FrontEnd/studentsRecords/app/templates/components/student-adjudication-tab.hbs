@@ -41,7 +41,7 @@
   {{/each}}
   <tr>
     <td class="dimmable" style="overflow: visible">
-    	{{#ui-dropdown class = "selection (if errorTC 'error')" selected = selectedTermCodeID onChange = (action (mut selectedTermCodeID)) onClick = (action "clearError" "errorTC")}}
+    	{{#ui-dropdown class = "fluid selection (if errorTC 'error')" selected = selectedTermCodeID onChange = (action (mut selectedTermCodeID)) onClick = (action "clearError" "errorTC")}}
           <div class = "default text">Term Code</div>
           <i class = "dropdown icon"></i>
           <div class = "menu">
@@ -54,7 +54,7 @@
       {{/ui-dropdown}}
     </td>
     <td class="dimmable" style="overflow: visible">
-    	{{#ui-dropdown class = "selection (if errorAC 'error')" selected = selectedAssessmentCodeID onChange = (action (mut selectedAssessmentCodeID)) onClick = (action "clearError" "errorAC")}}
+    	{{#ui-dropdown class = "fluid selection (if errorAC 'error')" selected = selectedAssessmentCodeID onChange = (action (mut selectedAssessmentCodeID)) onClick = (action "clearError" "errorAC")}}
           <div class = "default text">Assessment Code</div>
           <i class = "dropdown icon"></i>
           <div class = "menu">
