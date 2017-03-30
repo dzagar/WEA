@@ -216,8 +216,12 @@
               <td>{{grade.note}}</td>
               <td>
                 <div class="ui inverted buttons">
-                  <div class="ui inverted cstmLBlue button" {{action "saveGrade" grade}}>Save</div>
-                  <div class="ui red inverted button" {{action "deleteGrade" grade}}>Delete</div>
+                  <div class="ui inverted cstmLBlue icon button" {{action "saveGrade" grade}}>
+                  <i class = "icon save"></i>
+                  </div>
+                  <div class="ui red inverted icon button" {{action "deleteGrade" grade}}>
+                    <i class = "icon trash"></i>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -382,7 +386,7 @@
           </tr>
       {{/each}}
       <tr>
-              <td>
+              <td colspan = "2">
                   <div class="ui fluid input">
                       {{input type="text" value = newScholarshipName placeholder="Scholarship/Award Name"}}
                   </div>
