@@ -181,20 +181,79 @@
           </div>--}}
         </div>
       </div>
-      <h5>Plan Codes</h5>
+      {{#if termIndex}}
+      <h5>Programs</h5>
+      {{/if}}
+      
       {{#each currentStudent.terms as |term|}}
         {{#if (eq term.termCode.id termIndex)}}
           {{#each term.programRecords as |programRecord|}}
-            <label>{{programRecord.name}}</label>
-            <div class="ui bulleted list">
-            {{#each programRecord.planCodes as |planCode|}}
-              <div class="item">{{planCode.name}}</div>
-            {{/each}}
-            </div>
-          {{/each}}
+          <table class="ui fixed table">
+            <thead>
+              <tr onclick={{action 'displayProgram' programRecord.name}}>
+                <th>                  
+                  <label>{{programRecord.name}}<i style="color: gray"> (click to show program's plans)</i></label>
+                </th>
+              </tr>
+            </thead>
+            <div id="progInfo{{programRecord.name}}" class="studentProgramInfo" style="display: none">
+              <table class="ui fixed table">
+                <tr>
+                  <td><div class="ui input">{{input type="text" value = programRecord.name }}</div></td>
+                  <td colspan="2">                
+                    <div class="ui inverted buttons">
+                      <div class="ui inverted cstmLBlue icon button" {{action "saveProgram" programRecord}}>
+                        Save Program
+                      <i class = "icon save"></i>
+                      </div>
+                      <div class="ui red inverted icon button" {{action "deleteProgram" programRecord}}>
+                        Delete Program
+                        <i class = "icon trash"></i>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              {{#each programRecord.planCodes as |planCode|}}
+                <tr>
+                  <td><div class="ui fluid input">{{input type="text" value = planCode.name }}</div></td>
+                  <td colspan="2">                
+                    <div class="ui inverted buttons">
+                      <div class="ui inverted cstmLBlue icon button" {{action "savePlan" planCode}}>
+                        Save Plan
+                      <i class = "icon save"></i>
+                      </div>
+                      <div class="ui red inverted icon button" {{action "deletePlan" planCode}}>
+                        Delete Plan
+                        <i class = "icon trash"></i>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              {{/each}}
+              <tr>
+                <td><div class="ui fluid input">{{input type="text" value = newPlanName placeholder="Plan Name" }}</div></td>
+                <td>
+                  <div class="ui green inverted button" {{action "addNewPlan" programRecord}}>Add New Plan</div>
+                </td>
+              </tr>
+              </table>
+            </div>            
+          </table>
+          {{/each}}          
+          <table class="ui fixed table">
+            <tr>
+                <td><div class="ui fluid input">{{input type="text" value = newProgramName placeholder="Program Name" }}</div></td>
+              <td>
+                <div class="ui green inverted button" {{action "addNewProgram" term.id}}>Add New Program</div>
+              </td>
+            </tr>
+          </table>
         {{/if}}
+        {{!--add new program--}}
       {{/each}}
 
+      {{#if termIndex}}
+      <h5>Courses</h5>
       <table class="ui fixed table">
         <thead>
           <tr>
@@ -228,7 +287,6 @@
           {{/each}}
         {{/if}}
         {{/each}}
-        {{#if termIndex}}
           <tr>
             <td colspan="3" style="overflow: visible;">
               <div class="ui fluid input">
@@ -251,8 +309,8 @@
                 <div class="ui green inverted button" {{action "addNewGrade"}}>Add Grade</div>
             </td>
           </tr>
-        {{/if}}
-      </table>
+      </table>      
+      {{/if}}
     </div>
 
     <div class="ui tab segment" data-tab="advanced" style = "margin-top:0">

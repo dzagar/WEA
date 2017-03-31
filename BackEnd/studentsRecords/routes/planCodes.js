@@ -97,7 +97,7 @@ router.route('/:planCode_id')
                         response.send(error);
                     } else if (programRecord) {
                         let index = programRecord.planCodes.indexOf(planCode._id);
-                        if (index > 1) {
+                        if (index > -1) {
                             programRecord.planCodes.splice(index, 1);
                         }
 
@@ -105,15 +105,15 @@ router.route('/:planCode_id')
                             if (error) {
                                 response.send(error);
                             } else {
-                                response.json({deleted: planCode});
+                                response.send({planCode: planCode});
                             }
                         });
                     } else {
-                        response.json({deleted: planCode});
+                        response.send({planCode: planCode});
                     }
                 });
             } else {
-                response.json({deleted: planCode});
+                response.send({planCode: planCode});
             }
         });
     });
