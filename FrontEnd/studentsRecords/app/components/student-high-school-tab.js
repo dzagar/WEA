@@ -98,7 +98,7 @@ export default Ember.Component.extend({
                             school: schoolObj,
                             subject: subjectObj
                         });
-
+                        this.get('currentStudent').reload();
                         newHSCourse.save().then(function() {
                             console.log(newHSCourse.id);
                             let newGrade = self.get('store').createRecord('high-school-grade', {

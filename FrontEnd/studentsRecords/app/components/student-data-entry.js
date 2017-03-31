@@ -533,6 +533,7 @@ export default Ember.Component.extend({
                 units: this.get('newAdvancedStandingUnits').trim(),
                 from: this.get('newAdvancedStandingFrom').trim()
             }));
+            this.get('currentStudent').reload();
             this.get('newAdvancedStandingObj').save();
             this.set('newAdvancedStandingCourse', "");
             this.set('newAdvancedStandingDescription',"");
@@ -564,6 +565,7 @@ export default Ember.Component.extend({
                 student: this.get('currentStudent'),
                 note: this.get('newScholarshipName').trim()
             }));
+            this.get('currentStudent').reload();
             this.get('newScholarshipObj').save();
             this.set('newScholarshipName', "");
         }

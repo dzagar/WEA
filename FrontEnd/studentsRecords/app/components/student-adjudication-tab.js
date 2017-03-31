@@ -72,6 +72,7 @@ export default Ember.Component.extend({
         					termCode: termCodeObj,
         					assessmentCode: assessmentCodeObj
         				});
+                        this.get('currentStudent').reload();
         				newAdjudicationObj.save().then(()=>{
         					self.set('newNoteValue', null);
         					self.set('selectedTermCodeID', null);
