@@ -607,7 +607,11 @@ export default Ember.Component.extend({
       savedPlan.save();      
     },
     deletePlan(deletedPlan){
-      deletedPlan.destroyRecord();      
+      var self = this;
+      var programID = deletedPlan.get('programRecord.id');
+      deletedPlan.destroyRecord().then(function(){
+        self.get('store').find('program-record', programID);
+      });   
     },
     addNewPlan(planProgram){
       var self = this;
@@ -624,7 +628,11 @@ export default Ember.Component.extend({
       savedProgram.save();      
     },
     deleteProgram(deletedProgram){
-      deletedProgram.destroyRecord();
+      var self = this;
+      var termID = deletedProgram.get('term.id');
+      deletedProgram.destroyRecord().then(function(){
+        self.get('store').find('term', termID);
+      });
     },
     addNewProgram(termID){
       var self = this;
@@ -633,7 +641,9 @@ export default Ember.Component.extend({
       });
       
       newProgram.set('term', this.get('store').peekRecord('term', termID));
-      newProgram.save();
+      newProgram.save().then(function(){
+        self.set("newProgramName", "");
+      });
     }
   }
 });
