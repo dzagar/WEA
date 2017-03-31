@@ -283,12 +283,30 @@ export default Ember.Component.extend({
     if (!this.get('studentNotLoaded')&&this.get('tab')!=null){
       Ember.$(".ui.tab").removeClass("active");
       Ember.$(".ui.tab[data-tab=\"" + this.get('tab') + "\"]").addClass("active");
-    }
+    }    
+    var previous = $('.ui.tab.segment.active');
     Ember.$('.ui .menu .item').tab({
       'onVisible': function(tab){
         self.set('tab',tab);
+        var current = $('.ui.tab.segment.active');
+        // hide the current and show the previous, so that we can animate them
+        previous.show();
+        current.hide();
+
+        // hide the previous tab - once this is done, we can show the new one
+        previous.transition({
+            animation: 'fade down',
+            onComplete: function () {
+                // finally, show the new tab again
+                current.transition('fade up');
+            }
+        });
+        // remember the current tab for next change
+        previous = current;
       },
     });
+    
+    
   },
 
   actions: {
