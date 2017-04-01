@@ -599,6 +599,51 @@ export default Ember.Component.extend({
     {
         grade.save();
         console.log('save grade');
+    },
+    displayProgram(selectedProgram){             
+        Ember.$("#progInfo" + selectedProgram).toggle("fast");
+    },
+    savePlan(savedPlan){
+      savedPlan.save();      
+    },
+    deletePlan(deletedPlan){
+      var self = this;
+      var programID = deletedPlan.get('programRecord.id');
+      deletedPlan.destroyRecord().then(function(){
+        self.get('store').find('program-record', programID);
+      });   
+    },
+    addNewPlan(planProgram){
+      var self = this;
+      var newPlan = this.get('store').createRecord('plan-code', {
+        name: self.get('newPlanName')
+      });
+      newPlan.set('programRecord', planProgram);
+      newPlan.save().then(function(){
+        self.set('newPlanName', "")
+      });
+
+    },
+    saveProgram(savedProgram){
+      savedProgram.save();      
+    },
+    deleteProgram(deletedProgram){
+      var self = this;
+      var termID = deletedProgram.get('term.id');
+      deletedProgram.destroyRecord().then(function(){
+        self.get('store').find('term', termID);
+      });
+    },
+    addNewProgram(termID){
+      var self = this;
+      var newProgram = this.get('store').createRecord('program-record', {
+        name: self.get('newProgramName')
+      });
+      
+      newProgram.set('term', this.get('store').peekRecord('term', termID));
+      newProgram.save().then(function(){
+        self.set("newProgramName", "");
+      });
     }
   }
 });

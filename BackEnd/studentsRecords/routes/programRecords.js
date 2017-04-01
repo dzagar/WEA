@@ -128,7 +128,7 @@ router.route('/:programRecord_id')
                 programRecord.level = request.body.programRecord.level;
                 programRecord.load = request.body.programRecord.load;
                 programRecord.termCode = request.body.programRecord.termCode;
-                programRecord.planCodes = request.body.programRecord.planCodes;
+                if (request.body.programRecord.planCodes) programRecord.planCodes = request.body.programRecord.planCodes.splice();
 
                 programRecord.save(function(error) {
                     if (error) {
@@ -153,9 +153,9 @@ router.route('/:programRecord_id')
                         failed = true;
                         response.send(error);
                     } else if (term) {
-                        let index = term.programCodes.indexOf(programRecord._id);
+                        let index = term.programRecords.indexOf(programRecord._id);
                         if (index > -1) {
-                            term.programCodes.splice(index, 1);
+                            term.programRecords.splice(index, 1);
                         }
 
                         term.save(function (error) {
