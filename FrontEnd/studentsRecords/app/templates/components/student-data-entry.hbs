@@ -139,7 +139,7 @@
             <label>Registration Comments</label> {{textarea rows="4" type="text" value = currentStudent.registrationComments focus-in = (action "textFocusIn" "registrationComments") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
           </div>   
         </div>    
-        <div class="ui left aligned form">
+        <div class="ui left aligned grid form">
           <div class="row">  
             <div class="inline field">
               <button class="ui inverted cstmLBlue icon button" {{action 'saveStudent'}}>
