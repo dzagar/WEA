@@ -30,7 +30,7 @@
 </div> 
 
 {{#if showAddStudent}}
-  {{add-student INDEX = currentIndex notDONE = showAddStudent total = totalStudents pageSize = limit totalPages = totalPages changeOffset = (action 'changeOffset')}}
+  {{add-student INDEX = currentIndex selectStudent = (action 'selectStudent') notDONE = showAddStudent total = totalStudents pageSize = limit totalPages = totalPages changeOffset = (action 'changeOffset')}}
 {{/if}}
 
 {{#if showFilters}}
