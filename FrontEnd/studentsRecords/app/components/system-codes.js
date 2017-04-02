@@ -15,6 +15,8 @@ export default Ember.Component.extend({
     currentHighSchoolSubject: null,
     currentResidency: null,
     currentTermCode: null,
+    departmentModel: null,
+    facultyModel: null,
     genderModel: null,
     genderOutput: "",
     highSchoolModel: null,
@@ -44,6 +46,7 @@ export default Ember.Component.extend({
     newResidencyObj: null,
     newTermCodeName: "",
     newTermCodeObj: null,
+    programAdminsModel: null,
     residencyModel: null,
     residencyOutput: "",
     showAddCoursesModal: false,
@@ -218,9 +221,25 @@ export default Ember.Component.extend({
     
     didRender() {
         var self = this;
+        var previous = $('.ui.tab.segment.active');
         Ember.$('.menu .item').tab({
             'onVisible': function(tab){
                 self.send('load'+tab);
+                var current = $('.ui.tab.segment.active');
+                // hide the current and show the previous, so that we can animate them
+                previous.show();
+                current.hide();
+
+                // hide the previous tab - once this is done, we can show the new one
+                previous.transition({
+                    animation: 'fade left',
+                    onComplete: function () {
+                        // finally, show the new tab again
+                        current.transition('fade right');
+                    }
+                });
+                // remember the current tab for next change
+                previous = current;
             }
         });
         Ember.$('.ui.menu').find('.item').tab('change tab', 'second');
@@ -763,6 +782,59 @@ export default Ember.Component.extend({
         saveName(courseGrouping)
         {
             courseGrouping.save();
+        },
+        loadFaculties(){
+        var self = this;
+        this.get('store').findAll('faculty').then(function(facultyRecords){
+            self.set('facultyModel', facultyRecords);
+        });
+
+        },
+        deleteFaculty(){
+
+        },
+        saveFaculty(){
+
+        },
+        addFaculty(){
+            
+        },
+        loadDepartments(){
+        var self = this;
+        this.get('store').findAll('faculty').then(function(facultyRecords){
+            self.set('facultyModel', facultyRecords);
+            self.get('store').findAll('department').then(function(departmentRecords){
+                self.set('departmentModel', departmentRecords);
+            });
+        });
+
+        },
+        deleteDepartment(){
+
+        },
+        saveDepartment(){
+
+        },
+        addDepartment(){
+            
+        },
+        loadProgramAdmins(){
+            var self = this;
+            this.get('store').findAll('department').then(function(departmentRecords){
+                self.set('departmentModel', departmentRecords);
+                self.get('store').findAll('program-administration').then(function(progAdminsRecords){
+                    self.set('programAdminsModel', progAdminsRecords);
+                });
+            });
+        },
+        deleteAdmin(){
+
+        },
+        saveAdmin(){
+
+        },
+        addAdmin(){
+            
         }
 
     }

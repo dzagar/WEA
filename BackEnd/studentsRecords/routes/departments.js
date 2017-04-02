@@ -201,7 +201,15 @@ router.route('/')
                     });
                 }
             });
-        } else {
+        }else if (request.query.name){
+            Department.find({name: request.query.name}, function (error, departments) {
+                if (error) {
+                    response.send(error);
+                } else {
+                    response.json({departments: departments});
+                }
+            });
+        }else {
             Department.find(function (error, departments) {
                 if (error) {
                     response.send(error);

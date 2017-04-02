@@ -29,7 +29,7 @@
   <!-- Show data entry form -->
 <div class = "ui grid" style = "margin:0">
     <div class = "sixteen wide column" style="padding-bottom:0">
-        <div class = "ui secondary pointing fluid seven item menu">
+        <div class = "ui secondary pointing fluid ten item menu">
             <div style="cursor: pointer;" class="active item" data-tab="Genders">Gender</div>
             <div style="cursor: pointer;" class="item" data-tab="Residencies">Residency</div>
             <div style="cursor: pointer;" class="item" data-tab="TermCodes">Term Codes</div>
@@ -37,6 +37,9 @@
             <div style="cursor: pointer;" class="item" data-tab="CourseGroupings">Course Groupings</div>
             <div style="cursor: pointer;" class="item" data-tab="HighSchools">High Schools</div>
             <div style="cursor: pointer;" class="item" data-tab="HighSchoolSubjects">High School Subjects</div>
+            <div style="cursor: pointer;" class="item" data-tab="Faculties">Faculties</div>
+            <div style="cursor: pointer;" class="item" data-tab="Departments">Departments</div>
+            <div style="cursor: pointer;" class="item" data-tab="ProgramAdmins">Faculty Administrators</div>
         </div>
     </div>
 </div>
@@ -931,4 +934,97 @@
             </td>
         </tr>
     </table>
+</div>
+<div class="ui tab segment" data-tab="Faculties">
+  <table class="ui table">
+    <thead>
+      <tr>
+        <th class="six wide">Faculty</th>
+        <th class="six wide"></th>
+      </tr>
+    </thead>
+    {{#each facultyModel as |faculty|}}
+      <tr>
+        <td><div class = "ui fluid input">{{input type="text" value = faculty.name}}</div></td>
+        <td>
+          <div class="ui inverted buttons">
+              <button class="ui cstmLBlue inverted button" {{action "saveFaculty" faculty}}>Save
+                  &nbsp; <i class="save icon"></i>
+              </button>
+              <div class="divider"/>
+              <button class="ui red inverted button" {{action "deleteFaculty" faculty}}>Delete
+                  &nbsp; <i class="trash icon"></i>
+              </button>
+          </div>
+        </td>
+      </tr>
+    {{/each}}
+  </table>
+</div>
+<div class="ui tab segment" data-tab="Departments">
+  <table class="ui table">
+    <thead>
+      <tr>
+        <th class="six wide">Department</th>
+        <th class="six wide">Faculty</th>
+        <th class="four wide"></th>
+      </tr>
+    </thead>
+    {{#each departmentModel as |department|}}
+      <tr>
+        <td><div class = "ui fluid input">{{input type="text" value = department.name}}</div></td>
+        <td>
+          {{#ui-dropdown class="fluid selection" selected = "{{department.faculty.id}}"}}
+          <div class="menu">
+            {{#each facultyModel as |faculty|}}
+              <div data-value="{{faculty.id}}" class="item">
+                {{faculty.name}}
+              </div>
+            {{/each}}
+          </div>
+        {{/ui-dropdown}} 
+        </td>         
+        <td>
+          <div class="ui inverted buttons">
+              <button class="ui cstmLBlue inverted button" {{action "saveDepartment" department}}>Save
+                  &nbsp; <i class="save icon"></i>
+              </button>
+              <div class="divider"/>
+              <button class="ui red inverted button" {{action "deleteDepartment" department}}>Delete
+                  &nbsp; <i class="trash icon"></i>
+              </button>
+          </div>
+        </td>
+      </tr>
+    {{/each}}
+  </table>
+</div>
+<div class="ui tab segment" data-tab="ProgramAdmins">
+  <table class="ui table">
+    <thead>
+      <tr>
+        <th class="three wide">Name</th>
+        <th class="five wide">Position</th>
+        <th class="four wide">Department</th>
+        <th class="four wide"></th>
+      </tr>
+      {{#each programAdminsModel as |admin|}}
+        <tr>          
+          <td><div class = "ui fluid input">{{input type="text" value = admin.name}}</div></td>        
+          <td><div class = "ui fluid input">{{input type="text" value = admin.position}}</div></td>
+          <td>
+            {{#ui-dropdown class="fluid selection" selected = "{{admin.department.id}}"}}
+              <div class="menu">
+                {{#each departmentModel as |department|}}
+                  <div data-value="{{department.id}}" class="item">
+                    {{department.name}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}} 
+          </td>
+        </tr>
+      {{/each}}
+    </thead>
+  </table>
 </div>

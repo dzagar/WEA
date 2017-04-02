@@ -76,6 +76,14 @@ router.route('/')
                     });
                 }
             });
+        } else if (request.query.name) {
+            Faculty.find({name: request.query.name}, function (error, faculties) {
+                if (error) {
+                    response.send(error);
+                } else {
+                    response.json({faculties: faculties});
+                }
+            });
         } else {
             Faculty.find(function (error, faculties) {
                 if (error) {

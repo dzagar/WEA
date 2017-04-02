@@ -8,7 +8,7 @@ var parseJSON = bodyParser.json();
 
 router.route('/')
     .post(parseUrlencoded, parseJSON, function (request, response) {
-        var progAdmin = new ProgramAdministration(request.body.ProgramAdministration);
+        var progAdmin = new ProgramAdministration(request.body.programAdministration);
 
         if (progAdmin.department) {
             Department.findById(progAdmin.department, function(error, department) {
