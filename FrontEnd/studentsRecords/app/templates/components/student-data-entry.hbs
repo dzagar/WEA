@@ -207,8 +207,17 @@
             </thead>
             <div id="progInfo{{programRecord.name}}" class="studentProgramInfo" style="display: none">
               <table class="ui fixed table">
+                <tr class="active">
+                  <td><b>Program Name</b></td>
+                  <td><b>Level</b></td>
+                  <td><b>Load</b></td>
+                  <td></td>
+                  <td></td>
+                </tr>
                 <tr>
-                  <td><div class="ui input">{{input type="text" value = programRecord.name }}</div></td>
+                  <td><div class="ui fluid input">{{input type="text" value = programRecord.name }}</div></td>
+                  <td><div class="ui fluid input">{{input type="text" value = programRecord.level }}</div></td>
+                  <td><div class="ui fluid input">{{input type="text" value = programRecord.load }}</div></td>
                   <td colspan="2">                
                     <div class="ui inverted buttons">
                       <div class="ui inverted cstmLBlue icon button" {{action "saveProgram" programRecord}}>
@@ -223,8 +232,13 @@
                   </td>
                 </tr>
               {{#each programRecord.planCodes as |planCode|}}
+                <tr class="active">
+                  <td colspan="2"><b>Plan Name</b></td>
+                  <td colspan="3"></td>
+                </tr>
                 <tr>
-                  <td><div class="ui fluid input">{{input type="text" value = planCode.name }}</div></td>
+                  <td colspan="2"><div class="ui fluid input">{{input type="text" value = planCode.name }}</div></td>
+                  <td></td>
                   <td colspan="2">                
                     <div class="ui inverted buttons">
                       <div class="ui inverted cstmLBlue icon button" {{action "savePlan" planCode}}>
@@ -240,8 +254,9 @@
                 </tr>
               {{/each}}
               <tr>
-                <td><div class="ui fluid input">{{input type="text" value = newPlanName placeholder="Plan Name" }}</div></td>
-                <td>
+                <td colspan="2"><div class="ui fluid input">{{input type="text" value = newPlanName placeholder="Plan Name" }}</div></td>
+                <td></td>
+                <td colspan="2">
                   <div class="ui green inverted button" {{action "addNewPlan" programRecord}}>Add New Plan</div>
                 </td>
               </tr>
@@ -250,15 +265,21 @@
           </table>
           {{/each}}          
           <table class="ui fixed table">
+            <thead>
+              <tr>
+                <th colspan="5">Add New Program</th>
+              </tr>
+            </thead>
             <tr>
                 <td><div class="ui fluid input">{{input type="text" value = newProgramName placeholder="Program Name" }}</div></td>
-              <td>
+                <td><div class="ui fluid input">{{input type="Number" value = newProgramLevel placeholder="Program Level" }}</div></td>
+                <td><div class="ui fluid input">{{input type="text" value = newProgramLoad placeholder="Program Load" }}</div></td>
+              <td colspan="2">
                 <div class="ui green inverted button" {{action "addNewProgram" term.id}}>Add New Program</div>
               </td>
             </tr>
           </table>
         {{/if}}
-        {{!--add new program--}}
       {{/each}}
 
       {{#if termIndex}}

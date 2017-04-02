@@ -655,7 +655,9 @@ export default Ember.Component.extend({
     addNewProgram(termID){
       var self = this;
       var newProgram = this.get('store').createRecord('program-record', {
-        name: self.get('newProgramName')
+        name: self.get('newProgramName'),
+        level: self.get('newProgramLevel'),
+        load: self.get('newProgramLoad')
       });
       
       newProgram.set('term', this.get('store').peekRecord('term', termID));
