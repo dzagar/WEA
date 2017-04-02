@@ -49,8 +49,6 @@ body > .ember-view {
     height:auto;
     display:inline-block;
 }
-
-
 /*Home Page*/
 .ui.menu .item img.logo {
     margin-right: 1.5em;
@@ -248,5 +246,9 @@ div>div>div> .ui.huge.button {
   background-color: #00999f !important;
   color: #FFFFFF !important;
 }
-
-
+/**Param builder**/
+.field > input[type="text"][readonly]{
+  pointer-events: none;
+  background-color: #4e2683;
+  color:#ffffff;
+}

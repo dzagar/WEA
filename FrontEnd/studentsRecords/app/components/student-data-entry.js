@@ -533,6 +533,7 @@ export default Ember.Component.extend({
                 units: this.get('newAdvancedStandingUnits').trim(),
                 from: this.get('newAdvancedStandingFrom').trim()
             }));
+            this.get('currentStudent').reload();
             this.get('newAdvancedStandingObj').save();
             this.set('newAdvancedStandingCourse', "");
             this.set('newAdvancedStandingDescription',"");
@@ -564,6 +565,7 @@ export default Ember.Component.extend({
                 student: this.get('currentStudent'),
                 note: this.get('newScholarshipName').trim()
             }));
+            this.get('currentStudent').reload();
             this.get('newScholarshipObj').save();
             this.set('newScholarshipName', "");
         }
@@ -597,6 +599,51 @@ export default Ember.Component.extend({
     {
         grade.save();
         console.log('save grade');
+    },
+    displayProgram(selectedProgram){             
+        Ember.$("#progInfo" + selectedProgram).toggle("fast");
+    },
+    savePlan(savedPlan){
+      savedPlan.save();      
+    },
+    deletePlan(deletedPlan){
+      var self = this;
+      var programID = deletedPlan.get('programRecord.id');
+      deletedPlan.destroyRecord().then(function(){
+        self.get('store').find('program-record', programID);
+      });   
+    },
+    addNewPlan(planProgram){
+      var self = this;
+      var newPlan = this.get('store').createRecord('plan-code', {
+        name: self.get('newPlanName')
+      });
+      newPlan.set('programRecord', planProgram);
+      newPlan.save().then(function(){
+        self.set('newPlanName', "")
+      });
+
+    },
+    saveProgram(savedProgram){
+      savedProgram.save();      
+    },
+    deleteProgram(deletedProgram){
+      var self = this;
+      var termID = deletedProgram.get('term.id');
+      deletedProgram.destroyRecord().then(function(){
+        self.get('store').find('term', termID);
+      });
+    },
+    addNewProgram(termID){
+      var self = this;
+      var newProgram = this.get('store').createRecord('program-record', {
+        name: self.get('newProgramName')
+      });
+      
+      newProgram.set('term', this.get('store').peekRecord('term', termID));
+      newProgram.save().then(function(){
+        self.set("newProgramName", "");
+      });
     }
   }
 });

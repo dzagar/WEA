@@ -14,14 +14,14 @@
   of the following:
 </div>
 
-<div class = "contents">
+<div class = "contents logicalExpressionPg">
   <div id = "{{concat "logicalExp" level}}">
     <div class = "ui form">
       <div style = "{{if (eq level 0) 'padding: 2px; background-color:rgba(60,179,113,0.3); border-radius: 10px;' ''}}">
         {{#each booleanExps as |boolExp index|}}
           <div class = "fields">
             <div class = "fourteen wide field">
-              {{boolean-expression boolId = index currentField = boolExp.field currentOpr = boolExp.opr currentVal = boolExp.val}}
+              {{boolean-expression boolId = index currentField = boolExp.field currentOpr = boolExp.opr currentVal = boolExp.val isReadOnly = true}}
             </div>
             <div class = "two wide field">
               <button class="ui inverted red icon button" {{action 'destroyBoolExp' boolExp}}>
