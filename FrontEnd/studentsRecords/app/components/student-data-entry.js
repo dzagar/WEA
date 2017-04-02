@@ -71,6 +71,7 @@ export default Ember.Component.extend({
   studentModel: Ember.observer('offset', function () {
     var self = this;
     this.set('studentDataMessage', "Loading Student Data...");
+    console.log('offset observer');
     this.get('store').query('student', {
       number: self.get('filter').studentNumber,
       firstName: self.get('filter').firstName,
@@ -103,11 +104,13 @@ export default Ember.Component.extend({
 
   currentIndexChange: Ember.observer('currentIndex', function () {
     this.get('undoManager').clear();
+    console.log('current index change');
     this.setCurrentStudent(this.get('currentIndex'));
   }),
 
   fetchStudent: Ember.observer('currentStudent', function () {
     this.set('studentNotLoaded', true);
+    console.log('fetch student');
     this.set('studentDataMessage', "Loading Student...");
     this.showStudentData(this.get('currentStudent'));
     var self = this;

@@ -46,7 +46,7 @@
 
 <!-- other popups -->
 {{#if showAddStudent}}
-  {{add-student INDEX = currentIndex notDONE = showAddStudent total = totalStudents pageSize = pageSize totalPages = totalPages changeOffset = (action 'changeOffset')}}
+  {{add-student INDEX = currentIndex currentStudent = currentStudent showAllStudents = showAllStudents showMenuBar = showMenuBar notDONE = showAddStudent total = totalStudents pageSize = pageSize totalPages = totalPages changeOffset = (action 'changeOffset')}}
 {{/if}}
 
 <!-- Other non-popup screens -->
