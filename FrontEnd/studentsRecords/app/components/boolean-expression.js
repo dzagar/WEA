@@ -27,7 +27,7 @@ export default Ember.Component.extend({
         console.log('called field observer');
         if (this.get('currentField') >= 4 && this.get('currentField') <= 9){
             this.set('selectByCourseGrouping', true);
-            if (this.get('currentField') == 5){
+            if (this.get('currentField') == 5 || this.get('currentField') == 4){
                 this.set('enforceDoubleOpr', true);
             }
         } else {
@@ -164,7 +164,7 @@ export default Ember.Component.extend({
         this.set('regOprs', regOprs);
         this.set('fields', fields);
         console.log('in init');
-
+        this.set('courseGroupingOprs', []);
         this.get('store').findAll('course-grouping').then(function(courseGroupings){
             console.log('went into findall');
             courseGroupings.forEach(function(courseGrouping){
@@ -174,7 +174,6 @@ export default Ember.Component.extend({
                 };
                 self.get('courseGroupingOprs').push(newOpr);
             });
-
             if (self.get('isReadOnly') != null){
                 self.set('fieldName', fields[self.get('currentField')].name);
                 var courseGrouping = self.get('courseGroupingOprs').filter(function ( obj ) {
