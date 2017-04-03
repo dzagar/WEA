@@ -930,7 +930,7 @@ export default Ember.Component.extend({
             this.set('currentTerm', termCodeID);
         },
         proceedToReports(){
-            this.get('routing').transitionTo('generate-reports');
+            Ember.$('.ui.menu').find('.item').tab('change tab', 'Reports');
         },
         proceedToFlagged(){
             this.get('routing').transitionTo('student-records');
