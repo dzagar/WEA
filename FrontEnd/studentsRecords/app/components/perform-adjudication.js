@@ -45,6 +45,7 @@ export default Ember.Component.extend({
     evaluationTotal: 1000,
     studentInformation: null,
     routing: Ember.inject.service('-routing'),
+    reportAction: null,
     adjudicationStatus: "",
     store: Ember.inject.service(),
 
@@ -895,7 +896,8 @@ export default Ember.Component.extend({
             this.set('currentTerm', termCodeID);
         },
         proceedToReports(){
-            this.get('routing').transitionTo('generate-reports');
+            var self = this;
+            this.get('reportAction')(self.get('currentTerm'));
         },
         proceedToFlagged(){
             this.get('routing').transitionTo('student-records');

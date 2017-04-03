@@ -11,6 +11,7 @@ export default Ember.Component.extend({
 	currentCategory: null,
 	currentCategoryIndex: -1,
 	currentTerm: null,
+	termID: null,
 	pieChart: null,
 	pieChartWedges: [],
 	store: Ember.inject.service(),
@@ -19,21 +20,44 @@ export default Ember.Component.extend({
 	colourOptions: [{red: 78, blue: 38 , green: 131}, {red: 155, blue: 115, green: 208}, {red: 2, blue: 191, green: 198}, {red: 0, blue: 140, green: 147}],
 	init(){
 		this._super(...arguments);
-		
+		console.log('init gen rpts');
 		//load term data model
 		var self=this;
 		this.get('store').findAll('termCode').then(function (records) {
 			self.set('termModel', records);
-	      	self.set('currentTerm', records.get('firstObject'));//initialize currentTerm to first dropdown item
-
-   			//self.generateRandomData();
+			if (self.get('termID') == null){
+				self.set('currentTerm', self.get('termModel').get('firstObject'));
+			}
+	   		self.get('store').findAll('adjudicationCategory').then(function (records) {
+		    	self.set('categoryModel', records);
+		    });
    		});
-	    //load adjudication categories
-	    this.get('store').findAll('adjudicationCategory').then(function (records) {
-	    	self.set('categoryModel', records);
-	    });
-
 	},
+
+	didRender(){
+		console.log('render gen rpts');
+		var self = this;
+		//this.set('currentCategory', self.get('categoryModel').get('firstObject'));
+		if (this.get('termID') != null){
+			var index = null;
+			var name = null;
+			this.get('termModel').forEach(function(term){
+				if (self.get('termID') == term.get('id')){
+					console.log('found term');
+					index = self.get('termModel').indexOf(term);
+					name = term.get('name');
+				}
+			});
+			if (index != null){
+				$("#term option").filter(function() {
+				    return $(this).text() == name; 
+				}).prop('selected', true);
+				this.send('selectTerm', index);
+				this.send('generateReport');
+			}
+		}
+	},
+
 	barChartData: Ember.computed('barChartBars', function(){
 		let labels = [];
 		let vals = [];
