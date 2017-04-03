@@ -632,7 +632,12 @@ export default Ember.Component.extend({
         grade.save();
         console.log('save grade');
     },
-    displayProgram(selectedProgram){             
+    displayProgram(selectedProgram){  
+        if (Ember.$("#progInfo" + selectedProgram).is(':visible')){
+          Ember.$(".toggleDisplay" + selectedProgram).text(" (click to show program's plans)");
+        } else {
+          Ember.$(".toggleDisplay" + selectedProgram).text(" (click to hide program's plans)");
+        }           
         Ember.$("#progInfo" + selectedProgram).toggle("fast");
     },
     savePlan(savedPlan){
