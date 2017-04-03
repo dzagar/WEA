@@ -77,13 +77,12 @@
     <div class="ui tab segment active" data-tab="basics" style = "margin-top:0">
       <!-- student basic information !-->
       <h2>Basic Information</h2>
-      <h4> {{currentStudent.firstName}} {{currentStudent.lastName}} - {{currentStudent.studentNumber}}</h4>
-      <div class="ui grid studentInfo">
-        <div class="ui right aligned seven wide column">
+      <div class="ui twelve wide grid studentInfo">
+        <div class="ui right aligned six wide column">
           <div class="ui relaxed items form">
             <div class="item inline field">
               <label>Student Number</label>
-              {{input size="10" type="text"  value = currentStudent.studentNumber readonly=true}}
+              {{input type="text"  value = currentStudent.studentNumber readonly=true}}
             </div>
             <div class="item inline field">
               <label>First Name</label>
@@ -93,11 +92,15 @@
               <label>Last Name</label>
               {{input type="text" value = currentStudent.lastName focus-in = (action "textFocusIn" "lastName") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
             </div>
+          </div> 
+        </div>           
+        <div class="ui right aligned six wide column">
+          <div class="ui relaxed items form">
             <div class="item inline field">
               <label>Gender</label>
               <select id="ddlGender" onchange={{action 'selectGender' value="target.value"}} onclick = {{action 'genderFocusIn'}} onblur = {{action 'onFocusOut'}}>
                 {{#each genderModel as |genderChoice|}}
-                <option value={{genderChoice.id}} selected={{eq currentStudent.genInfo.id genderChoice.id}}>{{genderChoice.name}}</option>
+                <option value={{genderChoice.id}} selected={{eq currentStudent.gender.id genderChoice.id}}>{{genderChoice.name}}</option>
                 {{/each}}
               </select>
             </div>
@@ -108,41 +111,47 @@
             <div class="item inline field">
               <label>Residency</label>
               <select id="ddlResidency" onchange={{action 'selectResidency' value="target.value" }} onclick = {{action 'residencyFocusIn'}} onblur = {{action 'onFocusOut'}}>
-                    {{#each residencyModel as |residencyChoice|}}
-                      <option value={{residencyChoice.id}} selected={{eq currentStudent.resInfo.id residencyChoice.id}}>{{residencyChoice.name}} </option>
-                    {{/each}}
-                  </select>
-            </div>
-
-            <div class="item inline field">
-              <label>Basis of Admission</label> {{input type="text" value = currentStudent.basisOfAdmission focus-in = (action "textFocusIn" "basisOfAdmission") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
-            </div>
-            <div class="item inline field">
-              <label>Admission Average</label> {{input type="text" value = currentStudent.admissionAverage focus-in = (action "textFocusIn" "admissionAverage") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
-            </div>
-            <div class="ui two column grid">
-              <div class="item inline field column">
-                <label>Admission Comments</label> {{textarea rows="4" type="text" value = currentStudent.admissionComments focus-in = (action "textFocusIn" "admissionComments") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
-              </div>
-              <div class="item inline field column">
-                <label>Registration Comments</label> {{textarea rows="4" type="text" value = currentStudent.registrationComments focus-in = (action "textFocusIn" "registrationComments") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
-              </div>
-            </div>
-            
-
-            <div class="inline field">
-              <button class="ui inverted red icon button" {{action 'deleteCurrentStudent'}}>
-                    Delete <i class="trash icon"></i>
-              </button>
-              <button class="ui inverted cstmLBlue icon button" {{action 'saveStudent'}}>
-                    Save <i class="save icon"></i>
-              </button>
+                {{#each residencyModel as |residencyChoice|}}
+                  <option value={{residencyChoice.id}} selected={{eq currentStudent.resInfo.id residencyChoice.id}}>{{residencyChoice.name}} </option>
+                {{/each}}
+              </select>
             </div>
           </div>
         </div>
         <!-- Show student photo -->
-        <div class=" ui relaxed items center aligned six wide column ">
+        <div class=" ui items center aligned four wide column ">
           <img src={{studentPhoto}} class="item">
+        </div>
+                  
+        <div class="ui left aligned sixteen grid form">
+          <div class="row">
+            <div class="item inline eight wide column field">
+              <label>Basis of Admission</label> {{textarea rows="4"  type="text" value = currentStudent.basisOfAdmission focus-in = (action "textFocusIn" "basisOfAdmission") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
+            </div>
+            <div class="item inline  eight wide column field">
+              <label>Admission Average</label> {{textarea rows="4"  type="text" value = currentStudent.admissionAverage focus-in = (action "textFocusIn" "admissionAverage") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
+            </div>
+          </div>
+          <div class="item inline sixteen wide column field">
+            <label>Admission Comments</label> {{textarea rows="4" type="text" value = currentStudent.admissionComments focus-in = (action "textFocusIn" "admissionComments") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
+          </div>
+          <div class="item inline sixteen wide column field">
+            <label>Registration Comments</label> {{textarea rows="4" type="text" value = currentStudent.registrationComments focus-in = (action "textFocusIn" "registrationComments") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
+          </div>   
+        </div>    
+        <div class="ui left aligned grid form">
+          <div class="row">  
+            <div class="inline field">
+              <button class="ui inverted cstmLBlue icon button" {{action 'saveStudent'}}>
+                    Save <i class="save icon"></i>
+              </button>
+            </div>  
+            <div class="inline field">
+              <button class="ui inverted red icon button" {{action 'deleteCurrentStudent'}}>
+                    Delete <i class="trash icon"></i>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -198,8 +207,17 @@
             </thead>
             <div id="progInfo{{programRecord.name}}" class="studentProgramInfo" style="display: none">
               <table class="ui fixed table">
+                <tr class="active">
+                  <td><b>Program Name</b></td>
+                  <td><b>Level</b></td>
+                  <td><b>Load</b></td>
+                  <td></td>
+                  <td></td>
+                </tr>
                 <tr>
-                  <td><div class="ui input">{{input type="text" value = programRecord.name }}</div></td>
+                  <td><div class="ui fluid input">{{input type="text" value = programRecord.name }}</div></td>
+                  <td><div class="ui fluid input">{{input type="text" value = programRecord.level }}</div></td>
+                  <td><div class="ui fluid input">{{input type="text" value = programRecord.load }}</div></td>
                   <td colspan="2">                
                     <div class="ui inverted buttons">
                       <div class="ui inverted cstmLBlue icon button" {{action "saveProgram" programRecord}}>
@@ -214,8 +232,13 @@
                   </td>
                 </tr>
               {{#each programRecord.planCodes as |planCode|}}
+                <tr class="active">
+                  <td colspan="2"><b>Plan Name</b></td>
+                  <td colspan="3"></td>
+                </tr>
                 <tr>
-                  <td><div class="ui fluid input">{{input type="text" value = planCode.name }}</div></td>
+                  <td colspan="2"><div class="ui fluid input">{{input type="text" value = planCode.name }}</div></td>
+                  <td></td>
                   <td colspan="2">                
                     <div class="ui inverted buttons">
                       <div class="ui inverted cstmLBlue icon button" {{action "savePlan" planCode}}>
@@ -231,8 +254,9 @@
                 </tr>
               {{/each}}
               <tr>
-                <td><div class="ui fluid input">{{input type="text" value = newPlanName placeholder="Plan Name" }}</div></td>
-                <td>
+                <td colspan="2"><div class="ui fluid input">{{input type="text" value = newPlanName placeholder="Plan Name" }}</div></td>
+                <td></td>
+                <td colspan="2">
                   <div class="ui green inverted button" {{action "addNewPlan" programRecord}}>Add New Plan</div>
                 </td>
               </tr>
@@ -241,15 +265,21 @@
           </table>
           {{/each}}          
           <table class="ui fixed table">
+            <thead>
+              <tr>
+                <th colspan="5">Add New Program</th>
+              </tr>
+            </thead>
             <tr>
                 <td><div class="ui fluid input">{{input type="text" value = newProgramName placeholder="Program Name" }}</div></td>
-              <td>
+                <td><div class="ui fluid input">{{input type="Number" value = newProgramLevel placeholder="Program Level" }}</div></td>
+                <td><div class="ui fluid input">{{input type="text" value = newProgramLoad placeholder="Program Load" }}</div></td>
+              <td colspan="2">
                 <div class="ui green inverted button" {{action "addNewProgram" term.id}}>Add New Program</div>
               </td>
             </tr>
           </table>
         {{/if}}
-        {{!--add new program--}}
       {{/each}}
 
       {{#if termIndex}}

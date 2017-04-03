@@ -15,6 +15,8 @@ export default Ember.Component.extend({
     currentHighSchoolSubject: null,
     currentResidency: null,
     currentTermCode: null,
+    departmentModel: null,
+    facultyModel: null,
     genderModel: null,
     genderOutput: "",
     highSchoolModel: null,
@@ -44,6 +46,7 @@ export default Ember.Component.extend({
     newResidencyObj: null,
     newTermCodeName: "",
     newTermCodeObj: null,
+    programAdminsModel: null,
     residencyModel: null,
     residencyOutput: "",
     showAddCoursesModal: false,
@@ -218,9 +221,25 @@ export default Ember.Component.extend({
     
     didRender() {
         var self = this;
+        var previous = $('.ui.tab.segment.active');
         Ember.$('.menu .item').tab({
             'onVisible': function(tab){
                 self.send('load'+tab);
+                var current = $('.ui.tab.segment.active');
+                // hide the current and show the previous, so that we can animate them
+                previous.show();
+                current.hide();
+
+                // hide the previous tab - once this is done, we can show the new one
+                previous.transition({
+                    animation: 'fade left',
+                    onComplete: function () {
+                        // finally, show the new tab again
+                        current.transition('fade right');
+                    }
+                });
+                // remember the current tab for next change
+                previous = current;
             }
         });
         Ember.$('.ui.menu').find('.item').tab('change tab', 'second');
@@ -763,6 +782,107 @@ export default Ember.Component.extend({
         saveName(courseGrouping)
         {
             courseGrouping.save();
+        },
+        loadFaculties(){
+            var self = this;
+            this.get('store').findAll('faculty').then(function(facultyRecords){
+                self.set('facultyModel', facultyRecords);
+            });
+        },
+        deleteFaculty(facultyOBJ){
+            facultyOBJ.destroyRecord();
+        },
+        saveFaculty(facultyOBJ){
+            facultyOBJ.save();
+        },
+        addFaculty(){
+            var self = this;
+            var newFaculty = this.get('store').createRecord('faculty', {
+                name: self.get('newFacultyName')
+            });
+            newFaculty.save().then(function(){
+                self.set('newFacultyName', "");
+            });
+            
+        },
+        loadDepartments(){
+            var self = this;
+            this.get('store').findAll('faculty').then(function(facultyRecords){
+                self.set('facultyModel', facultyRecords);
+                self.get('store').findAll('department').then(function(departmentRecords){
+                    self.set('departmentModel', departmentRecords);
+                });
+            });
+        },
+        selectFaculty(departmentOBJ, ddlIndex){            
+            departmentOBJ.set('faculty', this.get('store').peekRecord('faculty', Ember.$("#facultyDDL" + ddlIndex).val()));            
+        },
+        deleteDepartment(departmentOBJ){
+            var self = this;
+            departmentOBJ.destroyRecord().then(function(){
+                self.get('store').findAll('faculty').then(function(facultyRecords){
+                    self.set('facultyModel', facultyRecords);
+                });
+            });
+        },
+        saveDepartment(departmentOBJ){
+            var self = this;
+            departmentOBJ.save().then(function(){
+                self.get('store').findAll('faculty').then(function(facultyRecords){
+                    self.set('facultyModel', facultyRecords);
+                });
+            });
+        },
+        addDepartment(){
+            var self = this;
+            var newDepartment = this.get('store').createRecord('department', {
+                name: self.get('newDepartmentName')
+            });
+            newDepartment.set('faculty', this.get('store').peekRecord('faculty', Ember.$("#newDeptFacultyDDL").val()));
+            newDepartment.save().then(function(){
+                self.set('newDepartmentName', "");
+            });
+            
+        },
+        loadProgramAdmins(){
+            var self = this;
+            this.get('store').findAll('department').then(function(departmentRecords){
+                self.set('departmentModel', departmentRecords);
+                self.get('store').findAll('program-administration').then(function(progAdminsRecords){
+                    self.set('programAdminsModel', progAdminsRecords);
+                });
+            });
+        },
+        deleteAdmin(adminOBJ){
+            var self = this;
+            adminOBJ.destroyRecord().then(function(){
+                self.get('store').findAll('department').then(function(departmentRecords){
+                    self.set('departmentModel', departmentRecords);
+                });
+            });
+        },
+        saveAdmin(adminOBJ){            
+            var self = this;
+            adminOBJ.save().then(function(){
+                self.get('store').findAll('department').then(function(departmentRecords){
+                    self.set('departmentModel', departmentRecords);
+                });
+            });
+        },
+        addAdmin(){
+            var self = this;
+            var newAdmin = this.get('store').createRecord('program-administration', {
+                name: self.get('newAdminName'),
+                position: self.get('newAdminPosition')
+            });
+            newAdmin.set('department', this.get('store').peekRecord('department', Ember.$("#newAdminDeptDDL").val()));
+            newAdmin.save().then(function(){
+                self.set('newAdminName', "");
+                self.set('newAdminPosition', "");
+            });            
+        },
+        selectDepartment(adminOBJ, ddlIndex){
+            adminOBJ.set('department', this.get('store').peekRecord('department', Ember.$("#departmentDDL" + ddlIndex).val()));            
         }
 
     }
