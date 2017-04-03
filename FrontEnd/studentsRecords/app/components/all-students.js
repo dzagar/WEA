@@ -44,8 +44,8 @@ export default Ember.Component.extend({
     selectStudent(student, index) {
       this.set('showAllStudents', false);
       this.set('showMenuBar', true);
-      this.set('currentIndex', index);
       this.set('currentStudent', student);
+      this.set('currentIndex', index);
     },
 
     toggleShowFilters() {

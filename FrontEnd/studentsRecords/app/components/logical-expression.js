@@ -57,7 +57,11 @@ export default Ember.Component.extend({
         if (rec){
             rec.then(obj => {
                 self.set('logicalExpressionsArr', obj.get('logicalExpressions'));
-                self.set('booleanExps', JSON.parse(obj.get('booleanExpression')));
+                if (obj.get('booleanExpression') != ""){
+                    self.set('booleanExps', JSON.parse(obj.get('booleanExpression')));
+                } else {
+                    self.set('booleanExps', []);
+                }
                 self.set('logLink', obj.get('logicalLink'));
             });
         }
@@ -78,12 +82,12 @@ export default Ember.Component.extend({
             this.get('booleanExps').removeObject(item);
             var parent = this.get('store').peekRecord('logical-expression', this.get('objectID'));
             if (parent){
-                parent.set('booleanExpression', this.get('booleanExps'));
+                parent.set('booleanExpression', JSON.stringify(this.get('booleanExps')));
                 parent.save();
             } else {
                 this.get('store').findRecord('logical-expression', this.get('objectID'), {reload: true})
                 .then(obj => {
-                    obj.set('booleanExpression', self.get('booleanExps'));
+                    obj.set('booleanExpression', JSON.stringify(self.get('booleanExps')));
                     obj.save();
                 });
             }
@@ -121,21 +125,35 @@ export default Ember.Component.extend({
             let child = this.get('store').peekRecord('logical-expression', this.get('currentChildID'));
             if (child){
                 this.get('logicalExpressionsArr').pushObject(child);
-                self.set('currentChildID', null);
-                self.set('creatingNewLogExp', false);
+                this.get('store').findRecord('logical-expression', this.get('objectID'), {reload: true})
+                .then(obj => {
+                    obj.save().then(()=>{
+                        self.set('currentChildID', null);
+                        self.set('creatingNewLogExp', false);
+                    });
+                });
             }
             
         },
         destroyLogExp: function(logExpObj){
             this.get('logicalExpressionsArr').removeObject(logExpObj);
-            logExpObj.destroyRecord();
+            var self = this;
+            this.get('store').findRecord('logical-expression', this.get('objectID'), {reload: true})
+                .then(obj => {
+                    obj.save().then(()=>{
+                        logExpObj.save().then(()=>{
+                            logExpObj.destroyRecord();
+                            self.set('currentChildID', null);
+                            self.set('creatingNewLogExp', false);
+                        });
+                    });
+                });
         },
         toggleNewLogExp: function(){
             var self = this;
             if (this.get('creatingNewLogExp')){ //destroy record if request is to HIDE
                 var child = this.get('store').peekRecord('logical-expression', this.get('currentChildID'));
                 if (child){
-                    this.get('logicalExpressionsArr').removeObject(child);
                     child.destroyRecord().then(()=>{
                         self.set('currentChildID', null);
                         self.set('creatingNewLogExp', false);

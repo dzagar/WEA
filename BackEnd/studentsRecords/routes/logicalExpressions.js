@@ -249,6 +249,22 @@ router.route('/:logicalExpression_id')
                                     }
                                 });
                             }
+                            else 
+                            {
+                                logicalExpression.booleanExpression = request.body.logicalExpression.booleanExpression;
+                                logicalExpression.logicalLink = request.body.logicalExpression.logicalLink;
+                                if (request.body.logicalExpression.logicalExpressions) logicalExpression.logicalExpressions = request.body.logicalExpression.logicalExpressions.splice();
+                                logicalExpression.ownerExpression = request.body.logicalExpression.ownerExpression;
+                                logicalExpression.assessmentCode = request.body.logicalExpression.assessmentCode;
+
+                                logicalExpression.save(function (error) {
+                                    if (error) {
+                                        response.send(error);
+                                    } else {
+                                        response.json({logicalExpression: logicalExpression});
+                                    }
+                                });
+                            }
                         }
                     })
                 } else {    //parent
@@ -272,7 +288,6 @@ router.route('/:logicalExpression_id')
     })
     .delete(parseUrlencoded, parseJSON, function (request, response) {
             let finishCallback = (logExp) => {
-
                 response.json({logicalExpression: logExp});
             }
             LogicalExpression.findById(request.params.logicalExpression_id, function(error, child){

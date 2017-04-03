@@ -4,8 +4,12 @@ export default Ember.Component.extend({
 
 	boolId: null,
 	currentField: null,
+    fieldName: null,
 	fields: null,
-	currentOpr: null,
+    currentOpr: null,
+    oprName: null,
+	currentOpr1: null,
+    currentOpr2: null,
 	operators: null,
 	currentVal: null,
     enforceBetweenVal: false,
@@ -14,13 +18,18 @@ export default Ember.Component.extend({
     currentVal1: null,
     currentVal2: null,
     enforceBooleanValueField: false,
+    enforceDoubleOpr: false,
     store: Ember.inject.service(),
     selectByCourseGrouping: false,
+    isReadOnly: null,
 
     fieldObserver: Ember.observer('currentField', function(){
         console.log('called field observer');
         if (this.get('currentField') >= 4 && this.get('currentField') <= 9){
             this.set('selectByCourseGrouping', true);
+            if (this.get('currentField') == 5 || this.get('currentField') == 4){
+                this.set('enforceDoubleOpr', true);
+            }
         } else {
             this.set('selectByCourseGrouping', false);
         }
@@ -31,10 +40,23 @@ export default Ember.Component.extend({
         if (this.get('currentOpr') == 6 || this.get('currentOpr') == 7){  //between
             this.set('currentVal', null);
             this.set('enforceBetweenVal', true);
+        } else if (this.get('enforceDoubleOpr')){
+            this.set('currentVal', null);
+            if (this.get('currentOpr2') == 6 || this.get('currentOpr2') == 7) this.set('enforceBetweenVal', true);
         } else {
             this.set('currentVal', null);
             this.set('enforceBetweenVal', false);
         }
+    }),
+
+    opr1Observer: Ember.observer('currentOpr1', function(){
+        var newCurrentOpr = this.get('currentOpr1') + "+" + this.get('currentOpr2');
+        this.set('currentOpr', newCurrentOpr);
+    }),
+
+    opr2Observer: Ember.observer('currentOpr2', function(){
+        var newCurrentOpr = this.get('currentOpr1') + "+" + this.get('currentOpr2');
+        this.set('currentOpr', newCurrentOpr);
     }),
 
     val1Observer: Ember.observer('currentVal1', function(){
@@ -142,6 +164,7 @@ export default Ember.Component.extend({
         this.set('regOprs', regOprs);
         this.set('fields', fields);
         console.log('in init');
+        this.set('courseGroupingOprs', []);
         this.get('store').findAll('course-grouping').then(function(courseGroupings){
             console.log('went into findall');
             courseGroupings.forEach(function(courseGrouping){
@@ -151,11 +174,27 @@ export default Ember.Component.extend({
                 };
                 self.get('courseGroupingOprs').push(newOpr);
             });
-            if (self.get('currentField')){
-                console.log(self.get('currentField'));
-                console.log(self.get('currentOpr'));
-                if (self.get('currentField') >= 4 && self.get('currentField') <= 9){
-                    self.set('selectByCourseGrouping', true);
+            if (self.get('isReadOnly') != null){
+                self.set('fieldName', fields[self.get('currentField')].name);
+                var courseGrouping = self.get('courseGroupingOprs').filter(function ( obj ) {
+                    return obj.id === self.get('currentOpr');
+                })[0];
+                if (self.get('currentOpr').indexOf('+') > -1){
+                    var oprArr = self.get('currentOpr');
+                    oprArr = oprArr.split("+");
+                    courseGrouping = self.get('courseGroupingOprs').filter(function ( obj ) {
+                                        return obj.id === oprArr[0];
+                                    })[0];
+                    var opr = courseGrouping.name + " / " + regOprs[oprArr[1]].name; 
+                    self.set('oprName', opr);
+                    self.set('valName', self.get('currentVal'));
+                } else if (courseGrouping){
+                    self.set('oprName', courseGrouping.name);
+                    if (self.get('currentVal') == 1) self.set('valName', "True");
+                    else self.set('valName', "False");
+                } else {
+                    self.set('oprName', regOprs[self.get('currentOpr')].name);
+                    self.set('valName', self.get('currentVal'));
                 }
             }
         });

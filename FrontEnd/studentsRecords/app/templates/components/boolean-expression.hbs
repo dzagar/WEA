@@ -1,3 +1,20 @@
+{{#if isReadOnly}}
+<div id = "{{concat "booleanExp" boolId}}">
+	<div class = "ui inline fields">
+	  <div class = "six wide field">
+	  	{{input class = "text" value = fieldName readonly = true}}
+	  </div>
+
+	  <div class = "six wide field">
+	  	{{input class = "text" value = oprName readonly = true}}
+	  </div>
+
+	  <div class = "four wide field">
+	  	{{input class = "text" value = valName readonly = true}}
+	  </div>
+	</div>
+</div>
+{{else}}
 <div id = "{{concat "booleanExp" boolId}}">
 	<div class = "ui inline fields">
 	  <div class = "six wide field">
@@ -17,18 +34,45 @@
 
 	  <div class = "six wide field">
 	  	{{#if selectByCourseGrouping}}
-	  		{{#ui-dropdown class = "selection" selected = currentOpr onChange = (action (mut currentOpr))}}
-		      <input name = "op" type = "hidden">
-		      <div class = "default text">Operand</div>
-		      <i class = "dropdown icon"></i>
-		      <div class = "menu">
-		        {{#each courseGroupingOprs as |currentOpr|}}
-		          <div class = "item" data-value = {{currentOpr.id}}>
-		            {{currentOpr.name}}
-		          </div>
-		        {{/each}}
-		      </div>
-		    {{/ui-dropdown}}
+	  		{{#if enforceDoubleOpr}}
+	  			{{#ui-dropdown class = "fluid selection" selected = currentOpr1 onChange = (action (mut currentOpr1))}}
+			      <input name = "op" type = "hidden">
+			      <div class = "default text">Course Grouping</div>
+			      <i class = "dropdown icon"></i>
+			      <div class = "menu">
+			        {{#each courseGroupingOprs as |currentOpr1|}}
+			          <div class = "item" data-value = {{currentOpr1.id}}>
+			            {{currentOpr1.name}}
+			          </div>
+			        {{/each}}
+			      </div>
+			    {{/ui-dropdown}}
+			    {{#ui-dropdown class = "fluid selection" selected = currentOpr2 onChange = (action (mut currentOpr2))}}
+			      <input name = "op" type = "hidden">
+			      <div class = "default text">Operand</div>
+			      <i class = "dropdown icon"></i>
+			      <div class = "menu">
+			        {{#each regOprs as |currentOpr2|}}
+			          <div class = "item" data-value = {{currentOpr2.id}}>
+			            {{currentOpr2.name}}
+			          </div>
+			        {{/each}}
+			      </div>
+			    {{/ui-dropdown}}
+			{{else}}
+				{{#ui-dropdown class = "selection" selected = currentOpr onChange = (action (mut currentOpr))}}
+			      <input name = "op" type = "hidden">
+			      <div class = "default text">Course Grouping</div>
+			      <i class = "dropdown icon"></i>
+			      <div class = "menu">
+			        {{#each courseGroupingOprs as |currentOpr|}}
+			          <div class = "item" data-value = {{currentOpr.id}}>
+			            {{currentOpr.name}}
+			          </div>
+			        {{/each}}
+			      </div>
+			    {{/ui-dropdown}}
+	  		{{/if}}
 	  	{{else}}
 		    {{#ui-dropdown class = "selection" selected = currentOpr onChange = (action (mut currentOpr))}}
 		      <input name = "op" type = "hidden">
@@ -52,6 +96,14 @@
 	      	{{input type = "text" placeholder = "First Value" value = currentVal1 onChange = (action (mut currentVal1))}}
 	      	{{input type = "text" placeholder = "Second Value" value = currentVal2 onChange = (action (mut currentVal2))}}
 	      {{else if selectByCourseGrouping}}
+	      	{{#if enforceDoubleOpr}}
+	      		{{#if enforceBetweenVal}}
+	      			{{input type = "text" placeholder = "First Value" value = currentVal1 onChange = (action (mut currentVal1))}}
+	      			{{input type = "text" placeholder = "Second Value" value = currentVal2 onChange = (action (mut currentVal2))}}
+	      		{{else}}
+	      			{{input type = "text" name = "arg2" placeholder = "Value" value = currentVal onChange = (action (mut currentVal))}}
+	      		{{/if}}
+	      	{{else}}
 	      	{{#ui-dropdown class = "selection" selected = currentVal onChange = (action (mut currentVal))}}
 	      		<div class = "default text">True/False</div>
 	      		<i class = "dropdown icon"></i>
@@ -64,6 +116,7 @@
 	      			</div>
 	      		</div>
 	      	{{/ui-dropdown}}
+	      	{{/if}}
 	      {{else}}
 	      	{{input type = "text" name = "arg2" placeholder = "Value" value = currentVal onChange = (action (mut currentVal))}}
 	      {{/if}}
@@ -71,3 +124,4 @@
 	  </div>
 	</div>
 </div>
+{{/if}}

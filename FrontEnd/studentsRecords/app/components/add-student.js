@@ -9,6 +9,7 @@ export default Ember.Component.extend({
 	lastName: null,
 	newStudent: null,
 	notDONE: null,
+	currentStudent:null,
 	studentNumber: null,
 	photo: null,
 	residencyModel: null,
@@ -25,6 +26,8 @@ export default Ember.Component.extend({
 	invalidGender: false,
 	invalidResidency: false,
 	pageSize: null,
+	showAllStudents: null,
+	showMenuBar: null,
 	totalPages: null,
 
 	init() {
@@ -82,15 +85,17 @@ export default Ember.Component.extend({
 					registrationComments: this.get('registrationComments')
 				}));
 				var self = this;
-				console.log('Old index: ' + this.get('INDEX'));
 				this.get('newStudent').save().then(function() {
 					self.get('changeOffset')((self.get('totalPages') - 1) * self.get('pageSize'), false);
-					console.log('old total: ' + self.get('total'));
 					self.set('total',self.get('total') + 1);
-					console.log('new total: ' + self.get('total'));
-					console.log('page size: ' + self.get('pageSize'));
 					self.set('INDEX', self.get('total') % (self.get('pageSize') - 1));
-					console.log('New index: ' + self.get('INDEX'));
+					if(self.get('currentStudent') != null){	//came from SDE
+						self.set('showAllStudents', false);
+						self.set('showMenuBar', true);
+						self.set('currentStudent', self.get('newStudent'));
+					} else {
+						self.get('selectStudent')((self.get('INDEX'), self.get('newStudent')));
+					}
 					self.set('notDONE', false);
 					Ember.$('.ui.modal').modal('hide');
 				});
@@ -121,7 +126,10 @@ export default Ember.Component.extend({
     Ember.$('.ui.modal')
       .modal({
         closable: false,
-		autofocus: false
+		autofocus: false,
+		onVisible: function () {
+	        Ember.$(".ui.modal").modal("refresh");
+	    }
       })
       .modal('show');
   }
