@@ -66,9 +66,9 @@ export default Ember.Component.extend({
             console.log("there are", records.get('length'), "assessments with no category");
             self.set('nonCategoryAdjudications', records);
         });
-        // this.get('store').findAll('course-grouping').then(function(records){
-        //     self.set('courseGroupingsModel', records);
-        // });
+        this.get('store').findAll('course-grouping').then(function(records){
+            self.set('courseGroupingsModel', records);
+        });
     },
     progressTracker: Ember.observer('evaluationProgress', function () {
         if (this.get('evaluationProgress') == this.get('evaluationTotal') && this.get('evaluationProgress') > 0){
@@ -395,6 +395,14 @@ export default Ember.Component.extend({
         //Increment to match dropdown index
         var field = Number(boolExpression.field) + 1;
         var opr = boolExpression.opr;
+        var splitOpr;
+        var courseGroupingID;
+        var oprValue;
+        if (opr.indexOf('+') >= 0){            
+            splitOpr = opr.split('+');
+            courseGroupingID = splitOpr[0];
+            oprValue = splitOpr[1];
+        }
         var val = boolExpression.val;
         var boolResult = false;
         switch (field){
@@ -416,7 +424,6 @@ export default Ember.Component.extend({
                 var studentCWA = [];
                 studentCWA.push(studentRecord.cumAVG);
                 boolResult = this.evaluateValue(Number(opr) + 1, studentCWA, val); 
-                console.log(boolResult);               
             }
             break;
             //student's number of failed credits total passes passed rule (ie: greater than, less than etc...)
@@ -448,10 +455,10 @@ export default Ember.Component.extend({
             //Student has completed a minimum number of courses from a course grouping
             case BoolValue.CREDITSIN:{
                 var coursesInGrouping = [];
-                var minimumNumberOfCredits = val;
+                var studentNumberOfCredits = 0;
                 this.get('courseGroupingsModel').forEach(function(courseGrouping){
                     //if we have the right course grouping
-                    if (courseGrouping.get('id') == opr)
+                    if (courseGrouping.get('id') == courseGroupingID)
                     {
                         courseGrouping.get('courseCodes').forEach(function(courseCode){
                             coursesInGrouping.push(courseCode.get('id'));
@@ -469,14 +476,14 @@ export default Ember.Component.extend({
                                 var gradeMarkNumber = Number(grade.mark);
                                 if (gradeMarkNumber >= 50)
                                 {
-                                    minimumNumberOfCredits -= grade.unit;                                    
+                                    studentNumberOfCredits += grade.unit;                                    
                                 }
                             }
                         }
                     });
                 });
-                //if minimumNumberOfCredits is 0 or less than the user has completed sufficient number of credits
-                boolResult = (minimumNumberOfCredits <= 0);        
+                //so now studentNumberOfCredits is equal to the number of credits the student has from a group. we now check the opr
+                boolResult = this.evaluateValue(oprValue, [studentNumberOfCredits], val);
             }
             break;
             //student's average in courses from a specific course grouping is greater than or equal to the val
@@ -485,9 +492,9 @@ export default Ember.Component.extend({
                 var gradeTotal = 0;
                 var courseUnitCount = 0;
                 this.get('courseGroupingsModel').forEach(function(courseGrouping){
-                    //if we have the right course grouping
-                    if (courseGrouping.get('id') == opr)
-                    {
+                    //if we have the right course grouping                    
+                    if (courseGrouping.get('id') == courseGroupingID)
+                    {                        
                         courseGrouping.get('courseCodes').forEach(function(courseCode){
                             coursesInGrouping.push(courseCode.get('id'));
                         });
@@ -507,7 +514,7 @@ export default Ember.Component.extend({
                     });
                 });
                 var studentGroupAVG = gradeTotal / courseUnitCount;
-                boolResult = (studentGroupAVG >= val);                
+                boolResult = this.evaluateValue(oprValue, [studentGroupAVG], val);
             }
             break;
             //if the student withdraws from 1 or more course in a course grouping
@@ -804,8 +811,8 @@ export default Ember.Component.extend({
     actions: {
         adjudicate()
         {
-            this.testingEvaluateValue();
-            return;
+            // this.testingEvaluateValue();
+            // return;
             var studentAdjudicationInfo = [];
             var currentTerm = this.get('currentTerm');
             var self = this;
