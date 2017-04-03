@@ -16,9 +16,9 @@
     <div class = "five wide column"></div>
 </div>
 <div class = "ui tab segment active" data-tab="Adjudication">
-	{{perform-adjudication}}
+	{{perform-adjudication reportAction = (action 'quickGenerateReport')}}
 </div>
 <div class = "ui tab segment" data-tab="Reports">
-	{{generate-reports}}
+	{{generate-reports termID = termID}}
 </div>
 
