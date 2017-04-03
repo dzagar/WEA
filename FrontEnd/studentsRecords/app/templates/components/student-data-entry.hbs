@@ -8,10 +8,10 @@
 {{#if showMenuBar}}
   <!-- Show the menu bar-->
   <div class="ui stackable container inverted eight item menu">
-    <a class="item" {{action 'saveStudent'}}>
+    <a class="item save" {{action 'saveStudent'}}>
       <i class="save icon"></i> Save
     </a>
-    <a class="item" {{action 'undoSave'}}>
+    <a class="item undo" {{action 'undoSave'}}>
       <i class="undo icon"></i> Undo
     </a>
     <a class="item" {{action 'deleteCurrentStudent'}}>
@@ -184,7 +184,7 @@
             <thead>
               <tr onclick={{action 'displayProgram' programRecord.name}}>
                 <th>                  
-                  <label>{{programRecord.name}}<i style="color: gray"> (click to show program's plans)</i></label>
+                  <label>{{programRecord.name}}<i class = "toggleDisplay{{programRecord.name}}" style="color: gray"> (click to show program's plans)</i></label>
                 </th>
               </tr>
             </thead>
