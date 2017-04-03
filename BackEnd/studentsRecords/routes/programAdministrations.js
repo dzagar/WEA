@@ -88,18 +88,89 @@ router.route('/:progAdmin_id')
     })
     .put(parseUrlencoded, parseJSON, function (request, response) {
         ProgramAdministration.findById(request.params.progAdmin_id, function (error, progAdmin) {
-            if (progAdmin) {
-                progAdmin.name = request.body.programAdministration.name;
-                progAdmin.position = request.body.programAdministration.position;
-                progAdmin.department = request.body.programAdministration.department;
+            if (error){
+                response.send(error);
+            } else if (progAdmin) {                
+                function savePut(){  
+                    progAdmin.name = request.body.programAdministration.name;
+                    progAdmin.position = request.body.programAdministration.position;
+                    progAdmin.department = request.body.programAdministration.department;
 
-                progAdmin.save(function (error) {
-                    if (error) {
-                        response.send(error);
-                    } else {
-                        response.json({programAdministration: progAdmin});
-                    }
-                });
+                    progAdmin.save(function (error) {
+                        if (error) {
+                            response.send(error);
+                        } else {
+                            response.json({programAdministration: progAdmin});
+                        }
+                    });
+                }
+                if (progAdmin.department != request.body.programAdministration.department)
+                {
+                    var completed = 0;
+                    var failed = false;
+                    Department.findById(request.body.programAdministration.department, function(error, newDepartment){
+                        if (error && !failed){
+                            failed = true;
+                            response.send(error);
+                        }
+                        else if (newDepartment){                            
+                            newDepartment.programAdministrations.push(request.params.progAdmin_id);
+                            newDepartment.save(function(error){
+                                if (error && !failed){
+                                    failed = true;
+                                    response.send(error);
+                                }else{
+                                    completed++
+                                    if (!failed && completed == 2){
+                                        savePut();
+                                    }
+                                }
+                            });
+                        } else{
+                            completed++;
+                            if (completed == 2 && !failed){
+                                savePut();
+                            }
+                        }
+                    });
+                    Department.findById(progAdmin.department, function(error, oldDepartment){
+                        if (error && !failed){
+                            failed = true;
+                            response.send(error);
+                        }else if (oldDepartment){
+                            var indexOfAdmin = oldDepartment.programAdministrations.indexOf(request.params.progAdmin_id);
+                            if (indexOfAdmin >= 0){
+                                oldDepartment.programAdministrations.splice(indexOfAdmin, 1);
+                                oldDepartment.save(function(error){
+                                    if (error && !failed){
+                                        failed  = true;
+                                        response.send(error);
+                                    } else if (!failed){
+                                        completed++;
+                                        if (completed == 2){
+                                            savePut();
+                                        }
+                                    }
+                                });
+                            } else{
+                                completed++;
+                                if (!failed && completed == 2){
+                                    savePut();
+                                }
+                            }
+
+                        }else{
+                            completed++;
+                            if (!failed && completed == 2){
+                                savePut();
+                            }
+                        }
+                    });
+
+                }
+                else{
+                    savePut();
+                }
             } else {
                 response.json({programAdministration: progAdmin});
             }

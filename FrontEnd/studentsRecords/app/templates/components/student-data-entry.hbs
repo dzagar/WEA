@@ -100,7 +100,7 @@
               <label>Gender</label>
               <select id="ddlGender" onchange={{action 'selectGender' value="target.value"}} onclick = {{action 'genderFocusIn'}} onblur = {{action 'onFocusOut'}}>
                 {{#each genderModel as |genderChoice|}}
-                <option value={{genderChoice.id}} selected={{eq currentStudent.genInfo.id genderChoice.id}}>{{genderChoice.name}}</option>
+                <option value={{genderChoice.id}} selected={{eq currentStudent.gender.id genderChoice.id}}>{{genderChoice.name}}</option>
                 {{/each}}
               </select>
             </div>

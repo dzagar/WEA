@@ -235,18 +235,90 @@ router.route('/:department_id')
             if (error) {
                 response.send(error);
             } else if (department) {
-                department.name = request.body.department.name;
-                department.assessmentCodes = request.body.department.assessmentCodes;
-                department.faculty = request.body.department.faculty;
-                department.programAdministration = request.body.department.programAdministration;
+                function savePut(){  
+                    department.name = request.body.department.name;
+                    if (request.body.department.assessmentCodes) department.assessmentCodes = request.body.department.assessmentCodes.splice();
+                    department.faculty = request.body.department.faculty;
+                    department.programAdministration = request.body.department.programAdministration;
 
-                department.save(function (error) {
-                    if (error) {
-                        response.send(error);
-                    } else {
-                        response.json({department: department});
-                    }
-                });
+                    department.save(function (error) {
+                        if (error) {
+                            response.send(error);
+                        } else {
+                            response.json({department: department});
+                        }
+                    });
+                }
+                if (department.faculty != request.body.department.faculty){
+                    var completed = 0;
+                    var failed = false;
+                    Faculty.findById(request.body.department.faculty, function(error, newFaculty){
+                        if (error && !failed){
+                            failed = true;
+                            response.send(error);
+                        }
+                        else if (newFaculty){  
+                            newFaculty.departments.push(request.params.department_id);
+                            newFaculty.save(function(error){
+                                if (error && !failed){
+                                    failed = true;
+                                    response.send(error);
+                                }
+                                else{
+                                    completed++;
+                                    if (completed == 2 && !failed){
+                                        savePut();
+                                    }
+                                }
+                            });                            
+                        }
+                        else{
+                            completed++;
+                            if (completed == 2 && !failed){
+                                savePut();
+                            }
+                        }
+                    });
+                    Faculty.findById(department.faculty, function(error, oldFaculty){
+                        if (error && !failed){
+                            failed = true;
+                            response.send(error);
+                        }
+                        else if (oldFaculty){  
+                            var indexOfDept = oldFaculty.departments.indexOf(request.params.department_id);
+                            if (indexOfDept >= 0){
+                                oldFaculty.departments.splice(indexOfDept, 1);
+                                oldFaculty.save(function(error){
+                                    if (error && !failed){
+                                        failed = true;
+                                        response.send(error);
+                                    }
+                                    else{
+                                        completed++;
+                                        if (completed == 2 && !failed){
+                                            savePut();
+                                        }
+                                    }
+                                });
+                            }
+                            else{                                
+                                completed++;
+                                if (!failed && completed == 2){
+                                    savePut();
+                                }
+                            }                     
+                        }
+                        else{
+                            completed++;
+                            if (!failed && completed == 2){
+                                savePut();
+                            }
+                        }
+                    });
+                }
+                else{
+                    savePut();
+                }
             } else {
                 response.json({department: department});
             }

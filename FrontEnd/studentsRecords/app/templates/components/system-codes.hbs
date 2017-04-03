@@ -959,6 +959,12 @@
         </td>
       </tr>
     {{/each}}
+    <tr>
+      <td><div class = "ui fluid input">{{input type="text" value = newFacultyName placeholder="Faculty Name"}}</div></td>
+      <td>
+          <div class="ui green inverted button" {{action "addFaculty"}}>Add New Faculty</div>
+      </td>
+    </tr>
   </table>
 </div>
 <div class="ui tab segment" data-tab="Departments">
@@ -970,20 +976,16 @@
         <th class="four wide"></th>
       </tr>
     </thead>
-    {{#each departmentModel as |department|}}
+    {{#each departmentModel as |department index|}}
       <tr>
         <td><div class = "ui fluid input">{{input type="text" value = department.name}}</div></td>
         <td>
-          {{#ui-dropdown class="fluid selection" selected = "{{department.faculty.id}}"}}
-          <div class="menu">
+          <select id="facultyDDL{{index}}" class="ui dropdown" onchange={{action 'selectFaculty' department index}}>
             {{#each facultyModel as |faculty|}}
-              <div data-value="{{faculty.id}}" class="item">
-                {{faculty.name}}
-              </div>
+              <option class="ui item" value={{faculty.id}} selected={{eq department.faculty.id faculty.id}}>{{faculty.name}}</option>
             {{/each}}
-          </div>
-        {{/ui-dropdown}} 
-        </td>         
+          </select>
+        </td>
         <td>
           <div class="ui inverted buttons">
               <button class="ui cstmLBlue inverted button" {{action "saveDepartment" department}}>Save
@@ -996,7 +998,20 @@
           </div>
         </td>
       </tr>
-    {{/each}}
+    {{/each}}    
+    <tr>
+      <td><div class = "ui fluid input">{{input type="text" value = newDepartmentName placeholder="Department Name"}}</div></td>
+      <td>
+        <select id="newDeptFacultyDDL" class="ui dropdown">
+          {{#each facultyModel as |faculty|}}
+            <option class="ui item" value={{faculty.id}}>{{faculty.name}}</option>
+          {{/each}}
+        </select>
+      </td>
+      <td>
+          <div class="ui green inverted button" {{action "addDepartment"}}>Add New Department</div>
+      </td>
+    </tr>
   </table>
 </div>
 <div class="ui tab segment" data-tab="ProgramAdmins">
@@ -1008,23 +1023,43 @@
         <th class="four wide">Department</th>
         <th class="four wide"></th>
       </tr>
-      {{#each programAdminsModel as |admin|}}
+    </thead>
+      {{#each programAdminsModel as |admin index|}}
         <tr>          
           <td><div class = "ui fluid input">{{input type="text" value = admin.name}}</div></td>        
           <td><div class = "ui fluid input">{{input type="text" value = admin.position}}</div></td>
           <td>
-            {{#ui-dropdown class="fluid selection" selected = "{{admin.department.id}}"}}
-              <div class="menu">
-                {{#each departmentModel as |department|}}
-                  <div data-value="{{department.id}}" class="item">
-                    {{department.name}}
-                  </div>
-                {{/each}}
-              </div>
-            {{/ui-dropdown}} 
+            <select id="departmentDDL{{index}}" class="ui dropdown" onchange={{action 'selectDepartment' admin index}}>
+              {{#each departmentModel as |department|}}
+                <option class="ui item" value={{department.id}} selected={{eq admin.department.id department.id}}>{{department.name}}</option>
+              {{/each}}
+            </select>
+          </td>          
+          <td>
+            <div class="ui inverted buttons">
+                <button class="ui cstmLBlue inverted button" {{action "saveAdmin" admin}}>Save
+                    &nbsp; <i class="save icon"></i>
+                </button>
+                <div class="divider"/>
+                <button class="ui red inverted button" {{action "deleteAdmin" admin}}>Delete
+                    &nbsp; <i class="trash icon"></i>
+                </button>
+            </div>
           </td>
         </tr>
       {{/each}}
-    </thead>
+      <tr>
+        <td><div class = "ui fluid input">{{input type="text" value = newAdminName placeholder="Administrator Name"}}</div></td>
+        <td><div class = "ui fluid input">{{input type="text" value = newAdminPosition placeholder="Position"}}</div></td>
+        <td>
+          <select id="newAdminDeptDDL" class="ui dropdown">
+            {{#each departmentModel as |department|}}
+              <option class="ui item" value={{department.id}}>{{department.name}}</option>
+            {{/each}}
+          </select>
+        </td>
+        <td>
+        </td>
+      </tr>
   </table>
 </div>
