@@ -247,7 +247,7 @@ div>div>div> .ui.huge.button {
   color: #FFFFFF !important;
 }
 /**Param builder**/
-.field > input[type="text"][readonly]{
+.logicalExpressionPg > div > div > div > div > div > div > div > div > div > input[type="text"][readonly]{
   pointer-events: none;
   background-color: #4e2683;
   color:#ffffff;

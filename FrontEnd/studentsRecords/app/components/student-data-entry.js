@@ -89,12 +89,14 @@ export default Ember.Component.extend({
 
       self.set('firstIndex', records.indexOf(records.get("firstObject")));
       self.set('lastIndex', records.indexOf(records.get("lastObject")));
-      if (self.get('movingBackword')) {
-        self.set('currentIndex', records.indexOf(records.get("lastObject")));
-        self.setCurrentStudent(self.get('currentIndex'));
-      } else {
-        self.set('currentIndex', records.indexOf(records.get("firstObject")));
-        self.setCurrentStudent(self.get('currentIndex'));
+      if (self.get('movingBackword') != null){
+        if (self.get('movingBackword')) {
+          self.set('currentIndex', records.indexOf(records.get("lastObject")));
+          //self.setCurrentStudent(self.get('currentIndex'));
+        } else {
+          self.set('currentIndex', records.indexOf(records.get("firstObject")));
+          //self.setCurrentStudent(self.get('currentIndex'));
+        }
       }
     }, function (reason) {
       console.log("Query to student records failed");
@@ -171,7 +173,7 @@ export default Ember.Component.extend({
       
       self.set('firstIndex', records.indexOf(records.get("firstObject")));
       self.set('lastIndex', records.indexOf(records.get("lastObject")));
-
+      self.set('movingBackword', null);
       // Show first student data
       //self.set('currentIndex', self.get('firstIndex'));
     }, function (reason) {
@@ -390,6 +392,7 @@ export default Ember.Component.extend({
     nextStudent() {
       this.set('movingBackword' , false);
       if (this.get('currentIndex') < this.get('lastIndex')) {
+        this.set('movingBackword', null);
         this.set('currentIndex', this.get('currentIndex') + 1);
       }
       else {
@@ -400,6 +403,7 @@ export default Ember.Component.extend({
     previousStudent() {
       this.set('movingBackword' , true);
       if (this.get('currentIndex') > 0) {
+        this.set('movingBackword', null);
         this.set('currentIndex', this.get('currentIndex') - 1);
       }
       else {

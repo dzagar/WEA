@@ -14,6 +14,9 @@
     <a class="item" {{action 'undoSave'}}>
       <i class="undo icon"></i> Undo
     </a>
+    <a class="item" {{action 'deleteCurrentStudent'}}>
+      <i class = "trash icon"></i> Delete
+    </a>
     <a class="item" {{action 'firstStudent'}}>
       <i class="step backward icon"></i> First
     </a>
@@ -29,9 +32,6 @@
     <a class="item" {{action 'allStudents'}}>
       <i class="content icon"></i> All Records
     </a>
-    <a class="item" {{action 'createStudent'}}>
-      <i class="add user icon"></i> Add Student
-    </a>
   </div>
 {{/if}}
 
@@ -45,9 +45,6 @@
 {{/if}}
 
 <!-- other popups -->
-{{#if showAddStudent}}
-  {{add-student INDEX = currentIndex currentStudent = currentStudent showAllStudents = showAllStudents showMenuBar = showMenuBar notDONE = showAddStudent total = totalStudents pageSize = pageSize totalPages = totalPages changeOffset = (action 'changeOffset')}}
-{{/if}}
 
 <!-- Other non-popup screens -->
 {{#if showAllStudents}}
@@ -139,20 +136,6 @@
             <label>Registration Comments</label> {{textarea rows="4" type="text" value = currentStudent.registrationComments focus-in = (action "textFocusIn" "registrationComments") focus-out = (action "onFocusOut") change = (action "onFieldChange")}}
           </div>   
         </div>    
-        <div class="ui left aligned grid form">
-          <div class="row">  
-            <div class="inline field">
-              <button class="ui inverted cstmLBlue icon button" {{action 'saveStudent'}}>
-                    Save <i class="save icon"></i>
-              </button>
-            </div>  
-            <div class="inline field">
-              <button class="ui inverted red icon button" {{action 'deleteCurrentStudent'}}>
-                    Delete <i class="trash icon"></i>
-              </button>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
 
