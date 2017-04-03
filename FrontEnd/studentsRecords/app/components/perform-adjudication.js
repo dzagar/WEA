@@ -483,7 +483,7 @@ export default Ember.Component.extend({
                     });
                 });
                 //so now studentNumberOfCredits is equal to the number of credits the student has from a group. we now check the opr
-                boolResult = this.evaluateValue(oprValue, [studentNumberOfCredits], val);
+                boolResult = this.evaluateValue(Number(oprValue) + 1, [studentNumberOfCredits], val);
             }
             break;
             //student's average in courses from a specific course grouping is greater than or equal to the val
@@ -506,6 +506,7 @@ export default Ember.Component.extend({
                         {
                             if (!isNaN(grade.mark))
                             {
+                                console.log(grade.mark);
                                 var gradeMarkNumber = Number(grade.mark);
                                 gradeTotal += gradeMarkNumber * grade.unit;
                                 courseUnitCount += grade.unit;
@@ -513,8 +514,15 @@ export default Ember.Component.extend({
                         }
                     });
                 });
-                var studentGroupAVG = gradeTotal / courseUnitCount;
-                boolResult = this.evaluateValue(oprValue, [studentGroupAVG], val);
+                if (courseUnitCount > 0){                    
+                    var studentGroupAVG = gradeTotal / courseUnitCount;
+                    console.log(studentGroupAVG);
+                    console.log(val);
+                    console.log(oprValue);
+                    boolResult = this.evaluateValue(Number(oprValue) + 1, [studentGroupAVG], val);
+                }else{
+                    boolResult = false;
+                }
             }
             break;
             //if the student withdraws from 1 or more course in a course grouping
@@ -702,7 +710,7 @@ export default Ember.Component.extend({
             case RegularOperators.EQUALS:{
                 for (var i = 0; i < studentValue.length; i++)
                 {
-                    if (Number(studentValue[i]) != ruleValue)
+                    if (Number(studentValue[i]) != Number(ruleValue))
                         evaluationResult = false;
                 }
             }
@@ -710,7 +718,7 @@ export default Ember.Component.extend({
             case RegularOperators.NOTEQUAL:{
                 for (var i = 0; i < studentValue.length; i++)
                 {
-                    if (Number(studentValue[i]) == ruleValue)
+                    if (Number(studentValue[i]) == Number(ruleValue))
                         evaluationResult = false;
                 }
 
@@ -719,7 +727,7 @@ export default Ember.Component.extend({
             case RegularOperators.GREATERTHAN:{
                 for (var i = 0; i < studentValue.length; i++)
                 {
-                    if (Number(studentValue[i]) <= ruleValue)
+                    if (Number(studentValue[i]) <= Number(ruleValue))
                         evaluationResult = false;
                 }
 
@@ -728,7 +736,7 @@ export default Ember.Component.extend({
             case RegularOperators.GREATEREQUAL:{
                 for (var i = 0; i < studentValue.length; i++)
                 {
-                    if (Number(studentValue[i]) < ruleValue)
+                    if (Number(studentValue[i]) < Number(ruleValue))
                         evaluationResult = false;
                 }
 
@@ -737,7 +745,7 @@ export default Ember.Component.extend({
             case RegularOperators.LESSTHAN:{
                 for (var i = 0; i < studentValue.length; i++)
                 {
-                    if (Number(studentValue[i]) >= ruleValue)
+                    if (Number(studentValue[i]) >= Number(ruleValue))
                         evaluationResult = false;
                 }
 
@@ -746,7 +754,7 @@ export default Ember.Component.extend({
             case RegularOperators.LESSEQUAL:{
                 for (var i = 0; i < studentValue.length; i++)
                 {
-                    if (Number(studentValue[i]) > ruleValue)
+                    if (Number(studentValue[i]) > Number(ruleValue))
                         evaluationResult = false;
                 }
 
@@ -822,7 +830,6 @@ export default Ember.Component.extend({
             var currentTotal = 0;
             var doneReading = false;
             var doneReadingMutex = Mutex.create();
-            
             this.get('store').findAll('student').then(function (records) {
                 currentTotal += records.get('length');
                 self.set('adjudicationStatus', self.get('adjudicationStatus') + "Beginning adjudication of " + currentTotal + " students." + "<br>");
