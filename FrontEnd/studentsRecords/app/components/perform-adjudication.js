@@ -413,7 +413,6 @@ export default Ember.Component.extend({
             break;
             //student's CWA passes passed rule (ie: greater than, less than etc...)
             case BoolValue.CWA:{
-                console.log("looking for CWA");
                 var studentCWA = [];
                 studentCWA.push(studentRecord.cumAVG);
                 boolResult = this.evaluateValue(Number(opr) + 1, studentCWA, val); 
@@ -696,15 +695,12 @@ export default Ember.Component.extend({
             case RegularOperators.EQUALS:{
                 for (var i = 0; i < studentValue.length; i++)
                 {
-                    console.log(Number(studentValue[i]) != ruleValue);
-                    console.log("studentval", studentValue[i], "passedval", ruleValue);
                     if (Number(studentValue[i]) != ruleValue)
                         evaluationResult = false;
                 }
             }
             break;
             case RegularOperators.NOTEQUAL:{
-                console.log("in is not equal");
                 for (var i = 0; i < studentValue.length; i++)
                 {
                     if (Number(studentValue[i]) == ruleValue)
@@ -714,7 +710,6 @@ export default Ember.Component.extend({
             }
             break;
             case RegularOperators.GREATERTHAN:{
-                console.log("in is greater than");
                 for (var i = 0; i < studentValue.length; i++)
                 {
                     if (Number(studentValue[i]) <= ruleValue)
@@ -724,7 +719,6 @@ export default Ember.Component.extend({
             }
             break;
             case RegularOperators.GREATEREQUAL:{
-                console.log("in is greater or equal");
                 for (var i = 0; i < studentValue.length; i++)
                 {
                     if (Number(studentValue[i]) < ruleValue)
@@ -734,7 +728,6 @@ export default Ember.Component.extend({
             }
             break;
             case RegularOperators.LESSTHAN:{
-                console.log("in is less than");
                 for (var i = 0; i < studentValue.length; i++)
                 {
                     if (Number(studentValue[i]) >= ruleValue)
@@ -744,7 +737,6 @@ export default Ember.Component.extend({
             }
             break;
             case RegularOperators.LESSEQUAL:{
-                console.log("in is less than or equal");
                 for (var i = 0; i < studentValue.length; i++)
                 {
                     if (Number(studentValue[i]) > ruleValue)
@@ -754,7 +746,6 @@ export default Ember.Component.extend({
             }
             break;
             case RegularOperators.BETINC:{
-                console.log("in is between inclusive");
                 var betVals = ruleValue.split('-');
                 var lowerBound = Number(betVals[0]);
                 var upperBound = Number(betVals[1]);
@@ -767,7 +758,6 @@ export default Ember.Component.extend({
             }
             break;
             case RegularOperators.BETEXC:{
-                console.log("in is between exclusive");
                 var betVals = ruleValue.split('-');
                 var lowerBound = Number(betVals[0]);
                 var upperBound = Number(betVals[1]);
@@ -782,9 +772,40 @@ export default Ember.Component.extend({
         }
         return evaluationResult;
     },
+    testingEvaluateValue(){
+        console.log("in EQUAL EVAL");
+        if (true != this.evaluateValue(1, [50], 50))
+            console.log("1. invalid result!!!!!!!");
+        if (true != this.evaluateValue(1, [100], 100))
+            console.log("2. invalid result!!!!!!!");
+        if (true != this.evaluateValue(1, [0], 0))
+            console.log("3. invalid result!!!!!!!");
+        if (false != this.evaluateValue(1, [0], 5))
+            console.log("4. invalid result!!!!!!!");
+        if (false != this.evaluateValue(1, [0], 15))
+            console.log("5. invalid result!!!!!!!");
+        if (false != this.evaluateValue(1, [100], 99.9))
+            console.log("6. invalid result!!!!!!!");
+
+        console.log("IN NOT EQUAL EVAL");     
+        if (false != this.evaluateValue(2, [50], 50))
+            console.log("1. invalid result!!!!!!!");
+        if (false != this.evaluateValue(2, [100], 100))
+            console.log("2. invalid result!!!!!!!");
+        if (false != this.evaluateValue(2, [0], 0))
+            console.log("3. invalid result!!!!!!!");
+        if (true != this.evaluateValue(2, [0], 5))
+            console.log("4. invalid result!!!!!!!");
+        if (true != this.evaluateValue(2, [0], 15))
+            console.log("5. invalid result!!!!!!!");
+        if (true != this.evaluateValue(2, [100], 99.9))
+            console.log("6. invalid result!!!!!!!");
+    },
     actions: {
         adjudicate()
         {
+            this.testingEvaluateValue();
+            return;
             var studentAdjudicationInfo = [];
             var currentTerm = this.get('currentTerm');
             var self = this;
