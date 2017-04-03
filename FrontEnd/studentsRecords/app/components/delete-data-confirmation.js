@@ -131,6 +131,11 @@ export default Ember.Component.extend({
 			}).then(function (response) {
 				console.log(response);
 			});
+			this.get('store').query('adjudication', {
+				deleteAll: true
+			}).then(function (response) {
+				console.log(response);
+			});
 		
 			this.get('store').unloadAll();
 
