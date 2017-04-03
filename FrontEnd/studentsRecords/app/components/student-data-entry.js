@@ -291,6 +291,15 @@ export default Ember.Component.extend({
     }    
     var previous = $('.ui.tab.segment.active');
     Ember.$('.ui .menu .item').tab({
+      'onLoad': function(tab){
+        if (Ember.$(".ui.tab[data-tab='basics']").hasClass("active")){
+          Ember.$('.item.save').removeClass('disabled');
+          Ember.$('.item.undo').removeClass('disabled');
+        } else {
+          Ember.$('.item.save').addClass('disabled');
+          Ember.$('.item.undo').addClass('disabled');
+        }
+      },
       'onVisible': function(tab){
         self.set('tab',tab);
         var current = $('.ui.tab.segment.active');
@@ -310,8 +319,6 @@ export default Ember.Component.extend({
         previous = current;
       },
     });
-    
-    
   },
 
   actions: {
