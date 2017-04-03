@@ -8,7 +8,7 @@
 {{#if ADM01IsPermitted }}
 <div class = "ui grid" style = "margin:0">
     <div class = "sixteen wide column" style="padding-bottom:0">
-        <div class = "ui secondary pointing fluid four item menu">
+        <div class = "ui secondary pointing fluid four item menu main">
             <div style="cursor: pointer;" class="active item" data-tab="ManageUsers">User Accounts</div>
             <div style="cursor: pointer;" class="item" data-tab="ManageRoles">System Roles</div>
             <div style="cursor: pointer;" class="item" data-tab="ManageFeatures">System Features/Privileges</div>
@@ -17,16 +17,16 @@
     </div>
 </div>
 
-<div class = "ui tab segment active" data-tab="ManageUsers">
+<div class = "ui tab segment main active" data-tab="ManageUsers">
   {{manage-users}}
 </div>
-<div class = "ui tab segment" data-tab="ManageRoles">
+<div class = "ui tab segment main" data-tab="ManageRoles">
   {{manage-roles}}
 </div>
-<div class = "ui tab segment" data-tab="ManageFeatures">
+<div class = "ui tab segment main" data-tab="ManageFeatures">
   {{manage-features}}
 </div>
-<div class = "ui tab segment" data-tab="ManageAdjudication">
+<div class = "ui tab segment main" data-tab="ManageAdjudication">
   <div class = "ui two column centered relaxed grid">
     <div class = "three wide column">
       <div class = "ui secondary vertical fluid pointing menu">
