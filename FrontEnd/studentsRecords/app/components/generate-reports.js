@@ -514,7 +514,7 @@ export default Ember.Component.extend({
 						doc.text('Student #', 25, 25);
 						doc.text('Student Name', 50, 25);
 						doc.text('Adj. Date', 100, 25);
-						doc.text('Assessment Code', 125, 25);
+						doc.text('Assessment Code, Name', 125, 25);
 						//doc.text('Note', 170, 25);
 						doc.setFont('helvetica', '');
 
@@ -523,8 +523,7 @@ export default Ember.Component.extend({
 							doc.text(dataObj.studentNumber, 25, yPos);
 							doc.text(dataObj.studentName, 50, yPos);
 							doc.text(dataObj.date, 100, yPos);
-							doc.text(dataObj.assessmentName, 125, yPos);
-							doc.text(dataObj.assessmentCode, 170, yPos);
+							doc.text(dataObj.assessmentCode + ', ' + dataObj.assessmentName, 125, yPos);
 							if(dataObj.note) {
 								//doc.text(dataObj.note, 170, yPos);
 							}
@@ -537,7 +536,7 @@ export default Ember.Component.extend({
 								doc.text('Student #', 25, 25);
 								doc.text('Student Name', 50, 25);
 								doc.text('Adj. Date', 100, 25);
-								doc.text('Assessment Code', 125, 25);
+								doc.text('Assessment Code, Name', 125, 25);
 								//doc.text('Note', 170, 25);
 								doc.setFont('helvetica', '');
 							}
