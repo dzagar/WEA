@@ -18,6 +18,8 @@ export default Ember.Component.extend({
 	termModel: null,
     generationWarningText: "Generating a PDF",
 	colourOptions: [{red: 78, blue: 38 , green: 131}, {red: 155, blue: 115, green: 208}, {red: 2, blue: 191, green: 198}, {red: 0, blue: 140, green: 147}],
+	totalRecords: 0,
+	showCharts: false,
 	init(){
 		this._super(...arguments);
 		console.log('init gen rpts');
@@ -64,9 +66,12 @@ export default Ember.Component.extend({
 		let backColours = [];
 		let borderColours = [];
 
+		this.set('totalRecords', 0);
+		let self = this;
 		this.get('barChartBars').forEach(function (bar, index) {
 			labels.push(bar.name);
 			vals.push(bar.length);
+			self.set('totalRecords', self.get('totalRecords') + bar.length);
 			backColours.push(bar.backColour);
 			borderColours.push(bar.borderColour);
 		});
@@ -89,9 +94,12 @@ export default Ember.Component.extend({
 		let backColours = [];
 		let borderColours = [];
 
+		this.set('totalRecords', 0);
+		let self = this;
 		this.get('pieChartWedges').forEach(function (wedge, index) {
 			labels.push(wedge.label);
 			vals.push(wedge.size);
+			self.set('totalRecords', self.get('totalRecords') + wedge.size);
 			backColours.push(wedge.backColour);
 			borderColours.push(wedge.borderColour);
 		});
@@ -225,6 +233,7 @@ export default Ember.Component.extend({
 			var self=this;
 			$("#open").removeClass('hideChart');
 			$("#chart").removeClass('hideChart');
+			this.set('showCharts', true);
 
 			var currentTerm = this.get('currentTerm');
 			var termCodeID= currentTerm.get('id');
@@ -354,6 +363,7 @@ export default Ember.Component.extend({
         	$("#chart").addClass('hideChart');
         },
         selectCategory(index){
+			this.set('showCharts', false);
         	this.set('currentCategoryIndex', index);
 			if (index != -1) {
 				this.set('currentCategory', this.get('categoryModel').objectAt(Number(index)));
