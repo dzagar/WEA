@@ -16,47 +16,26 @@ export default Ember.Component.extend({
   }),
 
   didRender(){
-    Ember.$('.menu .item').tab();
+    var previous = Ember.$('.ui.tab.segment.main.active');
+    Ember.$('.menu.main .item').tab({
+      'onVisible': function(tab){
+        var current = Ember.$('.ui.tab.segment.main.active');
+        // hide the current and show the previous, so that we can animate them
+        previous.show();
+        current.hide();
+        // hide the previous tab - once this is done, we can show the new one
+        previous.transition({
+            animation: 'fade left',
+            onComplete: function () {
+                // finally, show the new tab again
+                current.transition('fade right');
+            }
+        });
+        // remember the current tab for next change
+        previous = current;
+      }
+    });
     Ember.$('.ui.menu').find('.item').tab('change tab', 'second');
-  },
-
-  actions: {
-    manageUsers () {
-      this.set('isUsersShowing', true);
-      this.set('isFeaturesEditing', false);
-      this.set('isRolesEditing', false);
-      this.set('isAdjudicationRulesEditing', false);
-      this.set('isAdjudicationCategoriesIsShowing', false);
-    },
-    manageRoles (){
-      this.set('isUsersShowing', false);
-      this.set('isFeaturesEditing', false);
-      this.set('isRolesEditing', true);
-      this.set('isAdjudicationRulesEditing', false);
-      this.set('isAdjudicationCategoriesIsShowing', false);
-    },
-
-    manageFeatures (){
-      this.set('isUsersShowing', false);
-      this.set('isFeaturesEditing', true);
-      this.set('isRolesEditing', false);
-      this.set('isAdjudicationRulesEditing', false);
-      this.set('isAdjudicationCategoriesIsShowing', false);
-    },
-
-    manageAdjudication (){
-      this.set('isUsersShowing', false);
-      this.set('isFeaturesEditing', false);
-      this.set('isRolesEditing', false);
-      this.set('isAdjudicationRulesEditing', true);
-      this.set('isAdjudicationCategoriesIsShowing', false);
-    },
-    manageAdjudicationCategories() {      
-      this.set('isUsersShowing', false);
-      this.set('isFeaturesEditing', false);
-      this.set('isRolesEditing', false);
-      this.set('isAdjudicationRulesEditing', false);
-      this.set('isAdjudicationCategoriesIsShowing', true);
-    }
   }
+
 });

@@ -20,17 +20,22 @@
 			<div class="ui cstmLBlue button" {{action 'generateReport'}}>Generate Report</div>
 		</div>
 	</div>
-	<div class="ui relaxed items form">
-		{{#if (inline-compare currentCategoryIndex "==" -1)}}
-			<div id="chart">
-				<canvas id="barChart"></canvas>
+	{{#if showCharts}}
+		<div class="ui relaxed items form">
+			<div class="field">
+				<label style="text-align: center">Total Records: {{totalRecords}}</label>
 			</div>
-		{{else}}
-			<div id="chart">
-				<canvas id="pieChart"></canvas>
-			</div>
-		{{/if}}
-	</div>
+			{{#if (inline-compare currentCategoryIndex "==" -1)}}
+				<div id="chart">
+					<canvas id="barChart"></canvas>
+				</div>
+			{{else}}
+				<div id="chart">
+					<canvas id="pieChart"></canvas>
+				</div>
+			{{/if}}
+		</div>
+	{{/if}}
 	<div class="ui padded centered grid container">
 		<div id="open" class="hideChart">
 			<div class="ui cstmTurq button" {{action 'generatePDF'}}>Generate PDF</div>
