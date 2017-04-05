@@ -216,8 +216,8 @@ export default Ember.Component.extend({
             newAdjudicationObject.set('assessmentCode', self.get('store').peekRecord('assessmentCode', assessmentCodeID));                
             newAdjudicationObject.save().then(function(){
                 self.set('evaluationProgress', self.get('evaluationProgress') + 1);
-                return true;
             });
+            return true;
         }
         else{
             self.set('evaluationProgress', self.get('evaluationProgress') + 1);
