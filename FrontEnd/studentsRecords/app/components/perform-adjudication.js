@@ -60,16 +60,14 @@ export default Ember.Component.extend({
             self.set('currentTerm', records.get('firstObject').get('id'));
         }); 
         this.get('store').findAll('adjudication-category').then(function(records) {
-            console.log("there are ", records.get('length'), "adjudication categories");
             self.set('adjudicationCategories', records);
         });
         this.get('store').query('assessment-code', {noCategory: true}).then(function(records) {
-            console.log("there are", records.get('length'), "assessments with no category");
             self.set('nonCategoryAdjudications', records);
         });
-        // this.get('store').findAll('course-grouping').then(function(records){
-        //     self.set('courseGroupingsModel', records);
-        // });
+        this.get('store').findAll('course-grouping').then(function(records){
+            self.set('courseGroupingsModel', records);
+        });
     },
     progressTracker: Ember.observer('evaluationProgress', function () {
         if (this.get('evaluationProgress') == this.get('evaluationTotal') && this.get('evaluationProgress') > 0){
@@ -142,11 +140,9 @@ export default Ember.Component.extend({
                 }
                 if (numberOfPotentialAssessments > 0)
                 {
-                    console.log("category has length of ", numberOfPotentialAssessments);
                     self.evaluateCategoryAssessmentCode(category.get('assessmentCodes').get('lastObject').get('id'), failedDone, category.get('programYear'), studentRecord);
                 }
                 else{
-                    console.log("category had no codes");
                     self.set('evaluationProgress', self.get('evaluationProgress') + 1);
                 }
             });            
@@ -157,7 +153,6 @@ export default Ember.Component.extend({
         var self = this;
         //get the assessmentCode obj we are working with
         this.get('store').find('assessmentCode', assessmentCodeID).then(function(assessmentCode){
-            console.log("in category assessment", assessmentCode.get('adjudicationCategory').get('id'));
             //get the root logical expression
             var logicalExpressionID = assessmentCode.get('logicalExpression').get('id');
             self.get('store').find('logical-expression', logicalExpressionID).then(function(logicalExpression){
@@ -208,7 +203,6 @@ export default Ember.Component.extend({
         });
     },
     evaluateCategoryStudent(evaluationJSON, assessmentCodeID, requiredYear, passedStudentRecord){
-        console.log("in evaluate category student for", passedStudentRecord.studentID, "with reuired year", requiredYear);
         var self = this;
         if ((requiredYear && (passedStudentRecord.programLevels.indexOf(requiredYear) > 0 || requiredYear == 5) || !requiredYear) && self.evaluateStudentRecord(passedStudentRecord, evaluationJSON))
         {
@@ -217,15 +211,13 @@ export default Ember.Component.extend({
             var newAdjudicationObject = self.get('store').createRecord('adjudication', {
                 date: currentDate
             });
-            console.log(passedStudentRecord.cumAVG, "for student ", passedStudentRecord.studentID);
             newAdjudicationObject.set('student', self.get('store').peekRecord('student', passedStudentRecord.studentID));
             newAdjudicationObject.set('termCode', self.get('store').peekRecord('term-code', self.get('currentTerm')));
             newAdjudicationObject.set('assessmentCode', self.get('store').peekRecord('assessmentCode', assessmentCodeID));                
             newAdjudicationObject.save().then(function(){
-                console.log("found a student that qualifies");
                 self.set('evaluationProgress', self.get('evaluationProgress') + 1);
-                return true;
             });
+            return true;
         }
         else{
             self.set('evaluationProgress', self.get('evaluationProgress') + 1);
@@ -237,7 +229,6 @@ export default Ember.Component.extend({
     //this funtion gets an assessment code object by id then builds the boolean expresion tree then passes the built boolean to evaluateStudents
     evaluateNonCategoryAssessmentCode(assessmentCodeID)
     {
-        console.log("in non category");
         var self = this;
         //get the assessmentCode obj we are working with
         this.get('store').find('assessmentCode', assessmentCodeID).then(function(assessmentCode){
@@ -253,12 +244,10 @@ export default Ember.Component.extend({
                 {
                     var rootExpressionChildrenCount = logicalExpression.get('logicalExpressions').get('length');
                     var done = ()=>{
-                        console.log("done first", rootExpressionChildrenCount);
                         rootExpressionChildrenCount--;
                         if(rootExpressionChildrenCount){
                             return;
                         }
-                        console.log("done determining bool thing.", expressionBoolean);
                         self.evaluateStudents(expressionBoolean, assessmentCodeID);
                     }
                     function fetchAssociated(parent,childID,callback){
@@ -297,12 +286,10 @@ export default Ember.Component.extend({
                 var newAdjudicationObject = self.get('store').createRecord('adjudication', {
                     date: currentDate
                 });
-                console.log(studentInfo.cumAVG, "for student ", studentInfo.studentID);
                 newAdjudicationObject.set('student', self.get('store').peekRecord('student', studentInfo.studentID));
                 newAdjudicationObject.set('termCode', self.get('store').peekRecord('term-code', self.get('currentTerm')));
                 newAdjudicationObject.set('assessmentCode', self.get('store').peekRecord('assessmentCode', assessmentCodeID));                
                 newAdjudicationObject.save().then(function(){
-                    console.log("found a student that qualifies");
                     self.set('evaluationProgress', self.get('evaluationProgress') + 1);
                     return true;
                 });
@@ -318,7 +305,18 @@ export default Ember.Component.extend({
     //depth first
     evaluateStudentRecord(studentRecord, evaluationJson)
     {
+        
         var self = this;
+        var studentEnrolledInCurrentTerm = false;
+        studentRecord.terms.forEach(function(term){
+            if (!studentEnrolledInCurrentTerm && term.termCodeID == self.get('currentTerm'))
+            {
+                studentEnrolledInCurrentTerm = true;
+            }
+        });
+        if (!studentEnrolledInCurrentTerm){
+            return false;
+        }
         //if there are more children evaluation booleans
         if (evaluationJson.childBooleans.length > 0)
         {
@@ -340,7 +338,6 @@ export default Ember.Component.extend({
                         success = true;
                     }
                 });
-                console.log("studentREcord", studentRecord.studentID, "has a", success, "for ", evaluationJson);
                 return success;
             }
             //if it's an all (AND)
@@ -373,7 +370,6 @@ export default Ember.Component.extend({
                         success = true;
                     }
                 });
-                console.log("succes is", success);
                 return success;
             }
             //if it's an all (AND)
@@ -385,7 +381,6 @@ export default Ember.Component.extend({
                         success = false;
                     }
                 });
-                console.log("succes is", success);
                 return success;
             }
         }
@@ -396,6 +391,14 @@ export default Ember.Component.extend({
         //Increment to match dropdown index
         var field = Number(boolExpression.field) + 1;
         var opr = boolExpression.opr;
+        var splitOpr;
+        var courseGroupingID;
+        var oprValue;
+        if (opr.indexOf('+') >= 0){            
+            splitOpr = opr.split('+');
+            courseGroupingID = splitOpr[0];
+            oprValue = splitOpr[1];
+        }
         var val = boolExpression.val;
         var boolResult = false;
         switch (field){
@@ -404,26 +407,32 @@ export default Ember.Component.extend({
                 var currentTermID = studentRecord.termCodeID;
                 var termWA = [];
                 studentRecord.terms.forEach(function(term){
-                    if (term.termCodeID == currentTermID)
+                    if (term.termCodeID == currentTermID && term.termUnitsTotal > 0)
                     {
                         termWA.push(term.termAVG);
                     }
                 });
-                boolResult = this.evaluateValue(Number(opr) + 1, termWA, val);
+                //if the student does not have a YWA for the term then return false
+                if (termWA.length > 0)
+                {
+                    boolResult = this.evaluateValue(Number(opr) + 1, termWA, val);
+                } else{
+                    boolResult = false;
+                }
             }
             break;
             //student's CWA passes passed rule (ie: greater than, less than etc...)
             case BoolValue.CWA:{
-                console.log("looking for CWA");
                 var studentCWA = [];
                 studentCWA.push(studentRecord.cumAVG);
                 boolResult = this.evaluateValue(Number(opr) + 1, studentCWA, val); 
-                console.log(boolResult);               
             }
             break;
             //student's number of failed credits total passes passed rule (ie: greater than, less than etc...)
             case BoolValue.FAILEDCREDITS:{
                 var studentNumberOfFailedCredits = [studentRecord.cumUnitsTotal - studentRecord.cumUnitsPassed];
+                if (studentNumberOfFailedCredits < 0)
+                    studentNumberOfFailedCredits = 0;
                 boolResult = this.evaluateValue(Number(opr) + 1, studentNumberOfFailedCredits, val);                
             }
             break;
@@ -436,7 +445,7 @@ export default Ember.Component.extend({
                         term.grades.forEach(function(grade){
                             var gradeMark = grade.mark;
                             //if the mark is a number then check is the grade is a failing value
-                            if (!isNAN(gradeMark)){
+                            if (!isNaN(gradeMark)){
                                 var gradeMarkNumber = Number(gradeMark);
                                 if (gradeMarkNumber < 50)
                                     failingGrades.push(gradeMarkNumber);                    
@@ -450,10 +459,10 @@ export default Ember.Component.extend({
             //Student has completed a minimum number of courses from a course grouping
             case BoolValue.CREDITSIN:{
                 var coursesInGrouping = [];
-                var minimumNumberOfCredits = val;
+                var studentNumberOfCredits = 0;
                 this.get('courseGroupingsModel').forEach(function(courseGrouping){
                     //if we have the right course grouping
-                    if (courseGrouping.get('id') == opr)
+                    if (courseGrouping.get('id') == courseGroupingID)
                     {
                         courseGrouping.get('courseCodes').forEach(function(courseCode){
                             coursesInGrouping.push(courseCode.get('id'));
@@ -471,14 +480,14 @@ export default Ember.Component.extend({
                                 var gradeMarkNumber = Number(grade.mark);
                                 if (gradeMarkNumber >= 50)
                                 {
-                                    minimumNumberOfCredits -= grade.unit;                                    
+                                    studentNumberOfCredits += grade.unit;                                    
                                 }
                             }
                         }
                     });
                 });
-                //if minimumNumberOfCredits is 0 or less than the user has completed sufficient number of credits
-                boolResult = (minimumNumberOfCredits <= 0);        
+                //so now studentNumberOfCredits is equal to the number of credits the student has from a group. we now check the opr
+                boolResult = this.evaluateValue(Number(oprValue) + 1, [studentNumberOfCredits], val);
             }
             break;
             //student's average in courses from a specific course grouping is greater than or equal to the val
@@ -487,9 +496,9 @@ export default Ember.Component.extend({
                 var gradeTotal = 0;
                 var courseUnitCount = 0;
                 this.get('courseGroupingsModel').forEach(function(courseGrouping){
-                    //if we have the right course grouping
-                    if (courseGrouping.get('id') == opr)
-                    {
+                    //if we have the right course grouping                    
+                    if (courseGrouping.get('id') == courseGroupingID)
+                    {                        
                         courseGrouping.get('courseCodes').forEach(function(courseCode){
                             coursesInGrouping.push(courseCode.get('id'));
                         });
@@ -508,8 +517,12 @@ export default Ember.Component.extend({
                         }
                     });
                 });
-                var studentGroupAVG = gradeTotal / courseUnitCount;
-                boolResult = (studentGroupAVG >= val);                
+                if (courseUnitCount > 0){                    
+                    var studentGroupAVG = gradeTotal / courseUnitCount;
+                    boolResult = this.evaluateValue(Number(oprValue) + 1, [studentGroupAVG], val);
+                }else{
+                    boolResult = false;
+                }
             }
             break;
             //if the student withdraws from 1 or more course in a course grouping
@@ -642,15 +655,16 @@ export default Ember.Component.extend({
             break;
             //if this is the first time a YWA passes a rule (less than, in between, greater than etc...)
             case BoolValue.FIRSTYWA:{
+                var self = this;
                 var currentTermPasses = false;
                 var otherTermPasses = false;
                 var currentTermID = studentRecord.termCodeID;
                 studentRecord.terms.forEach(function(term){
-                    if (term.termCodeID == currentTermID && this.evaluateValue(opr + 1, term.termAVG, val))
+                    if (term.termCodeID == currentTermID && term.termUnitsTotal > 0 && self.evaluateValue(opr + 1, term.termAVG, val))
                     {                        
                         currentTermPasses = true;
                     }
-                    else if (this.evaluateValue(opr + 1, term.termAVG, val)){
+                    else if (term.termUnitsTotal > 0 && self.evaluateValue(opr + 1, term.termAVG, val)){
                         otherTermPasses = true;
                     }
                 });
@@ -659,15 +673,16 @@ export default Ember.Component.extend({
             break;
             //if this is the second time a YWA passes a rule (less than, in between, greater than etc...)
             case BoolValue.SECONDYWA:{
+                var self = this;
                 var currentTermPasses = false;
                 var otherTermCount = 0;
                 var currentTermID = studentRecord.termCodeID;
                 studentRecord.terms.forEach(function(term){
-                    if (term.termCodeID == currentTermID && this.evaluateValue(opr + 1, term.termAVG, val))
+                    if (term.termCodeID == currentTermID && term.termUnitsTotal > 0 &&  self.evaluateValue(opr + 1, term.termAVG, val))
                     {                        
                         currentTermPasses = true;
                     }
-                    else if (this.evaluateValue(opr + 1, term.termAVG, val)){
+                    else if (term.termUnitsTotal > 0 && self.evaluateValue(opr + 1, term.termAVG, val)){
                         otherTermCount++;
                     }
                 });
@@ -697,65 +712,57 @@ export default Ember.Component.extend({
             case RegularOperators.EQUALS:{
                 for (var i = 0; i < studentValue.length; i++)
                 {
-                    console.log(Number(studentValue[i]) != ruleValue);
-                    console.log("studentval", studentValue[i], "passedval", ruleValue);
-                    if (Number(studentValue[i]) != ruleValue)
+                    if (Number(studentValue[i]) != Number(ruleValue))
                         evaluationResult = false;
                 }
             }
             break;
             case RegularOperators.NOTEQUAL:{
-                console.log("in is not equal");
                 for (var i = 0; i < studentValue.length; i++)
                 {
-                    if (Number(studentValue[i]) == ruleValue)
+                    if (Number(studentValue[i]) == Number(ruleValue))
                         evaluationResult = false;
                 }
 
             }
             break;
             case RegularOperators.GREATERTHAN:{
-                console.log("in is greater than");
                 for (var i = 0; i < studentValue.length; i++)
                 {
-                    if (Number(studentValue[i]) <= ruleValue)
+                    if (Number(studentValue[i]) <= Number(ruleValue))
                         evaluationResult = false;
                 }
 
             }
             break;
             case RegularOperators.GREATEREQUAL:{
-                console.log("in is greater or equal");
                 for (var i = 0; i < studentValue.length; i++)
                 {
-                    if (Number(studentValue[i]) < ruleValue)
+                    if (Number(studentValue[i]) < Number(ruleValue))
                         evaluationResult = false;
                 }
 
             }
             break;
             case RegularOperators.LESSTHAN:{
-                console.log("in is less than");
                 for (var i = 0; i < studentValue.length; i++)
                 {
-                    if (Number(studentValue[i]) >= ruleValue)
+                    if (Number(studentValue[i]) >= Number(ruleValue))
                         evaluationResult = false;
                 }
 
             }
             break;
             case RegularOperators.LESSEQUAL:{
-                console.log("in is less than or equal");
                 for (var i = 0; i < studentValue.length; i++)
                 {
-                    if (Number(studentValue[i]) > ruleValue)
+                    if (Number(studentValue[i]) > Number(ruleValue))
                         evaluationResult = false;
                 }
 
             }
             break;
             case RegularOperators.BETINC:{
-                console.log("in is between inclusive");
                 var betVals = ruleValue.split('-');
                 var lowerBound = Number(betVals[0]);
                 var upperBound = Number(betVals[1]);
@@ -768,7 +775,6 @@ export default Ember.Component.extend({
             }
             break;
             case RegularOperators.BETEXC:{
-                console.log("in is between exclusive");
                 var betVals = ruleValue.split('-');
                 var lowerBound = Number(betVals[0]);
                 var upperBound = Number(betVals[1]);
@@ -783,9 +789,40 @@ export default Ember.Component.extend({
         }
         return evaluationResult;
     },
+    testingEvaluateValue(){
+        console.log("in EQUAL EVAL");
+        if (true != this.evaluateValue(1, [50], 50))
+            console.log("1. invalid result!!!!!!!");
+        if (true != this.evaluateValue(1, [100], 100))
+            console.log("2. invalid result!!!!!!!");
+        if (true != this.evaluateValue(1, [0], 0))
+            console.log("3. invalid result!!!!!!!");
+        if (false != this.evaluateValue(1, [0], 5))
+            console.log("4. invalid result!!!!!!!");
+        if (false != this.evaluateValue(1, [0], 15))
+            console.log("5. invalid result!!!!!!!");
+        if (false != this.evaluateValue(1, [100], 99.9))
+            console.log("6. invalid result!!!!!!!");
+
+        console.log("IN NOT EQUAL EVAL");     
+        if (false != this.evaluateValue(2, [50], 50))
+            console.log("1. invalid result!!!!!!!");
+        if (false != this.evaluateValue(2, [100], 100))
+            console.log("2. invalid result!!!!!!!");
+        if (false != this.evaluateValue(2, [0], 0))
+            console.log("3. invalid result!!!!!!!");
+        if (true != this.evaluateValue(2, [0], 5))
+            console.log("4. invalid result!!!!!!!");
+        if (true != this.evaluateValue(2, [0], 15))
+            console.log("5. invalid result!!!!!!!");
+        if (true != this.evaluateValue(2, [100], 99.9))
+            console.log("6. invalid result!!!!!!!");
+    },
     actions: {
         adjudicate()
         {
+            // this.testingEvaluateValue();
+            // return;
             var studentAdjudicationInfo = [];
             var currentTerm = this.get('currentTerm');
             var self = this;
@@ -795,7 +832,6 @@ export default Ember.Component.extend({
             var currentTotal = 0;
             var doneReading = false;
             var doneReadingMutex = Mutex.create();
-            
             this.get('store').findAll('student').then(function (records) {
                 currentTotal += records.get('length');
                 self.set('adjudicationStatus', self.get('adjudicationStatus') + "Beginning adjudication of " + currentTotal + " students." + "<br>");

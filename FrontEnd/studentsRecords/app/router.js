@@ -17,8 +17,6 @@ Router.map(function() {
   this.route('system-codes');
   this.route('import-files');
 
-  this.route('generate-reports');
-
   this.route('adjudication');
 
   this.route('user');
