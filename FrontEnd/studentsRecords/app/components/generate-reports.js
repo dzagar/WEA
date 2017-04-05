@@ -56,6 +56,7 @@ export default Ember.Component.extend({
 				}).prop('selected', true);
 				this.send('selectTerm', index);
 				this.send('generateReport');
+				this.set('termID', null);
 			}
 		}
 	},

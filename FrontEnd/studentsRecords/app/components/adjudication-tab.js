@@ -4,7 +4,8 @@ export default Ember.Component.extend({
 
 	termID: null,
 
-	didRender() {
+	init() {
+    this._super(...arguments);
     Ember.$('.menu .item').tab();
   },
 
