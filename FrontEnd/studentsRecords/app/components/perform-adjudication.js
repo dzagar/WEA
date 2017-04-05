@@ -305,7 +305,18 @@ export default Ember.Component.extend({
     //depth first
     evaluateStudentRecord(studentRecord, evaluationJson)
     {
+        
         var self = this;
+        var studentEnrolledInCurrentTerm = false;
+        studentRecord.terms.forEach(function(term){
+            if (!studentEnrolledInCurrentTerm && term.termCodeID == self.get('currentTerm'))
+            {
+                studentEnrolledInCurrentTerm = true;
+            }
+        });
+        if (!studentEnrolledInCurrentTerm){
+            return false;
+        }
         //if there are more children evaluation booleans
         if (evaluationJson.childBooleans.length > 0)
         {
