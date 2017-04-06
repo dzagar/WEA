@@ -1,15 +1,16 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  store: Ember.inject.service(),
-  routing: Ember.inject.service('-routing'),
-  userProfile: null,
-  user: null,
-  Model: null,
-  userName: null,
   encryptedPassword: null,
+  error: "",
   isChangingPassword: null,
-
+  Model: null,
+  routing: Ember.inject.service('-routing'),
+  store: Ember.inject.service(),
+  user: null,
+  userName: null,
+  userProfile: null,
+  
   getUser: Ember.computed (function () {
     var userID = this.get('user');
     var myStore = this.get('store');
@@ -48,7 +49,10 @@ export default Ember.Component.extend({
                 self.set('error',"");
             }
             else{
-              self.set('error',"Passwords do not match. Please try again.");
+              self.set('error',"Passwords do not match. Please try again. ");
+              if(self.get('userProfile').get('firstName')=="" || self.get('userProfile').get('lastName')=="" || self.get('userProfile').get('email')==""){
+                self.set('error',self.get('error')+"Make sure every field is filled in.");
+              }
               self.set('oldPassword',"");
               self.set('newPassword1',"");
               self.set('newPassword2',"");
