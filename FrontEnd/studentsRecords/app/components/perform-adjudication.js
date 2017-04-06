@@ -431,9 +431,9 @@ export default Ember.Component.extend({
             //student's number of failed credits total passes passed rule (ie: greater than, less than etc...)
             case BoolValue.FAILEDCREDITS:{
                 var studentNumberOfFailedCredits = [studentRecord.cumUnitsTotal - studentRecord.cumUnitsPassed];
-                if (studentNumberOfFailedCredits < 0)
-                    studentNumberOfFailedCredits = 0;
-                boolResult = this.evaluateValue(Number(opr) + 1, studentNumberOfFailedCredits, val);                
+                if (studentNumberOfFailedCredits[0] < 0)
+                    studentNumberOfFailedCredits[0] = 0;
+                boolResult = this.evaluateValue(Number(opr) + 1, studentNumberOfFailedCredits, val);   
             }
             break;
             //student's grade in all failed credits passes passed rule (ie: greater than, less than etc...)
