@@ -180,7 +180,7 @@ router.route('/')
                     if (error) {
                         response.send(error);
                     } else {
-                        console.log('assessment code is ' + assessmentCode);
+                        ////console.log('assessment code is ' + assessmentCode);
                         response.json({assessmentCode: assessmentCode});
                     }
                 });
@@ -248,13 +248,13 @@ router.route('/:assessmentCode_id')
                 response.send(error);
             }
             else{
-                console.log(assessmentCode);
+                ////console.log(assessmentCode);
                 //if the code was previously linked to a category
                 if (assessmentCode.adjudicationCategory){
-                    console.log(assessmentCode.adjudicationCategory);
+                    ////console.log(assessmentCode.adjudicationCategory);
                     AdjudicationCategory.findById(assessmentCode.adjudicationCategory, function(error, adjudicationCategory){
                         //if the category already has a reference to the assessment code we are saving
-                        console.log(adjudicationCategory);
+                        ////console.log(adjudicationCategory);
                         var indexOfAssessmentCode = adjudicationCategory.assessmentCodes.indexOf(assessmentCode.id);
                         if (indexOfAssessmentCode > -1){
                             adjudicationCategory.assessmentCodes.slice(indexOfAssessmentCode, 1);
@@ -304,7 +304,7 @@ router.route('/:assessmentCode_id')
                 else{
                     //if the new AssessmentCode has a category
                     if (request.body.assessmentCode.adjudicationCategory){
-                        console.log(request.body.assessmentCode.adjudicationCategory.id);
+                        ////console.log(request.body.assessmentCode.adjudicationCategory.id);
                         AdjudicationCategory.findById(request.body.assessmentCode.adjudicationCategory, function(error, newAdjudcationCategory){
                             newAdjudcationCategory.assessmentCodes.push(assessmentCode.id);
                             newAdjudcationCategory.save();
@@ -451,7 +451,7 @@ router.route('/:assessmentCode_id')
 
 function DestroyLogExp (id, callback) {
     LogicalExpression.findByIdAndRemove(id, function (error, logExp) {
-        console.log('Deleteing LogExp in RULE ' + id);
+        ////console.log('Deleteing LogExp in RULE ' + id);
         if (logExp && logExp.logicalExpressions && logExp.logicalExpressions.length > 0) {
             let childCount = logExp.logicalExpressions.length;
             let finishCallback = () => {
@@ -461,11 +461,11 @@ function DestroyLogExp (id, callback) {
                 }
             }
             for (let i = 0; i < logExp.logicalExpressions.length; i++) {
-                console.log('Deleteing child ' + i + '/' + logExp.logicalExpressions + ' (owned by ' + id + ')');
+                ////console.log('Deleteing child ' + i + '/' + logExp.logicalExpressions + ' (owned by ' + id + ')');
                 DestroyLogExp(logExp.logicalExpressions[i], finishCallback);
             }
         } else {
-            console.log('Could not find LogExp ' + id + ', or it had no children');
+            ////console.log('Could not find LogExp ' + id + ', or it had no children');
             callback(logExp);
         }
     });

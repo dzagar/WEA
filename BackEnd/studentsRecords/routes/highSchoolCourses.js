@@ -65,7 +65,7 @@ router.route('/')
                         } else {
                             response.json({highSchoolCourse: highSchoolCourse});
                         }
-                        console.log('removed high school courses');
+                        //console.log('removed high school courses');
                     });
                 }
             });
@@ -158,7 +158,7 @@ router.route('/')
         } 
         else if(request.query.subject)
         {
-            console.log("Entered this clause!");
+            //console.log("Entered this clause!");
             HighSchoolCourse.find({subject: request.query.subject}, function (error, courses) {
                 if(error)
                 {

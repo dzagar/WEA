@@ -60,7 +60,7 @@ router.route('/')
                             response.json({grade: grade});
                         }
                     });
-                } console.log('removed grades');
+                } //console.log('removed grades');
             });
         } 
         else if (request.query.term)

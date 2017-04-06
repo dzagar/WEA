@@ -98,7 +98,7 @@ router.route('/')
             {
                 if(error)
                 {
-                    console.log("no course groupings exist...");
+                    //console.log("no course groupings exist...");
                     response.send(error);
                 }
                 

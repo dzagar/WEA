@@ -61,7 +61,7 @@ router.route('/')
                             response.send(error);
                         } else {
                             response.json({terms: terms});
-                            console.log("removed terms");
+                            //console.log("removed terms");
                         }
                     });
                 }

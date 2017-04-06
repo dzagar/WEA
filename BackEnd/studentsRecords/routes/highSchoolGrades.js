@@ -62,7 +62,7 @@ router.route('/')
                         } else {
                             response.json({highSchoolGrade: highSchoolGrade});
                         }
-                        console.log('removed high school grades');
+                        //console.log('removed high school grades');
                     });
                 }
             });

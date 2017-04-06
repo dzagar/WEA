@@ -154,7 +154,7 @@ router.route('/')
                                             } else {
                                                 // get the user role
                                                 getToken(UserShadow, function(token){
-                                                    console.log(token);
+                                                    //console.log(token);
                                                     message4.token = encrypt(JSON.stringify(token));
                                                     message4.sessionIsActive = true;
                                                     message4.loginFailed = false;
@@ -170,7 +170,7 @@ router.route('/')
                                             message4.nonce = null;
                                             message4.response = null;
                                             message4.wrongPassword = true;
-                                            console.log("wrong password");
+                                            //console.log("wrong password");
                                             response.json({login: message4});
                                         }
                                     }

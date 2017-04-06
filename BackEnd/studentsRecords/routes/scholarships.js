@@ -39,7 +39,7 @@ router.route('/')
         if (deleteAll){
             Scholarship.remove({}, function(err){
                 if (err) response.send(err);
-                else console.log('removed scholarships');
+                else //console.log('removed scholarships');
             });
         }
         if (!Student) {

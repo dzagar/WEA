@@ -50,7 +50,7 @@ export default Ember.Component.extend({
     actions: {
         addHSGrade()
         {
-            console.log('add pressed');
+            //console.log('add pressed');
 
             this.set('errorHS', false);
             this.set('errorSubject', false);
@@ -100,14 +100,14 @@ export default Ember.Component.extend({
                         });
                         this.get('currentStudent').reload();
                         newHSCourse.save().then(function() {
-                            console.log(newHSCourse.id);
+                            //console.log(newHSCourse.id);
                             let newGrade = self.get('store').createRecord('high-school-grade', {
                                 mark: Number(self.get('newGradeValue')),
                                 student: self.get('currentStudent'),
                                 source: newHSCourse
                             });
                             newGrade.save().then(function() {
-                                console.log('success!');
+                                //console.log('success!');
                             });
                         });
                     });
@@ -150,7 +150,7 @@ export default Ember.Component.extend({
         changeHighSchool(highSchoolID)
         {
             this.set('selectedHighSchoolID', highSchoolID);
-            console.log(highSchoolID);
+            //console.log(highSchoolID);
         },
 
         loadSubjectData()

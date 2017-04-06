@@ -53,7 +53,7 @@ router.route('/')
                         }
                     });
                 } 
-                console.log('removed advanced standings');
+                ////console.log('removed advanced standings');
             });
         }
         
@@ -75,7 +75,7 @@ router.route('/')
                     }
                 else 
                     {
-                        //console.log(advancedStandings);
+                        ////console.log(advancedStandings);
                         response.json({advancedStandings: advancedStandings});
                 }
             });
@@ -86,7 +86,7 @@ router.route('/')
             //         }
             //     else 
             //         {
-            //             console.log(advancedStandings);
+            //             //console.log(advancedStandings);
             //             response.json({advancedStandings: advancedStandings});
             //         }
             // });

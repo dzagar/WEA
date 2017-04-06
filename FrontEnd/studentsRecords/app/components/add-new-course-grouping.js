@@ -18,12 +18,12 @@ export default Ember.Component.extend({
         this.get('store').findAll('course-code').then(function (records) {
             self.set('coursesModel', records);
             self.get('courseGroup').get('courseCodes').forEach(function(courseCode){
-                console.log(courseCode.get('id'));
+                //console.log(courseCode.get('id'));
                 self.get('selectedCourses').push(courseCode.get('id'));
             });
             self.set('donePopulating', true);
         });
-        console.log(this.get('selectedCourses'));
+        //console.log(this.get('selectedCourses'));
     },
     
 

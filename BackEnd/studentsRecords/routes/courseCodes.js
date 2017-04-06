@@ -12,7 +12,7 @@ router.route('/')
         courseCode.save(function(error) {
             if (error) {
                 response.send(error);
-                console.log(error);
+                ////console.log(error);
             } else {
                 response.json({courseCode: courseCode});
             }
@@ -34,7 +34,7 @@ router.route('/')
                         }
                     });
                 }
-                console.log('removed courseCodes');
+                ////console.log('removed courseCodes');
             });
         }
         else if (request.query.courseLetter && request.query.courseNumber)
@@ -42,7 +42,7 @@ router.route('/')
             CourseCode.findOne({courseLetter: request.query.courseLetter, courseNumber: request.query.courseNumber}, function(error, courseCode) {
                 if (error) {
                     response.send(error);
-                    console.log("error trying to find a course by number and letter");
+                    ////console.log("error trying to find a course by number and letter");
                 } else {
                     response.send({courseCode: courseCode});
                 }

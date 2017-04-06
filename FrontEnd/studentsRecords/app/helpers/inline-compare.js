@@ -28,7 +28,7 @@ export function inlineCompare(params/*, hash*/) {
       return op1 || op2;
   }
 
-  console.log('inline compare failed with operation: ' + op1 + ' ' + operation + ' ' + op2);
+  //console.log('inline compare failed with operation: ' + op1 + ' ' + operation + ' ' + op2);
   return false;
 }
 

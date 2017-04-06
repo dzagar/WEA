@@ -97,10 +97,10 @@ router.route('/:password_id')
             else {
                 if (request.body.password.passwordMustChanged) {
                     var Salt = rand(256, 36);
-                    console.log("password " + request.body.password.encryptedPassword);
-                    console.log("salt " + Salt);
-                    console.log("password + salt " + request.body.password.encryptedPassword + Salt);
-                    console.log("hasedpassword " + hash(request.body.password.encryptedPassword + Salt));
+                    //console.log("password " + request.body.password.encryptedPassword);
+                    //console.log("salt " + Salt);
+                    //console.log("password + salt " + request.body.password.encryptedPassword + Salt);
+                    //console.log("hasedpassword " + hash(request.body.password.encryptedPassword + Salt));
                     UserShadow.encryptedPassword = hash(request.body.password.encryptedPassword + Salt);
                     UserShadow.salt = Salt;
                     UserShadow.passwordMustChanged = false;

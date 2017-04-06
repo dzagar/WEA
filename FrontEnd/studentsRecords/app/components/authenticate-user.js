@@ -21,7 +21,7 @@ export default Ember.Component.extend({
           authentication.set('getName', name);
           self.get('routing').transitionTo('home');
         }, function (error) {
-          console.log(error);
+          //console.log(error);
         });
       } else {
         authentication.open(this.get('name'), this.get('password')).then(function () {

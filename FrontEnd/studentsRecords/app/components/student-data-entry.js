@@ -71,7 +71,7 @@ export default Ember.Component.extend({
   studentModel: Ember.observer('offset', function () {
     var self = this;
     this.set('studentDataMessage', "Loading Student Data...");
-    console.log('offset observer');
+    //console.log('offset observer');
     this.get('store').query('student', {
       number: self.get('filter').studentNumber,
       firstName: self.get('filter').firstName,
@@ -99,20 +99,20 @@ export default Ember.Component.extend({
         }
       }
     }, function (reason) {
-      console.log("Query to student records failed");
+      //console.log("Query to student records failed");
       self.set('studentDataMessage', "No Student Data Found");
     });
   }),
 
   currentIndexChange: Ember.observer('currentIndex', function () {
     this.get('undoManager').clear();
-    console.log('current index change');
+    //console.log('current index change');
     this.setCurrentStudent(this.get('currentIndex'));
   }),
 
   fetchStudent: Ember.observer('currentStudent', function () {
     this.set('studentNotLoaded', true);
-    console.log('fetch student');
+    //console.log('fetch student');
     this.set('studentDataMessage', "Loading Student...");
     this.showStudentData(this.get('currentStudent'));
     var self = this;
@@ -121,7 +121,7 @@ export default Ember.Component.extend({
       nonTerms: true
     }).then(function(nonTerms){
       self.set('studentUnselectedTermCodes', nonTerms);
-      console.log(self.get('studentUnselectedTermCodes'));
+      //console.log(self.get('studentUnselectedTermCodes'));
       self.set('studentNotLoaded', false);
     });
     self.set('termIndex', null);
@@ -177,7 +177,7 @@ export default Ember.Component.extend({
       // Show first student data
       //self.set('currentIndex', self.get('firstIndex'));
     }, function (reason) {
-      console.log("Query to student records failed");
+      //console.log("Query to student records failed");
       self.set('studentDataMessage', "No Student Data Found");
     });
 
@@ -186,7 +186,7 @@ export default Ember.Component.extend({
   },
   setCurrentStudent: function (index) {
     var student = this.get('studentsRecords').objectAt(index);
-    console.log('setting current student. student exists? ' + (student != null))
+    //console.log('setting current student. student exists? ' + (student != null))
     if (student != null){
       this.set('currentStudent', student);
     }
@@ -217,8 +217,8 @@ export default Ember.Component.extend({
         }
         if(this.get('currentStudent.gender') == null || this.get('currentStudent.gender.id') == null || this.get('currentStudent.gender.id') == 1 || this.get('currentStudent.gender.id') == 2)
         {
-          console.log(Ember.$("#ddlGender").val());
-          console.log(this.get('store').peekRecord('gender', Ember.$("#ddlGender").val()));
+          //console.log(Ember.$("#ddlGender").val());
+          //console.log(this.get('store').peekRecord('gender', Ember.$("#ddlGender").val()));
           this.get('currentStudent').set('gender',this.get('store').peekRecord('gender', Ember.$("#ddlGender").val()));
           this.get('currentStudent').save();
         }
@@ -242,7 +242,7 @@ export default Ember.Component.extend({
         });
         //loads student high school information
         this.get('store').query('high-school-grade', {student : studentID}).then(function(grades){
-          console.log(grades.content.length);
+          //console.log(grades.content.length);
           self.set('studentGrades', grades);
           for (var i = 0; i < grades.content.length; i++){
             
@@ -250,7 +250,7 @@ export default Ember.Component.extend({
             var gradeSourceID = gradeSource.get('id');
 
             // self.get('store').queryRecord('high-school-course', {grades : grades.objectAt(i).id}).then(function(course){
-            //   //console.log(course);
+            //   ////console.log(course);
             //   self.get('studentCourses').push(course);
             // });
            
@@ -369,18 +369,18 @@ export default Ember.Component.extend({
       this.get('store').query('student', {
         _id: this.get('currentStudent.id')
       }).then((student)=>{
-        console.log(student);
+        //console.log(student);
         var self = this;
         this.get('undoManager').add({
           undo: function(){
             // THIS DOES NOT WORK I DONT THINK
-            console.log("undo save"); 
+            //console.log("undo save"); 
             student.save();
           }
         });
         var updatedStudent = this.get('currentStudent');
         var res = this.get('store').peekRecord('residency', this.get('selectedResidency')); 
-        console.log(res);
+        //console.log(res);
         var gen = this.get('store').peekRecord('gender', this.get('selectedGender'));
         //updatedStudent.set('gender', this.get('selectedGender'));
         updatedStudent.set('DOB', this.get('selectedDate'));
@@ -429,20 +429,20 @@ export default Ember.Component.extend({
     },
 
     onFieldChange(){
-      console.log("on field change");
+      //console.log("on field change");
       this.set('noFieldChange', false);
     },
 
     onFocusOut(){
-        console.log("focus out called");
+        //console.log("focus out called");
         if (this.get('noFieldChange')){   //if a field hasnt been changed
-          console.log("undid field");
+          //console.log("undid field");
           this.get('undoManager').undo();
         } else {
           this.set("noFieldChange", true);
         }
         if (!this.get('undoManager').hasUndo()){   //if there are no undos left on stack
-          console.log("no undos left");
+          //console.log("no undos left");
           this.set('noFieldChange', true);
         }
     },
@@ -625,12 +625,12 @@ export default Ember.Component.extend({
     selectTerm(index)
     {
       this.set('termIndex', Number(index));
-      console.log("new index = " + this.get('termIndex'));
+      //console.log("new index = " + this.get('termIndex'));
     },
     saveGrade(grade)
     {
         grade.save();
-        console.log('save grade');
+        //console.log('save grade');
     },
     displayProgram(selectedProgram){  
         if (Ember.$("#progInfo" + selectedProgram).is(':visible')){

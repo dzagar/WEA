@@ -13,14 +13,14 @@ export default Ember.Component.extend({
 		this._super(...arguments);
 		var self = this;
         Ember.$('.ui.modal').remove();  //remove any existing modals
-        console.log("rule logical exp: " + this.get('ruleEditing').get('logicalExpression').get('id'));
+        //console.log("rule logical exp: " + this.get('ruleEditing').get('logicalExpression').get('id'));
         if (this.get('ruleEditing').get('logicalExpression').get('id') != null){	//if object passed
         	this.set('addingNew', false);	//you are just modifying not adding
         	this.set('newLogExp', this.get('ruleEditing').get('logicalExpression'));
         	this.set('oldLogExp', this.get('ruleEditing').get('logicalExpression'));
         	this.set('logicalExpID', this.get('newLogExp').get('id'));
         	this.set('loadLogExp', true);
-        	console.log('set parent logexp to id ' +  this.get('newLogExp').get('id') + 'for existing rule with id ' + this.get('ruleEditing').get('id'));
+        	//console.log('set parent logexp to id ' +  this.get('newLogExp').get('id') + 'for existing rule with id ' + this.get('ruleEditing').get('id'));
         } else {	//creating new logical expression
         	var ruleID = this.get('ruleEditing');
         	var logExp = this.get('store').createRecord('logical-expression', {
@@ -34,7 +34,7 @@ export default Ember.Component.extend({
         		self.set('newLogExp', logExp);
         		self.set('logicalExpID', self.get('newLogExp').get('id'));
         		self.set('loadLogExp', true);
-        		console.log('created parent logexp with id ' + self.get('newLogExp').get('id'));
+        		//console.log('created parent logexp with id ' + self.get('newLogExp').get('id'));
         	});
         }
 	},

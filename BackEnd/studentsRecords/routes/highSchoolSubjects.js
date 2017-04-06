@@ -9,7 +9,7 @@ var parseJSON = bodyParser.json();
 
 router.route('/')
     .post(parseUrlencoded, parseJSON, function (request, response) {
-        console.log('entered post');
+        //console.log('entered post');
         var highSchoolSubject = new HighSchoolSubject(request.body.highSchoolSubject);
         highSchoolSubject.save(function(error) {
             if (error) {
@@ -35,13 +35,13 @@ router.route('/')
                         } else {
                             response.json({highSchoolSubject: highSchoolSubject});
                         }
-                        console.log("removed subjects");
+                        //console.log("removed subjects");
                     });
                 }
             });
         } else if (course){
             HighSchoolSubject.findOne({courses: course}, function(err, highSchoolSubject){
-                console.log("entered proper fcn");
+                //console.log("entered proper fcn");
                 if (err) response.send(err);
                 else {
                     response.json({highSchoolSubject: highSchoolSubject});

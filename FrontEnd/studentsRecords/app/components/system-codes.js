@@ -590,7 +590,7 @@ export default Ember.Component.extend({
             {
                  if(highSchoolSubjectName.toUpperCase()==this.get('courseArray')[i].name.toUpperCase() && highSchoolSubjectDescription.toUpperCase()==this.get('courseArray')[i].description && highSchoolSubjectLevel.toUpperCase()==this.get('courseArray')[i].level && highSchoolSubjectUnit == this.get('courseArray')[i].unit && highSchoolSubjectSource.toUpperCase() == this.get('courseArray')[i].source)
                 {
-                    console.log('subject exists or is false');
+                    //console.log('subject exists or is false');
                     this.setHighSchoolSubjectOutput("The high school subject entered is already created! Please enter a new high school subject name!");
                     isHighSchoolSubjectCreated=false;
                 }
@@ -731,7 +731,7 @@ export default Ember.Component.extend({
 
             for(var i=0; i<courseGroupingArray.length;i++)
             {
-                console.log(courseGroupingArray[i].name);
+                //console.log(courseGroupingArray[i].name);
                 if(courseGroupingName.toUpperCase()==courseGroupingArray[i].name.toUpperCase())
                 {
                     this.setCourseGroupingOutput("Please enter a new course grouping name, this name is already taken!");

@@ -23,7 +23,7 @@ router.route('/')
         var l = parseInt(request.query.limit);
         if (request.query.deleteAll)
         {
-            console.log("delete All was true");
+            //console.log("delete All was true");
             HighSchool.remove({}, function(error) {
                     if (error)
                         response.send(error);
@@ -35,7 +35,7 @@ router.route('/')
                                     response.json({highSchool: highSchool});
                                 }
                         });
-                    } console.log("removed highschools");
+                    } //console.log("removed highschools");
                 });
          }
         else if (request.query.course){
@@ -122,7 +122,7 @@ router.route('/')
         let failed = false;
         let completed = 0;
         HighSchool.findByIdAndRemove(request.params.highSchool_id, function(error, school) {
-            console.log(school);
+            //console.log(school);
             if (error) {
                 failed = true;
                 response.send(error);

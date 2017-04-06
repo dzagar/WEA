@@ -790,33 +790,33 @@ export default Ember.Component.extend({
         return evaluationResult;
     },
     testingEvaluateValue(){
-        console.log("in EQUAL EVAL");
+        //console.log("in EQUAL EVAL");
         if (true != this.evaluateValue(1, [50], 50))
-            console.log("1. invalid result!!!!!!!");
+            //console.log("1. invalid result!!!!!!!");
         if (true != this.evaluateValue(1, [100], 100))
-            console.log("2. invalid result!!!!!!!");
+            //console.log("2. invalid result!!!!!!!");
         if (true != this.evaluateValue(1, [0], 0))
-            console.log("3. invalid result!!!!!!!");
+            //console.log("3. invalid result!!!!!!!");
         if (false != this.evaluateValue(1, [0], 5))
-            console.log("4. invalid result!!!!!!!");
+            //console.log("4. invalid result!!!!!!!");
         if (false != this.evaluateValue(1, [0], 15))
-            console.log("5. invalid result!!!!!!!");
+            //console.log("5. invalid result!!!!!!!");
         if (false != this.evaluateValue(1, [100], 99.9))
-            console.log("6. invalid result!!!!!!!");
+            //console.log("6. invalid result!!!!!!!");
 
-        console.log("IN NOT EQUAL EVAL");     
+        //console.log("IN NOT EQUAL EVAL");     
         if (false != this.evaluateValue(2, [50], 50))
-            console.log("1. invalid result!!!!!!!");
+            //console.log("1. invalid result!!!!!!!");
         if (false != this.evaluateValue(2, [100], 100))
-            console.log("2. invalid result!!!!!!!");
+            //console.log("2. invalid result!!!!!!!");
         if (false != this.evaluateValue(2, [0], 0))
-            console.log("3. invalid result!!!!!!!");
+            //console.log("3. invalid result!!!!!!!");
         if (true != this.evaluateValue(2, [0], 5))
-            console.log("4. invalid result!!!!!!!");
+            //console.log("4. invalid result!!!!!!!");
         if (true != this.evaluateValue(2, [0], 15))
-            console.log("5. invalid result!!!!!!!");
+            //console.log("5. invalid result!!!!!!!");
         if (true != this.evaluateValue(2, [100], 99.9))
-            console.log("6. invalid result!!!!!!!");
+            //console.log("6. invalid result!!!!!!!");
     },
     actions: {
         adjudicate()

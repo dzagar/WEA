@@ -15,11 +15,11 @@ export default Ember.Component.extend({
 			this.get('store').query('gender', {
 				deleteAll: true
 			});
-			console.log('deleted genders');
+			//console.log('deleted genders');
 			this.get('store').query('residency', {
 				deleteAll: true
 			});
-			console.log('deleted residencies');
+			//console.log('deleted residencies');
 
 			this.get('store').query('student', {
 				deleteAll: true
@@ -27,114 +27,114 @@ export default Ember.Component.extend({
 				self.get('store').query('scholarship', {
 					deleteAll: true
 				}).then(function(response){
-					console.log(response);
+					//console.log(response);
 				});
-				console.log('deleted scholarships');
+				//console.log('deleted scholarships');
 
 				self.get('store').query('advanced-standing', {
 					deleteAll: true
 				}).then(function(response){
-					console.log(response);
+					//console.log(response);
 				});
 			});
 			
 			this.get('store').query('term-code', {
 				deleteAll: true
 			}).then(function(response) {
-				console.log(response);
+				//console.log(response);
 			});
 			
 			this.get('store').query('course-code', {
 				deleteAll: true
 			}).then(function(response) {
-				console.log(response);
+				//console.log(response);
 			});
 
 			this.get('store').query('high-school', {
 				deleteAll: true
 			}).then(function(response) {
-				console.log(response);
+				//console.log(response);
 			});
 			this.get('store').query('high-school-subject', {
 				deleteAll: true
 			}).then(function(response) {
-				console.log(response);
+				//console.log(response);
 			});
 
 			this.get('store').query('high-school-grade', {
 				deleteAll: true
 			}).then(function(response) {
-				console.log(response);
+				//console.log(response);
 			});
 
 			this.get('store').query('high-school-course', {
 				deleteAll: true
 			}).then(function(response) {
-				console.log(response);
+				//console.log(response);
 			});
-			console.log('deleted students');
+			//console.log('deleted students');
 
 			this.get('store').query('program-record', {
 				deleteAll: true
 			}).then(function(response) {
-				console.log(response);
+				//console.log(response);
 			});
 
 			this.get('store').query('plan-code', {
 				deleteAll: true
 			}).then(function(response) {
-				console.log(response);
+				//console.log(response);
 			});
 			this.get('store').query('grade', {
 				deleteAll: true
 			}).then(function(response) {
-				console.log(response);
+				//console.log(response);
 			});
 
 			this.get('store').query('term', {
 				deleteAll: true
 			}).then(function (response) {
-				console.log(response);
+				//console.log(response);
 			});
 			this.get('store').query('program-administration', {
 				deleteAll: true
 			}).then(function (response) {
-				console.log(response);
+				//console.log(response);
 			});
 			this.get('store').query('department', {
 				deleteAll: true
 			}).then(function (response) {
-				console.log(response);
+				//console.log(response);
 			});
 			this.get('store').query('faculty', {
 				deleteAll: true
 			}).then(function (response) {
-				console.log(response);
+				//console.log(response);
 			});
 			this.get('store').query('assessment-code', {
 				deleteAll: true
 			}).then(function (response) {
-				console.log(response);
+				//console.log(response);
 			});
 			this.get('store').query('logical-expression', {
 				deleteAll: true
 			}).then(function (response) {
-				console.log(response);
+				//console.log(response);
 			});
 			this.get('store').query('adjudication-category', {
 				deleteAll: true
 			}).then(function (response) {
-				console.log(response);
+				//console.log(response);
 			});
 			this.get('store').query('course-grouping', {
 				deleteAll: true
 			}).then(function (response) {
-				console.log(response);
+				//console.log(response);
 			});
 			this.get('store').query('adjudication', {
 				deleteAll: true
 			}).then(function (response) {
-				console.log(response);
+				//console.log(response);
 			});
 		
 			this.get('store').unloadAll();
@@ -145,7 +145,7 @@ export default Ember.Component.extend({
       		Ember.$('.ui.modal').remove();
 		},
 		cancel: function(){
-			console.log('cancelled');
+			//console.log('cancelled');
 			this.set('notDONE', false);
 			Ember.$('.ui.modal').modal('hide');
       		Ember.$('.ui.modal').remove();

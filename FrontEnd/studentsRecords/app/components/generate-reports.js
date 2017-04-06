@@ -22,7 +22,7 @@ export default Ember.Component.extend({
 	showCharts: false,
 	init(){
 		this._super(...arguments);
-		console.log('init gen rpts');
+		//console.log('init gen rpts');
 		//load term data model
 		var self=this;
 		this.get('store').findAll('termCode').then(function (records) {
@@ -37,7 +37,7 @@ export default Ember.Component.extend({
 	},
 
 	didRender(){
-		console.log('render gen rpts');
+		//console.log('render gen rpts');
 		var self = this;
 		//this.set('currentCategory', self.get('categoryModel').get('firstObject'));
 		if (this.get('termID') != null){
@@ -45,7 +45,7 @@ export default Ember.Component.extend({
 			var name = null;
 			this.get('termModel').forEach(function(term){
 				if (self.get('termID') == term.get('id')){
-					console.log('found term');
+					//console.log('found term');
 					index = self.get('termModel').indexOf(term);
 					name = term.get('name');
 				}
@@ -215,7 +215,7 @@ export default Ember.Component.extend({
 			options: {
 				legend:{
 					onClick: function(e,legendItem){
-						console.log("Clicked " + legendItem.text);
+						//console.log("Clicked " + legendItem.text);
 					}
 				}
 			}
@@ -245,20 +245,20 @@ export default Ember.Component.extend({
 			// var pieChartLabels=this.get('pieChartLabels');
 			// var pieChartVals=this.get('barChartVals');
 			let pieChartWedges = [];
-			console.log("category is "+currentCategory);
-			console.log("currentTerm id is "+currentTerm.get('id'));
+			//console.log("category is "+currentCategory);
+			//console.log("currentTerm id is "+currentTerm.get('id'));
 
 
             //category 'Other' makes bar chart
             if (this.get('currentCategoryIndex') == -1)
             {
 				//this.destroyChart('bar');
-				console.log('getting assessment codes');
+				//console.log('getting assessment codes');
             	this.get('store').query('assessmentCode', {
             		adjudicationCategory: null,
 					noCategory: true
             	}).then(function(assessmentCodes){
-					console.log('found ' + assessmentCodes.get('length') + ' assessment codes');
+					//console.log('found ' + assessmentCodes.get('length') + ' assessment codes');
 					let promiseArr = [];
             		assessmentCodes.forEach(function(assessmentCode, codeIndex){ 
             			barChartBars.push({
@@ -276,10 +276,10 @@ export default Ember.Component.extend({
             		});
 					return promiseArr;
             	}).then(function (promiseArr) {
-					console.log('Got promise array');
+					//console.log('Got promise array');
 					return Ember.RSVP.all(promiseArr);
 				}).then(function (adjudicationObjArrays) {
-					console.log('Promise array resolved');
+					//console.log('Promise array resolved');
 					if (barChartBars.length == adjudicationObjArrays.length) {
 						barChartBars.forEach(function (bar, index) {
 							bar.length = adjudicationObjArrays[index].get('length');
@@ -288,12 +288,12 @@ export default Ember.Component.extend({
 							bar.backColour = self.getColour(index, 0.3);
 							bar.borderColour = self.getColour(index, 1);
 						});
-						console.log('done getting data, showing chart');
-						console.log(barChartBars);
+						//console.log('done getting data, showing chart');
+						//console.log(barChartBars);
 						self.set('barChartBars', barChartBars);
 						self.renderBarChart();
 					} else {
-						console.log("Bars and Adjudications don't match. bars: " + barChartBars.length + " adjudicationArrays: " + adjudicationObjArrays.length);
+						//console.log("Bars and Adjudications don't match. bars: " + barChartBars.length + " adjudicationArrays: " + adjudicationObjArrays.length);
 					}
 				});
 
@@ -346,12 +346,12 @@ export default Ember.Component.extend({
 							wedge.backColour = self.getColour(index, 0.3);
 							wedge.borderColour = self.getColour(index, 1);
 						});
-						console.log('done getting data, showing chart');
-						console.log(pieChartWedges);
+						//console.log('done getting data, showing chart');
+						//console.log(pieChartWedges);
 						self.set('pieChartWedges', pieChartWedges);
 						self.renderPieChart();
 					} else {
-						console.log("Wedges and AdjudicationArrays don't match. wedges: " + barChartBars.length + " adjudicationArrays: " + adjudicationObjArrays.length);
+						//console.log("Wedges and AdjudicationArrays don't match. wedges: " + barChartBars.length + " adjudicationArrays: " + adjudicationObjArrays.length);
 					}
 				});
             }
@@ -359,7 +359,7 @@ export default Ember.Component.extend({
         },
         selectTerm(index){
         	this.set('currentTerm', this.get('termModel').objectAt(Number(index)));
-        	console.log("new index " + this.get('currentTerm'));
+        	//console.log("new index " + this.get('currentTerm'));
         	$("#open").addClass('hideChart');
         	$("#chart").addClass('hideChart');
         },
@@ -369,12 +369,12 @@ export default Ember.Component.extend({
 			if (index != -1) {
 				this.set('currentCategory', this.get('categoryModel').objectAt(Number(index)));
 			}
-        	console.log("new index " + this.get('currentCategoryIndex'));
+        	//console.log("new index " + this.get('currentCategoryIndex'));
         	$("#open").addClass('hideChart');
         	$("#chart").addClass('hideChart');
         },
         generatePDF() {
-            console.log('Generating PDF document');
+            //console.log('Generating PDF document');
             this.set('generationWarningText', 'Generating a PDF Report');
             Ember.$('.ui.basic.modal').modal({closable: false}).modal('show');
             let self = this;
@@ -384,7 +384,7 @@ export default Ember.Component.extend({
             let assessmentCategory;
 			let noCategory;
             let fileName = "";
-			console.log('category is null? ' + (this.get('currentCategoryIndex') == -1));
+			//console.log('category is null? ' + (this.get('currentCategoryIndex') == -1));
             if (this.get('currentCategoryIndex') == -1) {
                 assessmentCategory = null;
 				noCategory = true;
@@ -395,7 +395,7 @@ export default Ember.Component.extend({
                 fileName = this.get('currentCategory').get('name') + '_';
             }
             fileName += this.get('currentTerm').get('name') + '.pdf';
-			console.log('querying');
+			//console.log('querying');
             this.get('store').query('assessmentCode', {
                 adjudicationCategory: assessmentCategory,
 				noCategory: noCategory
@@ -440,7 +440,7 @@ export default Ember.Component.extend({
 				// 							if(data[i].note)
 				// 								doc.text(data[i].note, 170, yPos);
 				// 						} else {
-				// 							//console.log("Student " + i + " is null (adjudication " + data[i].adjID + ")");
+				// 							////console.log("Student " + i + " is null (adjudication " + data[i].adjID + ")");
 				// 						}
 				// 						if ((i + 1) % 31 === 0) {
 				// 							doc.addPage();
@@ -494,14 +494,14 @@ export default Ember.Component.extend({
 								data[i].studentNumber = student.get('studentNumber');
 								data[i].studentName = student.get('firstName') + ' ' + student.get('lastName');
 							} else {
-								console.log('Error: student ' + i + ' is null');
+								//console.log('Error: student ' + i + ' is null');
 							}
 						});
 						
 						//remove all records that don't belong in this term
 						for(let i = 0; i < data.length; i++) {
 							if (data[i].termID != self.get('currentTerm').get('id')) {
-								console.log('Bad record found: ' + data[i].termID + ' / ' + self.get('currentTerm').get('id') + ' (index ' + i + ')');
+								//console.log('Bad record found: ' + data[i].termID + ' / ' + self.get('currentTerm').get('id') + ' (index ' + i + ')');
 								data.splice(i, 1);
 								i--;
 							}
@@ -550,7 +550,7 @@ export default Ember.Component.extend({
         	});
         },
 		generateExcel() {
-            console.log('Generating Excel document');
+            //console.log('Generating Excel document');
             this.set('generationWarningText', 'Generating a CSV Report');
             Ember.$('.ui.basic.modal').modal({closable: false}).modal('show');
             let self = this;
@@ -560,7 +560,7 @@ export default Ember.Component.extend({
             let assessmentCategory;
 			let noCategory;
             let fileName = "";
-			console.log('category is null? ' + (this.get('currentCategoryIndex') == -1));
+			//console.log('category is null? ' + (this.get('currentCategoryIndex') == -1));
             if (this.get('currentCategoryIndex') == -1) {
                 assessmentCategory = null;
 				noCategory = true;
@@ -571,7 +571,7 @@ export default Ember.Component.extend({
                 fileName = this.get('currentCategory').get('name') + '_';
             }
             fileName += this.get('currentTerm').get('name') + '.pdf';
-			console.log('querying');
+			//console.log('querying');
             this.get('store').query('assessmentCode', {
                 adjudicationCategory: assessmentCategory,
 				noCategory: noCategory
@@ -608,14 +608,14 @@ export default Ember.Component.extend({
 								data[i].studentNumber = student.get('studentNumber');
 								data[i].studentName = student.get('firstName') + ' ' + student.get('lastName');
 							} else {
-								console.log('Error: student ' + i + ' is null');
+								//console.log('Error: student ' + i + ' is null');
 							}
 						});
 						
 						//remove all records that don't belong in this term
 						for(let i = 0; i < data.length; i++) {
 							if (data[i].termID != self.get('currentTerm').get('id')) {
-								console.log('Bad record found: ' + data[i].termID + ' / ' + self.get('currentTerm').get('id') + ' (index ' + i + ')');
+								//console.log('Bad record found: ' + data[i].termID + ' / ' + self.get('currentTerm').get('id') + ' (index ' + i + ')');
 								data.splice(i, 1);
 								i--;
 							}
@@ -655,7 +655,7 @@ export default Ember.Component.extend({
 							CSV += row + '\r\n';
 						}
 						var uri = 'data:text/csv;charset=utf-8,' + encodeURI(CSV);
-						//console.log(uri);
+						////console.log(uri);
 						//generate filename
 						var fileName = "";
 						//make spaces to underscores
@@ -702,7 +702,7 @@ export default Ember.Component.extend({
         // 		});
         // 		return promiseArr;
         // 	}).then(function(promiseArr) {
-        // 		console.log('Done getting promise array');
+        // 		//console.log('Done getting promise array');
         // 		return Ember.RSVP.all(promiseArr);
         // 	}).then(function(students) {
         		
@@ -755,7 +755,7 @@ export default Ember.Component.extend({
 		// 		    CSV += row + '\r\n';
 		// 		}
 		// 	    var uri = 'data:text/csv;charset=utf-8,' + encodeURI(CSV);
-		// 	    //console.log(uri);
+		// 	    ////console.log(uri);
 		// 	    //generate filename
 		// 	    var fileName = "";
 		// 	    //make spaces to underscores

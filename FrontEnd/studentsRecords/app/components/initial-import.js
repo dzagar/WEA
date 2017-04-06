@@ -31,7 +31,7 @@ var ImportState = {
 
 function DisplayErrorMessage(message)
 {
-	console.log(message);
+	//console.log(message);
 }
 function checkUniqueSubject(sourceArray, newName, newDescription)
 {
@@ -39,7 +39,7 @@ function checkUniqueSubject(sourceArray, newName, newDescription)
 	{
 		if (sourceArray[i] && sourceArray[i].name === newName && sourceArray[i].description === newDescription)
 		{
-			console.log("found duplicate value of " + newName + " and " + newDescription);
+			//console.log("found duplicate value of " + newName + " and " + newDescription);
 			return false;
 		}
 	}
@@ -51,7 +51,7 @@ function checkUniqueHSCourse(sourceArray, newSchool, newLevel, newSource, newUni
 	{
 		if (sourceArray[i] && sourceArray[i].level == newLevel && sourceArray[i].source == newSource && sourceArray[i].unit == newUnit && sourceArray[i].name == newSubjectName && sourceArray[i].description == newSubjectDescription && sourceArray[i].schoolName == newSchool)
 		{
-			console.log("found duplicate field");
+			//console.log("found duplicate field");
 			return false;
 		}
 	}
@@ -64,8 +64,8 @@ function checkUniqueTerm(sourceArray, newStudentNumber, newTermCode)
 	{
 		if (sourceArray[i] && sourceArray[i].studentNumber == newStudentNumber && sourceArray[i].termCode == newTermCode)
 		{
-			console.log("found duplicate field in Term Code");
-			console.log(newStudentNumber);
+			//console.log("found duplicate field in Term Code");
+			//console.log(newStudentNumber);
 			return false;
 		}
 	}
@@ -78,8 +78,8 @@ function checkUniqueProgram(sourceArray, newStudentNumber, newTermCode, newName,
 	{
 		if (sourceArray[i] && sourceArray[i].studentNumber == newStudentNumber && sourceArray[i].term == newTermCode && sourceArray[i].program == newName && sourceArray[i].level == newLevel && sourceArray[i].load == newLoad)
 		{
-			console.log("found duplicate field in Program Record");
-			console.log(newStudentNumber);
+			//console.log("found duplicate field in Program Record");
+			//console.log(newStudentNumber);
 			return false;
 		}
 	}
@@ -91,8 +91,8 @@ function checkUniquePlan(sourceArray, newStudentNumber, newTermCode, newProgramN
 	{
 		if (sourceArray[i] && sourceArray[i].studentNumber == newStudentNumber && sourceArray[i].term == newTermCode && sourceArray[i].program == newProgramName && sourceArray[i].level == newLevel && sourceArray[i].load == newLoad && sourceArray[i].plan == newPlanName)
 		{
-			console.log("found duplicate field in Plan Code");
-			console.log(newStudentNumber);
+			//console.log("found duplicate field in Plan Code");
+			//console.log(newStudentNumber);
 			return false;
 		}
 	}
@@ -104,13 +104,13 @@ function checkUniqueCourse(sourceArray, newLetter, newNumber, newUnit)
 	{
 		if (sourceArray[i] && sourceArray[i].letter == newLetter && sourceArray[i].number == newNumber)
 		{
-			console.log("found duplicate course" + newLetter + newNumber);
+			//console.log("found duplicate course" + newLetter + newNumber);
 			
 			return false;
 		}
 		if (isNaN(newUnit))
 		{
-			console.log("ERROR: RECORD " + newLetter + newNumber + "cannot convert unit " + newUnit + " to a number");
+			//console.log("ERROR: RECORD " + newLetter + newNumber + "cannot convert unit " + newUnit + " to a number");
 			return false;
 		}
 	}
@@ -122,7 +122,7 @@ function checkUniqueDepartment(sourceArray, newFaculty, newDepartment)
 	{
 		if (sourceArray[i] && sourceArray[i].facultyName == newFaculty && sourceArray[i].departmentName == newDepartment)
 		{
-			console.log("found duplicate department" + newLetter + newNumber);			
+			//console.log("found duplicate department" + newLetter + newNumber);			
 			return false;
 		}
 	}
@@ -135,7 +135,7 @@ function VerificationFunction(sourceArray,newArray)
 	{
 		if(sourceArray[i]!=newArray[i])
 		{
-			console.log("There was an error in the '"+sourceArray[i]+"' header! Your current value is: '"+newArray[i]+"'. Please fix this before re-importing!");
+			//console.log("There was an error in the '"+sourceArray[i]+"' header! Your current value is: '"+newArray[i]+"'. Please fix this before re-importing!");
 			return false;
 		}
 	}
@@ -362,7 +362,7 @@ export default Ember.Component.extend({
 			var i,f;
 			for (i = 0; i != files.length; ++i) {
 				f = files[i];
-				console.log(f);
+				//console.log(f);
 				var reader = new FileReader();
 				var name = f.name;
 				var self=this;
@@ -1344,7 +1344,7 @@ export default Ember.Component.extend({
 										//this means the reading is done
 										if (!plan)
 										{
-											console.log("there was no plan");
+											//console.log("there was no plan");
 											if (i === 2)
 											{
 												self.pushOutput("<span style='color:red'>This file does not contain any properly formated data.</span>");
@@ -2572,15 +2572,15 @@ export default Ember.Component.extend({
 
 			setIndex(index)
 			{
-				console.log(index);
+				//console.log(index);
 				this.set('changingIndex',index);
-				console.log("index is now " + this.get('changingIndex'));
+				//console.log("index is now " + this.get('changingIndex'));
 			},
 
 			continue(){
 				Ember.$("#newFile" + this.get('importCount')).val('');
 				this.set('changingIndex', this.get('changingIndex')+1);
-				console.log("changed Index to " + this.get('changingIndex'));
+				//console.log("changed Index to " + this.get('changingIndex'));
 				var self = this;
 				switch(this.get('changingIndex')){
 					case 5:

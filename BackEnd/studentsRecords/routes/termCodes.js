@@ -35,7 +35,7 @@ router.route('/')
                             response.send(error);
                         } else {
                             response.json({termCodes: termCodes});
-                            console.log("removed term codes");
+                            //console.log("removed term codes");
                         }
                     });
                 }
@@ -80,7 +80,7 @@ router.route('/')
                         if (err) response.send(err);
                         else {
                             response.json({termCode: termCode.docs, meta: {total: num}});
-                            console.log(num);
+                            //console.log(num);
                         }
                     });
                 }
@@ -97,7 +97,7 @@ router.route('/')
                     if (error){
                         response.send(error);
                     }else{
-                        console.log(termCodes.length);
+                        //console.log(termCodes.length);
                         response.send({termCodes: termCodes});
                     }
                 });

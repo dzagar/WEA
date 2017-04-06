@@ -161,7 +161,7 @@ router.route('/')
 
             }
             else{
-                console.log("get all");
+                //console.log("get all");
                 Student.find({}, function(error, students){
                     if (error){
                         response.send(error);

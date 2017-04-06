@@ -60,18 +60,18 @@ router.route('/')
             Student.findOne({studentNumber: request.query.studentNumber}, function(error, student) {
                 if (!student)
                 {
-                    console.log("no student found");
+                    //console.log("no student found");
                 }
                 TermCode.findOne({name: request.query.termName}, function(error, termCode) {
                     if (!termCode)
                     {
-                        console.log("no term code found for " + request.query.termName);
+                        //console.log("no term code found for " + request.query.termName);
 
                     }
                     Term.findOne({termCode: termCode, student: student}, function(error, term) {
                         if (!term)
                         {
-                            console.log("no term found")
+                            //console.log("no term found")
                         }                        
                         ProgramRecord.findOne({term: term, name: request.query.programName, level: request.query.level, load: request.query.load}, function(error, programRecord) {
                             if (error) {
@@ -79,9 +79,9 @@ router.route('/')
                             } else {
                                 if (!programRecord)
                                 {
-                                    console.log("no program record found for name: " + request.query.programName + " and level: " + request.query.level + " and load : " + request.query.load);
-                                    console.log("And term : ");
-                                    console.log(term);
+                                    //console.log("no program record found for name: " + request.query.programName + " and level: " + request.query.level + " and load : " + request.query.load);
+                                    //console.log("And term : ");
+                                    //console.log(term);
                                 }
                                 response.send({programRecord: programRecord});
                             }

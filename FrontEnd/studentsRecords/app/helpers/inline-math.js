@@ -18,7 +18,7 @@ export function inlineMath(params/*, hash*/) {
       return op1 % op2;
   }
 
-  console.log('inline math failed with operation: ' + op1 + ' ' + operation + ' ' + op2);
+  //console.log('inline math failed with operation: ' + op1 + ' ' + operation + ' ' + op2);
   return 0;
 }
 
