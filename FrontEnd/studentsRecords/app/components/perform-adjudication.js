@@ -790,6 +790,7 @@ export default Ember.Component.extend({
         return evaluationResult;
     },
     testingEvaluateValue(){
+        /*
         //console.log("in EQUAL EVAL");
         if (true != this.evaluateValue(1, [50], 50))
             //console.log("1. invalid result!!!!!!!");
@@ -817,6 +818,7 @@ export default Ember.Component.extend({
             //console.log("5. invalid result!!!!!!!");
         if (true != this.evaluateValue(2, [100], 99.9))
             //console.log("6. invalid result!!!!!!!");
+            */
     },
     actions: {
         adjudicate()
